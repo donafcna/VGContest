@@ -292,8 +292,10 @@ cv.addEventListener('touchmove', e => {
 }, { passive: false });
 cv.addEventListener('touchend', () => { touchOn = false; });
 
-// ---------- AUDIO ENGINE ----------
+// ---------- DYNAMIC ADAPTIVE SPACE AUDIO ENGINE ----------
 let ac = null, musicOn = true, masterG = null;
+let musicFilter = null, musicReverb = null;
+
 function initAudio() {
   if (ac) {
     if (ac.state === 'suspended') {
@@ -306,198 +308,200 @@ function initAudio() {
     if (ac.state === 'suspended') {
       try { ac.resume(); } catch (e) {}
     }
-    masterG = ac.createGain(); masterG.gain.value = 0.38; masterG.connect(ac.destination);
+
+    masterG = ac.createGain();
+    masterG.gain.value = 0.40;
     
-    const tone = (type, freq, t0, dur, vol, detune) => {
-      if (!freq || !ac) return;
+    // Dynamic Master Filter for space intensity
+    musicFilter = ac.createBiquadFilter();
+    musicFilter.type = 'lowpass';
+    musicFilter.frequency.value = 4000;
+    musicFilter.Q.value = 2.0;
+
+    masterG.connect(musicFilter);
+    musicFilter.connect(ac.destination);
+
+    // --- SYNTHESIZER SOUND GENERATORS ---
+    function playKick(t0, power=1.0) {
+      if (!ac || !musicOn) return;
       const o = ac.createOscillator(), g = ac.createGain();
-      o.type = type; o.frequency.value = freq; if (detune) o.detune.value = detune;
-      g.gain.setValueAtTime(0.0001, t0);
-      g.gain.exponentialRampToValueAtTime(vol, t0 + 0.02);
+      o.frequency.setValueAtTime(160, t0);
+      o.frequency.exponentialRampToValueAtTime(32, t0 + 0.14);
+      g.gain.setValueAtTime(0.35 * power, t0);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.16);
+      o.connect(g); g.connect(masterG);
+      o.start(t0); o.stop(t0 + 0.17);
+    }
+
+    function playSnare(t0) {
+      if (!ac || !musicOn) return;
+      // Tone body
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = 'triangle'; o.frequency.setValueAtTime(220, t0);
+      o.frequency.exponentialRampToValueAtTime(80, t0 + 0.10);
+      g.gain.setValueAtTime(0.20, t0);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.12);
+      o.connect(g); g.connect(masterG);
+      o.start(t0); o.stop(t0 + 0.13);
+      // Noise snap
+      const dur = 0.14, buf = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2);
+      const s = ac.createBufferSource(); s.buffer = buf;
+      const f = ac.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 1400;
+      const ng = ac.createGain(); ng.gain.value = 0.22;
+      s.connect(f); f.connect(ng); ng.connect(masterG);
+      s.start(t0);
+    }
+
+    function playHiHat(t0, open=false) {
+      if (!ac || !musicOn) return;
+      const dur = open ? 0.18 : 0.04;
+      const buf = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+      const s = ac.createBufferSource(); s.buffer = buf;
+      const f = ac.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 7500;
+      const g = ac.createGain(); g.gain.value = open ? 0.08 : 0.045;
+      s.connect(f); f.connect(g); g.connect(masterG);
+      s.start(t0);
+    }
+
+    function playBass(t0, freq, dur, vol=0.14) {
+      if (!freq || !ac || !musicOn) return;
+      for (const det of [-6, 6]) {
+        const o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter();
+        o.type = 'sawtooth'; o.frequency.value = freq; o.detune.value = det;
+        f.type = 'lowpass';
+        f.frequency.setValueAtTime(1400 + (combo > 1 ? combo * 400 : 0), t0);
+        f.frequency.exponentialRampToValueAtTime(300, t0 + dur);
+        g.gain.setValueAtTime(0.001, t0);
+        g.gain.linearRampToValueAtTime(vol, t0 + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+        o.connect(f); f.connect(g); g.connect(masterG);
+        o.start(t0); o.stop(t0 + dur + 0.02);
+      }
+      // Sub-bass layer
+      const sub = ac.createOscillator(), subG = ac.createGain();
+      sub.type = 'sine'; sub.frequency.value = freq / 2;
+      subG.gain.setValueAtTime(vol * 1.2, t0);
+      subG.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+      sub.connect(subG); subG.connect(masterG);
+      sub.start(t0); sub.stop(t0 + dur + 0.02);
+    }
+
+    function playArp(t0, freq, dur, vol=0.045) {
+      if (!freq || !ac || !musicOn) return;
+      const o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter();
+      o.type = 'square'; o.frequency.value = freq;
+      f.type = 'bandpass'; f.frequency.value = freq * 1.5; f.Q.value = 3.0;
+      g.gain.setValueAtTime(0.001, t0);
+      g.gain.linearRampToValueAtTime(vol, t0 + 0.015);
       g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-      o.connect(g); g.connect(masterG); o.start(t0); o.stop(t0 + dur + 0.03);
-    };
-
-    // Authentic Note Frequencies in Bb Major
-    const F2=87.31, G2=98.00, A2=110.00, Bb2=116.54, C3=130.81, D3=146.83, Eb3=155.56, F3=174.61, G3=196.00, A3=220.00, Bb3=233.08;
-    const C4=261.63, D4=293.66, Eb4=311.13, E4=329.63, F4=349.23, Fs4=369.99, G4=392.00, Ab4=415.30, A4=440.00, Bb4=466.16, B4=493.88;
-    const C5=523.25, Db5=554.37, D5=587.33, Eb5=622.25, E5=659.25, F5=698.46, Fs5=739.99, G5=783.99, Ab5=830.61, A5=880.00, Bb5=932.33;
-
-    // Score events array: [tRel, freq, dur, type, vol, detune]
-    const events = [];
-    function addBrass(t, f, dur, v=0.12) {
-      if (!f) return;
-      events.push([t, f, dur, 'sawtooth', v, -5]);
-      events.push([t, f, dur * 0.85, 'square', v * 0.55, 5]);
-      events.push([t, f * 2, dur * 0.6, 'triangle', v * 0.35, 0]);
-    }
-    function addBass(t, f, dur, v=0.20) {
-      if (!f) return;
-      events.push([t, f, dur, 'sawtooth', v * 0.75, 0]);
-      events.push([t, f / 2, dur, 'sine', v, 0]);
-    }
-    function addTimpani(t) {
-      events.push([t, 65, 0.45, 'triangle', 0.35, -20]);
-      events.push([t, 45, 0.55, 'sine', 0.45, 0]);
+      o.connect(f); f.connect(g); g.connect(masterG);
+      o.start(t0); o.stop(t0 + dur + 0.02);
     }
 
-    // --- 1. Iconic Star Wars Opening Fanfare ---
-    // Triple pickup: "Da-da-da..."
-    addBrass(0.00, F4, 0.15, 0.10);
-    addBrass(0.18, F4, 0.15, 0.10);
-    addBrass(0.36, F4, 0.15, 0.12);
+    function playLead(t0, freq, dur, vol=0.07) {
+      if (!freq || !ac || !musicOn) return;
+      for (const [typ, det, v] of [['sawtooth', -7, vol], ['sawtooth', 7, vol], ['triangle', 0, vol * 0.8]]) {
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.type = typ; o.frequency.value = freq; o.detune.value = det;
+        g.gain.setValueAtTime(0.001, t0);
+        g.gain.linearRampToValueAtTime(v, t0 + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        o.connect(g); g.connect(masterG);
+        o.start(t0); o.stop(t0 + dur + 0.03);
+      }
+    }
 
-    // "TAAAAAHHHH..." (Bb4)
-    addBrass(0.55, Bb4, 1.10, 0.18);
-    addBass(0.55, Bb2, 1.10, 0.24);
-    addTimpani(0.55);
+    // Frequencies (D Minor / F Space Lydian Scale)
+    const D2=73.42, F2=87.31, G2=98.00, A2=110.00, Bb2=116.54, C3=130.81, D3=146.83, E3=164.81, F3=174.61, G3=196.00, A3=220.00, Bb3=233.08;
+    const C4=261.63, D4=293.66, E4=329.63, F4=349.23, G4=392.00, A4=440.00, Bb4=466.16, C5=523.25, D5=587.33, E5=659.25, F5=698.46, G5=783.99, A5=880.00;
 
-    // "DAAAAAHHHH..." (F5)
-    addBrass(1.70, F5, 1.10, 0.18);
-    addBass(1.70, F3, 1.10, 0.22);
-    addTimpani(1.70);
+    // 16th-Note Cosmic Arpeggio Pattern (32 Steps per loop)
+    const arpSeq = [
+      D4, F4, A4, D5,  F4, A4, D5, F5,   Bb3, D4, F4, Bb4, D4, F4, Bb4, D5,
+      F3, A3, C4, F4,  A3, C4, F4, A4,   C4, E4, G4, C5,   E4, G4, C5, E5
+    ];
 
-    // Triplet: "da-da-da..." (Eb5 - D5 - C5)
-    addBrass(2.85, Eb5, 0.22, 0.13);
-    addBrass(3.10, D5, 0.22, 0.13);
-    addBrass(3.35, C5, 0.22, 0.13);
+    // Driving Space Bass Progression
+    const bassSeq = [
+      D3, D3, D3, D3,  D3, D3, D3, D3,   Bb2, Bb2, Bb2, Bb2, Bb2, Bb2, Bb2, Bb2,
+      F2, F2, F2, F2,  F2, F2, F2, F2,   C3, C3, C3, C3,   C3, C3, C3, C3
+    ];
 
-    // "TAAAAAAHHHH!" (Bb5)
-    addBrass(3.60, Bb5, 1.10, 0.20);
-    addBass(3.60, Bb2, 1.10, 0.24);
-    addTimpani(3.60);
+    // Soaring Futuristic Space Lead Melody
+    const leadSeq = [
+      D5, 0, 0, A4,    0, C5, D5, 0,     F5, 0, E5, 0,     D5, 0, C5, 0,
+      D5, 0, 0, F5,    0, G5, A5, 0,     G5, 0, F5, 0,     E5, 0, C5, 0
+    ];
 
-    // "DAAAAH..." (F5)
-    addBrass(4.75, F5, 0.55, 0.15);
-    addBass(4.75, F3, 0.55, 0.18);
+    // 16th note step duration (136 BPM dynamic tempo)
+    const STEP = 0.110;
+    let step = 0, nextTime = ac.currentTime + 0.1;
 
-    // Triplet: "da-da-da..." (Eb5 - D5 - C5)
-    addBrass(5.35, Eb5, 0.22, 0.13);
-    addBrass(5.60, D5, 0.22, 0.13);
-    addBrass(5.85, C5, 0.22, 0.13);
-
-    // "TAAAAAAHHHH!" (Bb5)
-    addBrass(6.10, Bb5, 1.10, 0.20);
-    addBass(6.10, Bb2, 1.10, 0.24);
-    addTimpani(6.10);
-
-    // "DAAAAH..." (F5)
-    addBrass(7.25, F5, 0.55, 0.15);
-    addBass(7.25, F3, 0.55, 0.18);
-
-    // Triplet: "da-da-da..." (Eb5 - D5 - Eb5)
-    addBrass(7.85, Eb5, 0.22, 0.13);
-    addBrass(8.10, D5, 0.22, 0.13);
-    addBrass(8.35, Eb5, 0.22, 0.13);
-
-    // "DAAAAAAAAAAAHHH!" (C5)
-    addBrass(8.60, C5, 1.60, 0.18);
-    addBass(8.60, F2, 1.60, 0.24);
-    addTimpani(8.60);
-
-    // --- 2. Second Statement (Variation) ---
-    addBrass(10.50, F4, 0.15, 0.10);
-    addBrass(10.68, F4, 0.15, 0.10);
-    addBrass(10.86, F4, 0.15, 0.12);
-
-    addBrass(11.05, Bb4, 1.10, 0.18);
-    addBass(11.05, Bb2, 1.10, 0.24);
-    addTimpani(11.05);
-
-    addBrass(12.20, F5, 1.10, 0.18);
-    addBass(12.20, F3, 1.10, 0.22);
-    addTimpani(12.20);
-
-    addBrass(13.35, Eb5, 0.22, 0.13);
-    addBrass(13.60, D5, 0.22, 0.13);
-    addBrass(13.85, C5, 0.22, 0.13);
-
-    addBrass(14.10, Bb5, 1.10, 0.20);
-    addBass(14.10, Bb2, 1.10, 0.24);
-    addTimpani(14.10);
-
-    addBrass(15.25, F5, 0.55, 0.15);
-
-    addBrass(15.85, Eb5, 0.22, 0.13);
-    addBrass(16.10, D5, 0.22, 0.13);
-    addBrass(16.35, C5, 0.22, 0.13);
-
-    addBrass(16.60, Bb5, 1.10, 0.20);
-    addBass(16.60, Bb2, 1.10, 0.24);
-    addTimpani(16.60);
-
-    addBrass(17.75, F5, 0.55, 0.15);
-
-    addBrass(18.35, Eb5, 0.22, 0.13);
-    addBrass(18.60, D5, 0.22, 0.13);
-    addBrass(18.85, Eb5, 0.22, 0.13);
-
-    addBrass(19.10, C5, 1.60, 0.18);
-    addBass(19.10, F2, 1.60, 0.24);
-    addTimpani(19.10);
-
-    // --- 3. The Imperial March Climax (Darth Vader's Theme) ---
-    addBrass(21.00, G4, 0.45, 0.14);
-    addBrass(21.50, G4, 0.45, 0.14);
-    addBrass(22.00, G4, 0.45, 0.14);
-    addBrass(22.50, Eb4, 0.35, 0.14);
-    addBrass(22.90, Bb4, 0.25, 0.15);
-
-    addBrass(23.20, G4, 0.90, 0.18);
-    addBass(23.20, G2, 0.90, 0.22);
-    addTimpani(23.20);
-
-    addBrass(24.20, Eb4, 0.35, 0.14);
-    addBrass(24.60, Bb4, 0.25, 0.15);
-    addBrass(24.90, G4, 1.20, 0.18);
-    addBass(24.90, G2, 1.20, 0.22);
-
-    addBrass(26.30, D5, 0.45, 0.16);
-    addBrass(26.80, D5, 0.45, 0.16);
-    addBrass(27.30, D5, 0.45, 0.16);
-    addBrass(27.80, Eb5, 0.35, 0.16);
-    addBrass(28.20, Bb4, 0.25, 0.15);
-
-    addBrass(28.50, Fs4, 0.90, 0.18);
-    addBass(28.50, D3, 0.90, 0.22);
-    addTimpani(28.50);
-
-    addBrass(29.50, Eb4, 0.35, 0.14);
-    addBrass(29.90, Bb4, 0.25, 0.15);
-    addBrass(30.20, G4, 1.40, 0.20);
-    addBass(30.20, G2, 1.40, 0.24);
-    addTimpani(30.20);
-
-    const LOOP_DURATION = 32.0;
-    let loopStartTime = ac.currentTime + 0.1;
-    let nextEventIdx = 0;
-
-    // Scheduler tick
+    // Adaptive music scheduler loop
     setInterval(() => {
       if (!musicOn || !(state === 'play' || state === 'menu')) return;
       const now = ac.currentTime;
-      const ahead = now + 0.35;
 
-      while (true) {
-        if (nextEventIdx >= events.length) {
-          nextEventIdx = 0;
-          loopStartTime += LOOP_DURATION;
-        }
-        const ev = events[nextEventIdx];
-        const eventAbsoluteTime = loopStartTime + ev[0];
-
-        if (eventAbsoluteTime <= ahead) {
-          if (eventAbsoluteTime >= now - 0.05) {
-            tone(ev[3], ev[1], eventAbsoluteTime, ev[2], ev[4], ev[5]);
-          }
-          nextEventIdx++;
-        } else {
-          break;
-        }
+      // Dynamic Filter & Volume Adaptation based on gameplay
+      if (musicFilter) {
+        let targetFreq = 3500;
+        if (boss) targetFreq = 8000;
+        else if (combo >= 3) targetFreq = 6500;
+        else if (combo >= 1) targetFreq = 4800;
+        musicFilter.frequency.setTargetAtTime(targetFreq, now, 0.15);
       }
-    }, 60);
+
+      while (nextTime < now + 0.4) {
+        const s = step % 32;
+        const barStep = s % 8;
+        const isBossMode = !!boss;
+        const hasStreak = combo >= 2;
+
+        // 1. COSMIC DRUMS & BEAT
+        // Kick on 1 and 5 (and double kicks during boss/combo)
+        if (barStep === 0 || barStep === 4 || (isBossMode && (barStep === 2 || barStep === 6)) || (hasStreak && barStep === 6 && Math.random() < 0.5)) {
+          playKick(nextTime, isBossMode ? 1.35 : 1.0);
+        }
+        // Snare on 2 and 6
+        if (barStep === 2 || barStep === 6) {
+          playSnare(nextTime);
+        }
+        // Hi-Hats on every 16th note, open hat on offbeats
+        playHiHat(nextTime, barStep === 2 || barStep === 6);
+
+        // 2. DRIVING 16TH-NOTE SPACE BASS
+        const bf = bassSeq[s];
+        if (bf) {
+          playBass(nextTime, bf, STEP * 0.90, isBossMode ? 0.18 : 0.13);
+        }
+
+        // 3. SHIMMERING COSMIC ARPEGGIO
+        const af = arpSeq[s];
+        if (af) {
+          playArp(nextTime, af, STEP * 0.75, hasStreak ? 0.065 : 0.04);
+        }
+
+        // 4. SOARING SPACE LEAD MELODY
+        const lf = leadSeq[s];
+        if (lf) {
+          playLead(nextTime, lf, STEP * 2.8, isBossMode ? 0.09 : 0.065);
+        }
+
+        // Extra hyper-pulse during boss fights
+        if (isBossMode && barStep === 7) {
+          playArp(nextTime, D5 * 2, STEP * 0.5, 0.05);
+        }
+
+        step++;
+        nextTime += STEP;
+      }
+    }, 45);
   } catch (e) {
-    console.error('Audio init error:', e);
+    console.error('Dynamic Audio error:', e);
   }
 }
 
