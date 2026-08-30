@@ -224,35 +224,35 @@ let boss = null, bossT = 26;
 let fortT = 1.6, gliderT = 4.5, mineT = 7.5, shootCool = 0, t = 0;
 
 function getCameraTransform() {
-  let zoom = 1.25;
+  let zoom = 1.08;
   let camX = W * 0.5, camY = H * 0.5;
   
   if (state === 'intro') {
     if (introT < 1.9) {
-      // Act 1: Initial full view of ship and advancing UFOs
-      zoom = 1.25;
+      // Act 1: Wide cinematic view of galleon and advancing UFO scouts
+      zoom = 1.08;
       camX = W * 0.5;
       camY = H * 0.5;
     } else if (introT < 2.4) {
-      // Smoothly zoom in tightly on the cannons and UFOs
+      // Smoothly zoom in on the cannons and UFOs
       const p = (introT - 1.9) / 0.5;
-      zoom = 1.25 + p * (2.95 - 1.25);
-      camX = (W * 0.5) + p * (W * 0.43 - W * 0.5);
+      zoom = 1.08 + p * (2.35 - 1.08);
+      camX = (W * 0.5) + p * (W * 0.44 - W * 0.5);
       camY = H * 0.5;
     } else if (introT < 5.2) {
-      // Act 2: ULTRA-CLOSE ACTION-CAM ZOOM (Intense close-up on cannons, space, and exploding UFOs!)
-      zoom = 2.95;
-      camX = W * 0.43;
+      // Act 2: ACTION-CAM SHOT ZOOM (Cannons, looping corkscrews, and exploding UFOs!)
+      zoom = 2.35;
+      camX = W * 0.44;
       camY = H * 0.5;
     } else if (introT < 7.6) {
-      // Act 3: Smoothly zoom back out to reveal full galleon and incoming armada!
+      // Act 3: Smoothly zoom back out to wide galactic view!
       const p = (introT - 5.2) / 2.4;
-      zoom = 2.95 - p * (2.95 - 1.25);
-      camX = (W * 0.43) - p * (W * 0.43 - W * 0.5);
+      zoom = 2.35 - p * (2.35 - 1.08);
+      camX = (W * 0.44) - p * (W * 0.44 - W * 0.5);
       camY = H * 0.5;
     } else {
-      // Act 4: Standard combat battle zoom
-      zoom = 1.25;
+      // Act 4: Wide galactic combat battle view
+      zoom = 1.08;
       camX = W * 0.5;
       camY = H * 0.5;
     }
@@ -562,6 +562,55 @@ function initAudio() {
   } catch (e) {
     console.error('Dynamic Audio error:', e);
   }
+}
+
+function playStarWarsIntroFanfare() {
+  if (!ac || !musicOn) return;
+  const t0 = ac.currentTime + 0.05;
+  const F4 = 349.23, Bb4 = 466.16, C5 = 523.25, D5 = 587.33, Eb5 = 622.25, F5 = 698.46, Bb5 = 932.33;
+
+  function playHorn(time, freq, dur, vol = 0.28) {
+    for (const det of [-6, 0, 6]) {
+      const o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter();
+      o.type = 'sawtooth'; o.frequency.value = freq; o.detune.value = det;
+      f.type = 'lowpass'; f.frequency.value = 3600;
+      g.gain.setValueAtTime(0.001, time);
+      g.gain.linearRampToValueAtTime(vol, time + 0.035);
+      g.gain.exponentialRampToValueAtTime(0.001, time + dur);
+      o.connect(f); f.connect(g); g.connect(masterG);
+      o.start(time); o.stop(time + dur + 0.05);
+    }
+  }
+
+  function playTimpani(time) {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.frequency.setValueAtTime(115, time);
+    o.frequency.exponentialRampToValueAtTime(45, time + 0.32);
+    g.gain.setValueAtTime(0.42, time);
+    g.gain.exponentialRampToValueAtTime(0.001, time + 0.35);
+    o.connect(g); g.connect(masterG);
+    o.start(time); o.stop(time + 0.37);
+  }
+
+  // Star Wars Opening Fanfare: Triplets F4-F4-F4 -> Bb4 -> F5 -> Eb5-D5-C5 -> Bb5 -> F5
+  playTimpani(t0);
+  playHorn(t0, F4, 0.12, 0.25);
+  playHorn(t0 + 0.14, F4, 0.12, 0.25);
+  playHorn(t0 + 0.28, F4, 0.12, 0.25);
+
+  playTimpani(t0 + 0.44);
+  playHorn(t0 + 0.44, Bb4, 0.72, 0.35);
+
+  playTimpani(t0 + 1.22);
+  playHorn(t0 + 1.22, F5, 0.72, 0.38);
+
+  playHorn(t0 + 1.98, Eb5, 0.14, 0.28);
+  playHorn(t0 + 2.13, D5, 0.14, 0.28);
+  playHorn(t0 + 2.28, C5, 0.14, 0.28);
+
+  playTimpani(t0 + 2.45);
+  playHorn(t0 + 2.45, Bb5, 0.75, 0.40);
+  playHorn(t0 + 3.25, F5, 0.65, 0.32);
 }
 
 function sfx(type) {
@@ -973,6 +1022,7 @@ document.getElementById('startbtn').addEventListener('click', () => {
   document.getElementById('menu').classList.add('hidden');
   document.getElementById('pausebtn').style.display = 'block';
   initAudio();
+  playStarWarsIntroFanfare();
   state = 'intro';
 });
 
@@ -2439,10 +2489,10 @@ function draw() {
     cx.restore();
   }
 
-  // 13. CINEMATIC STORYLINE PROLOGUE OVERLAY
+  // 13. CINEMATIC STAR WARS STORYLINE PROLOGUE OVERLAY
   if (state === 'intro') {
     // Cinematic Black Letterbox Bars
-    const barH = Math.min(88, H * 0.14);
+    const barH = Math.min(94, H * 0.15);
     cx.fillStyle = '#010206';
     cx.fillRect(0, 0, W, barH);
     cx.fillRect(0, H - barH, W, barH);
@@ -2455,45 +2505,50 @@ function draw() {
     cx.moveTo(0, H - barH); cx.lineTo(W, H - barH);
     cx.stroke();
 
-    // Narrative Stage Content
+    // Top Header: Iconic Star Wars Universe Header
     cx.textAlign = 'center';
-    if (introT < 2.0) {
-      // Stage 1: The Maiden Voyage
-      cx.font = 'bold 13px "Orbitron", sans-serif';
-      cx.fillStyle = '#3fd5ff';
-      cx.fillText('🛰️ CAPTAIN\'S LOG • STARDATE 3042.8', W / 2, H - barH + 34);
+    cx.font = 'bold 12px "Orbitron", sans-serif';
+    cx.fillStyle = '#4bd5ee';
+    cx.fillText('✨ A LONG TIME AGO IN A STAR CLUSTER FAR, FAR AWAY....', W / 2, barH - 24);
 
-      cx.font = '16px "Outfit", sans-serif';
+    // Narrative Stage Content
+    if (introT < 2.0) {
+      // Stage 1: The Galactic Prologue
+      cx.font = 'bold 15px "Orbitron", sans-serif';
+      cx.fillStyle = '#ffd23c';
+      cx.fillText('🌌 EPISODE I: THE COSMIC CORSAIR', W / 2, H - barH + 34);
+
+      cx.font = '15px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('"The Solar Pirate Galleon glides into the deep Orion Abyss... Two hostile alien scouts detected!"', W / 2, H - barH + 62);
+      cx.fillText('"A lone wooden Solar Pirate Galleon sails deep space. Two Imperial Alien UFO scouts advance on intercept vector..."', W / 2, H - barH + 64);
     } else if (introT < 3.8) {
       // Stage 2: Action-Cam Cannon Zoom & Acrobatic Looping Broadside
-      cx.font = 'bold 14px "Orbitron", sans-serif';
+      cx.font = 'bold 15px "Orbitron", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('⚔️ ACTION-CAM LOCK: ACROBATIC LOOPING BROADSIDE SALVO!', W / 2, H - barH + 34);
+      cx.fillText('⚔️ ACTION-CAM LOCK: ACROBATIC BROADSIDE SALVO!', W / 2, H - barH + 34);
 
-      cx.font = '16px "Outfit", sans-serif';
+      cx.font = '15px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('"Firing twin corkscrew cannonballs... Looping acrobatically through the cosmic void!"', W / 2, H - barH + 62);
+      cx.fillText('"Firing twin corkscrew cannonballs... Looping acrobatically through the cosmic void!"', W / 2, H - barH + 64);
     } else if (introT < 5.5) {
       // Stage 3: Simultaneous Dual Explosions
       cx.font = 'bold 15px "Orbitron", sans-serif';
       cx.fillStyle = '#00dfa2';
-      cx.fillText('💥 SIMULTANEOUS DIRECT HITS! BOTH UFO SCOUTS VAPORIZED!', W / 2, H - barH + 34);
+      cx.fillText('💥 DIRECT HITS! BOTH IMPERIAL SCOUTS VAPORIZED!', W / 2, H - barH + 34);
 
-      cx.font = '16px "Outfit", sans-serif';
+      cx.font = '15px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('"Dual catastrophic alien reactor explosions confirmed! Salvaging dubloons..."', W / 2, H - barH + 62);
+      cx.fillText('"Alien reactor cores catastrophically overload in twin plasma blast waves! Salvaging dubloons..."', W / 2, H - barH + 64);
     } else {
       // Stage 4: Massive Alien Armada Inbound
       const flash = Math.sin(introT * 18) > 0;
       cx.font = 'bold 15px "Orbitron", sans-serif';
       cx.fillStyle = flash ? '#ff0055' : '#ffffff';
-      cx.fillText('🚨 RED ALERT: MASSIVE ALIEN UFO ARMADA ADVANCING!', W / 2, H - barH + 34);
+      cx.fillText('🚨 RED ALERT: THE IMPERIAL UFO BATTLE FLEET HAS ARRIVED!', W / 2, H - barH + 34);
 
-      cx.font = 'bold 16px "Outfit", sans-serif';
+      cx.font = 'bold 15px "Outfit", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('"ENEMY UFO BATTLE-CRUISERS CLOSING IN RAPIDLY! ALL HANDS TO BATTLE STATIONS! MAN THE CANNONS!"', W / 2, H - barH + 62);
+      cx.fillText('"MASSIVE ENEMY WARSHIPS ADVANCING IN ATTACK FORMATION! ALL HANDS TO BATTLE STATIONS!"', W / 2, H - barH + 64);
     }
 
     // Skip Button Indicator
