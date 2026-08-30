@@ -1157,15 +1157,24 @@ function update(dt) {
   ship.x = Math.max(80, Math.min(W - 140, ship.x));
   ship.y = Math.max(70, Math.min(H - 80, ship.y));
 
+function getWorldMouse() {
+  const zoom = 1.24;
+  return {
+    x: (mouse.x - W * 0.5) / zoom + W * 0.5,
+    y: (mouse.y - H * 0.5) / zoom + H * 0.5
+  };
+}
+
   // Dynamic Galleon Pitch & Flag Flutter
   const targetPitch = (ship.vy / MAX_SPD) * 0.25;
   ship.pitch += (targetPitch - ship.pitch) * Math.min(1, dt * 10);
   ship.flagWave += dt * 12;
 
-  // Aim angle directed towards mouse / touch pointer
+  // Aim angle directed towards world mouse pointer
+  const wm = getWorldMouse();
   const cannonOriginX = ship.x + 36;
   const cannonOriginY = ship.y + 18;
-  ship.aimAngle = Math.atan2(mouse.y - cannonOriginY, mouse.x - cannonOriginX);
+  ship.aimAngle = Math.atan2(wm.y - cannonOriginY, wm.x - cannonOriginX);
 
   ship.inv = Math.max(0, ship.inv - dt);
   ship.recoil = Math.max(0, ship.recoil - dt * 8);
@@ -1571,7 +1580,15 @@ function draw() {
   cx.fillStyle = '#020308';
   cx.fillRect(0, 0, W, H);
 
-  const isIntroForward = (state === 'intro' && (introT < 2.8 || introT >= 5.0));
+  // Apply 1.24x Cinematic Camera Zoom & Action Framing
+  const zoom = 1.24;
+  const _sx = shake ? (Math.random() - 0.5) * shake : 0;
+  const _sy = shake ? (Math.random() - 0.5) * shake : 0;
+
+  cx.save();
+  cx.translate(W * 0.5 + _sx, H * 0.5 + _sy);
+  cx.scale(zoom, zoom);
+  cx.translate(-W * 0.5, -H * 0.5);
 
   // Distant Glowing Nebulae
   for (const n of nebulae) {
@@ -1583,10 +1600,10 @@ function draw() {
     cx.beginPath(); cx.arc(n.x, n.y, n.r, 0, Math.PI * 2); cx.fill();
   }
 
-  // Photorealistic Giant Planet in Background
-  const planetX = isIntroForward ? W * 0.5 : W * 0.82;
-  const planetY = isIntroForward ? H * 0.28 : H * 0.32;
-  const planetR = isIntroForward ? 140 : 120;
+  // Photorealistic Giant Planet in Background (Side View)
+  const planetX = W * 0.82;
+  const planetY = H * 0.32;
+  const planetR = 125;
   const pg = cx.createRadialGradient(planetX - 35, planetY - 35, 15, planetX, planetY, planetR);
   pg.addColorStop(0, '#8eb4e3');
   pg.addColorStop(0.35, '#35547c');
@@ -1610,48 +1627,46 @@ function draw() {
     cx.beginPath(); cx.arc(s.x, s.y, s.size, 0, Math.PI * 2); cx.fill();
   }
 
-  // Hyperspace Rift Vortex in Scene 3 (Forward View Red Alert)
+  // Side-View Hyperspace Rift Vortex on the Right Horizon (Scene 3 Red Alert)
   if (state === 'intro' && introT >= 5.0) {
     cx.save();
-    cx.translate(W * 0.5, H * 0.45);
-    const riftR = Math.min(180, (introT - 5.0) * 80);
+    cx.translate(W * 0.85, H * 0.5);
+    const riftR = Math.min(170, (introT - 5.0) * 80);
     const rg = cx.createRadialGradient(0, 0, 10, 0, 0, riftR);
     rg.addColorStop(0, '#ff0055');
     rg.addColorStop(0.4, '#7928ca');
     rg.addColorStop(0.8, '#00ff66');
     rg.addColorStop(1, 'rgba(0,0,0,0)');
     cx.fillStyle = rg;
-    cx.beginPath(); cx.arc(0, 0, riftR, 0, Math.PI * 2); cx.fill();
+    cx.beginPath(); cx.ellipse(0, 0, riftR * 0.6, riftR * 1.3, 0, 0, Math.PI * 2); cx.fill();
 
     // Swirling energy lightning rings
     cx.rotate(t * 8);
     cx.strokeStyle = '#00ff66';
-    cx.lineWidth = 3;
+    cx.lineWidth = 3.5;
     for (let k = 0; k < 4; k++) {
       cx.rotate(Math.PI * 0.5);
-      cx.beginPath(); cx.arc(0, 0, riftR * 0.8, 0, Math.PI * 0.35); cx.stroke();
+      cx.beginPath(); cx.ellipse(0, 0, riftR * 0.5, riftR * 1.1, 0, 0, Math.PI * 0.4); cx.stroke();
     }
     cx.restore();
   }
 
-  // Floating Asteroids (Rendered in Side View / Play mode)
-  if (!isIntroForward) {
-    for (const a of asteroids) {
-      cx.save(); cx.translate(a.x, a.y); cx.rotate(a.rot);
-      const ag = cx.createRadialGradient(-a.r * 0.3, -a.r * 0.3, 2, 0, 0, a.r);
-      ag.addColorStop(0, '#667080'); ag.addColorStop(0.5, '#333842'); ag.addColorStop(1, '#111317');
-      cx.fillStyle = ag;
-      cx.beginPath();
-      for (let k = 0; k < 8; k++) {
-        const ang = (k / 8) * Math.PI * 2;
-        const rad = a.r * (0.8 + ((k % 3) * 0.12));
-        if (k === 0) cx.moveTo(Math.cos(ang)*rad, Math.sin(ang)*rad);
-        else cx.lineTo(Math.cos(ang)*rad, Math.sin(ang)*rad);
-      }
-      cx.closePath(); cx.fill();
-      cx.strokeStyle = '#22252c'; cx.lineWidth = 2; cx.stroke();
-      cx.restore();
+  // Floating Asteroids (Side View)
+  for (const a of asteroids) {
+    cx.save(); cx.translate(a.x, a.y); cx.rotate(a.rot);
+    const ag = cx.createRadialGradient(-a.r * 0.3, -a.r * 0.3, 2, 0, 0, a.r);
+    ag.addColorStop(0, '#667080'); ag.addColorStop(0.5, '#333842'); ag.addColorStop(1, '#111317');
+    cx.fillStyle = ag;
+    cx.beginPath();
+    for (let k = 0; k < 8; k++) {
+      const ang = (k / 8) * Math.PI * 2;
+      const rad = a.r * (0.8 + ((k % 3) * 0.12));
+      if (k === 0) cx.moveTo(Math.cos(ang)*rad, Math.sin(ang)*rad);
+      else cx.lineTo(Math.cos(ang)*rad, Math.sin(ang)*rad);
     }
+    cx.closePath(); cx.fill();
+    cx.strokeStyle = '#22252c'; cx.lineWidth = 2; cx.stroke();
+    cx.restore();
   }
 
   // Warp Speed Stardust Streaks
@@ -1663,15 +1678,8 @@ function draw() {
     }
   }
 
-  // Camera Shake
-  const _sx = shake ? (Math.random() - 0.5) * shake : 0;
-  const _sy = shake ? (Math.random() - 0.5) * shake : 0;
-  cx.save(); cx.translate(_sx, _sy);
-
-  // 10. REALISTIC PIRATE SHIP (SPACE SOLAR GALLEON)
-  if (isIntroForward) {
-    drawGalleonForward(cx, W * 0.5, H * 0.65 + Math.sin(introT * 2) * 8, 1.25);
-  } else if (state === 'intro' || state === 'play' || state === 'pause') {
+  // 10. REALISTIC PIRATE SHIP (SPACE SOLAR GALLEON SIDE PROFILE)
+  if (state === 'intro' || state === 'play' || state === 'pause') {
     cx.save();
     cx.translate(ship.x, ship.y);
     cx.rotate(ship.pitch);
@@ -1859,27 +1867,30 @@ function draw() {
     // 12. Tactical Laser Sight & Precision Aim Reticle
     const startX = ship.x + 36 + Math.cos(ship.aimAngle || 0) * 22;
     const startY = ship.y + 18 + Math.sin(ship.aimAngle || 0) * 22;
+    const startScreenX = (startX - W * 0.5) * 1.24 + W * 0.5;
+    const startScreenY = (startY - H * 0.5) * 1.24 + H * 0.5;
     
+    const wm = getWorldMouse();
     let locked = false;
-    if (boss && Math.hypot(mouse.x - boss.x, mouse.y - boss.y) < boss.w * 0.55) locked = true;
+    if (boss && Math.hypot(wm.x - boss.x, wm.y - boss.y) < boss.w * 0.55) locked = true;
     if (!locked) {
       for (const f of forts) {
-        if (Math.hypot(mouse.x - f.x, mouse.y - f.y) < f.w * 0.5) { locked = true; break; }
+        if (Math.hypot(wm.x - f.x, wm.y - f.y) < f.w * 0.5) { locked = true; break; }
       }
     }
     if (!locked) {
       for (const g of gliders) {
-        if (Math.hypot(mouse.x - g.x, mouse.y - g.y) < 32) { locked = true; break; }
+        if (Math.hypot(wm.x - g.x, wm.y - g.y) < 32) { locked = true; break; }
       }
     }
 
     // Laser Trajectory Guide Line
     cx.save();
-    cx.strokeStyle = locked ? 'rgba(255, 60, 80, 0.5)' : 'rgba(255, 210, 60, 0.35)';
-    cx.lineWidth = 1.5;
-    cx.setLineDash([5, 5]);
+    cx.strokeStyle = locked ? 'rgba(255, 60, 80, 0.55)' : 'rgba(255, 210, 60, 0.4)';
+    cx.lineWidth = 2;
+    cx.setLineDash([6, 6]);
     cx.beginPath();
-    cx.moveTo(startX, startY);
+    cx.moveTo(startScreenX, startScreenY);
     cx.lineTo(mouse.x, mouse.y);
     cx.stroke();
     cx.setLineDash([]);
