@@ -1,0 +1,13 @@
+﻿{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/Leon", "destination": "/leon/index.html" },
+    { "source": "/Leon/(.*)", "destination": "/leon/" },
+    { "source": "/Noel", "destination": "/noel/index.html" },
+    { "source": "/Noel/(.*)", "destination": "/noel/" },
+    { "source": "/Louis", "destination": "/louis/index.html" },
+    { "source": "/Louis/(.*)", "destination": "/louis/" },
+    { "source": "/Papa", "destination": "/papa/index.html" },
+    { "source": "/Papa/(.*)", "destination": "/papa/" }
+  ]
+}
