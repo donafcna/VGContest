@@ -1,13 +1,13 @@
-﻿{
+{
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/Leon", "destination": "/leon/index.html" },
-    { "source": "/Leon/(.*)", "destination": "/leon/" },
-    { "source": "/Noel", "destination": "/noel/index.html" },
-    { "source": "/Noel/(.*)", "destination": "/noel/" },
-    { "source": "/Louis", "destination": "/louis/index.html" },
-    { "source": "/Louis/(.*)", "destination": "/louis/" },
-    { "source": "/Papa", "destination": "/papa/index.html" },
-    { "source": "/Papa/(.*)", "destination": "/papa/" }
+    { "source": "/Leon/(.*)", "destination": "/leon/$1" },
+    { "source": "/Leon", "destination": "/leon" },
+    { "source": "/Noel/(.*)", "destination": "/noel/$1" },
+    { "source": "/Noel", "destination": "/noel" },
+    { "source": "/Louis/(.*)", "destination": "/louis/$1" },
+    { "source": "/Louis", "destination": "/louis" },
+    { "source": "/Papa/(.*)", "destination": "/papa/$1" },
+    { "source": "/Papa", "destination": "/papa" }
   ]
 }
