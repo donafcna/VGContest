@@ -236,19 +236,19 @@ function getCameraTransform() {
     } else if (introT < 2.4) {
       // Smoothly zoom in tightly on the cannons and UFOs
       const p = (introT - 1.9) / 0.5;
-      zoom = 1.25 + p * (2.25 - 1.25);
-      camX = (W * 0.5) + p * (W * 0.44 - W * 0.5);
+      zoom = 1.25 + p * (2.95 - 1.25);
+      camX = (W * 0.5) + p * (W * 0.43 - W * 0.5);
       camY = H * 0.5;
     } else if (introT < 5.2) {
-      // Act 2: TIGHT ACTION-CAM ZOOM (Only cannons, space, and exploding UFOs visible!)
-      zoom = 2.25;
-      camX = W * 0.44;
+      // Act 2: ULTRA-CLOSE ACTION-CAM ZOOM (Intense close-up on cannons, space, and exploding UFOs!)
+      zoom = 2.95;
+      camX = W * 0.43;
       camY = H * 0.5;
     } else if (introT < 7.6) {
       // Act 3: Smoothly zoom back out to reveal full galleon and incoming armada!
       const p = (introT - 5.2) / 2.4;
-      zoom = 2.25 - p * (2.25 - 1.25);
-      camX = (W * 0.44) - p * (W * 0.44 - W * 0.5);
+      zoom = 2.95 - p * (2.95 - 1.25);
+      camX = (W * 0.43) - p * (W * 0.43 - W * 0.5);
       camY = H * 0.5;
     } else {
       // Act 4: Standard combat battle zoom
