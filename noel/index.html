@@ -1248,22 +1248,30 @@ function update(dt) {
         // Calculate angle from secondary cannon to second UFO
         const aim2 = Math.atan2(introUfos[1].y - cannon2Y, introUfos[1].x - cannon2X);
 
-        // Cannonball 1 (Top Swivel Cannon -> UFO 1)
+        // Cannonball 1 (Top Swivel Cannon -> UFO 1 Acrobatic Corkscrew Loop)
         balls.push({
+          sx: cannon1X, sy: cannon1Y,
+          tx: introUfos[0] ? introUfos[0].x : W * 0.58,
+          ty: introUfos[0] ? introUfos[0].y : H * 0.38,
           x: cannon1X, y: cannon1Y,
-          vx: Math.cos(ship.aimAngle) * 980,
-          vy: Math.sin(ship.aimAngle) * 980,
-          r: 12,
-          isIntro: 1
+          r: 13,
+          isIntro: 1,
+          flightT: 0,
+          flightDur: 0.95,
+          loopDir: 1
         });
 
-        // Cannonball 2 (Lower Broadside Port -> UFO 2)
+        // Cannonball 2 (Lower Broadside Port -> UFO 2 Inverted Corkscrew Loop)
         balls.push({
+          sx: cannon2X, sy: cannon2Y,
+          tx: introUfos[1] ? introUfos[1].x : W * 0.64,
+          ty: introUfos[1] ? introUfos[1].y : H * 0.62,
           x: cannon2X, y: cannon2Y,
-          vx: Math.cos(aim2) * 980,
-          vy: Math.sin(aim2) * 980,
-          r: 12,
-          isIntro: 2
+          r: 13,
+          isIntro: 2,
+          flightT: 0,
+          flightDur: 0.95,
+          loopDir: -1
         });
       }
     }
@@ -1271,25 +1279,57 @@ function update(dt) {
     // Projectile physics and simultaneous impact detection during intro
     for (let i = balls.length - 1; i >= 0; i--) {
       const b = balls[i];
-      b.x += b.vx * dt;
-      b.y += b.vy * dt;
+      if (b.isIntro) {
+        b.flightT += dt;
+        const p = Math.min(1, b.flightT / (b.flightDur || 0.95));
+        
+        // Dynamic target tracking
+        const targetUfo = (b.isIntro === 1) ? introUfos[0] : introUfos[1];
+        if (targetUfo) { b.tx = targetUfo.x; b.ty = targetUfo.y; }
 
-      if (b.isIntro === 1 && introUfos[0] && !introUfos[0].dead && Math.hypot(b.x - introUfos[0].x, b.y - introUfos[0].y) < 42) {
-        introUfos[0].dead = true;
-        explode(introUfos[0].x, introUfos[0].y, introUfos[0].col, 50);
-        sfx('boom');
-        addShake(22);
-        coins.push({ x: introUfos[0].x, y: introUfos[0].y, vx: -90, vy: -35 });
-        balls.splice(i, 1);
-      } else if (b.isIntro === 2 && introUfos[1] && !introUfos[1].dead && Math.hypot(b.x - introUfos[1].x, b.y - introUfos[1].y) < 42) {
-        introUfos[1].dead = true;
-        explode(introUfos[1].x, introUfos[1].y, introUfos[1].col, 50);
-        sfx('boom');
-        addShake(22);
-        coins.push({ x: introUfos[1].x, y: introUfos[1].y, vx: -90, vy: 35 });
-        balls.splice(i, 1);
-      } else if (b.x > W + 80) {
-        balls.splice(i, 1);
+        const baseX = b.sx + (b.tx - b.sx) * p;
+        const baseY = b.sy + (b.ty - b.sy) * p;
+
+        // Acrobatic Corkscrew Loop (Smooth envelope starting at 0, doing a 360° loop, and homing into UFO!)
+        const env = Math.sin(p * Math.PI);
+        const loopAngle = p * Math.PI * 3.6 * (b.loopDir || 1);
+        const loopR = 78 * env;
+
+        b.x = baseX + Math.sin(loopAngle) * loopR * 0.5;
+        b.y = baseY - Math.cos(loopAngle) * loopR;
+
+        // Trailing rocket fire sparks & plasma smoke
+        parts.push({
+          type: 'spark',
+          x: b.x, y: b.y,
+          vx: (Math.random() - 0.5) * 35 - 50,
+          vy: (Math.random() - 0.5) * 35,
+          life: 0.35, maxLife: 0.35,
+          col: Math.random() < 0.6 ? '#ffd23c' : '#ff4400',
+          size: 3.5 + Math.random() * 3
+        });
+
+        // Simultaneous Double Detonation on impact
+        if (p >= 1.0) {
+          if (b.isIntro === 1 && introUfos[0] && !introUfos[0].dead) {
+            introUfos[0].dead = true;
+            explode(introUfos[0].x, introUfos[0].y, introUfos[0].col, 55);
+            sfx('boom');
+            addShake(24);
+            coins.push({ x: introUfos[0].x, y: introUfos[0].y, vx: -90, vy: -35 });
+          } else if (b.isIntro === 2 && introUfos[1] && !introUfos[1].dead) {
+            introUfos[1].dead = true;
+            explode(introUfos[1].x, introUfos[1].y, introUfos[1].col, 55);
+            sfx('boom');
+            addShake(24);
+            coins.push({ x: introUfos[1].x, y: introUfos[1].y, vx: -90, vy: 35 });
+          }
+          balls.splice(i, 1);
+        }
+      } else {
+        b.x += b.vx * dt;
+        b.y += b.vy * dt;
+        if (b.x > W + 80) balls.splice(i, 1);
       }
     }
 
@@ -2422,14 +2462,14 @@ function draw() {
       cx.fillStyle = '#ffffff';
       cx.fillText('"The Solar Pirate Galleon glides into the deep Orion Abyss... Two hostile alien scouts detected!"', W / 2, H - barH + 62);
     } else if (introT < 3.8) {
-      // Stage 2: Action-Cam Cannon Zoom & Simultaneous Broadside
+      // Stage 2: Action-Cam Cannon Zoom & Acrobatic Looping Broadside
       cx.font = 'bold 14px "Orbitron", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('⚔️ ACTION-CAM LOCK: SIMULTANEOUS DUAL BROADSIDE SALVO!', W / 2, H - barH + 34);
+      cx.fillText('⚔️ ACTION-CAM LOCK: ACROBATIC LOOPING BROADSIDE SALVO!', W / 2, H - barH + 34);
 
       cx.font = '16px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('"Targeting both advancing UFO scouts... FIRING MAIN SWIVEL & BROADSIDE CANNONS!"', W / 2, H - barH + 62);
+      cx.fillText('"Firing twin corkscrew cannonballs... Looping acrobatically through the cosmic void!"', W / 2, H - barH + 62);
     } else if (introT < 5.5) {
       // Stage 3: Simultaneous Dual Explosions
       cx.font = 'bold 15px "Orbitron", sans-serif';
