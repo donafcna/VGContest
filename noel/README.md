@@ -1,27 +1,23 @@
-# ☁️🏴‍☠️ Sky Pirates
+# 🚀🏴‍☠️ Space Pirates
 
-Noel's game for the family contest! (vgcontest.vercel.app)
-Survive the endless skies, blast fortresses, grab gold, defeat bosses, and climb the leaderboard! ⚓
+Noel's game for the family video game contest! (vgcontest.vercel.app)
+Command your authentic wooden Solar Pirate Galleon through deep space, blast Star Wars-style alien UFO squadrons & colossal Death Saucers, loot gold dubloons & alien plasma cores, and climb the galaxy leaderboard! ⚓🌌
 
 ## How to play
-- **Move**: ZQSD / WASD / Arrow keys
-- **Aim & Shoot**: Aim with mouse, hold left-click to fire cannons 💥
-- **Mobile / Touch**: Touch and hold to steer; the ship aims and fires automatically!
-- **Hangar 🛠️**: Spend gold coins 🪙 on ship upgrades and tokens 🎟️ to buy new ships!
-- **Lucky Spin 🎰**: Bosses drop spins with chances for coin & token jackpots!
-- **Skins 🎨**: Unlock custom balloon skins as you defeat more enemies!
-- **Leaderboard 🏆**: Online worldwide ranking with Supabase!
+- **Move**: WASD / Arrow keys or Mouse
+- **Cannons**: Left-Click or Space to fire heavy broadsides 💥
+- **Mobile / Touch**: Touch and drag to steer; the galleon auto-targets and fires!
+- **Hangar 🛠️**: Upgrade your wooden hull, 32-pounder cannons, solar sails, and salvage hook!
+- **Treasure Chest 🎰**: Bosses drop chests with chances for coin & plasma core jackpots!
+- **Galleon Skins 🎨**: Unlock custom cosmic hull and sail paints with confirmed UFO kills!
+- **Leaderboard 🏆**: Online worldwide galaxy ranking!
 
-## Ships available in Hangar
-- 🎈 **Crimson Cutter**: Balanced all-rounder (starter)
-- 🛡️ **Iron Galleon**: +2 Hull (Tanky, slower)
-- ⚡ **Sky Runner**: Fast hull + rapid fire
-- 🪙 **Golden Hind**: +60% gold & strong loot magnet
-- 🔱 **Storm Bringer**: Twin cannons
+## Ships in Hangar
+- ⛵ **Solar Corsair**: Balanced all-rounder (starter)
+- 🛡️ **Armoured Galleon**: +2 Hull (Tanky, reinforced oak)
+- ⚡ **Astral Sloop**: Ultra-fast solar sails + rapid fire
+- 🪙 **Golden Hind**: +60% Gold & powerful salvage hook
+- 🔱 **Solar Dreadnought**: Twin heavy broadside battery
 
-## To test the game
-Open a terminal and run:
-```bash
-python -m http.server 8642 --directory C:\Users\donat\Desktop\vgcontest
-```
-then go to http://localhost:8642/noel/
+## Test the game locally
+Open [http://localhost:8642/noel/](http://localhost:8642/noel/)
