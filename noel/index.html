@@ -1863,28 +1863,33 @@ function draw() {
     cx.beginPath(); cx.arc(s.x, s.y, s.size, 0, Math.PI * 2); cx.fill();
   }
 
-  // Side-View Hyperspace Rift Vortex on the Right Horizon (Scene 3 Red Alert)
-  if (state === 'intro' && introT >= 5.0) {
-    cx.save();
-    cx.translate(W * 0.85, H * 0.5);
-    const riftR = Math.min(170, (introT - 5.0) * 80);
-    const rg = cx.createRadialGradient(0, 0, 10, 0, 0, riftR);
-    rg.addColorStop(0, '#ff0055');
-    rg.addColorStop(0.4, '#7928ca');
-    rg.addColorStop(0.8, '#00ff66');
-    rg.addColorStop(1, 'rgba(0,0,0,0)');
-    cx.fillStyle = rg;
-    cx.beginPath(); cx.ellipse(0, 0, riftR * 0.6, riftR * 1.3, 0, 0, Math.PI * 2); cx.fill();
+  // Incoming Alien UFO Fleet Advancing from Deep Space (Stage 4 Red Alert)
+  if (state === 'intro' && introT >= 5.2) {
+    const fleetProgress = Math.min(1, (introT - 5.2) / 2.4);
+    const fleetBaseX = W * 1.15 - fleetProgress * (W * 0.38);
+    
+    // Draw 3 distant heavy battle-cruiser silhouettes advancing in formation
+    for (const [offX, offY, size, col] of [[0, -70, 0.75, '#ff3366'], [40, 20, 0.9, '#00ff66'], [15, 90, 0.7, '#00e5ff']]) {
+      cx.save();
+      cx.translate(fleetBaseX + offX, H * 0.5 + offY);
+      
+      // Distant saucer forcefield aura
+      const sg = cx.createRadialGradient(0, 0, 5, 0, 0, 45 * size);
+      sg.addColorStop(0, col + '99'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = sg;
+      cx.beginPath(); cx.ellipse(0, 0, 45 * size, 26 * size, 0, 0, Math.PI * 2); cx.fill();
 
-    // Swirling energy lightning rings
-    cx.rotate(t * 8);
-    cx.strokeStyle = '#00ff66';
-    cx.lineWidth = 3.5;
-    for (let k = 0; k < 4; k++) {
-      cx.rotate(Math.PI * 0.5);
-      cx.beginPath(); cx.ellipse(0, 0, riftR * 0.5, riftR * 1.1, 0, 0, Math.PI * 0.4); cx.stroke();
+      // Advancing Saucer Hull
+      cx.fillStyle = '#222834';
+      cx.beginPath(); cx.ellipse(0, 0, 42 * size, 18 * size, 0, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = col; cx.lineWidth = 2; cx.stroke();
+
+      // Cockpit Glow
+      cx.fillStyle = col;
+      cx.beginPath(); cx.arc(0, -4 * size, 6 * size, 0, Math.PI * 2); cx.fill();
+
+      cx.restore();
     }
-    cx.restore();
   }
 
   // Floating Asteroids (Side View)
@@ -2480,15 +2485,15 @@ function draw() {
       cx.fillStyle = '#ffffff';
       cx.fillText('"Dual catastrophic alien reactor explosions confirmed! Salvaging dubloons..."', W / 2, H - barH + 62);
     } else {
-      // Stage 4: Massive Armada Hyperspace Rupture
+      // Stage 4: Massive Alien Armada Inbound
       const flash = Math.sin(introT * 18) > 0;
       cx.font = 'bold 15px "Orbitron", sans-serif';
       cx.fillStyle = flash ? '#ff0055' : '#ffffff';
-      cx.fillText('🚨 RED ALERT: MASSIVE ALIEN UFO ARMADA INBOUND!', W / 2, H - barH + 34);
+      cx.fillText('🚨 RED ALERT: MASSIVE ALIEN UFO ARMADA ADVANCING!', W / 2, H - barH + 34);
 
       cx.font = 'bold 16px "Outfit", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('"MORE ENEMY UFO BATTLE-CRUISERS DROPPING OUT OF HYPERSPACE! ALL HANDS TO BATTLE STATIONS!"', W / 2, H - barH + 62);
+      cx.fillText('"ENEMY UFO BATTLE-CRUISERS CLOSING IN RAPIDLY! ALL HANDS TO BATTLE STATIONS! MAN THE CANNONS!"', W / 2, H - barH + 62);
     }
 
     // Skip Button Indicator
