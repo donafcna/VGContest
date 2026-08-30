@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>🏆 VGContest — Le Grand Concours de Jeux Vidéo de la Famille</title>
+  <title>🏆 VGContest — Family Video Game Championship</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -43,7 +43,6 @@
       overflow-x: hidden;
     }
 
-    /* Ambient animated background grid */
     .bg-grid {
       position: fixed;
       inset: 0;
@@ -65,7 +64,6 @@
       align-items: center;
     }
 
-    /* Header */
     header {
       text-align: center;
       margin-bottom: 3rem;
@@ -111,7 +109,6 @@
       line-height: 1.5;
     }
 
-    /* Games Grid */
     .games-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -119,7 +116,6 @@
       width: 100%;
     }
 
-    /* Game Card */
     .game-card {
       background: var(--bg-card);
       backdrop-filter: blur(12px);
@@ -161,7 +157,6 @@
       opacity: 1;
     }
 
-    /* Card Specific Colors */
     .card-noel {
       --card-accent: #ff9d42;
       --card-glow: rgba(255, 157, 66, 0.25);
@@ -240,7 +235,6 @@
       flex-grow: 1;
     }
 
-    /* Badges */
     .badges {
       display: flex;
       flex-wrap: wrap;
@@ -257,7 +251,6 @@
       color: #cfd8f5;
     }
 
-    /* Action Button */
     .btn-play {
       display: flex;
       align-items: center;
@@ -282,7 +275,6 @@
       font-weight: 800;
     }
 
-    /* Footer */
     footer {
       margin-top: 4rem;
       text-align: center;
@@ -292,10 +284,6 @@
       flex-direction: column;
       align-items: center;
       gap: 0.5rem;
-    }
-
-    footer .heart {
-      color: #ff5277;
     }
 
     @media (max-width: 600px) {
@@ -314,48 +302,48 @@
 
   <div class="container">
     <header>
-      <div class="trophy-badge">🏆 Concours 2026</div>
+      <div class="trophy-badge">🏆 2026 Contest</div>
       <h1><span class="gold">VGContest</span></h1>
-      <p class="subtitle">Le Grand Concours de Jeux Vidéo de la Famille — Gameplay, Design &amp; Créativité !</p>
+      <p class="subtitle">The Great Family Video Game Championship — Gameplay, Design &amp; Creativity!</p>
     </header>
 
     <main class="games-grid">
-      <!-- Noël -->
+      <!-- Noel -->
       <a class="game-card card-noel" href="noel/">
         <div class="card-top">
           <div class="avatar-wrap">☁️🏴‍☠️</div>
-          <span class="genre-tag">Shmup Aérien</span>
+          <span class="genre-tag">3D Aerial Shmup</span>
         </div>
-        <div class="author-name">Noël</div>
-        <div class="game-title">Sky Pirates</div>
-        <p class="game-desc">Prends la barre de ton dirigeable pirate, affronte des forteresses volantes, améliore ton navire au hangar et défie les boss légendaires !</p>
+        <div class="author-name">Noel</div>
+        <div class="game-title">Sky Pirates 3D</div>
+        <p class="game-desc">Take the helm of your pirate airship in realistic 3D forward flight! Blast flying fortresses, upgrade your ship in the hangar, and defeat legendary bosses!</p>
         <div class="badges">
           <span class="badge">🛠️ Hangar</span>
-          <span class="badge">🎰 Roulette</span>
+          <span class="badge">🎰 Lucky Wheel</span>
           <span class="badge">🏆 Leaderboard</span>
         </div>
         <div class="btn-play">
-          <span>Jouer</span>
+          <span>Play</span>
           <span>▶</span>
         </div>
       </a>
 
-      <!-- Léon -->
+      <!-- Leon -->
       <a class="game-card card-leon" href="leon/">
         <div class="card-top">
           <div class="avatar-wrap">🕹️🔦</div>
           <span class="genre-tag">Dungeon Crawler</span>
         </div>
-        <div class="author-name">Léon</div>
+        <div class="author-name">Leon</div>
         <div class="game-title">The Impossible Maze</div>
-        <p class="game-desc">Échappe-toi de gigantesques labyrinthes dans le noir avec ta torche. Arme-toi de fusils, combats les soldats et adopte un animal de combat !</p>
+        <p class="game-desc">Escape giant dark labyrinths with only your torchlight! Equip shotguns &amp; laser rifles, dodge traps, adopt battle pets, and fight soldiers!</p>
         <div class="badges">
-          <span class="badge">🔫 4 Armes</span>
-          <span class="badge">🛒 Magasin</span>
-          <span class="badge">🐾 Familiers</span>
+          <span class="badge">🔫 4 Weapons</span>
+          <span class="badge">🛒 Shop</span>
+          <span class="badge">🐾 Battle Pets</span>
         </div>
         <div class="btn-play">
-          <span>Jouer</span>
+          <span>Play</span>
           <span>▶</span>
         </div>
       </a>
@@ -364,18 +352,18 @@
       <a class="game-card card-louis" href="louis/">
         <div class="card-top">
           <div class="avatar-wrap">👾🚀</div>
-          <span class="genre-tag">Plateforme Spatiale</span>
+          <span class="genre-tag">Space Platformer</span>
         </div>
         <div class="author-name">Louis</div>
         <div class="game-title">Louis dans l'Espace</div>
-        <p class="game-desc">Pilote ta fusée à travers les étoiles, saute de plateforme en plateforme, esquive la pluie de météorites et élimine les soucoupes volantes !</p>
+        <p class="game-desc">Pilot your rocket through the stars, leap between platforms, dodge meteor showers, and blast flying saucers!</p>
         <div class="badges">
           <span class="badge">💥 Lasers</span>
-          <span class="badge">🛸 Soucoupes</span>
-          <span class="badge">🚩 Niveaux</span>
+          <span class="badge">🛸 Flying Saucers</span>
+          <span class="badge">🚩 Levels</span>
         </div>
         <div class="btn-play">
-          <span>Jouer</span>
+          <span>Play</span>
           <span>▶</span>
         </div>
       </a>
@@ -384,25 +372,25 @@
       <a class="game-card card-papa" href="papa/">
         <div class="card-top">
           <div class="avatar-wrap">🚀⚡</div>
-          <span class="genre-tag">En préparation</span>
+          <span class="genre-tag">In Development</span>
         </div>
         <div class="author-name">Papa</div>
-        <div class="game-title">Projet Secret</div>
-        <p class="game-desc">Le prototype ultra-secret du challenger Papa est en cours d'assemblage dans le laboratoire... Restez à l'affût !</p>
+        <div class="game-title">Secret Project</div>
+        <p class="game-desc">The top-secret challenger prototype from Papa is being crafted in the laboratory... Stay tuned!</p>
         <div class="badges">
-          <span class="badge">⏳ Bientôt</span>
-          <span class="badge">🔥 Classifié</span>
+          <span class="badge">⏳ Coming Soon</span>
+          <span class="badge">🔥 Classified</span>
         </div>
         <div class="btn-play">
-          <span>Voir l'aperçu</span>
+          <span>Preview</span>
           <span>🔍</span>
         </div>
       </a>
     </main>
 
     <footer>
-      <p>🎲 Que le meilleur game designer gagne ! 🏆</p>
-      <p style="opacity: 0.6; font-size: 0.85rem;">Fait avec passion pour le VGContest</p>
+      <p>🎲 May the best game designer win! 🏆</p>
+      <p style="opacity: 0.6; font-size: 0.85rem;">Crafted with passion for the VGContest</p>
     </footer>
   </div>
 </body>

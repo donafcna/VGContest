@@ -119,60 +119,60 @@
 <canvas id="cv"></canvas>
 <button id="musicbtn">🔊</button>
 <button id="pausebtn">⏸</button>
-<div id="touchHint" style="display:none;">🎯 Glisse pour piloter &amp; viser en 3D</div>
+<div id="touchHint" style="display:none;">🎯 Drag to steer &amp; aim in 3D</div>
 
 <div id="pauseoverlay" class="overlay hidden">
   <h1>⏸ PAUSE</h1>
-  <p>Respire un coup, capitaine…</p>
+  <p>Catch your breath, captain…</p>
   <div class="btnrow">
-    <button id="resumebtn">▶ REPRENDRE</button>
-    <button onclick="location.reload()">↻ RECOMMENCER</button>
+    <button id="resumebtn">▶ RESUME</button>
+    <button onclick="location.reload()">↻ RESTART</button>
   </div>
-  <a class="exitlink" href="../">🚪 MENU PRINCIPAL — VG Contest</a>
+  <a class="exitlink" href="../">🚪 MAIN MENU — VG Contest</a>
 </div>
 
 <div id="menu" class="overlay">
   <h1>☁️🏴‍☠️ SKY PIRATES 3D</h1>
-  <p>Capitaine Noël ! Prends la barre de ton navire en <b>vue 3D réaliste</b>.<br>
-  Pilote à travers les nuages, vise avec précision et anéantis les flottes ennemies et <b style="color:#ffd23c">boss colossaux</b> !</p>
+  <p>Captain Noel! Take the helm of your airship in <b>realistic 3D forward flight</b>.<br>
+  Soar through the clouds, aim with precision, and blast enemy fleets &amp; <b style="color:#ffd23c">colossal bosses</b>!</p>
   <div class="keys">
-    🎮 <b>Pilotage</b> : <b>Z Q S D</b> / <b>W A S D</b> / <b>Flèches</b> ou <b>Souris</b> (Roulis &amp; Tangage dynamiques)<br>
-    🎯 <b>Canons</b> : Vise avec le réticule, <b>CLIC GAUCHE</b> ou <b>ESPACE</b> = Salve de canons 💥<br>
-    📱 <b>Mobile</b> : Glisse ton doigt pour voler &amp; verrouiller les cibles automatiquement !
+    🎮 <b>Flight</b>: <b>W A S D</b> / <b>Arrow Keys</b> or <b>Mouse</b> (Dynamic 3D Roll &amp; Pitch)<br>
+    🎯 <b>Cannons</b>: Aim with reticle, <b>LEFT CLICK</b> or <b>SPACE</b> = Cannon Salvo 💥<br>
+    📱 <b>Mobile</b>: Drag your finger to steer &amp; auto-lock on targets!
   </div>
-  <input id="pname" placeholder="Ton pseudo de pirate" maxlength="14" autocomplete="off">
+  <input id="pname" placeholder="Your pirate name" maxlength="14" autocomplete="off">
   <div class="btnrow">
-    <button id="startbtn">⚓ HAUT LES VOILES !</button>
+    <button id="startbtn">⚓ SET SAIL!</button>
     <button id="hangarbtn" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ HANGAR</button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.08rem; color:#ffd23c; font-weight:bold"></p>
   <p id="bestline" style="margin-top:0.2rem; font-size:1rem; color:#ffd23c; font-weight:bold; min-height:1.2em"></p>
-  <p style="margin-top:0.3rem; font-size:0.85rem; color:#8fa6cb">Un jeu créé par Noël</p>
-  <div class="lb small" id="lbMenu"><h2>🏆 TOP 10 MONDIAL</h2><div class="empty">Chargement…</div></div>
+  <p style="margin-top:0.3rem; font-size:0.85rem; color:#8fa6cb">A game by Noel</p>
+  <div class="lb small" id="lbMenu"><h2>🏆 WORLD TOP 10</h2><div class="empty">Loading…</div></div>
 </div>
 
 <div id="loseoverlay" class="overlay hidden">
-  <h1>💥 VAISSEAU ÉCHOUÉ !</h1>
-  <p id="losetext">Ton dirigeable a été abattu en plein vol…</p>
+  <h1>💥 SHIPWRECKED!</h1>
+  <p id="losetext">Your airship was shot down in the clouds…</p>
   <div class="lb" id="lbLose"></div>
-  <button onclick="location.reload()">↻ RÉESSAYER</button>
-  <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">← Retour au Concours</a></p>
+  <button onclick="location.reload()">↻ TRY AGAIN</button>
+  <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">← Back to Contest</a></p>
 </div>
 
 <div id="winoverlay" class="overlay hidden">
-  <h1>🏴‍☠️ LÉGENDE DES CIEUX !</h1>
-  <p id="wintext">Tu as conquis tous les cieux !</p>
+  <h1>🏴‍☠️ LEGEND OF THE SKIES!</h1>
+  <p id="wintext">You conquered the endless skies!</p>
   <div class="lb" id="lbWin"></div>
-  <button onclick="location.reload()">↻ REJOUER</button>
-  <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">← Retour au Concours</a></p>
+  <button onclick="location.reload()">↻ PLAY AGAIN</button>
+  <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">← Back to Contest</a></p>
 </div>
 
 <div id="shop" class="overlay hidden">
-  <h1>🛠️ HANGAR DE NOËL</h1>
+  <h1>🛠️ NOEL'S HANGAR</h1>
   <p id="shopwallet"></p>
-  <p style="font-size:0.92rem;color:#9fb4d4;margin-bottom:0.6rem;max-width:540px">Récolte des 🪙 sur les navires et des 🎟️ sur les boss. Améliore ton bolide céleste !</p>
+  <p style="font-size:0.92rem;color:#9fb4d4;margin-bottom:0.6rem;max-width:540px">Loot 🪙 coins from enemy ships and 🎟️ tokens from bosses. Upgrade your sky dreadnought!</p>
   <div id="shopBody"></div>
-  <button id="shopclose" style="margin-top:1.3rem">⬅ RETOUR AU MENU</button>
+  <button id="shopclose" style="margin-top:1.3rem">⬅ BACK TO MENU</button>
 </div>
 
 <script>
@@ -218,8 +218,7 @@ const ship = {
   x: 0, y: 110, vx: 0, vy: 0,
   roll: 0, pitch: 0, yaw: 0,
   hp: 5, inv: 0, recoil: 0,
-  propRot: 0, flagWave: 0,
-  speedLines: []
+  propRot: 0, flagWave: 0
 };
 
 // 3D Object Collections
@@ -269,8 +268,7 @@ for (let i = 0; i < 8; i++) {
     y: 60 + Math.random() * 180,
     z: 1800 + Math.random() * 1400,
     s: 1.4 + Math.random() * 1.8,
-    speed: 90,
-    seed: Math.random()
+    speed: 90
   });
 }
 
@@ -484,28 +482,28 @@ const SAVE = {
 SAVE.load();
 
 const SHIPS = [
-  { id: 'cutter',  name: 'Crimson Cutter', cost: 0,  cols: ['#ff9d86', '#e64c4c', '#8a1f1f'], hp: 5, cool: 0.28, spd: 1,    gold: 1,   magnet: 0,  spread: [0],           power: 'Polyvalent et agile' },
-  { id: 'galleon', name: 'Iron Galleon',   cost: 5,  cols: ['#dde5ed', '#8a97a4', '#3d464f'], hp: 7, cool: 0.34, spd: 0.9,  gold: 1,   magnet: 0,  spread: [0],           power: '+2 cœurs de coque blindée' },
-  { id: 'runner',  name: 'Sky Runner',     cost: 6,  cols: ['#9effea', '#26c2a4', '#0d6b5c'], hp: 4, cool: 0.18, spd: 1.3,  gold: 1,   magnet: 40, spread: [0],           power: 'Super rapide & cadence mitraille' },
-  { id: 'hind',    name: 'Golden Hind',    cost: 8,  cols: ['#fff0b3', '#f2c14e', '#996f08'], hp: 5, cool: 0.28, spd: 1,    gold: 1.6, magnet: 100, spread: [0],          power: '+60% d\'or & aimant puissant' },
-  { id: 'storm',   name: 'Storm Bringer',  cost: 10, cols: ['#e4c4ff', '#9b59d0', '#4a1b6d'], hp: 5, cool: 0.34, spd: 1.05, gold: 1,   magnet: 0,  spread: [-0.13, 0.13], power: 'Double canons lourds' },
+  { id: 'cutter',  name: 'Crimson Cutter', cost: 0,  cols: ['#ff9d86', '#e64c4c', '#8a1f1f'], hp: 5, cool: 0.28, spd: 1,    gold: 1,   magnet: 0,  spread: [0],           power: 'Agile & balanced all-rounder' },
+  { id: 'galleon', name: 'Iron Galleon',   cost: 5,  cols: ['#dde5ed', '#8a97a4', '#3d464f'], hp: 7, cool: 0.34, spd: 0.9,  gold: 1,   magnet: 0,  spread: [0],           power: '+2 Hull hearts (Armoured tank)' },
+  { id: 'runner',  name: 'Sky Runner',     cost: 6,  cols: ['#9effea', '#26c2a4', '#0d6b5c'], hp: 4, cool: 0.18, spd: 1.3,  gold: 1,   magnet: 40, spread: [0],           power: 'Super fast & rapid-fire cannons' },
+  { id: 'hind',    name: 'Golden Hind',    cost: 8,  cols: ['#fff0b3', '#f2c14e', '#996f08'], hp: 5, cool: 0.28, spd: 1,    gold: 1.6, magnet: 100, spread: [0],          power: '+60% Gold & powerful loot magnet' },
+  { id: 'storm',   name: 'Storm Bringer',  cost: 10, cols: ['#e4c4ff', '#9b59d0', '#4a1b6d'], hp: 5, cool: 0.34, spd: 1.05, gold: 1,   magnet: 0,  spread: [-0.13, 0.13], power: 'Twin heavy broadside cannons' },
 ];
 
 const UPG = {
-  hull:   { name: 'Coque Renforcée', icon: '🛡️', max: 3, cost: l => 40 + l * 50, desc: '+1 cœur de vie max' },
-  cannon: { name: 'Canons Rapides',  icon: '💥', max: 3, cost: l => 50 + l * 60, desc: 'Cadence de tir accélérée' },
-  engine: { name: 'Moteur Turbo',    icon: '⚙️', max: 3, cost: l => 40 + l * 45, desc: 'Vitesse de déplacement 3D' },
-  magnet: { name: 'Aimant à Butin',  icon: '🧲', max: 3, cost: l => 30 + l * 40, desc: 'Rayon d\'attraction des pièces' },
+  hull:   { name: 'Reinforced Hull', icon: '🛡️', max: 3, cost: l => 40 + l * 50, desc: '+1 max heart' },
+  cannon: { name: 'Rapid Cannons',   icon: '💥', max: 3, cost: l => 50 + l * 60, desc: 'Faster fire rate' },
+  engine: { name: 'Turbo Engine',    icon: '⚙️', max: 3, cost: l => 40 + l * 45, desc: '3D flight speed' },
+  magnet: { name: 'Loot Magnet',     icon: '🧲', max: 3, cost: l => 30 + l * 40, desc: 'Coin attraction radius' },
 };
 
 const SKINS = [
-  { id: 'default', name: 'Couleurs du Navire', kills: 0,    cols: null },
-  { id: 'sunset',  name: 'Sunset Blaze 🌅',    kills: 25,   cols: ['#ffd7a8', '#ff8a3c', '#b3410e'] },
-  { id: 'toxic',   name: 'Toxic Green 🧪',     kills: 75,   cols: ['#e0ffb0', '#7ed957', '#2e6b22'] },
-  { id: 'ocean',   name: 'Deep Ocean 🌊',      kills: 150,  cols: ['#a9e0ff', '#2f9be6', '#0f3c63'] },
-  { id: 'shadow',  name: 'Shadow Fleet 🌑',    kills: 300,  cols: ['#9aa0aa', '#3a3f47', '#111316'] },
-  { id: 'royal',   name: 'Royal Purple 👑',    kills: 600,  cols: ['#e6c2ff', '#b06bff', '#53218c'] },
-  { id: 'legend',  name: 'Golden Legend ✨',   kills: 1200, cols: ['#fff2b0', '#ffcf3c', '#946d0a'] },
+  { id: 'default', name: 'Vessel Colours', kills: 0,    cols: null },
+  { id: 'sunset',  name: 'Sunset Blaze 🌅', kills: 25,   cols: ['#ffd7a8', '#ff8a3c', '#b3410e'] },
+  { id: 'toxic',   name: 'Toxic Green 🧪',  kills: 75,   cols: ['#e0ffb0', '#7ed957', '#2e6b22'] },
+  { id: 'ocean',   name: 'Deep Ocean 🌊',   kills: 150,  cols: ['#a9e0ff', '#2f9be6', '#0f3c63'] },
+  { id: 'shadow',  name: 'Shadow Fleet 🌑', kills: 300,  cols: ['#9aa0aa', '#3a3f47', '#111316'] },
+  { id: 'royal',   name: 'Royal Purple 👑', kills: 600,  cols: ['#e6c2ff', '#b06bff', '#53218c'] },
+  { id: 'legend',  name: 'Golden Legend ✨',kills: 1200, cols: ['#fff2b0', '#ffcf3c', '#946d0a'] },
 ];
 
 function skinById(id) { return SKINS.find(k => k.id === id) || SKINS[0]; }
@@ -602,15 +600,15 @@ function esc(s) {
 async function renderLeaderboard(cid, myScore, myName) {
   const el = document.getElementById(cid);
   if (!el) return;
-  const title = (cid === 'lbMenu') ? '🏆 TOP 10 MONDIAL' : '🏆 CLASSEMENT — TOP 10';
+  const title = (cid === 'lbMenu') ? '🏆 WORLD TOP 10' : '🏆 LEADERBOARD — TOP 10';
   const tag = LB.online() ? '' : ' <span style="opacity:.5;font-size:.75em">(local)</span>';
-  el.innerHTML = '<h2>' + title + tag + '</h2><div class="empty">Chargement…</div>';
+  el.innerHTML = '<h2>' + title + tag + '</h2><div class="empty">Loading…</div>';
   let rows = [], myRank = null;
   try { rows = await LB.top(10); } catch (e) {}
   if (myScore >= 0) { try { myRank = await LB.rank(myScore, myName); } catch (e) {} }
   let html = '<h2>' + title + tag + '</h2>';
   if (!rows.length) {
-    html += '<div class="empty">Sois le premier à marquer un score légendaire ! 🏴‍☠️</div>';
+    html += '<div class="empty">Be the first pirate to set a legendary score! 🏴‍☠️</div>';
   } else {
     html += '<ol>';
     rows.forEach((r, i) => {
@@ -620,12 +618,12 @@ async function renderLeaderboard(cid, myScore, myName) {
               '<span class="rk">' + rk + '</span>' +
               '<span class="nm">' + esc(r.name) + '</span>' +
               '<span class="sc">🪙 ' + r.score + '</span>' +
-              '<span class="lv">Vague ' + (r.level || 1) + '</span></li>';
+              '<span class="lv">Wave ' + (r.level || 1) + '</span></li>';
     });
     html += '</ol>';
   }
   if (myScore >= 0 && myRank) {
-    html += '<div class="myrank">⭐ Ton rang : #' + myRank + ' — ' + esc(myName) + ' · 🪙 ' + myScore + '</div>';
+    html += '<div class="myrank">⭐ Your Rank: #' + myRank + ' — ' + esc(myName) + ' · 🪙 ' + myScore + '</div>';
   }
   el.innerHTML = html;
 }
@@ -644,7 +642,7 @@ function spawnFort() {
     r: 62, bob: Math.random() * Math.PI * 2,
     turretRot: 0
   });
-  addAlert('⚠️ NAVIRE ENNEMI EN APPROCHE !', 'incoming');
+  addAlert('⚠️ ENEMY WARSHIP INCOMING!', 'incoming');
 }
 
 function spawnGlider() {
@@ -656,7 +654,7 @@ function spawnGlider() {
     wob: Math.random() * Math.PI * 2,
     r: 32, roll: 0
   });
-  addAlert('⚠️ CHASSEURS EN PIQUÉ !', 'incoming');
+  addAlert('⚠️ GLIDERS DIVING IN!', 'incoming');
 }
 
 function spawnMine() {
@@ -667,7 +665,7 @@ function spawnMine() {
     vz: -(120 + level * 16),
     r: 28, spin: Math.random() * Math.PI * 2
   });
-  addAlert('☠️ MINE CÉLESTE MAGNÉTIQUE !', 'incoming');
+  addAlert('☠️ SKY MINE AHEAD!', 'incoming');
 }
 
 const BTYPES = [
@@ -685,7 +683,7 @@ function spawnBoss() {
     x: 0, y: -70, z: 1300, targetZ: 560,
     atk: b.atk, atkT: 2.4, phase: 0
   };
-  addAlert('☠️ BOSS COLOSSAL : ' + b.name.toUpperCase() + ' !', 'incoming');
+  addAlert('☠️ COLOSSAL BOSS: ' + b.name.toUpperCase() + '!', 'incoming');
 }
 
 // ---------- GAME FLOW ----------
@@ -747,10 +745,10 @@ function lose() {
   const pb = saveBest();
   const bank = bankRun();
   document.getElementById('losetext').textContent =
-    `Abattu à la vague ${level}… Score final : ${score}` +
-    (pb ? '  🏅 NOUVEAU RECORD !' : `  · Meilleur : ${best} 🏅`) +
-    `\nTrésor engrangé : +${bank.coins} 🪙  +${bank.tokens} 🎟️  +${bank.spins} 🎰  +${bank.kills} ☠️` +
-    (bank.unlocked.length ? `\n🎨 Nouveau skin débloqué : ${bank.unlocked.join(', ')} !` : '');
+    `Shot down at Wave ${level}… Final Score: ${score}` +
+    (pb ? '  🏅 NEW BEST RECORD!' : `  · Best: ${best} 🏅`) +
+    `\nHaul banked: +${bank.coins} 🪙  +${bank.tokens} 🎟️  +${bank.spins} 🎰  +${bank.kills} ☠️` +
+    (bank.unlocked.length ? `\n🎨 New skin unlocked: ${bank.unlocked.join(', ')}!` : '');
   document.getElementById('loseoverlay').classList.remove('hidden');
   endGame('lbLose');
 }
@@ -768,42 +766,42 @@ function doSpin() {
   const r = Math.random();
   let msg;
   if (r < 0.42) { const a = 35 + (Math.random() * 8 | 0) * 10; SAVE.data.coins += a; msg = `+${a} 🪙`; }
-  else if (r < 0.67) { const a = 160 + (Math.random() * 11 | 0) * 15; SAVE.data.coins += a; msg = `💰 JACKPOT +${a} 🪙 !`; }
+  else if (r < 0.67) { const a = 160 + (Math.random() * 11 | 0) * 15; SAVE.data.coins += a; msg = `💰 JACKPOT +${a} 🪙!`; }
   else if (r < 0.90) { SAVE.data.tokens += 1; msg = `+1 🎟️`; }
-  else if (r < 0.985) { SAVE.data.tokens += 3; msg = `⭐ +3 🎟️ !`; }
-  else { SAVE.data.tokens += 8; msg = `🎉 MEGA JACKPOT +8 🎟️ !`; }
+  else if (r < 0.985) { SAVE.data.tokens += 3; msg = `⭐ +3 🎟️!`; }
+  else { SAVE.data.tokens += 8; msg = `🎉 MEGA JACKPOT +8 🎟️!`; }
   SAVE.save();
   return msg;
 }
 
 function buildShop() {
   renderWallet();
-  let h = '<h2>🎰 ROULETTE PIRATE — Butin de boss</h2>';
+  let h = '<h2>🎰 LUCKY PIRATE WHEEL — Boss Loot</h2>';
   h += `<div class="shopitem"><div class="ic">🎰</div>` +
-    `<div class="info"><div class="t">Faire tourner la roue</div>` +
-    `<div class="d">Gagne des pièces, jetons… ou le Jackpot !</div>` +
-    `<div class="lv" id="spinResult">Tu possèdes ${SAVE.data.spins} 🎰</div></div>` +
-    `<button data-buy="spin" data-key="1"${SAVE.data.spins > 0 ? '' : ' disabled'}>🎰 TOURNER</button></div>`;
+    `<div class="info"><div class="t">Spin the wheel</div>` +
+    `<div class="d">Win coins, tokens… or a Mega Jackpot!</div>` +
+    `<div class="lv" id="spinResult">You have ${SAVE.data.spins} 🎰</div></div>` +
+    `<button data-buy="spin" data-key="1"${SAVE.data.spins > 0 ? '' : ' disabled'}>🎰 SPIN</button></div>`;
   
-  h += '<h2>⚙️ AMÉLIORATIONS DU NAVIRE — Pièces 🪙</h2>';
+  h += '<h2>⚙️ AIRSHIP UPGRADES — Spend Coins 🪙</h2>';
   for (const key in UPG) {
     const u = UPG[key], lv = SAVE.data.upg[key], maxed = lv >= u.max;
     const cost = maxed ? 0 : u.cost(lv);
     const can = !maxed && SAVE.data.coins >= cost;
     h += `<div class="shopitem"><div class="ic">${u.icon}</div>` +
       `<div class="info"><div class="t">${u.name}</div><div class="d">${u.desc}</div>` +
-      `<div class="lv">Niveau ${lv}/${u.max}</div></div>` +
+      `<div class="lv">Level ${lv}/${u.max}</div></div>` +
       (maxed ? `<span class="maxed">✔ MAX</span>` : `<button data-buy="upg" data-key="${key}"${can ? '' : ' disabled'}>🪙 ${cost}</button>`) +
       `</div>`;
   }
   
-  h += '<h2>🚢 DIRIGEABLES DU HANGAR — Jetons 🎟️</h2>';
+  h += '<h2>🚢 HANGAR AIRSHIPS — Spend Tokens 🎟️</h2>';
   for (const s of SHIPS) {
     const owned = SAVE.data.ships.includes(s.id), sel = SAVE.data.sel === s.id;
     const can = SAVE.data.tokens >= s.cost;
     let btn;
-    if (sel) btn = `<button class="sel" disabled>✔ ÉQUIPÉ</button>`;
-    else if (owned) btn = `<button data-buy="sel" data-key="${s.id}">CHOISIR</button>`;
+    if (sel) btn = `<button class="sel" disabled>✔ EQUIPPED</button>`;
+    else if (owned) btn = `<button data-buy="sel" data-key="${s.id}">SELECT</button>`;
     else btn = `<button class="locked" data-buy="ship" data-key="${s.id}"${can ? '' : ' disabled'}>🎟️ ${s.cost}</button>`;
     h += `<div class="shopitem"><div class="ic" style="filter:drop-shadow(0 0 5px ${s.cols[1]})">🎈</div>` +
       `<div class="info"><div class="t">${s.name}</div><div class="d">${s.power}</div>` +
@@ -811,18 +809,18 @@ function buildShop() {
       btn + `</div>`;
   }
   
-  h += '<h2>🎨 SKINS DE BALLON — Débloqués aux éliminations ☠️</h2>';
+  h += '<h2>🎨 BALLOON SKINS — Unlocked with Lifetime Kills ☠️</h2>';
   for (const k of SKINS) {
     const unlocked = SAVE.data.kills >= k.kills, sel = SAVE.data.skin === k.id;
     const swatch = k.cols ? k.cols[1] : shipById(SAVE.data.sel).cols[1];
     let btn;
-    if (sel) btn = `<button class="sel" disabled>✔ ÉQUIPÉ</button>`;
-    else if (unlocked) btn = `<button data-buy="skin" data-key="${k.id}">CHOISIR</button>`;
+    if (sel) btn = `<button class="sel" disabled>✔ EQUIPPED</button>`;
+    else if (unlocked) btn = `<button data-buy="skin" data-key="${k.id}">SELECT</button>`;
     else btn = `<button class="locked" disabled>☠️ ${k.kills}</button>`;
     h += `<div class="shopitem"><div class="ic" style="filter:drop-shadow(0 0 6px ${swatch})">🎈</div>` +
       `<div class="info"><div class="t">${k.name}</div>` +
-      `<div class="d">${k.id === 'default' ? 'Couleurs d\'origine du vaisseau' : 'Peinture céleste personnalisée'}</div>` +
-      `<div class="lv">${unlocked ? '✔ Débloqué' : 'Nécessite ' + k.kills + ' éliminations'} · Total : ${SAVE.data.kills} ☠️</div></div>` +
+      `<div class="d">${k.id === 'default' ? "Vessel's original paint" : 'Custom celestial paint'}</div>` +
+      `<div class="lv">${unlocked ? '✔ Unlocked' : 'Requires ' + k.kills + ' kills'} · You: ${SAVE.data.kills} ☠️</div></div>` +
       btn + `</div>`;
   }
   document.getElementById('shopBody').innerHTML = h;
@@ -876,7 +874,7 @@ document.getElementById('shopclose').addEventListener('click', () => {
     if (i && n) i.value = n;
     best = +localStorage.getItem('sp_best') || 0;
     const bl = document.getElementById('bestline');
-    if (bl && best > 0) bl.textContent = '🏅 Record : ' + best;
+    if (bl && best > 0) bl.textContent = '🏅 Best: ' + best;
   } catch (e) {}
   renderLeaderboard('lbMenu', -1, null);
   renderWallet();
@@ -936,7 +934,7 @@ function update(dt) {
 
   if (state !== 'play') return;
 
-  // --- Real Flight Dynamics & Aerodynamics ---
+  // --- Flight Dynamics & Aerodynamics ---
   const ACC = 1250 * spdMul, MAX_SPD = 460 * spdMul;
   let ax = 0, ay = 0;
   if (keys['KeyW'] || keys['ArrowUp']) ay -= 1;
@@ -953,7 +951,6 @@ function update(dt) {
     ay = (targetWorldY - ship.y) * 0.016;
   }
 
-  // Smooth realistic inertia curves
   ship.vx += ax * ACC * dt;
   ship.vy += ay * ACC * dt;
   ship.vx *= Math.pow(0.025, dt);
@@ -966,7 +963,7 @@ function update(dt) {
   ship.x = Math.max(-480, Math.min(480, ship.x));
   ship.y = Math.max(-200, Math.min(240, ship.y));
 
-  // Dynamic Camera Lag for realistic flight feel
+  // Dynamic Camera Lag
   camera.lagX += (ship.x * 0.55 - camera.lagX) * Math.min(1, dt * 7);
   camera.lagY += (ship.y * 0.55 - camera.lagY) * Math.min(1, dt * 7);
 
@@ -976,7 +973,7 @@ function update(dt) {
   const targetPitch = (ship.vy / MAX_SPD) * 0.32;
   ship.pitch += (targetPitch - ship.pitch) * Math.min(1, dt * 11);
 
-  // Propeller & Flag Wave Animations
+  // Propeller & Flag Wave
   ship.propRot += dt * 38;
   ship.flagWave += dt * 10;
 
@@ -1003,7 +1000,7 @@ function update(dt) {
     });
   }
 
-  // --- Real Cannon Ballistics Firing into 3D Depth ---
+  // Cannon Firing into 3D Depth
   shootCool -= dt;
   let wantShoot = mouse.down || keys['Space'] || (isTouch && touchOn);
   if (wantShoot && shootCool <= 0) {
@@ -1033,7 +1030,6 @@ function update(dt) {
         r: 11
       });
       
-      // Muzzle smoke flash
       for (let k = 0; k < 4; k++) {
         parts.push({
           x: sx, y: sy, z: 30,
@@ -1090,12 +1086,11 @@ function update(dt) {
     }
   }
 
-  // Update Cannonballs (Flying into Depth)
+  // Update Cannonballs
   for (let i = balls.length - 1; i >= 0; i--) {
     const b = balls[i];
     b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
     
-    // Glowing Tracer Trail
     if (Math.random() < 0.7) {
       parts.push({ x: b.x, y: b.y, z: b.z, vx: (Math.random()-0.5)*15, vy: (Math.random()-0.5)*15, vz: -60, life: 0.28, col: '#ff9d3c', size: 4 });
     }
@@ -1111,7 +1106,7 @@ function update(dt) {
           explode3D(boss.x, boss.y, boss.z, boss.col, 70); sfx('boom'); addShake(18);
           addScore(50, W/2, H*0.35);
           tokensRun += 2; spinsRun += 1;
-          popup(W/2, H*0.3, 'BOSS DÉTRUIT ! +2 🎟️ +1 🎰', '#ffd23c');
+          popup(W/2, H*0.3, 'BOSS DEFEATED! +2 🎟️ +1 🎰', '#ffd23c');
           for (let k = 0; k < 12; k++) coins.push({ x: boss.x + (Math.random()-0.5)*120, y: boss.y, z: boss.z, vx: (Math.random()-0.5)*160, vy: -60, vz: -130 });
           if (Math.random() < 0.75) powerups.push({ x: boss.x, y: boss.y, z: boss.z, type: 'heart', vx: 0, vy: -30, vz: -90 });
           boss = null; bossT = 28 + Math.random() * 8;
@@ -1183,7 +1178,6 @@ function update(dt) {
     f.y += Math.sin(t * 1.5 + f.bob) * 22 * dt;
     f.turretRot = Math.atan2(ship.y - f.y, ship.x - f.x);
     
-    // Smoke when damaged
     if (f.hp < f.maxHp && Math.random() < 0.4) {
       parts.push({ x: f.x + 10, y: f.y, z: f.z, vx: (Math.random()-0.5)*20, vy: -30, vz: f.vz, life: 0.5, col: '#444', size: 8 });
     }
@@ -1287,11 +1281,11 @@ function update(dt) {
         sfx('map');
         const proj = project(ship.x, ship.y, 0);
         if (p.type === 'heart') { ship.hp = Math.min(maxHp, ship.hp + 1); popup(proj.x, proj.y - 75, '+1 ❤️', '#ff6b6b'); }
-        else if (p.type === 'rapid') { rapidT = 7; popup(proj.x, proj.y - 75, 'TIR RAPIDE ! ⚡', '#8fd3ff'); }
-        else if (p.type === 'shield') { shieldT = 6; ship.inv = Math.max(ship.inv, 6); popup(proj.x, proj.y - 75, 'BOUCLIER ! 🛡️', '#7fffd0'); }
-        else if (p.type === 'triple') { tripleT = 8; popup(proj.x, proj.y - 75, 'TRIPLE CANON ! 🔱', '#ffd23c'); }
+        else if (p.type === 'rapid') { rapidT = 7; popup(proj.x, proj.y - 75, 'RAPID FIRE! ⚡', '#8fd3ff'); }
+        else if (p.type === 'shield') { shieldT = 6; ship.inv = Math.max(ship.inv, 6); popup(proj.x, proj.y - 75, 'SHIELD! 🛡️', '#7fffd0'); }
+        else if (p.type === 'triple') { tripleT = 8; popup(proj.x, proj.y - 75, 'TRIPLE CANNONS! 🔱', '#ffd23c'); }
         else if (p.type === 'bomb') {
-          popup(proj.x, proj.y - 75, '💥 BOMBE NUCLÉAIRE !', '#ff8a3c'); addShake(20); sfx('boom');
+          popup(proj.x, proj.y - 75, '💥 MEGA BOMB!', '#ff8a3c'); addShake(20); sfx('boom');
           for (const f of forts) { explode3D(f.x, f.y, f.z, f.col, 28); addScore(10, W/2, H/2); coins.push({ x: f.x, y: f.y, z: f.z }); }
           for (const g of gliders) { explode3D(g.x, g.y, g.z, '#c8d6e5', 16); addScore(5, W/2, H/2); }
           for (const m of mines) explode3D(m.x, m.y, m.z, '#ff7a3c', 20);
@@ -1320,10 +1314,10 @@ function damageShip() {
 }
 
 // -------------------------------------------------------------
-// HYPER-REALISTIC 3D RENDERING PIPELINE
+// 3D RENDERING PIPELINE
 // -------------------------------------------------------------
 function draw() {
-  // 1. Photorealistic Atmosphere Sky & Horizon Gradient
+  // 1. Atmosphere Sky Gradient
   const skyGrad = cx.createLinearGradient(0, 0, 0, H);
   skyGrad.addColorStop(0, '#0a1e38');
   skyGrad.addColorStop(0.32, '#1b4d7e');
@@ -1334,11 +1328,10 @@ function draw() {
   cx.fillStyle = skyGrad;
   cx.fillRect(0, 0, W, H);
 
-  // Volumetric Sun with Sunbeams (Crepuscular Rays)
+  // Volumetric Sun
   const sunX = W * 0.5 - camera.lagX * 0.08;
   const sunY = H * 0.38 - camera.lagY * 0.08;
   
-  // Outer ray flare
   const sunRays = cx.createRadialGradient(sunX, sunY, 20, sunX, sunY, 400);
   sunRays.addColorStop(0, 'rgba(255, 250, 210, 0.95)');
   sunRays.addColorStop(0.18, 'rgba(255, 235, 160, 0.45)');
@@ -1346,16 +1339,14 @@ function draw() {
   sunRays.addColorStop(1, 'rgba(255, 210, 80, 0)');
   cx.fillStyle = sunRays; cx.fillRect(sunX - 450, sunY - 450, 900, 900);
   
-  // Sun disk with intense core
   cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(sunX, sunY, 28, 0, Math.PI * 2); cx.fill();
 
-  // 2. Distant Sky Islands in Horizon Haze
+  // 2. Distant Sky Islands
   for (const f of farIslands) {
     const p = project(f.x, f.y, f.z);
     if (!p.visible) continue;
     cx.save(); cx.translate(p.x, p.y); cx.scale(p.scale * f.s, p.scale * f.s);
     cx.globalAlpha = Math.min(0.55, p.scale * 1.8);
-    // Island body (shaded rock & forest)
     const isGrad = cx.createLinearGradient(0, -40, 0, 60);
     isGrad.addColorStop(0, '#557a55');
     isGrad.addColorStop(0.3, '#3b5e43');
@@ -1368,13 +1359,12 @@ function draw() {
     cx.quadraticCurveTo(40, 70, 0, 75);
     cx.quadraticCurveTo(-45, 65, -90, 10);
     cx.fill();
-    // Waterfall streak
     cx.fillStyle = 'rgba(230, 245, 255, 0.6)';
     cx.fillRect(-8, 5, 4, 60);
     cx.restore();
   }
 
-  // 3. Dense Rolling Sea of Clouds (Ground Plane)
+  // 3. Rolling Sea of Clouds
   for (const s of seaClouds) {
     const p = project(s.x, s.y, s.z);
     if (!p.visible) continue;
@@ -1388,7 +1378,7 @@ function draw() {
     cx.restore();
   }
 
-  // 4. Volumetric Clouds Passing at High Speed
+  // 4. Volumetric Clouds
   for (const c of clouds3D) {
     const p = project(c.x, c.y, c.z);
     if (!p.visible) continue;
@@ -1419,12 +1409,12 @@ function draw() {
     }
   }
 
-  // Screen shake & camera recoil
+  // Screen shake
   const _sx = shake ? (Math.random() - 0.5) * shake : 0;
   const _sy = shake ? (Math.random() - 0.5) * shake : 0;
   cx.save(); cx.translate(_sx, _sy);
 
-  // 5. Render 3D Objects Sorted by Depth (Z-sorting: farthest to closest)
+  // 5. Render 3D Objects Sorted by Depth (Z-sorting)
   const drawList = [];
   if (boss) drawList.push({ type: 'boss', z: boss.z, obj: boss });
   for (const f of forts) drawList.push({ type: 'fort', z: f.z, obj: f });
@@ -1445,28 +1435,23 @@ function draw() {
       if (!p.visible) continue;
       cx.save(); cx.translate(p.x, p.y); cx.scale(p.scale, p.scale);
       
-      // Boss aura
       const glow = cx.createRadialGradient(0, 0, 15, 0, 0, b.r + 65);
       glow.addColorStop(0, b.col + '99'); glow.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = glow; cx.beginPath(); cx.arc(0, 0, b.r + 65, 0, Math.PI * 2); cx.fill();
       
-      // Boss envelope
       const bgr = cx.createRadialGradient(-b.r * 0.35, -b.r * 0.35, 12, 0, 0, b.r);
       bgr.addColorStop(0, '#ffffff'); bgr.addColorStop(0.35, b.col); bgr.addColorStop(1, '#11051c');
       cx.fillStyle = bgr; cx.beginPath(); cx.arc(0, 0, b.r, 0, Math.PI * 2); cx.fill();
       
-      // Armoured Iron Bands & Rivets
       cx.strokeStyle = '#181820'; cx.lineWidth = 6; cx.stroke();
       for (const rx of [-0.55, 0, 0.55]) {
         cx.beginPath(); cx.ellipse(rx * b.r * 0.7, 0, b.r * (0.45 - Math.abs(rx) * 0.25) + 10, b.r, 0, 0, Math.PI * 2); cx.stroke();
       }
       
-      // Dread skull emblem
       cx.fillStyle = '#fff'; cx.beginPath(); cx.arc(0, -6, b.r * 0.38, 0, Math.PI * 2); cx.fill();
       cx.fillStyle = '#111'; cx.font = 'bold ' + (b.r * 0.58) + 'px serif'; cx.textAlign = 'center';
       cx.fillText('☠', 0, b.r * 0.16);
       
-      // Heavy multi-deck battleship hull underneath
       const bgon = cx.createLinearGradient(0, b.r * 0.6, 0, b.r * 1.3);
       bgon.addColorStop(0, '#4a4a55'); bgon.addColorStop(1, '#1a1a20');
       cx.fillStyle = bgon;
@@ -1482,18 +1467,15 @@ function draw() {
       if (!p.visible) continue;
       cx.save(); cx.translate(p.x, p.y); cx.scale(p.scale, p.scale);
       
-      // Fortress Zeppelin Balloon
       const fg = cx.createRadialGradient(-18, -25, 10, 0, -12, f.r);
       fg.addColorStop(0, '#ffffff'); fg.addColorStop(0.35, f.col); fg.addColorStop(1, '#1e141a');
       cx.fillStyle = fg; cx.beginPath(); cx.arc(0, -12, f.r, 0, Math.PI * 2); cx.fill();
       cx.strokeStyle = 'rgba(0,0,0,0.5)'; cx.lineWidth = 3.5; cx.stroke();
       
-      // Gore Seam Ribs
       for (const rx of [-f.r * 0.6, 0, f.r * 0.6]) {
         cx.beginPath(); cx.ellipse(rx * 0.7, -12, Math.abs(rx) * 0.4 + 6, f.r - 2, 0, 0, Math.PI * 2); cx.stroke();
       }
       
-      // Wooden Galleon Hull
       const hg = cx.createLinearGradient(0, f.r * 0.4, 0, f.r * 0.95);
       hg.addColorStop(0, '#9e6231'); hg.addColorStop(1, '#4a2d14');
       cx.fillStyle = hg;
@@ -1502,12 +1484,10 @@ function draw() {
       cx.fill();
       cx.strokeStyle = '#2b1606'; cx.lineWidth = 2.5; cx.stroke();
       
-      // Turret aiming at player
       cx.save(); cx.translate(0, f.r * 0.65); cx.rotate(f.turretRot || 0);
       cx.fillStyle = '#222'; cx.fillRect(-6, -4, 26, 8);
       cx.restore();
       
-      // 3D Health Bar
       const hbW = f.r * 1.2, hbH = 8;
       cx.fillStyle = 'rgba(0,0,0,0.6)'; cx.fillRect(-hbW / 2 - 2, -f.r - 28, hbW + 4, hbH + 4);
       cx.fillStyle = '#ff385c'; cx.fillRect(-hbW / 2, -f.r - 26, hbW, hbH);
@@ -1522,7 +1502,6 @@ function draw() {
       cx.save(); cx.translate(p.x, p.y); cx.scale(p.scale, p.scale);
       cx.rotate(g.roll || 0);
       
-      // Fighter Delta Wing (Realistic shaded metal)
       const wg = cx.createLinearGradient(0, -g.r, 0, g.r);
       wg.addColorStop(0, '#ffffff'); wg.addColorStop(0.4, '#c2d2e2'); wg.addColorStop(1, '#4a5d70');
       cx.fillStyle = wg;
@@ -1535,7 +1514,6 @@ function draw() {
       cx.fill();
       cx.strokeStyle = '#d63031'; cx.lineWidth = 3.5; cx.stroke();
       
-      // Cockpit canopy glow
       cx.fillStyle = '#ff7675';
       cx.beginPath(); cx.arc(0, -g.r * 0.2, 5, 0, Math.PI * 2); cx.fill();
       
@@ -1548,19 +1526,16 @@ function draw() {
       cx.save(); cx.translate(p.x, p.y); cx.scale(p.scale, p.scale);
       cx.rotate(m.spin);
       
-      // Spikes
       cx.strokeStyle = '#1a1d24'; cx.lineWidth = 4.5;
       for (let k = 0; k < 8; k++) {
         const a = k / 8 * Math.PI * 2;
         cx.beginPath(); cx.moveTo(Math.cos(a)*m.r, Math.sin(a)*m.r);
         cx.lineTo(Math.cos(a)*(m.r + 12), Math.sin(a)*(m.r + 12)); cx.stroke();
       }
-      // Sphere with iron metallic shading
       const mgr = cx.createRadialGradient(-5, -5, 2, 0, 0, m.r);
       mgr.addColorStop(0, '#8c95a6'); mgr.addColorStop(0.5, '#373c47'); mgr.addColorStop(1, '#111317');
       cx.fillStyle = mgr; cx.beginPath(); cx.arc(0, 0, m.r, 0, Math.PI * 2); cx.fill();
       
-      // Blinking warning core
       cx.fillStyle = `rgba(255,${(100 + Math.sin(t * 12) * 90) | 0},30,1)`;
       cx.beginPath(); cx.arc(0, 0, 6, 0, Math.PI * 2); cx.fill();
       
@@ -1604,7 +1579,6 @@ function draw() {
       if (!p.visible) continue;
       cx.save(); cx.translate(p.x, p.y); cx.scale(p.scale, p.scale);
       
-      // Fiery cannonball with burning core
       const bg = cx.createRadialGradient(-3, -3, 1, 0, 0, b.r);
       bg.addColorStop(0, '#ffffff');
       bg.addColorStop(0.35, '#ffe552');
@@ -1619,7 +1593,6 @@ function draw() {
       if (!p.visible) continue;
       cx.save(); cx.translate(p.x, p.y); cx.scale(p.scale, p.scale);
       
-      // Enemy plasma cannonball (Danger Red Glow)
       cx.fillStyle = `rgba(255, 40, 40, ${0.75 + Math.sin(t * 14) * 0.25})`;
       cx.beginPath(); cx.arc(0, 0, eb.r + 8, 0, Math.PI * 2); cx.fill();
       
@@ -1645,7 +1618,7 @@ function draw() {
     }
   }
 
-  // 6. Draw Player Airship in Photorealistic Rear 3D View
+  // 6. Draw Player Airship
   if (state === 'play' || state === 'pause') {
     const pShip = project(ship.x, ship.y, 0);
     cx.save();
@@ -1654,7 +1627,7 @@ function draw() {
 
     if (ship.inv > 0 && Math.floor(t * 14) % 2 === 0) cx.globalAlpha = 0.4;
 
-    // Steam Thrusters with Twin Engine Exhaust (Left & Right)
+    // Steam Thrusters with Twin Engine Exhaust
     for (const ex of [-28, 28]) {
       cx.fillStyle = 'rgba(240, 245, 255, 0.55)';
       cx.beginPath();
@@ -1663,7 +1636,7 @@ function draw() {
       cx.fill();
     }
 
-    // Balloon Shadow & Volume (3D Ellipsoid View from Behind)
+    // Balloon Shadow & Volume
     const bGrad = cx.createRadialGradient(-18, -48, 12, 0, -36, 75);
     bGrad.addColorStop(0, '#ffffff');
     bGrad.addColorStop(0.25, shipCols[0]);
@@ -1672,7 +1645,7 @@ function draw() {
     cx.fillStyle = bGrad;
     cx.beginPath(); cx.ellipse(0, -36, 62, 52, 0, 0, Math.PI * 2); cx.fill();
 
-    // 3D Stitching Rib Lines (Gore Seams)
+    // 3D Stitching Rib Lines
     cx.strokeStyle = 'rgba(20, 0, 0, 0.45)'; cx.lineWidth = 3;
     for (const rx of [-42, -22, 0, 22, 42]) {
       cx.beginPath();
@@ -1682,14 +1655,14 @@ function draw() {
     cx.strokeStyle = 'rgba(40, 5, 5, 0.7)'; cx.lineWidth = 3.5;
     cx.beginPath(); cx.ellipse(0, -36, 62, 52, 0, 0, Math.PI * 2); cx.stroke();
 
-    // Gold Insignia Ring & Pirate Skull on Back of Balloon
+    // Gold Insignia Ring & Pirate Skull
     cx.fillStyle = '#ffd23c';
     cx.beginPath(); cx.arc(0, -36, 21, 0, Math.PI * 2); cx.fill();
     cx.strokeStyle = '#996f08'; cx.lineWidth = 2.5; cx.stroke();
     cx.fillStyle = '#111'; cx.font = 'bold 22px serif'; cx.textAlign = 'center';
     cx.fillText('☠', 0, -28);
 
-    // Mast & Waving Pirate Flag on Top
+    // Mast & Waving Pirate Flag
     cx.strokeStyle = '#2b1b10'; cx.lineWidth = 3.5;
     cx.beginPath(); cx.moveTo(0, -88); cx.lineTo(0, -114); cx.stroke();
     cx.fillStyle = '#111';
@@ -1700,7 +1673,7 @@ function draw() {
     cx.quadraticCurveTo(14, -100, 0, -98);
     cx.closePath(); cx.fill();
 
-    // Rigging Ropes (Connected from balloon envelope to wooden hull)
+    // Rigging Ropes
     cx.strokeStyle = '#3d2514'; cx.lineWidth = 2.5;
     cx.beginPath();
     cx.moveTo(-42, -10); cx.lineTo(-28, 24);
@@ -1709,7 +1682,7 @@ function draw() {
     cx.moveTo(20, -4); cx.lineTo(14, 24);
     cx.stroke();
 
-    // Wooden Gondola Hull (Mahogany with Brass Plating & Rivets)
+    // Wooden Gondola Hull
     const hGrad = cx.createLinearGradient(0, 18, 0, 54);
     hGrad.addColorStop(0, '#ba804e');
     hGrad.addColorStop(0.5, '#8c582e');
@@ -1727,7 +1700,7 @@ function draw() {
       cx.beginPath(); cx.arc(rx, 25.5, 1.8, 0, Math.PI * 2); cx.fill();
     }
 
-    // Glowing Captain's Stained Glass Stern Windows
+    // Glowing Stern Windows
     for (const wx of [-16, 0, 16]) {
       cx.fillStyle = '#ffd23c';
       cx.beginPath(); cx.roundRect(wx - 5, 32, 10, 12, 3); cx.fill();
@@ -1735,7 +1708,7 @@ function draw() {
       cx.beginPath(); cx.arc(wx, 38, 9, 0, Math.PI * 2); cx.fill();
     }
 
-    // Twin Rotating Brass Propellers with Motion Blur
+    // Twin Rotating Brass Propellers
     for (const px of [-28, 28]) {
       cx.save(); cx.translate(px, 38);
       const pa = ship.propRot * (px > 0 ? 1 : -1);
@@ -1752,13 +1725,13 @@ function draw() {
       cx.restore();
     }
 
-    // Recoiling Broadside Cannons
+    // Recoiling Cannons
     const recoilOff = ship.recoil * 6;
     cx.fillStyle = '#1c1c22';
     cx.fillRect(-39, 28 + recoilOff, 6, 8);
     cx.fillRect(33, 28 + recoilOff, 6, 8);
 
-    // Active Shield Energy Sphere
+    // Active Shield Sphere
     if (shieldT > 0) {
       cx.globalAlpha = 0.55 + Math.sin(t * 8) * 0.2;
       cx.strokeStyle = '#7fffd0'; cx.lineWidth = 4;
@@ -1771,18 +1744,16 @@ function draw() {
     cx.restore();
   }
 
-  // 7. Tactical HUD Reticle (Dynamic Combat Crosshair)
+  // 7. Tactical Crosshair
   if (state === 'play') {
     const rx = mouse.x, ry = mouse.y;
     cx.save();
     cx.translate(rx, ry);
     
-    // Outer Target Bracket
     cx.strokeStyle = 'rgba(255, 210, 60, 0.9)';
     cx.lineWidth = 2.5;
     cx.beginPath(); cx.arc(0, 0, 22, 0, Math.PI * 2); cx.stroke();
     
-    // Crosshair ticks
     cx.beginPath();
     cx.moveTo(-32, 0); cx.lineTo(-14, 0);
     cx.moveTo(14, 0); cx.lineTo(32, 0);
@@ -1790,12 +1761,11 @@ function draw() {
     cx.moveTo(0, 14); cx.lineTo(0, 32);
     cx.stroke();
     
-    // Center laser dot
     cx.fillStyle = '#ff385c'; cx.beginPath(); cx.arc(0, 0, 3.5, 0, Math.PI * 2); cx.fill();
     cx.restore();
   }
 
-  // Floating score popups
+  // Floating Popups
   for (const p of popups) {
     cx.save();
     cx.globalAlpha = Math.max(0, Math.min(1, p.life * 1.4));
@@ -1808,7 +1778,7 @@ function draw() {
 
   cx.restore(); // end screen shake
 
-  // Muzzle flash screen burst
+  // Muzzle flash
   if (muzzleFlash > 0) {
     cx.fillStyle = `rgba(255, 230, 140, ${muzzleFlash * 0.15})`;
     cx.fillRect(0, 0, W, H);
@@ -1827,7 +1797,7 @@ function draw() {
     
     cx.fillStyle = '#fff'; cx.font = 'bold 22px sans-serif'; cx.textAlign = 'left';
     cx.fillText(`🪙 ${score}`, 20, 76);
-    cx.fillText(`🌊 VAGUE ${level}`, 20, 106);
+    cx.fillText(`🌊 WAVE ${level}`, 20, 106);
     
     if (combo >= 2 && comboT > 0) {
       cx.fillStyle = '#ff8a3c'; cx.font = 'bold 24px sans-serif';
@@ -1835,11 +1805,11 @@ function draw() {
     }
     
     let puy = 172;
-    if (rapidT > 0) { cx.fillStyle = '#8fd3ff'; cx.font = 'bold 18px sans-serif'; cx.fillText(`⚡ CADENCE : ${rapidT.toFixed(1)}s`, 20, puy); puy += 28; }
-    if (shieldT > 0) { cx.fillStyle = '#7fffd0'; cx.font = 'bold 18px sans-serif'; cx.fillText(`🛡️ BOUCLIER : ${shieldT.toFixed(1)}s`, 20, puy); puy += 28; }
-    if (tripleT > 0) { cx.fillStyle = '#ffd23c'; cx.font = 'bold 18px sans-serif'; cx.fillText(`🔱 TRIPLE CANON : ${tripleT.toFixed(1)}s`, 20, puy); puy += 28; }
+    if (rapidT > 0) { cx.fillStyle = '#8fd3ff'; cx.font = 'bold 18px sans-serif'; cx.fillText(`⚡ RAPID: ${rapidT.toFixed(1)}s`, 20, puy); puy += 28; }
+    if (shieldT > 0) { cx.fillStyle = '#7fffd0'; cx.font = 'bold 18px sans-serif'; cx.fillText(`🛡️ SHIELD: ${shieldT.toFixed(1)}s`, 20, puy); puy += 28; }
+    if (tripleT > 0) { cx.fillStyle = '#ffd23c'; cx.font = 'bold 18px sans-serif'; cx.fillText(`🔱 TRIPLE: ${tripleT.toFixed(1)}s`, 20, puy); puy += 28; }
 
-    // Boss Giant Health Bar
+    // Boss Health Bar
     if (boss) {
       const bw = Math.min(460, W - 60), bx = (W - bw) / 2, by = 24;
       cx.fillStyle = 'rgba(0,0,0,0.7)'; cx.fillRect(bx - 4, by - 4, bw + 8, 26);
@@ -1858,7 +1828,7 @@ function draw() {
       cx.font = 'bold 28px sans-serif';
       cx.fillStyle = 'rgba(0,0,0,0.6)';
       cx.fillText(a.text, W / 2 + 2, ay + 2);
-      cx.fillStyle = a.text.includes('MINE') || a.text.includes('ENNEMI') ? '#ff5a4c' : '#ffd23c';
+      cx.fillStyle = a.text.includes('MINE') || a.text.includes('ENEMY') ? '#ff5a4c' : '#ffd23c';
       cx.fillText(a.text, W / 2, ay);
       ay += 40;
     }
