@@ -306,7 +306,7 @@ function initAudio() {
     if (ac.state === 'suspended') {
       try { ac.resume(); } catch (e) {}
     }
-    masterG = ac.createGain(); masterG.gain.value = 0.35; masterG.connect(ac.destination);
+    masterG = ac.createGain(); masterG.gain.value = 0.38; masterG.connect(ac.destination);
     
     const tone = (type, freq, t0, dur, vol, detune) => {
       if (!freq || !ac) return;
@@ -318,58 +318,184 @@ function initAudio() {
       o.connect(g); g.connect(masterG); o.start(t0); o.stop(t0 + dur + 0.03);
     };
 
-    // Frequencies
-    const Eb2=77.78, Fs2=92.50, G2=98.00, Bb2=116.54, C3=130.81, D3=146.83, Eb3=155.56, F3=174.61, Fs3=185.00, G3=196.00, Ab3=207.65, A3=220.00, Bb3=233.08, B3=246.94;
-    const C4=261.63, Db4=277.18, D4=293.66, Eb4=311.13, E4=329.63, F4=349.23, Fs4=369.99, G4=392.00, Ab4=415.30, A4=440.00, Bb4=466.16, B4=493.88;
+    // Authentic Note Frequencies in Bb Major
+    const F2=87.31, G2=98.00, A2=110.00, Bb2=116.54, C3=130.81, D3=146.83, Eb3=155.56, F3=174.61, G3=196.00, A3=220.00, Bb3=233.08;
+    const C4=261.63, D4=293.66, Eb4=311.13, E4=329.63, F4=349.23, Fs4=369.99, G4=392.00, Ab4=415.30, A4=440.00, Bb4=466.16, B4=493.88;
     const C5=523.25, Db5=554.37, D5=587.33, Eb5=622.25, E5=659.25, F5=698.46, Fs5=739.99, G5=783.99, Ab5=830.61, A5=880.00, Bb5=932.33;
 
-    // Star Wars Epic Medley: Main Theme Fanfare -> Imperial March (Darth Vader)
-    // 64 step score (each step = 0.22s)
-    const swMelody = [
-      // 0-15: Star Wars Main Theme Fanfare (Heroic Brass)
-      D4, D4, D4, G4, G4, G4, D5, D5,  C5, B4, A4, G5, G5, D5, D5, 0,
-      // 16-31: Main Theme Variation
-      C5, B4, A4, G5, G5, D5, D5, 0,   C5, B4, C5, A4, A4, A4, 0, 0,
-      // 32-47: The Imperial March (Darth Vader)
-      G4, 0, G4, 0, G4, 0, Eb4, 0,     Bb4, 0, G4, 0, Eb4, 0, Bb4, G4,
-      // 48-63: Imperial March Climax
-      D5, 0, D5, 0, D5, 0, Eb5, 0,     Bb4, 0, Fs4, 0, Eb4, 0, Bb4, G4
-    ];
+    // Score events array: [tRel, freq, dur, type, vol, detune]
+    const events = [];
+    function addBrass(t, f, dur, v=0.12) {
+      if (!f) return;
+      events.push([t, f, dur, 'sawtooth', v, -5]);
+      events.push([t, f, dur * 0.85, 'square', v * 0.55, 5]);
+      events.push([t, f * 2, dur * 0.6, 'triangle', v * 0.35, 0]);
+    }
+    function addBass(t, f, dur, v=0.20) {
+      if (!f) return;
+      events.push([t, f, dur, 'sawtooth', v * 0.75, 0]);
+      events.push([t, f / 2, dur, 'sine', v, 0]);
+    }
+    function addTimpani(t) {
+      events.push([t, 65, 0.45, 'triangle', 0.35, -20]);
+      events.push([t, 45, 0.55, 'sine', 0.45, 0]);
+    }
 
-    const swBass = [
-      // Main theme bassline
-      G2, G3, G2, G3, G2, G3, G2, G3,  C3, C4, C3, C4, G2, G3, G2, G3,
-      C3, C4, C3, C4, G2, G3, G2, G3,  C3, C4, D3, D4, G2, G3, G2, 0,
-      // Imperial March bass stabs
-      G2, G2, G2, G2, G2, G2, Eb2, Eb2, Bb2, Bb2, G2, G2, Eb2, Eb2, Bb2, G2,
-      D3, D3, D3, D3, D3, D3, Eb3, Eb3, Bb2, Bb2, Fs2, Fs2, Eb2, Eb2, Bb2, G2
-    ];
+    // --- 1. Iconic Star Wars Opening Fanfare ---
+    // Triple pickup: "Da-da-da..."
+    addBrass(0.00, F4, 0.15, 0.10);
+    addBrass(0.18, F4, 0.15, 0.10);
+    addBrass(0.36, F4, 0.15, 0.12);
 
-    const STEP = 0.22;
-    let step = 0, next = ac.currentTime + 0.15;
+    // "TAAAAAHHHH..." (Bb4)
+    addBrass(0.55, Bb4, 1.10, 0.18);
+    addBass(0.55, Bb2, 1.10, 0.24);
+    addTimpani(0.55);
+
+    // "DAAAAAHHHH..." (F5)
+    addBrass(1.70, F5, 1.10, 0.18);
+    addBass(1.70, F3, 1.10, 0.22);
+    addTimpani(1.70);
+
+    // Triplet: "da-da-da..." (Eb5 - D5 - C5)
+    addBrass(2.85, Eb5, 0.22, 0.13);
+    addBrass(3.10, D5, 0.22, 0.13);
+    addBrass(3.35, C5, 0.22, 0.13);
+
+    // "TAAAAAAHHHH!" (Bb5)
+    addBrass(3.60, Bb5, 1.10, 0.20);
+    addBass(3.60, Bb2, 1.10, 0.24);
+    addTimpani(3.60);
+
+    // "DAAAAH..." (F5)
+    addBrass(4.75, F5, 0.55, 0.15);
+    addBass(4.75, F3, 0.55, 0.18);
+
+    // Triplet: "da-da-da..." (Eb5 - D5 - C5)
+    addBrass(5.35, Eb5, 0.22, 0.13);
+    addBrass(5.60, D5, 0.22, 0.13);
+    addBrass(5.85, C5, 0.22, 0.13);
+
+    // "TAAAAAAHHHH!" (Bb5)
+    addBrass(6.10, Bb5, 1.10, 0.20);
+    addBass(6.10, Bb2, 1.10, 0.24);
+    addTimpani(6.10);
+
+    // "DAAAAH..." (F5)
+    addBrass(7.25, F5, 0.55, 0.15);
+    addBass(7.25, F3, 0.55, 0.18);
+
+    // Triplet: "da-da-da..." (Eb5 - D5 - Eb5)
+    addBrass(7.85, Eb5, 0.22, 0.13);
+    addBrass(8.10, D5, 0.22, 0.13);
+    addBrass(8.35, Eb5, 0.22, 0.13);
+
+    // "DAAAAAAAAAAAHHH!" (C5)
+    addBrass(8.60, C5, 1.60, 0.18);
+    addBass(8.60, F2, 1.60, 0.24);
+    addTimpani(8.60);
+
+    // --- 2. Second Statement (Variation) ---
+    addBrass(10.50, F4, 0.15, 0.10);
+    addBrass(10.68, F4, 0.15, 0.10);
+    addBrass(10.86, F4, 0.15, 0.12);
+
+    addBrass(11.05, Bb4, 1.10, 0.18);
+    addBass(11.05, Bb2, 1.10, 0.24);
+    addTimpani(11.05);
+
+    addBrass(12.20, F5, 1.10, 0.18);
+    addBass(12.20, F3, 1.10, 0.22);
+    addTimpani(12.20);
+
+    addBrass(13.35, Eb5, 0.22, 0.13);
+    addBrass(13.60, D5, 0.22, 0.13);
+    addBrass(13.85, C5, 0.22, 0.13);
+
+    addBrass(14.10, Bb5, 1.10, 0.20);
+    addBass(14.10, Bb2, 1.10, 0.24);
+    addTimpani(14.10);
+
+    addBrass(15.25, F5, 0.55, 0.15);
+
+    addBrass(15.85, Eb5, 0.22, 0.13);
+    addBrass(16.10, D5, 0.22, 0.13);
+    addBrass(16.35, C5, 0.22, 0.13);
+
+    addBrass(16.60, Bb5, 1.10, 0.20);
+    addBass(16.60, Bb2, 1.10, 0.24);
+    addTimpani(16.60);
+
+    addBrass(17.75, F5, 0.55, 0.15);
+
+    addBrass(18.35, Eb5, 0.22, 0.13);
+    addBrass(18.60, D5, 0.22, 0.13);
+    addBrass(18.85, Eb5, 0.22, 0.13);
+
+    addBrass(19.10, C5, 1.60, 0.18);
+    addBass(19.10, F2, 1.60, 0.24);
+    addTimpani(19.10);
+
+    // --- 3. The Imperial March Climax (Darth Vader's Theme) ---
+    addBrass(21.00, G4, 0.45, 0.14);
+    addBrass(21.50, G4, 0.45, 0.14);
+    addBrass(22.00, G4, 0.45, 0.14);
+    addBrass(22.50, Eb4, 0.35, 0.14);
+    addBrass(22.90, Bb4, 0.25, 0.15);
+
+    addBrass(23.20, G4, 0.90, 0.18);
+    addBass(23.20, G2, 0.90, 0.22);
+    addTimpani(23.20);
+
+    addBrass(24.20, Eb4, 0.35, 0.14);
+    addBrass(24.60, Bb4, 0.25, 0.15);
+    addBrass(24.90, G4, 1.20, 0.18);
+    addBass(24.90, G2, 1.20, 0.22);
+
+    addBrass(26.30, D5, 0.45, 0.16);
+    addBrass(26.80, D5, 0.45, 0.16);
+    addBrass(27.30, D5, 0.45, 0.16);
+    addBrass(27.80, Eb5, 0.35, 0.16);
+    addBrass(28.20, Bb4, 0.25, 0.15);
+
+    addBrass(28.50, Fs4, 0.90, 0.18);
+    addBass(28.50, D3, 0.90, 0.22);
+    addTimpani(28.50);
+
+    addBrass(29.50, Eb4, 0.35, 0.14);
+    addBrass(29.90, Bb4, 0.25, 0.15);
+    addBrass(30.20, G4, 1.40, 0.20);
+    addBass(30.20, G2, 1.40, 0.24);
+    addTimpani(30.20);
+
+    const LOOP_DURATION = 32.0;
+    let loopStartTime = ac.currentTime + 0.1;
+    let nextEventIdx = 0;
+
+    // Scheduler tick
     setInterval(() => {
-      while (next < ac.currentTime + 0.5) {
-        if (musicOn && (state === 'play' || state === 'menu')) {
-          const s = step % 64;
-          const mf = swMelody[s];
-          const bf = swBass[s];
+      if (!musicOn || !(state === 'play' || state === 'menu')) return;
+      const now = ac.currentTime;
+      const ahead = now + 0.35;
 
-          // Lead Orchestral Brass Trumpet / French Horn
-          if (mf) {
-            tone('sawtooth', mf, next, STEP * 0.95, 0.08, -4);
-            tone('square', mf, next, STEP * 0.70, 0.045, 4);
-            tone('triangle', mf * 2, next, STEP * 0.50, 0.03);
-          }
-
-          // Heavy Imperial March Bass & Timpani Stabs
-          if (bf) {
-            tone('sawtooth', bf, next, STEP * 1.1, 0.15, 5);
-            tone('sine', bf / 2, next, STEP * 1.2, 0.18);
-          }
+      while (true) {
+        if (nextEventIdx >= events.length) {
+          nextEventIdx = 0;
+          loopStartTime += LOOP_DURATION;
         }
-        step++; next += STEP;
+        const ev = events[nextEventIdx];
+        const eventAbsoluteTime = loopStartTime + ev[0];
+
+        if (eventAbsoluteTime <= ahead) {
+          if (eventAbsoluteTime >= now - 0.05) {
+            tone(ev[3], ev[1], eventAbsoluteTime, ev[2], ev[4], ev[5]);
+          }
+          nextEventIdx++;
+        } else {
+          break;
+        }
       }
-    }, 100);
+    }, 60);
   } catch (e) {
     console.error('Audio init error:', e);
   }
