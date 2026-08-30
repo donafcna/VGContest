@@ -1734,8 +1734,200 @@ function draw() {
     cx.restore();
   }
 
+// Draw Solar Pirate Galleon in Forward 3D Perspective (View from Behind)
+function drawGalleonForward(cx, x, y, scale=1.0) {
+  cx.save();
+  cx.translate(x, y);
+  cx.scale(scale, scale);
+
+  // Twin Solar Ether Wake Streams
+  for (const wx of [-26, 26]) {
+    const wg = cx.createLinearGradient(wx, 20, wx, 80);
+    wg.addColorStop(0, '#ffd23c');
+    wg.addColorStop(0.5, '#ff8a3c');
+    wg.addColorStop(1, 'rgba(255, 100, 0, 0)');
+    cx.fillStyle = wg;
+    cx.beginPath();
+    cx.moveTo(wx - 8, 20); cx.lineTo(wx + 8, 20); cx.lineTo(wx + 2, 75 + Math.sin(t * 15) * 8); cx.lineTo(wx - 2, 75 + Math.sin(t * 15) * 8);
+    cx.closePath(); cx.fill();
+  }
+
+  // 3 Towering Masts & Billowing Golden Solar Sails (Seen from Behind in 3D Perspective)
+  for (const [mx, mh, sw, sh] of [[0, 75, 68, 38], [-24, 62, 54, 30], [24, 62, 54, 30]]) {
+    // Mast
+    cx.strokeStyle = '#26160c'; cx.lineWidth = 3;
+    cx.beginPath(); cx.moveTo(mx, 10); cx.lineTo(mx, -mh); cx.stroke();
+
+    // Cross yardarm
+    cx.beginPath(); cx.moveTo(mx - sw * 0.5, -mh * 0.65); cx.lineTo(mx + sw * 0.5, -mh * 0.65); cx.stroke();
+
+    // Billowing Sail
+    const sg = cx.createLinearGradient(mx, -mh * 0.7, mx, -mh * 0.7 + sh);
+    sg.addColorStop(0, 'rgba(255, 250, 220, 0.95)');
+    sg.addColorStop(0.5, 'rgba(255, 210, 60, 0.8)');
+    sg.addColorStop(1, 'rgba(230, 140, 20, 0.55)');
+    cx.fillStyle = sg;
+    cx.beginPath();
+    cx.moveTo(mx - sw * 0.48, -mh * 0.65);
+    cx.quadraticCurveTo(mx, -mh * 0.65 + sh * 0.8, mx + sw * 0.48, -mh * 0.65);
+    cx.lineTo(mx + sw * 0.42, -mh * 0.65 + sh);
+    cx.quadraticCurveTo(mx, -mh * 0.65 + sh * 1.3, mx - sw * 0.42, -mh * 0.65 + sh);
+    cx.closePath();
+    cx.fill();
+    cx.strokeStyle = 'rgba(255, 210, 60, 0.9)'; cx.lineWidth = 1.5; cx.stroke();
+  }
+
+  // Jolly Roger Skull Flag at top of Main Mast
+  cx.fillStyle = '#111';
+  cx.beginPath();
+  cx.moveTo(0, -75);
+  cx.quadraticCurveTo(14, -73 + Math.sin(t * 10) * 3, 26, -71 + Math.sin(t * 10) * 4);
+  cx.lineTo(22, -61 + Math.sin(t * 10 + 1) * 3);
+  cx.quadraticCurveTo(10, -63, 0, -65);
+  cx.closePath(); cx.fill();
+  cx.fillStyle = '#fff'; cx.font = 'bold 9px serif'; cx.textAlign = 'center';
+  cx.fillText('☠', 12, -65);
+
+  // Rear Transom Stern Galleon Hull (Carved Oak & Mahogany)
+  const hg = cx.createLinearGradient(0, -10, 0, 32);
+  hg.addColorStop(0, '#c88a55');
+  hg.addColorStop(0.5, '#8c5528');
+  hg.addColorStop(1, '#3b1c06');
+  cx.fillStyle = hg;
+  cx.beginPath();
+  cx.moveTo(-36, 0);
+  cx.lineTo(-26, 28);
+  cx.lineTo(26, 28);
+  cx.lineTo(36, 0);
+  cx.closePath();
+  cx.fill();
+  cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.5; cx.stroke();
+
+  // Captain's Stained Glass Windows (Triple glowing arched windows)
+  for (const wx of [-16, 0, 16]) {
+    const wg = cx.createLinearGradient(wx, 4, wx, 18);
+    wg.addColorStop(0, '#ffffff'); wg.addColorStop(0.5, '#ffd23c'); wg.addColorStop(1, '#ff6a00');
+    cx.fillStyle = wg;
+    cx.beginPath(); cx.roundRect(wx - 5, 5, 10, 14, [4, 4, 1, 1]); cx.fill();
+    cx.strokeStyle = '#1e0c02'; cx.lineWidth = 1.2; cx.stroke();
+  }
+
+  // Stern Red/Green Navigation Lanterns
+  cx.fillStyle = '#33ee66'; cx.beginPath(); cx.arc(32, 4, 3, 0, Math.PI * 2); cx.fill();
+  cx.fillStyle = '#ff3344'; cx.beginPath(); cx.arc(-32, 4, 3, 0, Math.PI * 2); cx.fill();
+
+  cx.restore();
+}
+
+// -------------------------------------------------------------
+// PHOTOREALISTIC RENDERING (PIRATE GALLEON VS STAR WARS UFOS)
+// -------------------------------------------------------------
+function draw() {
+  // 1. Deep Space Cosmic Canvas
+  cx.fillStyle = '#020308';
+  cx.fillRect(0, 0, W, H);
+
+  const isIntroForward = (state === 'intro' && (introT < 2.8 || introT >= 5.0));
+
+  // Distant Glowing Nebulae
+  for (const n of nebulae) {
+    const ng = cx.createRadialGradient(n.x, n.y, 10, n.x, n.y, n.r);
+    ng.addColorStop(0, n.col + '30');
+    ng.addColorStop(0.5, n.col + '12');
+    ng.addColorStop(1, 'rgba(0,0,0,0)');
+    cx.fillStyle = ng;
+    cx.beginPath(); cx.arc(n.x, n.y, n.r, 0, Math.PI * 2); cx.fill();
+  }
+
+  // Photorealistic Giant Planet in Background
+  const planetX = isIntroForward ? W * 0.5 : W * 0.82;
+  const planetY = isIntroForward ? H * 0.28 : H * 0.32;
+  const planetR = isIntroForward ? 140 : 120;
+  const pg = cx.createRadialGradient(planetX - 35, planetY - 35, 15, planetX, planetY, planetR);
+  pg.addColorStop(0, '#8eb4e3');
+  pg.addColorStop(0.35, '#35547c');
+  pg.addColorStop(0.7, '#15243b');
+  pg.addColorStop(1, '#050a12');
+  cx.fillStyle = pg;
+  cx.beginPath(); cx.arc(planetX, planetY, planetR, 0, Math.PI * 2); cx.fill();
+
+  // Planet Rings
+  cx.save(); cx.translate(planetX, planetY); cx.rotate(-0.4);
+  cx.strokeStyle = 'rgba(160, 200, 240, 0.25)'; cx.lineWidth = 14;
+  cx.beginPath(); cx.ellipse(0, 0, planetR * 1.85, planetR * 0.38, 0, 0, Math.PI * 2); cx.stroke();
+  cx.strokeStyle = 'rgba(210, 235, 255, 0.4)'; cx.lineWidth = 4;
+  cx.beginPath(); cx.ellipse(0, 0, planetR * 1.7, planetR * 0.35, 0, 0, Math.PI * 2); cx.stroke();
+  cx.restore();
+
+  // Multi-layered Starfield
+  for (const s of stars) {
+    const alpha = s.brightness * (0.7 + Math.sin(s.twinkle) * 0.3);
+    cx.fillStyle = `rgba(220, 240, 255, ${alpha})`;
+    cx.beginPath(); cx.arc(s.x, s.y, s.size, 0, Math.PI * 2); cx.fill();
+  }
+
+  // Hyperspace Rift Vortex in Scene 3 (Forward View Red Alert)
+  if (state === 'intro' && introT >= 5.0) {
+    cx.save();
+    cx.translate(W * 0.5, H * 0.45);
+    const riftR = Math.min(180, (introT - 5.0) * 80);
+    const rg = cx.createRadialGradient(0, 0, 10, 0, 0, riftR);
+    rg.addColorStop(0, '#ff0055');
+    rg.addColorStop(0.4, '#7928ca');
+    rg.addColorStop(0.8, '#00ff66');
+    rg.addColorStop(1, 'rgba(0,0,0,0)');
+    cx.fillStyle = rg;
+    cx.beginPath(); cx.arc(0, 0, riftR, 0, Math.PI * 2); cx.fill();
+
+    // Swirling energy lightning rings
+    cx.rotate(t * 8);
+    cx.strokeStyle = '#00ff66';
+    cx.lineWidth = 3;
+    for (let k = 0; k < 4; k++) {
+      cx.rotate(Math.PI * 0.5);
+      cx.beginPath(); cx.arc(0, 0, riftR * 0.8, 0, Math.PI * 0.35); cx.stroke();
+    }
+    cx.restore();
+  }
+
+  // Floating Asteroids (Rendered in Side View / Play mode)
+  if (!isIntroForward) {
+    for (const a of asteroids) {
+      cx.save(); cx.translate(a.x, a.y); cx.rotate(a.rot);
+      const ag = cx.createRadialGradient(-a.r * 0.3, -a.r * 0.3, 2, 0, 0, a.r);
+      ag.addColorStop(0, '#667080'); ag.addColorStop(0.5, '#333842'); ag.addColorStop(1, '#111317');
+      cx.fillStyle = ag;
+      cx.beginPath();
+      for (let k = 0; k < 8; k++) {
+        const ang = (k / 8) * Math.PI * 2;
+        const rad = a.r * (0.8 + ((k % 3) * 0.12));
+        if (k === 0) cx.moveTo(Math.cos(ang)*rad, Math.sin(ang)*rad);
+        else cx.lineTo(Math.cos(ang)*rad, Math.sin(ang)*rad);
+      }
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#22252c'; cx.lineWidth = 2; cx.stroke();
+      cx.restore();
+    }
+  }
+
+  // Warp Speed Stardust Streaks
+  if (state === 'play' || state === 'intro') {
+    cx.strokeStyle = 'rgba(255, 210, 60, 0.35)';
+    cx.lineWidth = 1.5;
+    for (const sl of speedLines) {
+      cx.beginPath(); cx.moveTo(sl.x, sl.y); cx.lineTo(sl.x + sl.len, sl.y); cx.stroke();
+    }
+  }
+
+  // Camera Shake
+  const _sx = shake ? (Math.random() - 0.5) * shake : 0;
+  const _sy = shake ? (Math.random() - 0.5) * shake : 0;
+  cx.save(); cx.translate(_sx, _sy);
+
   // 10. REALISTIC PIRATE SHIP (SPACE SOLAR GALLEON)
-  if (state === 'intro' || state === 'play' || state === 'pause') {
+  if (isIntroForward) {
+    drawGalleonForward(cx, W * 0.5, H * 0.65 + Math.sin(introT * 2) * 8, 1.25);
+  } else if (state === 'intro' || state === 'play' || state === 'pause') {
     cx.save();
     cx.translate(ship.x, ship.y);
     cx.rotate(ship.pitch);
@@ -1778,20 +1970,6 @@ function draw() {
     cx.fillText('☠', -30, -42);
 
     // --- C. Real Wooden Galleon Hull (Mahogany & Oak Planks) ---
-    const hGrad = cx.createLinearGradient(0, 10, 0, 36);
-    hGrad.addColorStop(0, '#c88a55');
-    hGrad.addColorStop(0.45, '#8c5528');
-    hGrad.addColorStop(1, '#3b1c06');
-    cx.fillStyle = hGrad;
-    cx.beginPath();
-    cx.moveTo(-44, 12);               // Stern gallery
-    cx.lineTo(36, 12);                // Foredeck
-    cx.quadraticCurveTo(56, 18, 48, 30); // Prow with figurehead
-    cx.lineTo(-38, 30);               // Keel bottom
-    cx.quadraticCurveTo(-48, 26, -44, 12); // Stern counter
-    cx.closePath();
-    cx.fill();
-    cx.strokeStyle = '#1e0c02'; cx.lineWidth = 2.5; cx.stroke();
 
     // Brass Keel Trim & Fastener Rivets
     cx.fillStyle = '#f2c14e';
