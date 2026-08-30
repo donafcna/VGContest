@@ -1,0 +1,51 @@
+/* === The Impossible Maze — Leon's style === */
+/* Change the colors here! */
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #1c0f00 0%, #4a1d00 100%);
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.game-container {
+  text-align: center;
+}
+
+h1 {
+  color: #FFA500;
+  text-shadow: 0 0 14px rgba(255, 165, 0, 0.6);
+  margin: 12px 0;
+}
+
+canvas {
+  border: 4px solid #FFA500;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(255, 165, 0, 0.35);
+  background: #141419;
+  max-width: 95vw;
+}
+
+.help {
+  color: #ffd9a0;
+  font-size: 14px;
+}
+
+#btnPause, #btnItems, #btnBoard {
+  background: #FFA500;
+  color: #2a1500;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 22px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 4px;
+}
+
+#btnPause:hover, #btnItems:hover, #btnBoard:hover {
+  background: #ffc04d;
+}
