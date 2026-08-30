@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>🏆 VGContest — Le Grand Concours de Jeux Vidéo de la Famille</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d1b;
+      --bg-card: rgba(22, 26, 54, 0.85);
+      --bg-card-hover: rgba(30, 36, 75, 0.95);
+      --accent: #ffd23c;
+      --accent-glow: rgba(255, 210, 60, 0.35);
+      --accent-cyan: #3fd5ff;
+      --accent-green: #3eed87;
+      --accent-purple: #b56cff;
+      --accent-red: #ff5277;
+      --text: #f0f3ff;
+      --text-muted: #95a3c8;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 210, 60, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #1c1a45 0%, var(--bg) 65%);
+      color: var(--text);
+      font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1.2rem 3rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient animated background grid */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .trophy-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 210, 60, 0.12);
+      border: 1px solid rgba(255, 210, 60, 0.3);
+      color: var(--accent);
+      padding: 0.4rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 0 20px rgba(255, 210, 60, 0.15);
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 7vw, 4rem);
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 0.8rem;
+      text-shadow: 0 0 35px rgba(255, 210, 60, 0.3);
+    }
+
+    h1 span.gold {
+      background: linear-gradient(135deg, #ffe57f 0%, #ffb800 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      max-width: 650px;
+      line-height: 1.5;
+    }
+
+    /* Games Grid */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.8rem;
+      width: 100%;
+    }
+
+    /* Game Card */
+    .game-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.8rem 1.5rem 1.6rem;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--card-accent, var(--accent)), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .game-card:hover, .game-card:focus-visible {
+      transform: translateY(-6px);
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 30px var(--card-glow, var(--accent-glow));
+      outline: none;
+    }
+
+    .game-card:hover::before {
+      opacity: 1;
+    }
+
+    /* Card Specific Colors */
+    .card-noel {
+      --card-accent: #ff9d42;
+      --card-glow: rgba(255, 157, 66, 0.25);
+    }
+    .card-leon {
+      --card-accent: #3eed87;
+      --card-glow: rgba(62, 237, 135, 0.25);
+    }
+    .card-louis {
+      --card-accent: #3fd5ff;
+      --card-glow: rgba(63, 213, 255, 0.25);
+    }
+    .card-papa {
+      --card-accent: #b56cff;
+      --card-glow: rgba(181, 108, 255, 0.25);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.2rem;
+    }
+
+    .avatar-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      transition: transform 0.25s;
+    }
+
+    .game-card:hover .avatar-wrap {
+      transform: scale(1.1) rotate(4deg);
+    }
+
+    .genre-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 0.3rem 0.7rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--card-accent, var(--accent));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .author-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.2rem;
+    }
+
+    .game-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.6rem;
+      line-height: 1.25;
+    }
+
+    .game-desc {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin-bottom: 1.4rem;
+      flex-grow: 1;
+    }
+
+    /* Badges */
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .badge {
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 0.25rem 0.55rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      color: #cfd8f5;
+    }
+
+    /* Action Button */
+    .btn-play {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.85rem 1.2rem;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #ffffff;
+      transition: all 0.2s;
+    }
+
+    .game-card:hover .btn-play {
+      background: var(--card-accent, var(--accent));
+      color: #0b0d1b;
+      border-color: transparent;
+      box-shadow: 0 4px 16px var(--card-glow, var(--accent-glow));
+      font-weight: 800;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    footer .heart {
+      color: #ff5277;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1.5rem 1rem 2.5rem;
+      }
+      .games-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <div class="container">
+    <header>
+      <div class="trophy-badge">🏆 Concours 2026</div>
+      <h1><span class="gold">VGContest</span></h1>
+      <p class="subtitle">Le Grand Concours de Jeux Vidéo de la Famille — Gameplay, Design &amp; Créativité !</p>
+    </header>
+
+    <main class="games-grid">
+      <!-- Noël -->
+      <a class="game-card card-noel" href="noel/">
+        <div class="card-top">
+          <div class="avatar-wrap">☁️🏴‍☠️</div>
+          <span class="genre-tag">Shmup Aérien</span>
+        </div>
+        <div class="author-name">Noël</div>
+        <div class="game-title">Sky Pirates</div>
+        <p class="game-desc">Prends la barre de ton dirigeable pirate, affronte des forteresses volantes, améliore ton navire au hangar et défie les boss légendaires !</p>
+        <div class="badges">
+          <span class="badge">🛠️ Hangar</span>
+          <span class="badge">🎰 Roulette</span>
+          <span class="badge">🏆 Leaderboard</span>
+        </div>
+        <div class="btn-play">
+          <span>Jouer</span>
+          <span>▶</span>
+        </div>
+      </a>
+
+      <!-- Léon -->
+      <a class="game-card card-leon" href="leon/">
+        <div class="card-top">
+          <div class="avatar-wrap">🕹️🔦</div>
+          <span class="genre-tag">Dungeon Crawler</span>
+        </div>
+        <div class="author-name">Léon</div>
+        <div class="game-title">The Impossible Maze</div>
+        <p class="game-desc">Échappe-toi de gigantesques labyrinthes dans le noir avec ta torche. Arme-toi de fusils, combats les soldats et adopte un animal de combat !</p>
+        <div class="badges">
+          <span class="badge">🔫 4 Armes</span>
+          <span class="badge">🛒 Magasin</span>
+          <span class="badge">🐾 Familiers</span>
+        </div>
+        <div class="btn-play">
+          <span>Jouer</span>
+          <span>▶</span>
+        </div>
+      </a>
+
+      <!-- Louis -->
+      <a class="game-card card-louis" href="louis/">
+        <div class="card-top">
+          <div class="avatar-wrap">👾🚀</div>
+          <span class="genre-tag">Plateforme Spatiale</span>
+        </div>
+        <div class="author-name">Louis</div>
+        <div class="game-title">Louis dans l'Espace</div>
+        <p class="game-desc">Pilote ta fusée à travers les étoiles, saute de plateforme en plateforme, esquive la pluie de météorites et élimine les soucoupes volantes !</p>
+        <div class="badges">
+          <span class="badge">💥 Lasers</span>
+          <span class="badge">🛸 Soucoupes</span>
+          <span class="badge">🚩 Niveaux</span>
+        </div>
+        <div class="btn-play">
+          <span>Jouer</span>
+          <span>▶</span>
+        </div>
+      </a>
+
+      <!-- Papa -->
+      <a class="game-card card-papa" href="papa/">
+        <div class="card-top">
+          <div class="avatar-wrap">🚀⚡</div>
+          <span class="genre-tag">En préparation</span>
+        </div>
+        <div class="author-name">Papa</div>
+        <div class="game-title">Projet Secret</div>
+        <p class="game-desc">Le prototype ultra-secret du challenger Papa est en cours d'assemblage dans le laboratoire... Restez à l'affût !</p>
+        <div class="badges">
+          <span class="badge">⏳ Bientôt</span>
+          <span class="badge">🔥 Classifié</span>
+        </div>
+        <div class="btn-play">
+          <span>Voir l'aperçu</span>
+          <span>🔍</span>
+        </div>
+      </a>
+    </main>
+
+    <footer>
+      <p>🎲 Que le meilleur game designer gagne ! 🏆</p>
+      <p style="opacity: 0.6; font-size: 0.85rem;">Fait avec passion pour le VGContest</p>
+    </footer>
+  </div>
+</body>
+</html>

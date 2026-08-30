@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>🚀 Le jeu de Papa — VGContest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d1b;
+      --card: rgba(22, 26, 54, 0.85);
+      --accent: #b56cff;
+      --accent-glow: rgba(181, 108, 255, 0.35);
+      --text: #f0f3ff;
+      --text-muted: #95a3c8;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: radial-gradient(circle at 50% 30%, #20133b 0%, var(--bg) 70%);
+      color: var(--text);
+      font-family: 'Outfit', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      max-width: 540px;
+      width: 100%;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.5), 0 0 40px var(--accent-glow);
+    }
+    .emoji {
+      font-size: 5rem;
+      display: inline-block;
+      margin-bottom: 1rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(5deg); }
+    }
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 0.8rem;
+    }
+    h1 span {
+      background: linear-gradient(135deg, #d8aaff 0%, #b56cff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    a.btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.9rem 2rem;
+      background: linear-gradient(135deg, #b56cff, #823cd0);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.05rem;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(181, 108, 255, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    a.btn-back:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 26px rgba(181, 108, 255, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="emoji">🚀🛠️</div>
+    <h1>Le jeu de <span>Papa</span></h1>
+    <p>Le laboratoire secret tourne à plein régime… Le prototype du jeu arrive très bientôt !</p>
+    <a class="btn-back" href="../">← Retour au VGContest</a>
+  </div>
+</body>
+</html>
