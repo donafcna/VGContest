@@ -198,12 +198,14 @@ let combo = 0, comboT = 0;
 let rapidT = 0, shieldT = 0, tripleT = 0;
 let maxHp = 5, baseCool = 0.25, spdMul = 1, magnetBonus = 0, goldMult = 1;
 let baseSpread = [0], shipCols = ['#c88a55', '#8c5528', '#3b1c06'], tokensRun = 0, killsRun = 0, spinsRun = 0;
+let introT = 0, storySectorAnnounced = 0;
 
 // High-fidelity Real Space Pirate Galleon
 const ship = {
   x: 180, y: H * 0.5, vx: 0, vy: 0,
   pitch: 0, hp: 5, inv: 0, recoil: 0,
-  flagWave: 0, sailGlow: 0, r: 46
+  flagWave: 0, sailGlow: 0, r: 46,
+  aimAngle: 0
 };
 
 // Collections for Space Pirate Combat
@@ -270,16 +272,26 @@ if (isTouch) document.getElementById('touchHint').style.display = 'block';
 addEventListener('keydown', e => {
   initAudio();
   keys[e.code] = true;
-  if (e.code === 'Space') e.preventDefault();
+  if (e.code === 'Space') {
+    e.preventDefault();
+    if (state === 'intro') { startCombat(); return; }
+  }
   if (e.code === 'Escape' || e.code === 'KeyP') togglePause();
 });
 addEventListener('keyup', e => keys[e.code] = false);
 addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-addEventListener('mousedown', e => { initAudio(); if (e.button === 0) mouse.down = true; });
+addEventListener('mousedown', e => {
+  initAudio();
+  if (e.button === 0) {
+    if (state === 'intro') { startCombat(); return; }
+    mouse.down = true;
+  }
+});
 addEventListener('mouseup', e => { if (e.button === 0) mouse.down = false; });
 
 cv.addEventListener('touchstart', e => {
   initAudio();
+  if (state === 'intro') { startCombat(); return; }
   touchOn = true;
   const tc = e.touches[0];
   mouse.x = tc.clientX; mouse.y = tc.clientY;
@@ -837,6 +849,18 @@ function spawnBoss() {
 }
 
 // ---------- GAME FLOW ----------
+function startCombat() {
+  if (state === 'intro') {
+    state = 'play';
+    sfx('incoming');
+    addShake(16);
+    addAlert('🚨 RED ALERT: ALIEN UFO BATTLEGROUP ENGAGING!', 'incoming');
+    spawnGlider();
+    spawnGlider();
+    fortT = 2.0;
+  }
+}
+
 document.getElementById('startbtn').addEventListener('click', () => {
   const inp = document.getElementById('pname');
   let nm = (inp && inp.value.trim()) || localStorage.getItem('sp_name') || 'Captain';
@@ -848,8 +872,10 @@ document.getElementById('startbtn').addEventListener('click', () => {
   maxHp = lo.maxHp; baseCool = lo.baseCool; spdMul = lo.spdMul;
   magnetBonus = lo.magnetBonus; goldMult = lo.goldMult; baseSpread = lo.baseSpread; shipCols = lo.cols;
   
-  ship.hp = maxHp; ship.inv = 0; ship.x = 180; ship.y = H * 0.5;
+  ship.hp = maxHp; ship.inv = 0; ship.x = -120; ship.y = H * 0.5;
   ship.vx = 0; ship.vy = 0; ship.pitch = 0;
+  introT = 0;
+  storySectorAnnounced = 1;
   tokensRun = 0; killsRun = 0; spinsRun = 0;
   balls = []; eballs = []; forts = []; gliders = []; mines = []; coins = []; powerups = []; parts = [];
   boss = null; bossT = 26; score = 0; coinsN = 0; level = 1; t = 0;
@@ -857,7 +883,7 @@ document.getElementById('startbtn').addEventListener('click', () => {
   document.getElementById('menu').classList.add('hidden');
   document.getElementById('pausebtn').style.display = 'block';
   initAudio();
-  state = 'play';
+  state = 'intro';
 });
 
 function togglePause() {
@@ -1069,6 +1095,41 @@ function update(dt) {
     if (popups[i].life <= 0) popups.splice(i, 1);
   }
 
+  // CINEMATIC STORYLINE PROLOGUE LOGIC
+  if (state === 'intro') {
+    introT += dt;
+    const targetX = Math.min(220, W * 0.22);
+    ship.x += (targetX - ship.x) * Math.min(1, dt * 1.5);
+    ship.y = H * 0.5 + Math.sin(introT * 1.5) * 16;
+    ship.pitch = Math.sin(introT * 1.5) * 0.04;
+    ship.flagWave += dt * 10;
+    ship.aimAngle = 0;
+
+    // Glowing solar wake particles
+    if (Math.random() < 0.75) {
+      parts.push({
+        x: ship.x - 52,
+        y: ship.y + 14 + (Math.random() - 0.5) * 10,
+        vx: -220 - Math.random() * 80,
+        vy: (Math.random() - 0.5) * 20,
+        life: 0.45,
+        col: Math.random() < 0.5 ? '#ffd23c' : '#3fd5ff',
+        size: 5 + Math.random() * 5
+      });
+    }
+
+    if (introT >= 5.0 && introT - dt < 5.0) {
+      sfx('incoming');
+      addShake(20);
+      hurtFlash = 0.5;
+    }
+
+    if (introT >= 7.8) {
+      startCombat();
+    }
+    return;
+  }
+
   if (state !== 'play') return;
 
   // Space Pirate Galleon Navigation & Solar Ether Inertia
@@ -1166,7 +1227,14 @@ function update(dt) {
     sfx('shot');
   }
 
-  level = 1 + Math.floor(t / 26);
+  const newLevel = 1 + Math.floor(t / 26);
+  if (newLevel > level) {
+    level = newLevel;
+    if (level === 2) addAlert('🛰️ SECTOR 2: ASTEROID GRAVEYARD — Heavy UFO Cruisers Engaging!', 'incoming');
+    else if (level === 3) addAlert('🛰️ SECTOR 3: QUANTUM NEBULA — Proximity Mines Detected!', 'incoming');
+    else if (level === 4) addAlert('🛰️ SECTOR 4: DEEP ORION ABYSS — Hostile Flagship Inbound!', 'incoming');
+    else addAlert(`🛰️ SECTOR ${level}: UNCHARTED SPACE — UFO Fleet Inbound!`, 'incoming');
+  }
 
   // Spawns
   fortT -= dt;
@@ -1667,7 +1735,7 @@ function draw() {
   }
 
   // 10. REALISTIC PIRATE SHIP (SPACE SOLAR GALLEON)
-  if (state === 'play' || state === 'pause') {
+  if (state === 'intro' || state === 'play' || state === 'pause') {
     cx.save();
     cx.translate(ship.x, ship.y);
     cx.rotate(ship.pitch);
@@ -1919,6 +1987,61 @@ function draw() {
       cx.fillText('TARGET LOCK', 0, 28);
     }
     cx.restore();
+  }
+
+  // 13. CINEMATIC STORYLINE PROLOGUE OVERLAY
+  if (state === 'intro') {
+    // Cinematic Black Letterbox Bars
+    const barH = Math.min(88, H * 0.14);
+    cx.fillStyle = '#010206';
+    cx.fillRect(0, 0, W, barH);
+    cx.fillRect(0, H - barH, W, barH);
+    
+    // Glowing Gold Trim
+    cx.strokeStyle = '#ffd23c';
+    cx.lineWidth = 2;
+    cx.beginPath();
+    cx.moveTo(0, barH); cx.lineTo(W, barH);
+    cx.moveTo(0, H - barH); cx.lineTo(W, H - barH);
+    cx.stroke();
+
+    // Narrative Stage Content
+    cx.textAlign = 'center';
+    if (introT < 2.6) {
+      // Stage 1: The Maiden Voyage
+      cx.font = 'bold 13px "Orbitron", sans-serif';
+      cx.fillStyle = '#3fd5ff';
+      cx.fillText('🛰️ CAPTAIN\'S LOG • STARDATE 3042.8', W / 2, H - barH + 34);
+
+      cx.font = '16px "Outfit", sans-serif';
+      cx.fillStyle = '#ffffff';
+      cx.fillText('"The Solar Pirate Galleon glides peacefully into the uncharted Orion Abyss..."', W / 2, H - barH + 62);
+    } else if (introT < 5.0) {
+      // Stage 2: Scanning the Void
+      cx.font = 'bold 13px "Orbitron", sans-serif';
+      cx.fillStyle = '#ffd23c';
+      cx.fillText('📡 LONG-RANGE SUBSPACE SENSORS ONLINE', W / 2, H - barH + 34);
+
+      cx.font = '16px "Outfit", sans-serif';
+      cx.fillStyle = '#ffffff';
+      cx.fillText('"Scanning deep celestial void... All systems nominal. Solar sails locked to stellar ether."', W / 2, H - barH + 62);
+    } else {
+      // Stage 3: Hyperspace Rift & Red Alert!
+      const flash = Math.sin(introT * 18) > 0;
+      cx.font = 'bold 15px "Orbitron", sans-serif';
+      cx.fillStyle = flash ? '#ff0055' : '#ffffff';
+      cx.fillText('🚨 RED ALERT: MASSIVE HYPERSPACE RUPTURE DETECTED!', W / 2, H - barH + 34);
+
+      cx.font = 'bold 16px "Outfit", sans-serif';
+      cx.fillStyle = '#ffd23c';
+      cx.fillText('"ALIEN UFO FLEET DROPPING OUT OF WARP! ALL HANDS TO BATTLE STATIONS! MAN THE CANNONS!"', W / 2, H - barH + 62);
+    }
+
+    // Skip Button Indicator
+    cx.textAlign = 'right';
+    cx.font = '12px "Orbitron", sans-serif';
+    cx.fillStyle = 'rgba(255, 210, 60, 0.85)';
+    cx.fillText('[ SPACE / CLICK TO SKIP PROLOGUE ▶ ]', W - 24, H - barH - 14);
   }
 }
 
