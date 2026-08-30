@@ -609,17 +609,53 @@ function addScore(base, x, y) {
 }
 
 function explode(x, y, col, n) {
+  // 1. Shockwave Blast Ring
+  parts.push({
+    type: 'ring',
+    x, y,
+    r: 6,
+    maxR: 35 + n * 0.9,
+    life: 0.42,
+    maxLife: 0.42,
+    col: col || '#00ff66',
+    lw: 3.5
+  });
+
+  // 2. Plasma Fireball Clouds
+  const fireCount = Math.min(8, 3 + (n / 10 | 0));
+  for (let i = 0; i < fireCount; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const sp = 30 + Math.random() * 80;
+    parts.push({
+      type: 'fireball',
+      x: x + (Math.random() - 0.5) * 12,
+      y: y + (Math.random() - 0.5) * 12,
+      vx: Math.cos(a) * sp,
+      vy: Math.sin(a) * sp,
+      life: 0.50 + Math.random() * 0.25,
+      maxLife: 0.75,
+      r: 8 + Math.random() * 8,
+      maxR: 26 + Math.random() * 18,
+      col: col || '#ffd23c'
+    });
+  }
+
+  // 3. High-Velocity Flying Shrapnel & Molten Sparks
   for (let i = 0; i < n; i++) {
     const a = Math.random() * Math.PI * 2;
-    const sp = 60 + Math.random() * 290;
+    const sp = 80 + Math.random() * 320;
+    const isShard = Math.random() < 0.5;
     parts.push({
+      type: isShard ? 'shrapnel' : 'spark',
       x, y,
       vx: Math.cos(a) * sp,
       vy: Math.sin(a) * sp,
-      life: 0.5 + Math.random() * 0.6,
-      col,
-      size: 4 + Math.random() * 9,
-      isSplinter: Math.random() < 0.45
+      rot: Math.random() * Math.PI * 2,
+      vrot: (Math.random() - 0.5) * 16,
+      life: 0.45 + Math.random() * 0.65,
+      maxLife: 1.1,
+      col: isShard ? (Math.random() < 0.5 ? col : '#ffffff') : (Math.random() < 0.6 ? '#ffd23c' : '#ff3366'),
+      size: isShard ? (6 + Math.random() * 9) : (2.5 + Math.random() * 3.5)
     });
   }
 }
@@ -1264,7 +1300,7 @@ function update(dt) {
   ship.y = Math.max(70, Math.min(H - 80, ship.y));
 
 function getWorldMouse() {
-  const zoom = 1.24;
+  const zoom = (state === 'intro') ? 1.66 : 1.25;
   return {
     x: (mouse.x - W * 0.5) / zoom + W * 0.5,
     y: (mouse.y - H * 0.5) / zoom + H * 0.5
@@ -1579,9 +1615,22 @@ function getWorldMouse() {
   // Update Particles
   for (let i = parts.length - 1; i >= 0; i--) {
     const p = parts[i];
-    p.x += p.vx * dt; p.y += p.vy * dt;
     p.life -= dt;
-    if (p.life <= 0) parts.splice(i, 1);
+    if (p.life <= 0) { parts.splice(i, 1); continue; }
+
+    if (p.type === 'ring') {
+      p.r += (p.maxR - p.r) * Math.min(1, dt * 9);
+    } else if (p.type === 'fireball') {
+      p.x += (p.vx || 0) * dt; p.y += (p.vy || 0) * dt;
+      p.vx = (p.vx || 0) * 0.94; p.vy = (p.vy || 0) * 0.94;
+      p.r += (p.maxR - p.r) * Math.min(1, dt * 5);
+    } else if (p.type === 'shrapnel') {
+      p.x += (p.vx || 0) * dt; p.y += (p.vy || 0) * dt;
+      p.rot = (p.rot || 0) + (p.vrot || 2) * dt;
+      p.vx = (p.vx || 0) * 0.96; p.vy = (p.vy || 0) * 0.96;
+    } else {
+      p.x += (p.vx || 0) * dt; p.y += (p.vy || 0) * dt;
+    }
   }
 }
 
@@ -1686,8 +1735,8 @@ function draw() {
   cx.fillStyle = '#020308';
   cx.fillRect(0, 0, W, H);
 
-  // Apply 1.24x Cinematic Camera Zoom & Action Framing
-  const zoom = 1.24;
+  // Apply Dynamic Cinematic Camera Zoom (1.66x in Intro Storyline, 1.25x in Battle)
+  const zoom = (state === 'intro') ? 1.66 : 1.25;
   const _sx = shake ? (Math.random() - 0.5) * shake : 0;
   const _sy = shake ? (Math.random() - 0.5) * shake : 0;
 
@@ -1995,14 +2044,54 @@ function draw() {
     cx.restore();
   }
 
-  // 9. Particles
+  // 9. Particles (Multi-Stage Hollywood Explosions & Plasma FX)
   for (const pt of parts) {
-    cx.save(); cx.translate(pt.x, pt.y);
-    cx.globalAlpha = Math.max(0, pt.life);
-    cx.fillStyle = pt.col;
-    if (pt.isSplinter) cx.fillRect(-pt.size / 2, -pt.size, pt.size, pt.size * 2);
-    else { cx.beginPath(); cx.arc(0, 0, pt.size || 4, 0, Math.PI * 2); cx.fill(); }
-    cx.restore();
+    if (pt.type === 'ring') {
+      cx.save();
+      const alpha = Math.max(0, Math.min(1, pt.life / (pt.maxLife || 0.45)));
+      cx.globalAlpha = alpha;
+      cx.strokeStyle = pt.col || '#00ff66';
+      cx.lineWidth = pt.lw || 3;
+      cx.beginPath();
+      cx.arc(pt.x, pt.y, Math.max(1, pt.r), 0, Math.PI * 2);
+      cx.stroke();
+      cx.restore();
+    } else if (pt.type === 'fireball') {
+      cx.save();
+      const alpha = Math.max(0, Math.min(1, pt.life / (pt.maxLife || 0.7)));
+      cx.globalAlpha = alpha * 0.85;
+      const fg = cx.createRadialGradient(pt.x, pt.y, 2, pt.x, pt.y, Math.max(4, pt.r));
+      fg.addColorStop(0, '#ffffff');
+      fg.addColorStop(0.35, pt.col || '#ffd23c');
+      fg.addColorStop(0.75, '#ff3300');
+      fg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = fg;
+      cx.beginPath();
+      cx.arc(pt.x, pt.y, Math.max(4, pt.r), 0, Math.PI * 2);
+      cx.fill();
+      cx.restore();
+    } else if (pt.type === 'shrapnel') {
+      cx.save();
+      cx.translate(pt.x, pt.y);
+      cx.rotate(pt.rot || 0);
+      const alpha = Math.max(0, Math.min(1, pt.life / (pt.maxLife || 1.0)));
+      cx.globalAlpha = alpha;
+      cx.fillStyle = pt.col || '#ffffff';
+      cx.fillRect(-pt.size * 0.5, -pt.size * 0.25, pt.size, pt.size * 0.5);
+      cx.strokeStyle = '#ffd23c';
+      cx.lineWidth = 1;
+      cx.strokeRect(-pt.size * 0.5, -pt.size * 0.25, pt.size, pt.size * 0.5);
+      cx.restore();
+    } else {
+      cx.save();
+      cx.translate(pt.x, pt.y);
+      cx.globalAlpha = Math.max(0, Math.min(1, pt.life));
+      cx.fillStyle = pt.col;
+      cx.beginPath();
+      cx.arc(0, 0, pt.size || 3.5, 0, Math.PI * 2);
+      cx.fill();
+      cx.restore();
+    }
   }
 
   // 10. REALISTIC PIRATE SHIP (SPACE SOLAR GALLEON SIDE PROFILE)
@@ -2192,10 +2281,11 @@ function draw() {
     cx.globalAlpha = 1; cx.textAlign = 'left';
 
     // 12. Tactical Laser Sight & Precision Aim Reticle
+    const currentZoom = (state === 'intro') ? 1.66 : 1.25;
     const startX = ship.x + 36 + Math.cos(ship.aimAngle || 0) * 22;
     const startY = ship.y + 18 + Math.sin(ship.aimAngle || 0) * 22;
-    const startScreenX = (startX - W * 0.5) * 1.24 + W * 0.5;
-    const startScreenY = (startY - H * 0.5) * 1.24 + H * 0.5;
+    const startScreenX = (startX - W * 0.5) * currentZoom + W * 0.5;
+    const startScreenY = (startY - H * 0.5) * currentZoom + H * 0.5;
     
     const wm = getWorldMouse();
     let locked = false;
