@@ -268,16 +268,18 @@ let touchOn = false;
 if (isTouch) document.getElementById('touchHint').style.display = 'block';
 
 addEventListener('keydown', e => {
+  initAudio();
   keys[e.code] = true;
   if (e.code === 'Space') e.preventDefault();
   if (e.code === 'Escape' || e.code === 'KeyP') togglePause();
 });
 addEventListener('keyup', e => keys[e.code] = false);
 addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-addEventListener('mousedown', e => { if (e.button === 0) mouse.down = true; });
+addEventListener('mousedown', e => { initAudio(); if (e.button === 0) mouse.down = true; });
 addEventListener('mouseup', e => { if (e.button === 0) mouse.down = false; });
 
 cv.addEventListener('touchstart', e => {
+  initAudio();
   touchOn = true;
   const tc = e.touches[0];
   mouse.x = tc.clientX; mouse.y = tc.clientY;
@@ -307,39 +309,58 @@ function initAudio() {
       g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
       o.connect(g); g.connect(masterG); o.start(t0); o.stop(t0 + dur + 0.03);
     };
-    const D4=293.66, E4=329.63, F4=349.23, G4=392.00, A4=440.00, B4=493.88, C5=523.25;
-    const mel = [
-      A4,A4,A4,A4, A4,G4,A4,B4, A4,G4,F4,E4, D4, 0, 0, 0,
-      A4,A4,A4,A4, A4,B4,C5,B4, A4,G4,F4,E4, D4, 0, 0, 0
+    // Frequencies
+    const G2=98.00, Bb2=116.54, C3=130.81, D3=146.83, Eb3=155.56, F3=174.61, Fs3=185.00, G3=196.00, Ab3=207.65, A3=220.00, Bb3=233.08, B3=246.94;
+    const C4=261.63, Db4=277.18, D4=293.66, Eb4=311.13, E4=329.63, F4=349.23, Fs4=369.99, G4=392.00, Ab4=415.30, A4=440.00, Bb4=466.16, B4=493.88;
+    const C5=523.25, Db5=554.37, D5=587.33, Eb5=622.25, E5=659.25, F5=698.46, Fs5=739.99, G5=783.99, Ab5=830.61, A5=880.00, Bb5=932.33;
+
+    // Star Wars Epic Medley: Main Theme Fanfare -> Imperial March (Darth Vader)
+    // 64 step score (each step = 0.20s sixteenth/eighth note pulse)
+    const swMelody = [
+      // 0-15: Star Wars Main Theme Fanfare (Heroic Brass)
+      D4, D4, D4, G4, G4, G4, D5, D5,  C5, B4, A4, G5, G5, D5, D5, 0,
+      // 16-31: Main Theme Variation
+      C5, B4, A4, G5, G5, D5, D5, 0,   C5, B4, C5, A4, A4, A4, 0, 0,
+      // 32-47: The Imperial March (Darth Vader)
+      G4, 0, G4, 0, G4, 0, Eb4, 0,     Bb4, 0, G4, 0, Eb4, 0, Bb4, G4,
+      // 48-63: Imperial March Climax
+      D5, 0, D5, 0, D5, 0, Eb5, 0,     Bb4, 0, Fs4, 0, Eb4, 0, Bb4, G4
     ];
-    const D3=146.83, C3=130.81;
-    const barRoot = [D3, C3, D3, C3];
-    const Dm=[293.66,349.23,440.00], C=[261.63,329.63,392.00];
-    const barChord = [Dm, C, Dm, C];
-    const STEP = 0.30;
+
+    const swBass = [
+      // Main theme bassline
+      G2, G3, G2, G3, G2, G3, G2, G3,  C3, C4, C3, C4, G2, G3, G2, G3,
+      C3, C4, C3, C4, G2, G3, G2, G3,  C3, C4, D3, D4, G2, G3, G2, 0,
+      // Imperial March bass stabs
+      G2, G2, G2, G2, G2, G2, Eb2=77.78, Eb2,  Bb2, Bb2, G2, G2, Eb2, Eb2, Bb2, G2,
+      D3, D3, D3, D3, D3, D3, Eb3, Eb3,        Bb2, Bb2, Fs2=92.50, Fs2, Eb2, Eb2, Bb2, G2
+    ];
+
+    const STEP = 0.22;
     let step = 0, next = ac.currentTime + 0.15;
     setInterval(() => {
       while (next < ac.currentTime + 0.5) {
-        if (musicOn && state === 'play') {
-          const s = step % 32, bar = (s / 8) | 0, sub = s % 8;
-          const mf = mel[s];
+        if (musicOn && (state === 'play' || state === 'menu')) {
+          const s = step % 64;
+          const mf = swMelody[s];
+          const bf = swBass[s];
+
+          // Lead Orchestral Brass Trumpet / French Horn
           if (mf) {
-            tone('sawtooth', mf, next, STEP * 0.92, 0.042, -5);
-            tone('triangle', mf * 2, next, STEP * 0.6, 0.015);
+            tone('sawtooth', mf, next, STEP * 0.95, 0.055, -4);
+            tone('square', mf, next, STEP * 0.70, 0.028, 4);
+            tone('triangle', mf * 2, next, STEP * 0.50, 0.018);
           }
-          if (sub === 0 || sub === 4) {
-            tone('sawtooth', barRoot[bar], next, STEP * 1.5, 0.12, 5);
-            tone('sine', barRoot[bar] / 2, next, STEP * 1.5, 0.09);
-          }
-          if (sub === 2 || sub === 6) {
-            for (const cf of barChord[bar]) {
-              tone('sawtooth', cf, next, STEP * 0.75, 0.022, -10);
-            }
+
+          // Heavy Imperial March Bass & Timpani Stabs
+          if (bf) {
+            tone('sawtooth', bf, next, STEP * 1.1, 0.12, 5);
+            tone('sine', bf / 2, next, STEP * 1.2, 0.14);
           }
         }
         step++; next += STEP;
       }
-    }, 120);
+    }, 100);
   } catch (e) {}
 }
 
