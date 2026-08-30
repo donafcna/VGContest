@@ -225,14 +225,40 @@ let fortT = 1.6, gliderT = 4.5, mineT = 7.5, shootCool = 0, t = 0;
 
 function getCameraTransform() {
   let zoom = 1.25;
+  let camX = W * 0.5, camY = H * 0.5;
+  
   if (state === 'intro') {
-    if (introT >= 2.2 && introT <= 3.8) {
-      zoom = 1.48; // Dramatic action punch zoom when cannons fire
+    if (introT < 1.9) {
+      // Act 1: Initial full view of ship and advancing UFOs
+      zoom = 1.25;
+      camX = W * 0.5;
+      camY = H * 0.5;
+    } else if (introT < 2.4) {
+      // Smoothly zoom in tightly on the cannons and UFOs
+      const p = (introT - 1.9) / 0.5;
+      zoom = 1.25 + p * (2.25 - 1.25);
+      camX = (W * 0.5) + p * (W * 0.44 - W * 0.5);
+      camY = H * 0.5;
+    } else if (introT < 5.2) {
+      // Act 2: TIGHT ACTION-CAM ZOOM (Only cannons, space, and exploding UFOs visible!)
+      zoom = 2.25;
+      camX = W * 0.44;
+      camY = H * 0.5;
+    } else if (introT < 7.6) {
+      // Act 3: Smoothly zoom back out to reveal full galleon and incoming armada!
+      const p = (introT - 5.2) / 2.4;
+      zoom = 2.25 - p * (2.25 - 1.25);
+      camX = (W * 0.44) - p * (W * 0.44 - W * 0.5);
+      camY = H * 0.5;
     } else {
-      zoom = 1.28;
+      // Act 4: Standard combat battle zoom
+      zoom = 1.25;
+      camX = W * 0.5;
+      camY = H * 0.5;
     }
   }
-  return { zoom, camX: W * 0.5, camY: H * 0.5 };
+  
+  return { zoom, camX, camY };
 }
 
 function getWorldMouse() {
@@ -1206,8 +1232,8 @@ function update(dt) {
         ship.aimAngle = Math.atan2(introUfos[0].y - cannon1Y, introUfos[0].x - cannon1X);
       }
       
-      // SIMULTANEOUS DUAL CANNON BLAST at introT = 2.8s!
-      if (introT >= 2.8 && !introShot1) {
+      // SIMULTANEOUS DUAL CANNON BLAST at introT = 2.6s!
+      if (introT >= 2.6 && !introShot1) {
         introShot1 = true;
         introShot2 = true;
         sfx('shot');
