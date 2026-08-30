@@ -1678,6 +1678,187 @@ function draw() {
     }
   }
 
+  // 2. Render Gold Dubloons
+  for (const c of coins) {
+    cx.save(); cx.translate(c.x, c.y);
+    cx.scale(Math.abs(Math.cos(c.spin || 0)) * 0.85 + 0.15, 1);
+    const cg = cx.createRadialGradient(-2, -2, 1, 0, 0, 16);
+    cg.addColorStop(0, '#fff6b8'); cg.addColorStop(0.4, '#ffd23c'); cg.addColorStop(1, '#9e6d05');
+    cx.fillStyle = cg;
+    cx.beginPath(); cx.arc(0, 0, 16, 0, Math.PI * 2); cx.fill();
+    cx.strokeStyle = '#b8860b'; cx.lineWidth = 2; cx.stroke();
+    cx.restore();
+  }
+
+  // 3. Render Pirate Powerup Supply Chests
+  for (const pu of powerups) {
+    const col = pu.type === 'heart' ? '#ff3366' : pu.type === 'rapid' ? '#00e5ff' : pu.type === 'shield' ? '#00dfa2' : pu.type === 'triple' ? '#ffd23c' : '#ff0055';
+    const ic  = pu.type === 'heart' ? '❤️' : pu.type === 'rapid' ? '⚡' : pu.type === 'shield' ? '🛡️' : pu.type === 'triple' ? '🔱' : '💣';
+    
+    cx.save(); cx.translate(pu.x, pu.y);
+    const glow = cx.createRadialGradient(0, 0, 5, 0, 0, 32);
+    glow.addColorStop(0, col + 'ee'); glow.addColorStop(1, 'rgba(0,0,0,0)');
+    cx.fillStyle = glow; cx.beginPath(); cx.arc(0, 0, 32, 0, Math.PI * 2); cx.fill();
+    
+    cx.fillStyle = '#2c1504'; cx.beginPath(); cx.roundRect(-16, -16, 32, 32, 6); cx.fill();
+    cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.5; cx.stroke();
+    cx.font = '19px sans-serif'; cx.textAlign = 'center'; cx.textBaseline = 'middle';
+    cx.fillText(ic, 0, 1);
+    cx.restore();
+  }
+
+  // 4. Render Heavy Alien UFO Battle-Cruisers (Star Wars Style)
+  for (const f of forts) {
+    cx.save(); cx.translate(f.x, f.y);
+    
+    // Glowing Saucer Force Field
+    const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.48);
+    sg.addColorStop(0, f.col + '99'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+    cx.fillStyle = sg;
+    cx.beginPath(); cx.ellipse(0, 0, f.w * 0.48, f.h * 0.45, 0, 0, Math.PI * 2); cx.fill();
+
+    // Metallic Flying Saucer Hull (Upper Dome & Lower Disc)
+    const dg = cx.createLinearGradient(0, -f.h * 0.45, 0, f.h * 0.45);
+    dg.addColorStop(0, '#d0dbe5'); dg.addColorStop(0.35, '#6a798a'); dg.addColorStop(1, '#1b222c');
+    cx.fillStyle = dg;
+    cx.beginPath(); cx.ellipse(0, 0, f.w * 0.46, f.h * 0.32, 0, 0, Math.PI * 2); cx.fill();
+    cx.strokeStyle = '#11161d'; cx.lineWidth = 3; cx.stroke();
+
+    // Upper Glass Cockpit Dome with Alien Glow
+    const ckg = cx.createRadialGradient(-8, -12, 2, 0, -8, 20);
+    ckg.addColorStop(0, '#ffffff'); ckg.addColorStop(0.5, f.col); ckg.addColorStop(1, '#052b14');
+    cx.fillStyle = ckg;
+    cx.beginPath(); cx.ellipse(0, -10, 22, 14, 0, 0, Math.PI * 2); cx.fill();
+    cx.strokeStyle = '#fff'; cx.lineWidth = 1.5; cx.stroke();
+
+    // Rotating Saucer Navigation Lights
+    for (let k = 0; k < 6; k++) {
+      const a = (k / 6) * Math.PI * 2 + f.saucerSpin;
+      const lx = Math.cos(a) * (f.w * 0.38);
+      const ly = Math.sin(a) * (f.h * 0.22);
+      cx.fillStyle = f.col;
+      cx.beginPath(); cx.arc(lx, ly, 3.5, 0, Math.PI * 2); cx.fill();
+    }
+    
+    // Health bar
+    cx.fillStyle = 'rgba(0,0,0,0.7)'; cx.fillRect(-35, -f.h * 0.5 - 12, 70, 6);
+    cx.fillStyle = '#00ff66'; cx.fillRect(-33, -f.h * 0.5 - 11, 66 * (f.hp / f.maxHp), 4);
+    
+    cx.restore();
+  }
+
+  // 5. Render TIE-Style UFO Fighters
+  for (const g of gliders) {
+    cx.save(); cx.translate(g.x, g.y);
+    
+    // Central Spherical UFO Pod
+    const cg = cx.createRadialGradient(-4, -4, 2, 0, 0, 14);
+    cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.4, '#5d6878'); cg.addColorStop(1, '#1b222c');
+    cx.fillStyle = cg;
+    cx.beginPath(); cx.arc(0, 0, 14, 0, Math.PI * 2); cx.fill();
+    cx.strokeStyle = '#00ff66'; cx.lineWidth = 2; cx.stroke();
+
+    // Glowing Green Cockpit Window (TIE Viewport)
+    cx.fillStyle = '#00ff66';
+    cx.beginPath(); cx.arc(-4, 0, 5, 0, Math.PI * 2); cx.fill();
+
+    // Twin Vertical Solar Radiator Wings (Star Wars TIE Style)
+    cx.fillStyle = '#222834';
+    cx.strokeStyle = '#6a798a'; cx.lineWidth = 2;
+    for (const wx of [-16, 16]) {
+      cx.beginPath();
+      cx.moveTo(wx, -16); cx.lineTo(wx - 4, -20); cx.lineTo(wx - 4, 20); cx.lineTo(wx, 16);
+      cx.closePath();
+      cx.fill(); cx.stroke();
+    }
+    
+    cx.restore();
+  }
+
+  // 6. Render Quantum Alien Mines
+  for (const m of mines) {
+    cx.save(); cx.translate(m.x, m.y); cx.rotate(m.spin);
+    
+    cx.strokeStyle = '#00e5ff'; cx.lineWidth = 3;
+    for (let k = 0; k < 6; k++) {
+      const a = (k / 6) * Math.PI * 2;
+      cx.beginPath(); cx.moveTo(Math.cos(a)*m.r, Math.sin(a)*m.r);
+      cx.lineTo(Math.cos(a)*(m.r + 12), Math.sin(a)*(m.r + 12)); cx.stroke();
+    }
+    
+    const mgr = cx.createRadialGradient(-3, -3, 2, 0, 0, m.r);
+    mgr.addColorStop(0, '#c7f9ff'); mgr.addColorStop(0.5, '#0077ff'); mgr.addColorStop(1, '#001a4d');
+    cx.fillStyle = mgr; cx.beginPath(); cx.arc(0, 0, m.r, 0, Math.PI * 2); cx.fill();
+    
+    cx.fillStyle = `rgba(255,255,255,${0.8 + Math.sin(t * 14) * 0.2})`;
+    cx.beginPath(); cx.arc(0, 0, 6, 0, Math.PI * 2); cx.fill();
+    cx.restore();
+  }
+
+  // 7. Render Boss Colossal UFO Mothership (Death Saucer)
+  if (boss) {
+    cx.save(); cx.translate(boss.x, boss.y);
+    
+    // Giant Saucer Force Shield Halo
+    const bg = cx.createRadialGradient(0, 0, 20, 0, 0, boss.w * 0.48);
+    bg.addColorStop(0, boss.col + 'aa'); bg.addColorStop(1, 'rgba(0,0,0,0)');
+    cx.fillStyle = bg;
+    cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.48, boss.h * 0.46, 0, 0, Math.PI * 2); cx.fill();
+
+    // Armored Alien Saucer Disc
+    const dg = cx.createLinearGradient(0, -boss.h * 0.45, 0, boss.h * 0.45);
+    dg.addColorStop(0, '#e3edf7'); dg.addColorStop(0.35, '#56667a'); dg.addColorStop(1, '#111720');
+    cx.fillStyle = dg;
+    cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.46, boss.h * 0.35, 0, 0, Math.PI * 2); cx.fill();
+    cx.strokeStyle = '#00ff66'; cx.lineWidth = 4; cx.stroke();
+
+    // Central Giant Superlaser Emitter Core
+    const cr = cx.createRadialGradient(0, 0, 5, 0, 0, 42);
+    cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.4, '#00ff66'); cr.addColorStop(1, '#023814');
+    cx.fillStyle = cr; cx.beginPath(); cx.arc(0, 0, 36, 0, Math.PI * 2); cx.fill();
+    cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.5; cx.stroke();
+
+    // Rotating Super-Array Lights
+    for (let k = 0; k < 8; k++) {
+      const a = (k / 8) * Math.PI * 2 + boss.spinRing;
+      const lx = Math.cos(a) * (boss.w * 0.38);
+      const ly = Math.sin(a) * (boss.h * 0.26);
+      cx.fillStyle = '#00ff66';
+      cx.beginPath(); cx.arc(lx, ly, 6, 0, Math.PI * 2); cx.fill();
+    }
+
+    cx.restore();
+  }
+
+  // 8. Render Projectiles
+  // Player Fiery Cannonballs
+  for (const b of balls) {
+    cx.save(); cx.translate(b.x, b.y);
+    const bg = cx.createRadialGradient(-2, -2, 1, 0, 0, b.r);
+    bg.addColorStop(0, '#ffffff'); bg.addColorStop(0.35, '#ffe552'); bg.addColorStop(0.75, '#ff6a00'); bg.addColorStop(1, '#4a1100');
+    cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, b.r, 0, Math.PI * 2); cx.fill();
+    cx.restore();
+  }
+  // Enemy Star Wars Green Laser Blasts
+  for (const eb of eballs) {
+    cx.save(); cx.translate(eb.x, eb.y);
+    const mg = cx.createRadialGradient(0, 0, 1, 0, 0, eb.r + 6);
+    mg.addColorStop(0, '#ffffff'); mg.addColorStop(0.4, '#00ff66'); mg.addColorStop(1, 'rgba(0,255,100,0)');
+    cx.fillStyle = mg; cx.beginPath(); cx.arc(0, 0, eb.r + 6, 0, Math.PI * 2); cx.fill();
+    cx.fillStyle = '#ffffff'; cx.fillRect(-10, -3, 20, 6);
+    cx.restore();
+  }
+
+  // 9. Particles
+  for (const pt of parts) {
+    cx.save(); cx.translate(pt.x, pt.y);
+    cx.globalAlpha = Math.max(0, pt.life);
+    cx.fillStyle = pt.col;
+    if (pt.isSplinter) cx.fillRect(-pt.size / 2, -pt.size, pt.size, pt.size * 2);
+    else { cx.beginPath(); cx.arc(0, 0, pt.size || 4, 0, Math.PI * 2); cx.fill(); }
+    cx.restore();
+  }
+
   // 10. REALISTIC PIRATE SHIP (SPACE SOLAR GALLEON SIDE PROFILE)
   if (state === 'intro' || state === 'play' || state === 'pause') {
     cx.save();
