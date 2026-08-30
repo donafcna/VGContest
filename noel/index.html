@@ -200,6 +200,7 @@ let maxHp = 5, baseCool = 0.25, spdMul = 1, magnetBonus = 0, goldMult = 1;
 let baseSpread = [0], shipCols = ['#c88a55', '#8c5528', '#3b1c06'], tokensRun = 0, killsRun = 0, spinsRun = 0;
 let introT = 0, storySectorAnnounced = 0;
 let introUfos = [], introShot1 = false, introShot2 = false;
+let wreckage = [], shieldShards = [];
 
 // High-fidelity Real Space Pirate Galleon
 const ship = {
@@ -1010,9 +1011,21 @@ document.getElementById('startbtn').addEventListener('click', () => {
   introT = 0;
   introShot1 = false;
   introShot2 = false;
+  wreckage = [];
+  shieldShards = [];
   introUfos = [
-    { x: W * 0.78, y: H * 0.38, targetX: W * 0.58, targetY: H * 0.38, col: '#00ff66', w: 66, h: 40, saucerSpin: 0, dead: false },
-    { x: W * 0.84, y: H * 0.62, targetX: W * 0.64, targetY: H * 0.62, col: '#00e5ff', w: 66, h: 40, saucerSpin: 0, dead: false }
+    {
+      x: W * 0.82, y: H * 0.35, targetX: W * 0.58, targetY: H * 0.38,
+      vx: -180, vy: 20, pitch: 0.12, roll: 0.15,
+      col: '#00ff66', w: 70, h: 44, saucerSpin: 0,
+      shield: 1.0, dead: false, engineGlow: 1.0
+    },
+    {
+      x: W * 0.88, y: H * 0.65, targetX: W * 0.64, targetY: H * 0.62,
+      vx: -190, vy: -20, pitch: -0.12, roll: -0.15,
+      col: '#00e5ff', w: 70, h: 44, saucerSpin: 0,
+      shield: 1.0, dead: false, engineGlow: 1.0
+    }
   ];
   storySectorAnnounced = 1;
   tokensRun = 0; killsRun = 0; spinsRun = 0;
@@ -1361,18 +1374,48 @@ function update(dt) {
 
         // Simultaneous Double Detonation on impact
         if (p >= 1.0) {
-          if (b.isIntro === 1 && introUfos[0] && !introUfos[0].dead) {
-            introUfos[0].dead = true;
-            explode(introUfos[0].x, introUfos[0].y, introUfos[0].col, 55);
+          const u = (b.isIntro === 1) ? introUfos[0] : introUfos[1];
+          if (u && !u.dead) {
+            u.dead = true;
+            explode(u.x, u.y, u.col, 65);
             sfx('boom');
-            addShake(24);
-            coins.push({ x: introUfos[0].x, y: introUfos[0].y, vx: -90, vy: -35 });
-          } else if (b.isIntro === 2 && introUfos[1] && !introUfos[1].dead) {
-            introUfos[1].dead = true;
-            explode(introUfos[1].x, introUfos[1].y, introUfos[1].col, 55);
-            sfx('boom');
-            addShake(24);
-            coins.push({ x: introUfos[1].x, y: introUfos[1].y, vx: -90, vy: 35 });
+            addShake(28);
+
+            // 1. Hexagonal Energy Shield Shatter Shards
+            for (let k = 0; k < 12; k++) {
+              const ang = (k / 12) * Math.PI * 2;
+              const spd = 140 + Math.random() * 160;
+              shieldShards.push({
+                x: u.x, y: u.y,
+                vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+                rot: Math.random() * Math.PI * 2, vrot: (Math.random() - 0.5) * 14,
+                size: 8 + Math.random() * 8, col: u.col,
+                life: 0.65, maxLife: 0.65
+              });
+            }
+
+            // 2. Saucer Hull Cleaved into 2 Spinning Wreckage Halves
+            wreckage.push({
+              x: u.x - 14, y: u.y - 8,
+              vx: -130 + Math.random() * 40, vy: -75 - Math.random() * 50,
+              rot: u.pitch || 0, vrot: -4.8,
+              col: u.col, half: 'top', w: u.w, h: u.h, life: 2.4, maxLife: 2.4
+            });
+            wreckage.push({
+              x: u.x + 14, y: u.y + 8,
+              vx: 90 + Math.random() * 40, vy: 75 + Math.random() * 50,
+              rot: u.pitch || 0, vrot: 4.8,
+              col: u.col, half: 'bottom', w: u.w, h: u.h, life: 2.4, maxLife: 2.4
+            });
+
+            // 3. Gold dubloons burst out
+            for (let c = 0; c < 3; c++) {
+              coins.push({
+                x: u.x, y: u.y,
+                vx: -120 + Math.random() * 60,
+                vy: (c - 1) * 45 + (Math.random() - 0.5) * 20
+              });
+            }
           }
           balls.splice(i, 1);
         }
@@ -1381,6 +1424,35 @@ function update(dt) {
         b.y += b.vy * dt;
         if (b.x > W + 80) balls.splice(i, 1);
       }
+    }
+
+    // Update Wreckage & Shield Shards in Intro
+    for (let i = wreckage.length - 1; i >= 0; i--) {
+      const w = wreckage[i];
+      w.x += w.vx * dt; w.y += w.vy * dt;
+      w.rot += w.vrot * dt;
+      w.vx *= 0.98; w.vy *= 0.98;
+      w.life -= dt;
+      if (Math.random() < 0.65) {
+        parts.push({
+          type: 'fireball',
+          x: w.x + (Math.random() - 0.5) * 16,
+          y: w.y + (Math.random() - 0.5) * 16,
+          vx: (Math.random() - 0.5) * 30, vy: (Math.random() - 0.5) * 30,
+          life: 0.35, maxLife: 0.35,
+          r: 5, maxR: 16,
+          col: w.col
+        });
+      }
+      if (w.life <= 0) wreckage.splice(i, 1);
+    }
+
+    for (let i = shieldShards.length - 1; i >= 0; i--) {
+      const s = shieldShards[i];
+      s.x += s.vx * dt; s.y += s.vy * dt;
+      s.rot += s.vrot * dt;
+      s.life -= dt;
+      if (s.life <= 0) shieldShards.splice(i, 1);
     }
 
     // Update coins & explosion particles in intro
@@ -2066,43 +2138,130 @@ function draw() {
     cx.restore();
   }
 
-  // 5.5 Render Intro UFO Scouts
+  // 5.5 Render Intro UFO Scouts & Fractured Wreckage
   if (state === 'intro') {
     for (const u of introUfos) {
       if (!u.dead) {
         cx.save();
         cx.translate(u.x, u.y);
+        cx.rotate(u.pitch || 0);
         
-        // Saucer forcefield glow
-        const sg = cx.createRadialGradient(0, 0, 8, 0, 0, u.w * 0.48);
-        sg.addColorStop(0, u.col + 'aa'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+        // Dynamic Forcefield Shield Aura
+        const sg = cx.createRadialGradient(0, 0, 10, 0, 0, u.w * 0.55);
+        sg.addColorStop(0, u.col + 'aa');
+        sg.addColorStop(0.6, u.col + '33');
+        sg.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = sg;
-        cx.beginPath(); cx.ellipse(0, 0, u.w * 0.48, u.h * 0.45, 0, 0, Math.PI * 2); cx.fill();
+        cx.beginPath(); cx.ellipse(0, 0, u.w * 0.55, u.h * 0.52, 0, 0, Math.PI * 2); cx.fill();
 
-        // Metallic Saucer Hull
-        const dg = cx.createLinearGradient(0, -u.h * 0.45, 0, u.h * 0.45);
-        dg.addColorStop(0, '#d0dbe5'); dg.addColorStop(0.35, '#6a798a'); dg.addColorStop(1, '#1b222c');
+        // Pulsing Ion Thruster Wake (Leftward stream)
+        const tg = cx.createLinearGradient(u.w * 0.35, 0, u.w * 0.75, 0);
+        tg.addColorStop(0, u.col);
+        tg.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.fillStyle = tg;
+        cx.beginPath();
+        cx.moveTo(u.w * 0.35, -8);
+        cx.lineTo(u.w * 0.75 + Math.sin(t * 16) * 10, 0);
+        cx.lineTo(u.w * 0.35, 8);
+        cx.closePath();
+        cx.fill();
+
+        // Armored Saucer Disc (Titanium Alloy)
+        const dg = cx.createLinearGradient(0, -u.h * 0.5, 0, u.h * 0.5);
+        dg.addColorStop(0, '#e8f1fa');
+        dg.addColorStop(0.3, '#738499');
+        dg.addColorStop(0.7, '#232b36');
+        dg.addColorStop(1, '#0e1217');
         cx.fillStyle = dg;
-        cx.beginPath(); cx.ellipse(0, 0, u.w * 0.46, u.h * 0.32, 0, 0, Math.PI * 2); cx.fill();
-        cx.strokeStyle = '#11161d'; cx.lineWidth = 2.5; cx.stroke();
+        cx.beginPath(); cx.ellipse(0, 0, u.w * 0.48, u.h * 0.34, 0, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#0a0e13'; cx.lineWidth = 2.5; cx.stroke();
 
-        // Glass Cockpit Dome
-        const ckg = cx.createRadialGradient(-4, -6, 2, 0, -4, 12);
-        ckg.addColorStop(0, '#ffffff'); ckg.addColorStop(0.5, u.col); ckg.addColorStop(1, '#052b14');
+        // Glowing Core / Central Armored Dome
+        const ckg = cx.createRadialGradient(-6, -8, 2, 0, -4, 16);
+        ckg.addColorStop(0, '#ffffff');
+        ckg.addColorStop(0.4, u.col);
+        ckg.addColorStop(1, '#02240e');
         cx.fillStyle = ckg;
-        cx.beginPath(); cx.ellipse(0, -5, 14, 9, 0, 0, Math.PI * 2); cx.fill();
+        cx.beginPath(); cx.ellipse(0, -6, 16, 11, 0, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.5; cx.stroke();
 
-        // Rotating Navigation Lights
-        for (let k = 0; k < 5; k++) {
-          const a = (k / 5) * Math.PI * 2 + u.saucerSpin;
+        // Rotating Magnetic Drive Ring Lights
+        for (let k = 0; k < 6; k++) {
+          const a = (k / 6) * Math.PI * 2 + u.saucerSpin;
           const lx = Math.cos(a) * (u.w * 0.38);
           const ly = Math.sin(a) * (u.h * 0.22);
-          cx.fillStyle = u.col;
-          cx.beginPath(); cx.arc(lx, ly, 3, 0, Math.PI * 2); cx.fill();
+          cx.fillStyle = (k % 2 === 0) ? '#ffffff' : u.col;
+          cx.beginPath(); cx.arc(lx, ly, 3.5, 0, Math.PI * 2); cx.fill();
         }
+
+        // TIE-Style Laser Cannons
+        cx.fillStyle = '#1b222c';
+        cx.fillRect(-18, u.h * 0.22, 10, 4);
+        cx.fillRect(8, u.h * 0.22, 10, 4);
 
         cx.restore();
       }
+    }
+
+    // Render Cleaved Alien Saucer Wreckage Halves
+    for (const w of wreckage) {
+      cx.save();
+      cx.translate(w.x, w.y);
+      cx.rotate(w.rot);
+      cx.globalAlpha = Math.max(0, Math.min(1, w.life / (w.maxLife * 0.6)));
+
+      const dg = cx.createLinearGradient(0, -w.h * 0.3, 0, w.h * 0.3);
+      dg.addColorStop(0, '#8596a8');
+      dg.addColorStop(0.6, '#232b36');
+      dg.addColorStop(1, '#0e1217');
+      cx.fillStyle = dg;
+
+      cx.beginPath();
+      if (w.half === 'top') {
+        cx.ellipse(0, -4, w.w * 0.44, w.h * 0.22, 0, Math.PI, Math.PI * 2);
+        cx.lineTo(w.w * 0.40, 2);
+        cx.lineTo(-w.w * 0.40, 2);
+      } else {
+        cx.ellipse(0, 4, w.w * 0.44, w.h * 0.22, 0, 0, Math.PI);
+        cx.lineTo(-w.w * 0.40, -2);
+        cx.lineTo(w.w * 0.40, -2);
+      }
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#05070a'; cx.lineWidth = 2; cx.stroke();
+
+      // Exposed Sparking Plasma Fracture Line
+      cx.strokeStyle = w.col;
+      cx.lineWidth = 3;
+      cx.beginPath();
+      cx.moveTo(-w.w * 0.38, 0);
+      cx.lineTo(-w.w * 0.15, (Math.random() - 0.5) * 6);
+      cx.lineTo(w.w * 0.15, (Math.random() - 0.5) * 6);
+      cx.lineTo(w.w * 0.38, 0);
+      cx.stroke();
+
+      cx.restore();
+    }
+
+    // Render Hexagonal Energy Shield Shards
+    for (const s of shieldShards) {
+      cx.save();
+      cx.translate(s.x, s.y);
+      cx.rotate(s.rot);
+      const alpha = Math.max(0, s.life / s.maxLife);
+      cx.globalAlpha = alpha;
+      cx.fillStyle = s.col + '55';
+      cx.strokeStyle = s.col;
+      cx.lineWidth = 2;
+      cx.beginPath();
+      for (let k = 0; k < 6; k++) {
+        const a = (k / 6) * Math.PI * 2;
+        const rx = Math.cos(a) * s.size, ry = Math.sin(a) * s.size;
+        if (k === 0) cx.moveTo(rx, ry); else cx.lineTo(rx, ry);
+      }
+      cx.closePath();
+      cx.fill(); cx.stroke();
+      cx.restore();
     }
   }
 
