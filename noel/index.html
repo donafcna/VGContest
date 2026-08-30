@@ -223,6 +223,26 @@ let speedLines = [];  // warp speed stardust streaks
 let boss = null, bossT = 26;
 let fortT = 1.6, gliderT = 4.5, mineT = 7.5, shootCool = 0, t = 0;
 
+function getCameraTransform() {
+  let zoom = 1.25;
+  if (state === 'intro') {
+    if (introT >= 2.2 && introT <= 3.8) {
+      zoom = 1.48; // Dramatic action punch zoom when cannons fire
+    } else {
+      zoom = 1.28;
+    }
+  }
+  return { zoom, camX: W * 0.5, camY: H * 0.5 };
+}
+
+function getWorldMouse() {
+  const { zoom, camX, camY } = getCameraTransform();
+  return {
+    x: (mouse.x - W * 0.5) / zoom + camX,
+    y: (mouse.y - H * 0.5) / zoom + camY
+  };
+}
+
 // Deep Space Environment (Nebulae, Ringed Planet, Starfield, Asteroids)
 const stars = [];
 for (let i = 0; i < 160; i++) {
@@ -910,14 +930,14 @@ document.getElementById('startbtn').addEventListener('click', () => {
   maxHp = lo.maxHp; baseCool = lo.baseCool; spdMul = lo.spdMul;
   magnetBonus = lo.magnetBonus; goldMult = lo.goldMult; baseSpread = lo.baseSpread; shipCols = lo.cols;
   
-  ship.hp = maxHp; ship.inv = 0; ship.x = Math.min(240, W * 0.22); ship.y = H * 0.5;
+  ship.hp = maxHp; ship.inv = 0; ship.x = W * 0.22; ship.y = H * 0.5;
   ship.vx = 0; ship.vy = 0; ship.pitch = 0;
   introT = 0;
   introShot1 = false;
   introShot2 = false;
   introUfos = [
-    { x: W + 120, y: H * 0.38, targetX: W * 0.58, targetY: H * 0.38, col: '#00ff66', w: 66, h: 40, saucerSpin: 0, dead: false },
-    { x: W + 180, y: H * 0.62, targetX: W * 0.62, targetY: H * 0.62, col: '#00e5ff', w: 66, h: 40, saucerSpin: 0, dead: false }
+    { x: W * 0.78, y: H * 0.38, targetX: W * 0.58, targetY: H * 0.38, col: '#00ff66', w: 66, h: 40, saucerSpin: 0, dead: false },
+    { x: W * 0.84, y: H * 0.62, targetX: W * 0.64, targetY: H * 0.62, col: '#00e5ff', w: 66, h: 40, saucerSpin: 0, dead: false }
   ];
   storySectorAnnounced = 1;
   tokensRun = 0; killsRun = 0; spinsRun = 0;
@@ -1142,8 +1162,8 @@ function update(dt) {
   // CINEMATIC STORYLINE PROLOGUE LOGIC
   if (state === 'intro') {
     introT += dt;
-    const targetX = Math.min(220, W * 0.22);
-    ship.x += (targetX - ship.x) * Math.min(1, dt * 1.5);
+    const targetX = W * 0.22;
+    ship.x += (targetX - ship.x) * Math.min(1, dt * 2.0);
     ship.y = H * 0.5 + Math.sin(introT * 1.5) * 16;
     ship.pitch = Math.sin(introT * 1.5) * 0.04;
     ship.flagWave += dt * 10;
@@ -1168,8 +1188,8 @@ function update(dt) {
       const u = introUfos[k];
       if (!u.dead) {
         u.saucerSpin += dt * 6;
-        if (introT > 1.2) {
-          u.x += (u.targetX - u.x) * Math.min(1, dt * 2.2);
+        if (introT > 0.4) {
+          u.x += (u.targetX - u.x) * Math.min(1, dt * 2.4);
         }
       }
     }
@@ -1301,41 +1321,6 @@ function update(dt) {
   ship.y += ship.vy * dt;
   ship.x = Math.max(80, Math.min(W - 140, ship.x));
   ship.y = Math.max(70, Math.min(H - 80, ship.y));
-
-function getCameraTransform() {
-  let zoom = 1.25;
-  let camX = W * 0.5, camY = H * 0.5;
-  if (state === 'intro') {
-    if (introT < 2.0) {
-      zoom = 1.35;
-      camX = W * 0.45;
-      camY = H * 0.5;
-    } else if (introT < 4.2) {
-      // DRAMATIC CLOSE-UP ON BROADSIDE CANNONS BEING FIRED
-      zoom = 2.15;
-      camX = ship.x + 38;
-      camY = ship.y + 18;
-    } else if (introT < 5.8) {
-      // PULL BACK TO CAPTURE DUAL UFO EXPLOSIONS
-      zoom = 1.55;
-      camX = (ship.x + (introUfos[0] ? introUfos[0].x : W * 0.6)) * 0.5;
-      camY = H * 0.5;
-    } else {
-      zoom = 1.25;
-      camX = W * 0.5;
-      camY = H * 0.5;
-    }
-  }
-  return { zoom, camX, camY };
-}
-
-function getWorldMouse() {
-  const { zoom, camX, camY } = getCameraTransform();
-  return {
-    x: (mouse.x - W * 0.5) / zoom + camX,
-    y: (mouse.y - H * 0.5) / zoom + camY
-  };
-}
 
   // Dynamic Galleon Pitch & Flag Flutter
   const targetPitch = (ship.vy / MAX_SPD) * 0.25;
