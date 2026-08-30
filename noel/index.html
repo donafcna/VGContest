@@ -142,9 +142,9 @@
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
   Sail through deep cosmic space and blast <b>Star Wars-style alien UFO squadrons &amp; Motherships</b> with heavy naval broadsides!</p>
   <div class="keys">
-    🎮 <b>Navigation</b>: <b>W A S D</b> / <b>Arrows</b> or <b>Mouse</b> (Solar Wind Aerodynamics &amp; Space Flight)<br>
-    🎯 <b>Naval Cannons</b>: <b>LEFT CLICK</b> or <b>SPACE</b> = Heavy Broadside Salvo 💥<br>
-    📱 <b>Mobile Touch</b>: Drag anywhere to steer &amp; unleash automatic broadsides!
+    🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM in any direction</b> • <b>LEFT CLICK</b> or <b>SPACE</b> = Fire Broadside 💥<br>
+    🎮 <b>Navigation</b>: <b>W A S D</b> or <b>Arrow Keys</b> (Solar Ether Flight &amp; Speed Thrusters)<br>
+    📱 <b>Mobile Touch</b>: Drag anywhere to steer &amp; lock-on auto fire!
   </div>
   <input id="pname" placeholder="Captain Callsign" maxlength="14" autocomplete="off">
   <div class="btnrow">
@@ -935,6 +935,11 @@ function update(dt) {
   ship.pitch += (targetPitch - ship.pitch) * Math.min(1, dt * 10);
   ship.flagWave += dt * 12;
 
+  // Aim angle directed towards mouse / touch pointer
+  const cannonOriginX = ship.x + 36;
+  const cannonOriginY = ship.y + 18;
+  ship.aimAngle = Math.atan2(mouse.y - cannonOriginY, mouse.x - cannonOriginX);
+
   ship.inv = Math.max(0, ship.inv - dt);
   ship.recoil = Math.max(0, ship.recoil - dt * 8);
   rapidT = Math.max(0, rapidT - dt);
@@ -956,7 +961,7 @@ function update(dt) {
     });
   }
 
-  // Heavy Pirate Naval Broadside (Firing Fiery Cannonballs to the right)
+  // Directed Pirate Naval Cannon Salvo (Fires directly at aim target)
   shootCool -= dt;
   let wantShoot = mouse.down || keys['Space'] || (isTouch && touchOn);
   if (wantShoot && shootCool <= 0) {
@@ -964,12 +969,17 @@ function update(dt) {
     ship.recoil = 1.0;
     muzzleFlash = 1.0;
     
-    const spreadAngles = tripleT > 0 ? [-0.18, 0, 0.18] : baseSpread;
-    for (const ang of spreadAngles) {
-      const spd = 1250;
+    const spreadAngles = tripleT > 0 ? [-0.16, 0, 0.16] : baseSpread;
+    const baseAim = ship.aimAngle;
+    const muzzleX = cannonOriginX + Math.cos(baseAim) * 22;
+    const muzzleY = cannonOriginY + Math.sin(baseAim) * 22;
+
+    for (const spr of spreadAngles) {
+      const ang = baseAim + spr;
+      const spd = 1350;
       balls.push({
-        x: ship.x + 48,
-        y: ship.y + 14,
+        x: muzzleX,
+        y: muzzleY,
         vx: Math.cos(ang) * spd,
         vy: Math.sin(ang) * spd,
         r: 10
@@ -977,10 +987,10 @@ function update(dt) {
       
       for (let k = 0; k < 6; k++) {
         parts.push({
-          x: ship.x + 52,
-          y: ship.y + 14,
-          vx: 90 + Math.random() * 160,
-          vy: (Math.random() - 0.5) * 80,
+          x: muzzleX,
+          y: muzzleY,
+          vx: Math.cos(ang) * (120 + Math.random() * 180) + (Math.random() - 0.5) * 60,
+          vy: Math.sin(ang) * (120 + Math.random() * 180) + (Math.random() - 0.5) * 60,
           life: 0.22,
           col: '#ffd23c',
           size: 8
@@ -1563,13 +1573,36 @@ function draw() {
     cx.fillStyle = '#33ee66'; cx.beginPath(); cx.arc(46, 16, 3.5, 0, Math.PI * 2); cx.fill(); // Bow Green
     cx.fillStyle = '#ff3344'; cx.beginPath(); cx.arc(-42, 16, 3.5, 0, Math.PI * 2); cx.fill(); // Stern Red
 
-    // Heavy Cast-Iron Broadside Cannons
-    const recoilOff = ship.recoil * 5;
+    // Heavy Cast-Iron Swivel Deck Cannon (Physically rotates and aims at mouse)
+    const localAim = (ship.aimAngle || 0) - ship.pitch;
+    const recoilDist = ship.recoil * 6;
+
+    // Swivel Turret Pivot
+    cx.save();
+    cx.translate(36, 18);
+    cx.rotate(localAim);
+
+    // Cast-Iron Cannon Barrel
+    const cgrad = cx.createLinearGradient(0, -5, 0, 5);
+    cgrad.addColorStop(0, '#4a5568');
+    cgrad.addColorStop(0.5, '#1e2430');
+    cgrad.addColorStop(1, '#0a0d13');
+    cx.fillStyle = cgrad;
+    cx.beginPath();
+    cx.roundRect(-8 - recoilDist, -4, 26, 8, 2);
+    cx.fill();
+    cx.strokeStyle = '#f2c14e'; cx.lineWidth = 1.2; cx.stroke();
+
+    // Reinforced Muzzle Band & Brass Rings
+    cx.fillStyle = '#f2c14e';
+    cx.fillRect(16 - recoilDist, -5, 3, 10);
+    cx.fillRect(4 - recoilDist, -4.5, 2, 9);
+    cx.restore();
+
+    // Secondary Midship & Stern Broadside Ports
     cx.fillStyle = '#14141a';
-    cx.fillRect(36 - recoilOff, 18, 16, 6);
-    cx.fillRect(10 - recoilOff, 18, 16, 6);
-    cx.fillRect(-16 - recoilOff, 18, 16, 6);
-    cx.fillStyle = '#ffd23c'; cx.fillRect(48 - recoilOff, 17, 3, 8);
+    cx.fillRect(8, 19, 14, 5);
+    cx.fillRect(-18, 19, 14, 5);
 
     // Active Energy Shield Bubble
     if (shieldT > 0) {
@@ -1652,6 +1685,74 @@ function draw() {
       ay += 42;
     }
     cx.globalAlpha = 1; cx.textAlign = 'left';
+
+    // 12. Tactical Laser Sight & Precision Aim Reticle
+    const startX = ship.x + 36 + Math.cos(ship.aimAngle || 0) * 22;
+    const startY = ship.y + 18 + Math.sin(ship.aimAngle || 0) * 22;
+    
+    let locked = false;
+    if (boss && Math.hypot(mouse.x - boss.x, mouse.y - boss.y) < boss.w * 0.55) locked = true;
+    if (!locked) {
+      for (const f of forts) {
+        if (Math.hypot(mouse.x - f.x, mouse.y - f.y) < f.w * 0.5) { locked = true; break; }
+      }
+    }
+    if (!locked) {
+      for (const g of gliders) {
+        if (Math.hypot(mouse.x - g.x, mouse.y - g.y) < 32) { locked = true; break; }
+      }
+    }
+
+    // Laser Trajectory Guide Line
+    cx.save();
+    cx.strokeStyle = locked ? 'rgba(255, 60, 80, 0.5)' : 'rgba(255, 210, 60, 0.35)';
+    cx.lineWidth = 1.5;
+    cx.setLineDash([5, 5]);
+    cx.beginPath();
+    cx.moveTo(startX, startY);
+    cx.lineTo(mouse.x, mouse.y);
+    cx.stroke();
+    cx.setLineDash([]);
+    cx.restore();
+
+    // Aim Crosshair at Mouse
+    cx.save();
+    cx.translate(mouse.x, mouse.y);
+    const retCol = locked ? '#ff3366' : '#ffd23c';
+
+    // Spinning Outer Reticle Ring
+    cx.rotate(t * 2);
+    cx.strokeStyle = retCol;
+    cx.lineWidth = 2;
+    cx.beginPath();
+    cx.arc(0, 0, 16, 0, Math.PI * 0.4); cx.stroke();
+    cx.beginPath();
+    cx.arc(0, 0, 16, Math.PI * 0.5, Math.PI * 0.9); cx.stroke();
+    cx.beginPath();
+    cx.arc(0, 0, 16, Math.PI, Math.PI * 1.4); cx.stroke();
+    cx.beginPath();
+    cx.arc(0, 0, 16, Math.PI * 1.5, Math.PI * 1.9); cx.stroke();
+
+    // Precision Crosshairs
+    cx.rotate(-t * 2);
+    cx.beginPath();
+    cx.moveTo(-20, 0); cx.lineTo(-6, 0);
+    cx.moveTo(6, 0); cx.lineTo(20, 0);
+    cx.moveTo(0, -20); cx.lineTo(0, -6);
+    cx.moveTo(0, 6); cx.lineTo(0, 20);
+    cx.stroke();
+
+    // Center Target Pip
+    cx.fillStyle = retCol;
+    cx.beginPath(); cx.arc(0, 0, 3, 0, Math.PI * 2); cx.fill();
+
+    if (locked) {
+      cx.font = 'bold 10px "Orbitron", sans-serif';
+      cx.fillStyle = '#ff3366';
+      cx.textAlign = 'center';
+      cx.fillText('TARGET LOCK', 0, 28);
+    }
+    cx.restore();
   }
 }
 
