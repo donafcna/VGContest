@@ -813,19 +813,31 @@ function skinById(id) { return SKINS.find(k => k.id === id) || SKINS[0]; }
 function shipById(id) { return SHIPS.find(s => s.id === id) || SHIPS[0]; }
 
 function computeLoadout() {
-  const s = shipById(SAVE.data.sel), u = SAVE.data.upg;
-  let cols = s.cols;
+  const s = shipById(SAVE.data.sel), u = SAVE.data.upg || {};
+  let cols = s.cols ? [...s.cols] : ['#c88a55', '#8c5528', '#3b1c06'];
   const sk = skinById(SAVE.data.skin);
-  if (sk && sk.cols && SAVE.data.kills >= sk.kills) cols = sk.cols;
+  if (sk && sk.cols && SAVE.data.kills >= sk.kills) cols = [...sk.cols];
   return {
-    maxHp: s.hp + u.hull,
-    baseCool: s.cool * Math.pow(0.85, u.cannon),
-    spdMul: s.spd + u.engine * 0.18,
-    magnetBonus: s.magnet + u.magnet * 60,
-    goldMult: s.gold,
-    baseSpread: s.spread,
+    maxHp: (s.hp || 5) + (u.hull || 0),
+    baseCool: (s.cool || 0.25) * Math.pow(0.85, u.cannon || 0),
+    spdMul: (s.spd || 1) + (u.engine || 0) * 0.18,
+    magnetBonus: (s.magnet || 0) + (u.magnet || 0) * 60,
+    goldMult: s.gold || 1,
+    baseSpread: s.spread ? [...s.spread] : [0],
     cols: cols,
   };
+}
+
+function applyLoadout() {
+  const lo = computeLoadout();
+  maxHp = lo.maxHp;
+  baseCool = lo.baseCool;
+  spdMul = lo.spdMul;
+  magnetBonus = lo.magnetBonus;
+  goldMult = lo.goldMult;
+  baseSpread = lo.baseSpread;
+  shipCols = lo.cols;
+  ship.hp = maxHp;
 }
 
 function bankRun() {
@@ -1009,11 +1021,7 @@ document.getElementById('startbtn').addEventListener('click', () => {
   playerName = nm.slice(0, 14);
   try { localStorage.setItem('sp_name', playerName); } catch (e) {}
   scoreSubmitted = false;
-  
-  const lo = computeLoadout();
-  maxHp = lo.maxHp; baseCool = lo.baseCool; spdMul = lo.spdMul;
-  magnetBonus = lo.magnetBonus; goldMult = lo.goldMult; baseSpread = lo.baseSpread; shipCols = lo.cols;
-  
+  applyLoadout();
   ship.hp = maxHp; ship.inv = 0; ship.x = W * 0.22; ship.y = H * 0.5;
   ship.vx = 0; ship.vy = 0; ship.pitch = 0;
   introT = 0;
@@ -1171,19 +1179,41 @@ document.getElementById('shopBody').addEventListener('click', e => {
   const kind = btn.dataset.buy, key = btn.dataset.key;
   if (kind === 'upg') {
     const u = UPG[key], lv = SAVE.data.upg[key];
-    if (lv < u.max && SAVE.data.coins >= u.cost(lv)) { SAVE.data.coins -= u.cost(lv); SAVE.data.upg[key]++; SAVE.save(); sfx('coin'); }
+    if (lv < u.max && SAVE.data.coins >= u.cost(lv)) {
+      SAVE.data.coins -= u.cost(lv);
+      SAVE.data.upg[key]++;
+      SAVE.save();
+      applyLoadout();
+      sfx('coin');
+    }
   } else if (kind === 'ship') {
     const s = shipById(key);
     if (!SAVE.data.ships.includes(key) && SAVE.data.tokens >= s.cost) {
-      SAVE.data.tokens -= s.cost; SAVE.data.ships.push(key); SAVE.data.sel = key; SAVE.save(); sfx('map');
+      SAVE.data.tokens -= s.cost;
+      SAVE.data.ships.push(key);
+      SAVE.data.sel = key;
+      SAVE.save();
+      applyLoadout();
+      sfx('map');
     }
   } else if (kind === 'sel') {
-    if (SAVE.data.ships.includes(key)) { SAVE.data.sel = key; SAVE.save(); sfx('coin'); }
+    if (SAVE.data.ships.includes(key)) {
+      SAVE.data.sel = key;
+      SAVE.save();
+      applyLoadout();
+      sfx('coin');
+    }
   } else if (kind === 'skin') {
     const k = skinById(key);
-    if (SAVE.data.kills >= k.kills) { SAVE.data.skin = key; SAVE.save(); sfx('coin'); }
+    if (SAVE.data.kills >= k.kills) {
+      SAVE.data.skin = key;
+      SAVE.save();
+      applyLoadout();
+      sfx('coin');
+    }
   } else if (kind === 'spin') {
     const msg = doSpin();
+    applyLoadout();
     buildShop();
     if (msg) {
       const el = document.getElementById('spinResult');
@@ -1192,6 +1222,7 @@ document.getElementById('shopBody').addEventListener('click', e => {
     }
     return;
   }
+  applyLoadout();
   buildShop();
 });
 
@@ -1218,6 +1249,7 @@ document.getElementById('shopclose').addEventListener('click', () => {
   } catch (e) {}
   renderLeaderboard('lbMenu', -1, null);
   renderWallet();
+  applyLoadout();
 })();
 
 // -------------------------------------------------------------
@@ -2408,6 +2440,11 @@ function draw() {
 
     if (ship.inv > 0 && Math.floor(t * 14) % 2 === 0) cx.globalAlpha = 0.4;
 
+    // Dynamic colors from equipped ship and skin
+    const col0 = (shipCols && shipCols[0]) || '#c88a55';
+    const col1 = (shipCols && shipCols[1]) || '#8c5528';
+    const col2 = (shipCols && shipCols[2]) || '#3b1c06';
+
     // --- A. Tall Masts & Glowing Solar Sails ---
     for (const [mx, mh, myOff] of [[-18, 52, -28], [12, 60, -34], [34, 44, -22]]) {
       // Wooden Mast
@@ -2417,11 +2454,11 @@ function draw() {
       // Yardarm Spar
       cx.beginPath(); cx.moveTo(mx - 14, myOff); cx.lineTo(mx + 14, myOff); cx.stroke();
 
-      // Billowing Solar Sail (Golden Canvas with Radiant Ether Glow)
+      // Billowing Solar Sail (Dynamically styled to equipped skin / ship colors!)
       const sg = cx.createLinearGradient(mx, myOff, mx + 16, myOff + 28);
-      sg.addColorStop(0, 'rgba(255, 250, 220, 0.95)');
-      sg.addColorStop(0.5, 'rgba(255, 210, 60, 0.75)');
-      sg.addColorStop(1, 'rgba(230, 140, 20, 0.5)');
+      sg.addColorStop(0, '#ffffff');
+      sg.addColorStop(0.45, col0);
+      sg.addColorStop(1, col1);
       cx.fillStyle = sg;
       cx.beginPath();
       cx.moveTo(mx - 12, myOff);
@@ -2429,7 +2466,7 @@ function draw() {
       cx.lineTo(mx - 12, myOff + 26);
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = 'rgba(255, 210, 60, 0.9)'; cx.lineWidth = 1.5; cx.stroke();
+      cx.strokeStyle = col0; cx.lineWidth = 1.5; cx.stroke();
     }
 
     // --- B. Pirate Jolly Roger Skull Flag on Main Mast ---
@@ -2443,11 +2480,11 @@ function draw() {
     cx.fillStyle = '#fff'; cx.font = 'bold 11px serif'; cx.textAlign = 'center';
     cx.fillText('☠', -30, -42);
 
-    // --- C. Real Wooden Galleon Hull (Mahogany & Oak Planks) ---
+    // --- C. Real Wooden Galleon Hull (Mahogany & Oak Planks styled by equipped ship/skin) ---
     const hGrad = cx.createLinearGradient(0, 10, 0, 36);
-    hGrad.addColorStop(0, '#c88a55');
-    hGrad.addColorStop(0.45, '#8c5528');
-    hGrad.addColorStop(1, '#3b1c06');
+    hGrad.addColorStop(0, col0);
+    hGrad.addColorStop(0.45, col1);
+    hGrad.addColorStop(1, col2);
     cx.fillStyle = hGrad;
     cx.beginPath();
     cx.moveTo(-44, 12);               // Stern gallery
