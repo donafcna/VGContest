@@ -502,9 +502,14 @@
       </div>
     </div>
 
-    <!-- Section C: Join Online Room -->
+    <!-- Section C: Join Online Room (Option B) -->
     <div id="netPanelJoin" class="net-panel" style="display:none;">
-      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px; border-left:4px solid #00ffee;">
+      <div style="background:rgba(0,255,238,0.08); border:1px solid rgba(0,255,238,0.3); border-radius:10px; padding:8px 12px; margin-bottom:10px;">
+        <div style="font-size:0.82rem; color:#00ffee; font-weight:bold; font-family:'Orbitron',sans-serif; margin-bottom:2px;">📡 OPTION B: JOIN VIA ROOM CODE</div>
+        <div style="font-size:0.78rem; color:#94a3b8;">Enter the 4-letter or full Room Code (e.g. <b>884</b> or <b>GALAXY-884</b>) and tap <b>CONNECT</b>!</div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px; border-left:4px solid #00ffee;">
         <span style="font-weight:bold; color:#00ffee; font-size:0.85rem; width:88px; font-family:'Orbitron',sans-serif">Pilot Name:</span>
         <input id="pnameJoin" placeholder="Your Name" maxlength="14" style="flex:1; padding:6px 10px; font-size:0.88rem; margin:0;" value="Wingman">
         <select id="pshipJoin" style="background:#0f172a; color:#00ffee; border:1px solid #00ffee; border-radius:8px; padding:6px 8px; font-size:0.8rem; font-family:'Orbitron',sans-serif">
@@ -517,11 +522,11 @@
       </div>
 
       <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-        <input id="joinRoomCodeInp" placeholder="Room Code (e.g. PIRATE-123)" maxlength="18" style="flex:1; padding:8px 12px; font-size:0.95rem; font-family:'Orbitron',sans-serif; text-transform:uppercase; background:#0b1329; border:1px solid #00ffee; color:#00ffee; border-radius:8px;">
-        <button type="button" id="joinRoomBtn" style="background:linear-gradient(135deg,#00ffee,#0088ff); color:#000; border:none; padding:8px 16px; font-size:0.85rem; font-weight:bold; border-radius:8px; cursor:pointer; font-family:'Orbitron',sans-serif;">🚀 CONNECT</button>
+        <input id="joinRoomCodeInp" placeholder="ROOM CODE (e.g. GALAXY-842 or 842)" maxlength="18" style="flex:1; padding:10px 14px; font-size:1rem; font-family:'Orbitron',sans-serif; text-transform:uppercase; letter-spacing:1.5px; font-weight:bold; background:#0b1329; border:2px solid #00ffee; color:#00ffee; border-radius:8px;">
+        <button type="button" id="joinRoomBtn" style="background:linear-gradient(135deg,#00ffee,#0088ff); color:#000; border:none; padding:10px 18px; font-size:0.9rem; font-weight:900; border-radius:8px; cursor:pointer; font-family:'Orbitron',sans-serif;">🚀 CONNECT</button>
       </div>
 
-      <div id="joinStatusText" style="font-size:0.82rem; color:#94a3b8; padding:4px;">Enter the Room Code from your friend or click their invite link!</div>
+      <div id="joinStatusText" style="font-size:0.82rem; color:#94a3b8; padding:6px 4px; line-height:1.4;">Type your friend's Room Code above and press CONNECT!</div>
     </div>
 
     <!-- Section D: Couch Same-Screen Mode -->
@@ -2209,10 +2214,16 @@ function handleHostIncomingData(conn, data) {
 function connectToHostRoom(targetRoomCode) {
   if (peer) { try { peer.destroy(); } catch(e){} }
   const statusEl = document.getElementById('joinStatusText');
-  if (statusEl) statusEl.innerHTML = '<span style="color:#ffd23c;">🟡 Connecting to Captain\'s Room...</span>';
+  if (statusEl) statusEl.innerHTML = '<span style="color:#ffd23c; font-weight:bold;">🟡 Connecting to Captain\'s Room...</span>';
 
-  onlineRoomCode = targetRoomCode.trim().toUpperCase();
-  const peerId = 'vgcontest-sp-' + onlineRoomCode.toLowerCase().replace(/[^a-z0-9]/g, '');
+  let code = (targetRoomCode || '').trim().toUpperCase();
+  if (!code.startsWith('GALAXY-') && code.length <= 5) {
+    code = 'GALAXY-' + code;
+  }
+  onlineRoomCode = code;
+  const cleanCode = onlineRoomCode.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const peerId = 'vgcontest-sp-' + cleanCode;
+
   try {
     peer = new Peer();
     peer.on('open', () => {
@@ -2226,14 +2237,14 @@ function connectToHostRoom(targetRoomCode) {
         handleClientIncomingData(data);
       });
       clientConn.on('close', () => {
-        if (statusEl) statusEl.innerHTML = '<span style="color:#ff3344;">❌ Disconnected from Host.</span>';
+        if (statusEl) statusEl.innerHTML = '<span style="color:#ff3344; font-weight:bold;">❌ Disconnected from Host.</span>';
       });
       clientConn.on('error', err => {
-        if (statusEl) statusEl.innerHTML = '<span style="color:#ff3344;">❌ Could not reach Room Code. Check code and retry.</span>';
+        if (statusEl) statusEl.innerHTML = '<span style="color:#ff3344; font-weight:bold;">❌ Could not reach Room Code. Check code and retry.</span>';
       });
     });
     peer.on('error', err => {
-      if (statusEl) statusEl.innerHTML = '<span style="color:#ff3344;">❌ Connection error: Room Code not found.</span>';
+      if (statusEl) statusEl.innerHTML = `<span style="color:#ff3344; font-weight:bold;">❌ Room "${onlineRoomCode}" not found. Make sure Host has created the room!</span>`;
     });
   } catch(e) {
     if (statusEl) statusEl.innerText = '❌ WebRTC error';
@@ -2248,7 +2259,13 @@ function handleClientIncomingData(data) {
     isOnline = true;
     netMode = 'client';
     if (statusEl) {
-      statusEl.innerHTML = `<span style="color:#3fd07a; font-weight:bold;">🟢 CONNECTED AS P${myPlayerIndex + 1}!</span><br><span style="color:#cfe4ff;">Waiting for Captain to launch the armada...</span>`;
+      statusEl.innerHTML = `
+        <div style="background:rgba(63,208,122,0.12); border:1px solid #3fd07a; border-radius:8px; padding:10px; margin-top:6px; text-align:left;">
+          <div style="color:#3fd07a; font-weight:bold; font-size:0.95rem; font-family:'Orbitron',sans-serif;">🟢 CONNECTED TO FLEET AS P${myPlayerIndex + 1}!</div>
+          <div style="color:#cfe4ff; font-size:0.82rem; margin-top:3px;">Room Code: <b>${onlineRoomCode}</b></div>
+          <div style="color:#ffd23c; font-size:0.8rem; margin-top:3px;">⏳ When the Host Captain starts the battle, your game will start automatically!</div>
+        </div>
+      `;
     }
   } else if (data.type === 'game_start') {
     isOnline = true;
@@ -2369,12 +2386,21 @@ if (copyOnlineBtn) {
   });
 }
 
-// Join Room Button
+// Join Room Button & Enter Key Listener
 const joinBtn = document.getElementById('joinRoomBtn');
+const joinInp = document.getElementById('joinRoomCodeInp');
 if (joinBtn) {
   joinBtn.addEventListener('click', () => {
-    const code = document.getElementById('joinRoomCodeInp').value.trim();
+    const code = joinInp ? joinInp.value.trim() : '';
     if (code) connectToHostRoom(code);
+  });
+}
+if (joinInp) {
+  joinInp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const code = joinInp.value.trim();
+      if (code) connectToHostRoom(code);
+    }
   });
 }
 
