@@ -1338,7 +1338,7 @@ function spawnFort() {
   const roll = Math.random();
   let variant = 'cruiser', col = '#00ff66', name = 'TITAN BATTLE-CRUISER', hp = 4, w = 120, h = 65;
   if (roll < 0.35) {
-    variant = 'cruiser'; col = '#00ff66'; name = 'TITAN BATTLE-CRUISER'; hp = 4 + Math.floor(level * 0.5);
+    variant = 'cruiser'; col = '#00ffaa'; name = 'VOID ECLIPSE DESTROYER'; hp = 5 + Math.floor(level * 0.6); w = 125; h = 66;
   } else if (roll < 0.70) {
     variant = 'tesla'; col = '#00e5ff'; name = 'CYBER-EMP FORTRESS'; hp = 6 + Math.floor(level * 0.8); w = 115; h = 70;
   } else {
@@ -2326,9 +2326,9 @@ function update(dt) {
         }
         sfx('laser');
       } else {
-        // Titan Battle-Cruiser: Dual Aimed Turbo-Lasers!
-        eballs.push({ type: 'laser', col: '#00ff66', x: f.x - f.w * 0.45, y: f.y - 8, vx: (dx/dist)*520, vy: (dy/dist)*520, r: 10 });
-        eballs.push({ type: 'laser', col: '#00ff66', x: f.x - f.w * 0.45, y: f.y + 8, vx: (dx/dist)*520, vy: (dy/dist)*520, r: 10 });
+        // VOID ECLIPSE DESTROYER: Dual Aimed Emerald Turbo-Lasers!
+        eballs.push({ type: 'laser', col: '#00ffaa', x: f.x - f.w * 0.45, y: f.y - 12, vx: (dx/dist)*540, vy: (dy/dist)*540, r: 11 });
+        eballs.push({ type: 'laser', col: '#00ffaa', x: f.x - f.w * 0.45, y: f.y + 12, vx: (dx/dist)*540, vy: (dy/dist)*540, r: 11 });
         sfx('laser');
       }
     }
@@ -2852,42 +2852,94 @@ function draw() {
       cx.beginPath(); cx.arc(f.w * 0.15, -8, 8 + Math.cos(t * 8) * 2, 0, Math.PI * 2); cx.fill();
 
     } else {
-      // ARCHETYPE 1: Titan Battle-Cruiser (Armored Titanium Flying Saucer)
-      const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.48);
-      sg.addColorStop(0, f.col + 'aa'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      // ARCHETYPE 1: VOID ECLIPSE DESTROYER (Angular Stealth Star-Destroyer Battlecruiser)
+      // Subspace Plasma Aura Glow
+      const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.54);
+      sg.addColorStop(0, 'rgba(0, 255, 170, 0.45)');
+      sg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = sg;
-      cx.beginPath(); cx.ellipse(0, 0, f.w * 0.48, f.h * 0.45, 0, 0, Math.PI * 2); cx.fill();
+      cx.beginPath(); cx.ellipse(0, 0, f.w * 0.52, f.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
 
-      // Armored Titanium Alloy Saucer Hull
-      const dg = cx.createLinearGradient(0, -f.h * 0.45, 0, f.h * 0.45);
-      dg.addColorStop(0, '#e2e8f0'); dg.addColorStop(0.35, '#64748b'); dg.addColorStop(1, '#0f172a');
-      cx.fillStyle = dg;
-      cx.beginPath(); cx.ellipse(0, 0, f.w * 0.46, f.h * 0.32, 0, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#020617'; cx.lineWidth = 3; cx.stroke();
+      // Main Forward Dagger-Wedge Stealth Hull (High-tech multi-angle facets)
+      const hg = cx.createLinearGradient(f.w * 0.5, 0, -f.w * 0.5, 0);
+      hg.addColorStop(0, '#020617');
+      hg.addColorStop(0.4, '#0f172a');
+      hg.addColorStop(0.75, '#1e293b');
+      hg.addColorStop(1, '#334155');
+      cx.fillStyle = hg;
+      cx.beginPath();
+      cx.moveTo(-f.w * 0.48, 0);                 // Forward prow needle
+      cx.lineTo(-f.w * 0.28, -f.h * 0.38);       // Port bow slope
+      cx.lineTo(f.w * 0.25, -f.h * 0.44);        // Port main wing
+      cx.lineTo(f.w * 0.45, -f.h * 0.22);        // Port rear engine wing
+      cx.lineTo(f.w * 0.45, f.h * 0.22);         // Starboard rear engine wing
+      cx.lineTo(f.w * 0.25, f.h * 0.44);         // Starboard main wing
+      cx.lineTo(-f.w * 0.28, f.h * 0.38);        // Starboard bow slope
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#00ffaa'; cx.lineWidth = 2.2; cx.stroke();
 
-      // Central Command Dome with Pulsing Core
-      const ckg = cx.createRadialGradient(-8, -12, 2, 0, -8, 20);
-      ckg.addColorStop(0, '#ffffff'); ckg.addColorStop(0.45, f.col); ckg.addColorStop(1, '#02240e');
-      cx.fillStyle = ckg;
-      cx.beginPath(); cx.ellipse(0, -10, 22, 14, 0, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#fff'; cx.lineWidth = 1.5; cx.stroke();
+      // Armored Spine Deck Plate (Layered armor bevels)
+      const spg = cx.createLinearGradient(0, -f.h * 0.25, 0, f.h * 0.25);
+      spg.addColorStop(0, '#475569'); spg.addColorStop(0.5, '#0f172a'); spg.addColorStop(1, '#1e293b');
+      cx.fillStyle = spg;
+      cx.beginPath();
+      cx.moveTo(-f.w * 0.32, 0);
+      cx.lineTo(-f.w * 0.12, -f.h * 0.22);
+      cx.lineTo(f.w * 0.32, -f.h * 0.22);
+      cx.lineTo(f.w * 0.38, 0);
+      cx.lineTo(f.w * 0.32, f.h * 0.22);
+      cx.lineTo(-f.w * 0.12, f.h * 0.22);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#64748b'; cx.lineWidth = 1.5; cx.stroke();
 
-      // Rotating Drive Lights
-      for (let k = 0; k < 6; k++) {
-        const a = (k / 6) * Math.PI * 2 + f.saucerSpin;
-        const lx = Math.cos(a) * (f.w * 0.38), ly = Math.sin(a) * (f.h * 0.22);
-        cx.fillStyle = (k % 2 === 0) ? '#ffffff' : f.col;
-        cx.beginPath(); cx.arc(lx, ly, 3.5, 0, Math.PI * 2); cx.fill();
+      // Pulsing Dark Matter Reactor Core (Center)
+      const rcg = cx.createRadialGradient(0, 0, 1, 0, 0, 12);
+      rcg.addColorStop(0, '#ffffff');
+      rcg.addColorStop(0.4, '#00ffaa');
+      rcg.addColorStop(1, '#064e3b');
+      cx.fillStyle = rcg;
+      cx.beginPath(); cx.arc(0, 0, 9 + Math.sin(t * 14) * 1.5, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.arc(0, 0, 13, t * 8, t * 8 + Math.PI); cx.stroke();
+
+      // Elevated Command Bridge Superstructure (Rear Tower)
+      cx.fillStyle = '#020617';
+      cx.fillRect(f.w * 0.15, -f.h * 0.14, f.w * 0.18, f.h * 0.28);
+      cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1.2;
+      cx.strokeRect(f.w * 0.15, -f.h * 0.14, f.w * 0.18, f.h * 0.28);
+      
+      // Bridge Viewport Strip
+      cx.fillStyle = '#00ffaa';
+      cx.fillRect(f.w * 0.12, -f.h * 0.08, 4, f.h * 0.16);
+
+      // Dual Aimed Heavy Turbo-Railgun Cannons on Wing Sponsons
+      const aimAng = Math.atan2(ship.y - f.y, ship.x - f.x);
+      for (const wy of [-f.h * 0.32, f.h * 0.32]) {
+        cx.save();
+        cx.translate(-f.w * 0.08, wy);
+        cx.rotate(aimAng);
+        cx.fillStyle = '#020617'; cx.fillRect(0, -3, 16, 6);
+        cx.fillStyle = '#00ffaa'; cx.fillRect(14, -2, 4, 4);
+        cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1; cx.strokeRect(0, -3, 16, 6);
+        cx.restore();
       }
 
-      // Ventral Turbo-Laser Battery
-      const aimToPlayer = Math.atan2(ship.y - f.y, ship.x - f.x);
-      cx.save();
-      cx.translate(-f.w * 0.25, f.h * 0.18);
-      cx.rotate(aimToPlayer);
-      cx.fillStyle = '#0f172a'; cx.fillRect(0, -2.5, 14, 5);
-      cx.fillStyle = '#00ff66'; cx.fillRect(12, -1.5, 3, 3);
-      cx.restore();
+      // Triple Rear Ion Plasma Thrusters (Streaming emerald engine fire)
+      for (const ty of [-f.h * 0.16, 0, f.h * 0.16]) {
+        const jg = cx.createLinearGradient(f.w * 0.45, ty, f.w * 0.65, ty);
+        jg.addColorStop(0, '#00ffaa');
+        jg.addColorStop(0.5, '#0284c7');
+        jg.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.fillStyle = jg;
+        cx.beginPath();
+        cx.moveTo(f.w * 0.45, ty - 4);
+        cx.lineTo(f.w * 0.62 + Math.random() * 8, ty);
+        cx.lineTo(f.w * 0.45, ty + 4);
+        cx.closePath();
+        cx.fill();
+      }
     }
     
     // Health bar
