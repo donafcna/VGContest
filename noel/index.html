@@ -202,7 +202,7 @@ let level = 1, coinsN = 0, score = 0, best = 0;
 let playerName = 'Captain', scoreSubmitted = false;
 let shake = 0, hurtFlash = 0, muzzleFlash = 0;
 let combo = 0, comboT = 0;
-let rapidT = 0, shieldT = 0, tripleT = 0;
+let rapidT = 0, shieldT = 0, tripleT = 0, slowT = 0;
 let maxHp = 5, baseCool = 0.25, spdMul = 1, magnetBonus = 0, goldMult = 1;
 let baseSpread = [0], shipCols = ['#c88a55', '#8c5528', '#3b1c06'], tokensRun = 0, killsRun = 0, spinsRun = 0;
 let introT = 0, storySectorAnnounced = 0;
@@ -964,42 +964,70 @@ async function renderLeaderboard(cid, myScore, myName) {
   el.innerHTML = html;
 }
 
-// ---------- SPAWN ALIEN UFOS (Star Wars Style) ----------
+// ---------- SPAWN ALIEN ENEMY ARCHETYPES WITH UNIQUE POWERS ----------
 function spawnFort() {
-  const colors = ['#00ff66', '#00e5ff', '#ff0055', '#ffaa00'];
+  const roll = Math.random();
+  let variant = 'cruiser', col = '#00ff66', name = 'TITAN BATTLE-CRUISER', hp = 4, w = 120, h = 65;
+  if (roll < 0.35) {
+    variant = 'cruiser'; col = '#00ff66'; name = 'TITAN BATTLE-CRUISER'; hp = 4 + Math.floor(level * 0.5);
+  } else if (roll < 0.70) {
+    variant = 'tesla'; col = '#00e5ff'; name = 'CYBER-EMP FORTRESS'; hp = 6 + Math.floor(level * 0.8); w = 115; h = 70;
+  } else {
+    variant = 'brood'; col = '#d946ef'; name = 'BIO-SPORE HIVE CARRIER'; hp = 5 + Math.floor(level * 0.6); w = 125; h = 68;
+  }
+
   forts.push({
+    variant,
     x: W + 140,
     y: 80 + Math.random() * (H - 220),
-    vx: -(150 + level * 22),
-    hp: 4, maxHp: 4,
-    shootT: 1.0 + Math.random() * 1.3,
-    col: colors[(Math.random() * colors.length) | 0],
-    w: 120, h: 65, bob: Math.random() * Math.PI * 2,
-    saucerSpin: 0
+    vx: -(140 + level * 20),
+    hp, maxHp: hp,
+    shootT: 1.0 + Math.random() * 1.2,
+    col, name,
+    w, h,
+    bob: Math.random() * Math.PI * 2,
+    saucerSpin: 0,
+    empCharge: 0
   });
-  addAlert('⚠️ ALIEN UFO BATTLE-CRUISER DETECTED!', 'incoming');
+  addAlert(`⚠️ ${name} DETECTED!`, 'incoming');
 }
 
-function spawnGlider() {
+function spawnGlider(xPos, yPos, forceType) {
+  const roll = forceType || (Math.random() < 0.45 ? 'tie' : Math.random() < 0.75 ? 'stalker' : 'rammer');
+  let col = '#00ff66', name = 'TIE INTERCEPTOR', spd = 290 + level * 40, w = 52, h = 32;
+  if (roll === 'stalker') {
+    col = '#a855f7'; name = 'QUANTUM PHASE STALKER'; spd = 260 + level * 35; w = 48; h = 30;
+  } else if (roll === 'rammer') {
+    col = '#ff3344'; name = 'SOLAR KAMIKAZE RAMMER'; spd = 380 + level * 55; w = 54; h = 26;
+  }
+
   gliders.push({
-    x: W + 80,
-    y: 60 + Math.random() * (H - 200),
-    vx: -(290 + level * 45),
+    variant: roll,
+    x: xPos !== undefined ? xPos : W + 80,
+    y: yPos !== undefined ? yPos : 60 + Math.random() * (H - 200),
+    vx: -spd,
     wob: Math.random() * Math.PI * 2,
-    w: 52, h: 32,
-    saucerSpin: 0
+    w, h,
+    col, name,
+    saucerSpin: 0,
+    blinkT: 1.8 + Math.random() * 1.5,
+    isBlinking: 0
   });
-  addAlert('⚠️ TIE-STYLE UFO FIGHTERS IN ATTACK VECTOR!', 'incoming');
+  if (xPos === undefined) addAlert(`⚠️ ${name} IN ATTACK VECTOR!`, 'incoming');
 }
 
 function spawnMine() {
+  const isCluster = Math.random() < 0.45;
   mines.push({
+    variant: isCluster ? 'cluster' : 'quantum',
     x: W + 70,
     y: 90 + Math.random() * (H - 240),
     vx: -(110 + level * 15),
-    r: 28, spin: Math.random() * Math.PI * 2
+    r: isCluster ? 32 : 28,
+    col: isCluster ? '#ff5500' : '#00e5ff',
+    spin: Math.random() * Math.PI * 2
   });
-  addAlert('☠️ QUANTUM ALIEN MINE DETECTED!', 'incoming');
+  addAlert(isCluster ? '☠️ INCENDIARY CLUSTER MINE DETECTED!' : '☠️ QUANTUM PROXIMITY MINE DETECTED!', 'incoming');
 }
 
 const BTYPES = [
@@ -1552,7 +1580,9 @@ function update(dt) {
   if (state !== 'play') return;
 
   // Space Pirate Galleon Navigation & Solar Ether Inertia
-  const ACC = 1450 * spdMul, MAX_SPD = 480 * spdMul;
+  slowT = Math.max(0, slowT - dt);
+  const curSpdMul = spdMul * (slowT > 0 ? 0.55 : 1.0);
+  const ACC = 1450 * curSpdMul, MAX_SPD = 480 * curSpdMul;
   let ax = 0, ay = 0;
   if (keys['KeyW'] || keys['ArrowUp']) ay -= 1;
   if (keys['KeyS'] || keys['ArrowDown']) ay += 1;
@@ -1769,6 +1799,13 @@ function update(dt) {
             explode(f.x, f.y, f.col, 40); sfx('boom');
             addScore(10, f.x, f.y); addShake(8);
             coins.push({ x: f.x, y: f.y, vx: -120, vy: -30 });
+
+            // Bio-Hive Special Death Power: Hatches 2 Mini-Swarmer Drones!
+            if (f.variant === 'brood') {
+              popup(f.x, f.y - 30, 'BIO-SWARM HATCHED!', '#d946ef');
+              spawnGlider(f.x, f.y - 25, 'tie');
+              spawnGlider(f.x, f.y + 25, 'tie');
+            }
             
             const roll = Math.random();
             if (roll < 0.08) powerups.push({ x: f.x, y: f.y, type: 'heart', vx: -95, vy: 0 });
@@ -1787,8 +1824,18 @@ function update(dt) {
     if (!hit) {
       for (let j = gliders.length - 1; j >= 0; j--) {
         const g = gliders[j];
+        
+        // Quantum Phase Stalker: 50% chance to Quantum Blink evade if shot from far!
+        if (g.variant === 'stalker' && Math.hypot(b.x - g.x, b.y - g.y) < 110 && g.blinkT <= 0.8) {
+          g.blinkT = 2.0;
+          g.y = Math.max(70, Math.min(H - 90, g.y + (Math.random() < 0.5 ? -110 : 110)));
+          explode(g.x, g.y, '#a855f7', 16);
+          sfx('incoming');
+          continue;
+        }
+
         if (Math.hypot(b.x - g.x, b.y - g.y) < g.w * 0.5 + 12) {
-          explode(g.x, g.y, '#00ff66', 20); sfx('boom');
+          explode(g.x, g.y, g.col || '#00ff66', 20); sfx('boom');
           addScore(5, g.x, g.y); addShake(5); hit = true;
           if (Math.random() < 0.5) coins.push({ x: g.x, y: g.y, vx: -95, vy: 0 });
           gliders.splice(j, 1);
@@ -1801,8 +1848,24 @@ function update(dt) {
       for (let j = mines.length - 1; j >= 0; j--) {
         const m = mines[j];
         if (Math.hypot(b.x - m.x, b.y - m.y) < m.r + 12) {
-          explode(m.x, m.y, '#00e5ff', 26); sfx('boom');
+          explode(m.x, m.y, m.col || '#00e5ff', 28); sfx('boom');
           addScore(8, m.x, m.y); addShake(7); hit = true;
+
+          // Incendiary Cluster Mine Special Power: Spawns 4 Fiery Shrapnel Orbs!
+          if (m.variant === 'cluster') {
+            popup(m.x, m.y - 20, 'CLUSTER SHRAPNEL!', '#ff5500');
+            for (let k = 0; k < 4; k++) {
+              const a = (k / 4) * Math.PI * 2 + 0.35;
+              eballs.push({
+                type: 'shrapnel',
+                col: '#ff5500',
+                x: m.x, y: m.y,
+                vx: Math.cos(a) * 360, vy: Math.sin(a) * 360,
+                r: 10
+              });
+            }
+          }
+
           if (Math.random() < 0.4) coins.push({ x: m.x, y: m.y, vx: -95, vy: 0 });
           mines.splice(j, 1);
           break;
@@ -1813,7 +1876,7 @@ function update(dt) {
     if (hit) balls.splice(i, 1);
   }
 
-  // Update Enemy UFO Cruisers
+  // Update Enemy Warships & Unique Powers
   for (let i = forts.length - 1; i >= 0; i--) {
     const f = forts[i];
     f.x += f.vx * dt;
@@ -1821,12 +1884,39 @@ function update(dt) {
     f.y += Math.sin(t * 1.5 + f.bob) * 24 * dt;
     
     f.shootT -= dt;
-    if (f.shootT <= 0 && f.x < W - 50 && f.x > 80) {
+    if (f.shootT <= 0 && f.x < W - 40 && f.x > 80) {
       f.shootT = Math.max(1.3, 2.7 - level * 0.3);
       const dx = ship.x - f.x, dy = ship.y - f.y;
       const dist = Math.hypot(dx, dy) || 1;
-      eballs.push({ x: f.x - f.w * 0.45, y: f.y + 4, vx: (dx/dist)*500, vy: (dy/dist)*500, r: 12 });
-      sfx('laser');
+
+      if (f.variant === 'tesla') {
+        // Cyber-EMP Fortress: Expanding EMP Shockwave Ring!
+        eballs.push({
+          type: 'emp',
+          col: '#00e5ff',
+          x: f.x - f.w * 0.45, y: f.y,
+          vx: -380, vy: (dy / dist) * 120,
+          r: 18
+        });
+        sfx('incoming');
+      } else if (f.variant === 'brood') {
+        // Bio-Spore Hive: 3-Way Spreading Toxic Acid Spore Barrage!
+        for (const spr of [-0.22, 0, 0.22]) {
+          eballs.push({
+            type: 'spore',
+            col: '#d946ef',
+            x: f.x - f.w * 0.45, y: f.y,
+            vx: -480 * Math.cos(spr), vy: 480 * Math.sin(spr),
+            r: 13
+          });
+        }
+        sfx('laser');
+      } else {
+        // Titan Battle-Cruiser: Dual Aimed Turbo-Lasers!
+        eballs.push({ type: 'laser', col: '#00ff66', x: f.x - f.w * 0.45, y: f.y - 8, vx: (dx/dist)*520, vy: (dy/dist)*520, r: 10 });
+        eballs.push({ type: 'laser', col: '#00ff66', x: f.x - f.w * 0.45, y: f.y + 8, vx: (dx/dist)*520, vy: (dy/dist)*520, r: 10 });
+        sfx('laser');
+      }
     }
     
     if (f.x < -f.w) forts.splice(i, 1);
@@ -1835,17 +1925,41 @@ function update(dt) {
     }
   }
 
-  // Update TIE-Style UFO Fighters
+  // Update Light Interceptors & Stalkers
   for (let i = gliders.length - 1; i >= 0; i--) {
     const g = gliders[i];
     g.x += g.vx * dt;
     g.saucerSpin += dt * 6;
-    g.y += (ship.y - g.y) * 0.9 * dt + Math.sin(t * 6 + g.wob) * 48 * dt;
+
+    if (g.variant === 'stalker') {
+      // Quantum Phase Stalker: Periodic Warp Blink
+      g.blinkT -= dt;
+      if (g.blinkT <= 0) {
+        g.blinkT = 2.2 + Math.random() * 1.5;
+        g.y = Math.max(70, Math.min(H - 90, g.y + (Math.random() < 0.5 ? -95 : 95)));
+        explode(g.x, g.y, '#a855f7', 14);
+      }
+      g.y += (ship.y - g.y) * 0.6 * dt;
+    } else if (g.variant === 'rammer') {
+      // Solar Kamikaze Rammer: Aggressive Altitude Homing with Rocket Flame Trail
+      g.y += (ship.y - g.y) * 2.8 * dt;
+      if (Math.random() < 0.65) {
+        parts.push({
+          type: 'fireball',
+          x: g.x + 22, y: g.y,
+          vx: 120 + Math.random() * 80, vy: (Math.random() - 0.5) * 25,
+          life: 0.18, maxLife: 0.18, r: 4, maxR: 12, col: '#ff5500'
+        });
+      }
+    } else {
+      // TIE Void Interceptor: Sinusoidal Evasive Dive
+      g.y += (ship.y - g.y) * 0.9 * dt + Math.sin(t * 6 + g.wob) * 48 * dt;
+    }
     
     if (g.x < -60) gliders.splice(i, 1);
     else if (ship.inv <= 0 && Math.hypot(g.x - ship.x, g.y - ship.y) < ship.r + 25) {
       damageShip();
-      explode(g.x, g.y, '#00ff66', 20);
+      explode(g.x, g.y, g.col || '#00ff66', 20);
       gliders.splice(i, 1);
     }
   }
@@ -1859,19 +1973,25 @@ function update(dt) {
     
     if (m.x < -50) mines.splice(i, 1);
     else if (ship.inv <= 0 && Math.hypot(m.x - ship.x, m.y - ship.y) < ship.r + m.r) {
-      explode(m.x, m.y, '#00e5ff', 28); sfx('boom');
+      explode(m.x, m.y, m.col || '#00e5ff', 28); sfx('boom');
       damageShip();
       mines.splice(i, 1);
     }
   }
 
-  // Update Enemy Green Laser Bolts
+  // Update Enemy Projectiles (Lasers, EMP Waves, Bio-Spores, Shrapnel)
   for (let i = eballs.length - 1; i >= 0; i--) {
     const b = eballs[i];
     b.x += b.vx * dt; b.y += b.vy * dt;
     
     if (b.x < -30 || b.y < -30 || b.y > H + 30) eballs.splice(i, 1);
-    else if (ship.inv <= 0 && Math.hypot(b.x - ship.x, b.y - ship.y) < ship.r + b.r - 8) {
+    else if (ship.inv <= 0 && Math.hypot(b.x - ship.x, b.y - ship.y) < ship.r + b.r - 6) {
+      if (b.type === 'emp') {
+        slowT = 2.8;
+        popup(ship.x, ship.y - 30, '⚡ EMP SHOCK — ENGINES DISRUPTED!', '#00e5ff');
+      } else if (b.type === 'spore') {
+        popup(ship.x, ship.y - 30, '☣ ACID SPORE HIT!', '#d946ef');
+      }
       damageShip();
       eballs.splice(i, 1);
     }
@@ -2230,112 +2350,199 @@ function draw() {
     cx.fillStyle = glow; cx.beginPath(); cx.arc(0, 0, 32, 0, Math.PI * 2); cx.fill();
     
     cx.fillStyle = '#2c1504'; cx.beginPath(); cx.roundRect(-16, -16, 32, 32, 6); cx.fill();
-    cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.5; cx.stroke();
-    cx.font = '19px sans-serif'; cx.textAlign = 'center'; cx.textBaseline = 'middle';
     cx.fillText(ic, 0, 1);
     cx.restore();
   }
 
-  // 4. Render Heavy Alien UFO Battle-Cruisers (Sci-Fi Armored Warships)
+  // 4. Render Heavy Alien Warships (3 Distinct Archetypes)
   for (const f of forts) {
     cx.save(); cx.translate(f.x, f.y);
     
-    // Hexagonal Force Field Shimmer
-    const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.48);
-    sg.addColorStop(0, f.col + 'aa'); sg.addColorStop(1, 'rgba(0,0,0,0)');
-    cx.fillStyle = sg;
-    cx.beginPath(); cx.ellipse(0, 0, f.w * 0.48, f.h * 0.45, 0, 0, Math.PI * 2); cx.fill();
+    if (f.variant === 'tesla') {
+      // ARCHETYPE 2: Cyber-EMP Disruption Fortress (Octagonal Cobalt Base with Tesla Coils)
+      const sg = cx.createRadialGradient(0, 0, 15, 0, 0, f.w * 0.52);
+      sg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = sg; cx.beginPath(); cx.arc(0, 0, f.w * 0.5, 0, Math.PI * 2); cx.fill();
 
-    // Armored Titanium Alloy Saucer Hull
-    const dg = cx.createLinearGradient(0, -f.h * 0.45, 0, f.h * 0.45);
-    dg.addColorStop(0, '#e2e8f0'); dg.addColorStop(0.35, '#64748b'); dg.addColorStop(1, '#0f172a');
-    cx.fillStyle = dg;
-    cx.beginPath(); cx.ellipse(0, 0, f.w * 0.46, f.h * 0.32, 0, 0, Math.PI * 2); cx.fill();
-    cx.strokeStyle = '#020617'; cx.lineWidth = 3; cx.stroke();
+      // Octagonal Cyber-Armor Station
+      const tg = cx.createLinearGradient(0, -f.h * 0.48, 0, f.h * 0.48);
+      tg.addColorStop(0, '#38bdf8'); tg.addColorStop(0.4, '#0369a1'); tg.addColorStop(1, '#082f49');
+      cx.fillStyle = tg;
+      cx.beginPath();
+      for (let k = 0; k < 8; k++) {
+        const ang = (k / 8) * Math.PI * 2 + Math.PI / 8;
+        const rx = Math.cos(ang) * (f.w * 0.44), ry = Math.sin(ang) * (f.h * 0.40);
+        if (k === 0) cx.moveTo(rx, ry); else cx.lineTo(rx, ry);
+      }
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#00e5ff'; cx.lineWidth = 3; cx.stroke();
 
-    // Titanium Hull Armor Plating Grooves
-    cx.strokeStyle = '#1e293b'; cx.lineWidth = 1.5;
-    cx.beginPath();
-    cx.moveTo(-f.w * 0.35, 0); cx.lineTo(f.w * 0.35, 0);
-    cx.moveTo(-f.w * 0.25, -f.h * 0.15); cx.lineTo(f.w * 0.25, -f.h * 0.15);
-    cx.stroke();
+      // Twin Glowing Tesla Induction Coils
+      for (const cy of [-f.h * 0.28, f.h * 0.28]) {
+        cx.fillStyle = '#0f172a'; cx.fillRect(-f.w * 0.35, cy - 4, 18, 8);
+        cx.strokeStyle = '#00ffee'; cx.lineWidth = 2;
+        cx.beginPath(); cx.arc(-f.w * 0.35, cy, 7 + Math.sin(t * 18) * 2, 0, Math.PI * 2); cx.stroke();
+      }
 
-    // Central Command Dome with Pulsing Core
-    const ckg = cx.createRadialGradient(-8, -12, 2, 0, -8, 20);
-    ckg.addColorStop(0, '#ffffff'); ckg.addColorStop(0.45, f.col); ckg.addColorStop(1, '#02240e');
-    cx.fillStyle = ckg;
-    cx.beginPath(); cx.ellipse(0, -10, 22, 14, 0, 0, Math.PI * 2); cx.fill();
-    cx.strokeStyle = '#fff'; cx.lineWidth = 1.5; cx.stroke();
+      // Central EMP Reactor Core (Pulsing high-voltage arcs)
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, 14, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.5; cx.stroke();
+      
+    } else if (f.variant === 'brood') {
+      // ARCHETYPE 3: Bio-Xenomorph Hive Spore Carrier (Organic Chitin Carapace with Venom Sacs)
+      const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.50);
+      sg.addColorStop(0, 'rgba(217, 70, 239, 0.45)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = sg; cx.beginPath(); cx.ellipse(0, 0, f.w * 0.50, f.h * 0.46, 0, 0, Math.PI * 2); cx.fill();
 
-    // Rotating Magnetic Drive Ring Lights
-    for (let k = 0; k < 6; k++) {
-      const a = (k / 6) * Math.PI * 2 + f.saucerSpin;
-      const lx = Math.cos(a) * (f.w * 0.38);
-      const ly = Math.sin(a) * (f.h * 0.22);
-      cx.fillStyle = (k % 2 === 0) ? '#ffffff' : f.col;
-      cx.beginPath(); cx.arc(lx, ly, 3.5, 0, Math.PI * 2); cx.fill();
+      // Bio-Chitin Carapace
+      const bg = cx.createLinearGradient(0, -f.h * 0.45, 0, f.h * 0.45);
+      bg.addColorStop(0, '#f472b6'); bg.addColorStop(0.4, '#86198f'); bg.addColorStop(1, '#3b0764');
+      cx.fillStyle = bg;
+      cx.beginPath();
+      cx.ellipse(0, 0, f.w * 0.46, f.h * 0.35, 0, 0, Math.PI * 2);
+      cx.fill();
+      cx.strokeStyle = '#d946ef'; cx.lineWidth = 3; cx.stroke();
+
+      // Twitching Bio-Mandibles on Bow
+      cx.strokeStyle = '#f472b6'; cx.lineWidth = 3;
+      cx.beginPath();
+      cx.moveTo(-f.w * 0.4, -12); cx.quadraticCurveTo(-f.w * 0.52, -20 + Math.sin(t * 12) * 6, -f.w * 0.42, -28);
+      cx.moveTo(-f.w * 0.4, 12); cx.quadraticCurveTo(-f.w * 0.52, 20 - Math.sin(t * 12) * 6, -f.w * 0.42, 28);
+      cx.stroke();
+
+      // Pulsing Acid Venom Sacs
+      cx.fillStyle = '#22c55e';
+      cx.beginPath(); cx.arc(-f.w * 0.15, -8, 8 + Math.sin(t * 8) * 2, 0, Math.PI * 2); cx.fill();
+      cx.beginPath(); cx.arc(f.w * 0.15, -8, 8 + Math.cos(t * 8) * 2, 0, Math.PI * 2); cx.fill();
+
+    } else {
+      // ARCHETYPE 1: Titan Battle-Cruiser (Armored Titanium Flying Saucer)
+      const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.48);
+      sg.addColorStop(0, f.col + 'aa'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = sg;
+      cx.beginPath(); cx.ellipse(0, 0, f.w * 0.48, f.h * 0.45, 0, 0, Math.PI * 2); cx.fill();
+
+      // Armored Titanium Alloy Saucer Hull
+      const dg = cx.createLinearGradient(0, -f.h * 0.45, 0, f.h * 0.45);
+      dg.addColorStop(0, '#e2e8f0'); dg.addColorStop(0.35, '#64748b'); dg.addColorStop(1, '#0f172a');
+      cx.fillStyle = dg;
+      cx.beginPath(); cx.ellipse(0, 0, f.w * 0.46, f.h * 0.32, 0, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#020617'; cx.lineWidth = 3; cx.stroke();
+
+      // Central Command Dome with Pulsing Core
+      const ckg = cx.createRadialGradient(-8, -12, 2, 0, -8, 20);
+      ckg.addColorStop(0, '#ffffff'); ckg.addColorStop(0.45, f.col); ckg.addColorStop(1, '#02240e');
+      cx.fillStyle = ckg;
+      cx.beginPath(); cx.ellipse(0, -10, 22, 14, 0, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#fff'; cx.lineWidth = 1.5; cx.stroke();
+
+      // Rotating Drive Lights
+      for (let k = 0; k < 6; k++) {
+        const a = (k / 6) * Math.PI * 2 + f.saucerSpin;
+        const lx = Math.cos(a) * (f.w * 0.38), ly = Math.sin(a) * (f.h * 0.22);
+        cx.fillStyle = (k % 2 === 0) ? '#ffffff' : f.col;
+        cx.beginPath(); cx.arc(lx, ly, 3.5, 0, Math.PI * 2); cx.fill();
+      }
+
+      // Ventral Turbo-Laser Battery
+      const aimToPlayer = Math.atan2(ship.y - f.y, ship.x - f.x);
+      cx.save();
+      cx.translate(-f.w * 0.25, f.h * 0.18);
+      cx.rotate(aimToPlayer);
+      cx.fillStyle = '#0f172a'; cx.fillRect(0, -2.5, 14, 5);
+      cx.fillStyle = '#00ff66'; cx.fillRect(12, -1.5, 3, 3);
+      cx.restore();
     }
-
-    // Ventral Heavy Turbo-Laser Battery (Aims towards player ship!)
-    const aimToPlayer = Math.atan2(ship.y - f.y, ship.x - f.x);
-    cx.save();
-    cx.translate(-f.w * 0.25, f.h * 0.18);
-    cx.rotate(aimToPlayer);
-    cx.fillStyle = '#0f172a'; cx.fillRect(0, -2.5, 14, 5);
-    cx.fillStyle = '#00ff66'; cx.fillRect(12, -1.5, 3, 3);
-    cx.restore();
     
     // Health bar
     cx.fillStyle = 'rgba(0,0,0,0.8)'; cx.fillRect(-35, -f.h * 0.5 - 14, 70, 7);
-    cx.fillStyle = '#00ff66'; cx.fillRect(-33, -f.h * 0.5 - 13, 66 * Math.max(0, f.hp / f.maxHp), 5);
+    cx.fillStyle = f.col || '#00ff66'; cx.fillRect(-33, -f.h * 0.5 - 13, 66 * Math.max(0, f.hp / f.maxHp), 5);
     cx.strokeStyle = '#020617'; cx.lineWidth = 1; cx.strokeRect(-35, -f.h * 0.5 - 14, 70, 7);
     
     cx.restore();
   }
 
-  // 5. Render TIE-Inspired Hex-Wing Interceptors (Star Wars TIE Fighter Physics)
+  // 5. Render Light Fighters & Stalkers (3 Distinct Archetypes)
   for (const g of gliders) {
     cx.save(); cx.translate(g.x, g.y);
-    
-    // Dynamic bank roll angle
-    const bank = Math.sin(t * 8 + g.x * 0.05) * 0.2;
-    cx.rotate(bank);
 
-    // Central Spherical Cockpit Ball
-    const cg = cx.createRadialGradient(-4, -4, 2, 0, 0, 15);
-    cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.4, '#475569'); cg.addColorStop(1, '#0f172a');
-    cx.fillStyle = cg;
-    cx.beginPath(); cx.arc(0, 0, 14, 0, Math.PI * 2); cx.fill();
-    cx.strokeStyle = '#020617'; cx.lineWidth = 2; cx.stroke();
-
-    // Octagonal TIE Viewport with Red Aiming Sensor
-    cx.fillStyle = '#0f172a';
-    cx.beginPath(); cx.arc(-5, 0, 6, 0, Math.PI * 2); cx.fill();
-    cx.fillStyle = '#ff2255';
-    cx.beginPath(); cx.arc(-5, 0, 2.5, 0, Math.PI * 2); cx.fill();
-
-    // Vertical Hexagonal Solar Radiator Panels
-    for (const wx of [-16, 16]) {
-      cx.fillStyle = '#1e293b';
-      cx.strokeStyle = '#64748b'; cx.lineWidth = 2;
+    if (g.variant === 'stalker') {
+      // ARCHETYPE 2: Quantum Phase Stealth Fighter (Translucent Violet Needle Hull)
+      cx.globalAlpha = 0.55 + Math.sin(t * 14) * 0.35;
+      const tg = cx.createLinearGradient(-24, 0, 24, 0);
+      tg.addColorStop(0, '#d946ef'); tg.addColorStop(0.5, '#701a75'); tg.addColorStop(1, '#2e1065');
+      cx.fillStyle = tg;
       cx.beginPath();
-      cx.moveTo(wx, -18);
-      cx.lineTo(wx - 5, -24);
-      cx.lineTo(wx - 5, 24);
-      cx.lineTo(wx, 18);
+      cx.moveTo(-24, 0); // Forward needle point
+      cx.lineTo(20, -14);
+      cx.lineTo(12, 0);
+      cx.lineTo(20, 14);
       cx.closePath();
-      cx.fill(); cx.stroke();
+      cx.fill();
+      cx.strokeStyle = '#f472b6'; cx.lineWidth = 2; cx.stroke();
 
-      // Photovoltaic Hexagon Grid Details
-      cx.strokeStyle = '#00ff66'; cx.lineWidth = 0.8;
+      // Glowing Phase Core
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, 4, 0, Math.PI * 2); cx.fill();
+      cx.globalAlpha = 1;
+
+    } else if (g.variant === 'rammer') {
+      // ARCHETYPE 3: Solar Kamikaze Razor Dart (Crimson Arrowhead Dart with Blazing Engine)
+      const rg = cx.createLinearGradient(-26, 0, 24, 0);
+      rg.addColorStop(0, '#f43f5e'); rg.addColorStop(0.5, '#9f1239'); rg.addColorStop(1, '#4c0519');
+      cx.fillStyle = rg;
       cx.beginPath();
-      cx.moveTo(wx - 3, -16); cx.lineTo(wx - 3, 16);
-      cx.stroke();
-    }
+      cx.moveTo(-26, 0);
+      cx.lineTo(22, -12);
+      cx.lineTo(16, 0);
+      cx.lineTo(22, 12);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#ff0033'; cx.lineWidth = 2.5; cx.stroke();
 
-    // Ion Thruster Flame Flare
-    cx.fillStyle = '#00ffee';
-    cx.beginPath(); cx.arc(14, 0, 3.5 + Math.sin(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
+      // Molten Ramming Spike on Bow
+      cx.fillStyle = '#ff6a00';
+      cx.beginPath(); cx.moveTo(-26, 0); cx.lineTo(-34, 0); cx.lineTo(-24, -4); cx.fill();
+
+    } else {
+      // ARCHETYPE 1: TIE Void Interceptor (Star Wars Hex-Wing Fighter)
+      const bank = Math.sin(t * 8 + g.x * 0.05) * 0.2;
+      cx.rotate(bank);
+
+      // Central Spherical Cockpit Ball
+      const cg = cx.createRadialGradient(-4, -4, 2, 0, 0, 15);
+      cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.4, '#475569'); cg.addColorStop(1, '#0f172a');
+      cx.fillStyle = cg;
+      cx.beginPath(); cx.arc(0, 0, 14, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#020617'; cx.lineWidth = 2; cx.stroke();
+
+      // Octagonal TIE Viewport with Red Aiming Sensor
+      cx.fillStyle = '#0f172a';
+      cx.beginPath(); cx.arc(-5, 0, 6, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ff2255';
+      cx.beginPath(); cx.arc(-5, 0, 2.5, 0, Math.PI * 2); cx.fill();
+
+      // Vertical Hexagonal Solar Radiator Panels
+      for (const wx of [-16, 16]) {
+        cx.fillStyle = '#1e293b';
+        cx.strokeStyle = '#64748b'; cx.lineWidth = 2;
+        cx.beginPath();
+        cx.moveTo(wx, -18);
+        cx.lineTo(wx - 5, -24);
+        cx.lineTo(wx - 5, 24);
+        cx.lineTo(wx, 18);
+        cx.closePath();
+        cx.fill(); cx.stroke();
+
+        cx.strokeStyle = '#00ff66'; cx.lineWidth = 0.8;
+        cx.beginPath();
+        cx.moveTo(wx - 3, -16); cx.lineTo(wx - 3, 16);
+        cx.stroke();
+      }
+
+      // Ion Thruster Flame Flare
+      cx.fillStyle = '#00ffee';
+      cx.beginPath(); cx.arc(14, 0, 3.5 + Math.sin(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
+    }
     cx.restore();
   }
 
@@ -2457,30 +2664,50 @@ function draw() {
     }
   }
 
-  // 6. Render Quantum Alien Mines
+  // 6. Render Quantum & Incendiary Cluster Mines (2 Distinct Archetypes)
   for (const m of mines) {
     cx.save(); cx.translate(m.x, m.y); cx.rotate(m.spin);
     
-    // Sweeping Red/Cyan Tripwire Laser Scanners
-    cx.strokeStyle = 'rgba(255, 30, 80, 0.45)'; cx.lineWidth = 1.5;
-    cx.beginPath();
-    cx.moveTo(0, 0); cx.lineTo(Math.cos(t * 3) * 60, Math.sin(t * 3) * 60);
-    cx.moveTo(0, 0); cx.lineTo(Math.cos(t * 3 + Math.PI) * 60, Math.sin(t * 3 + Math.PI) * 60);
-    cx.stroke();
+    if (m.variant === 'cluster') {
+      // ARCHETYPE 2: Incendiary Magma Cluster Mine (8 Spikes with Molten Core)
+      cx.strokeStyle = '#ff4400'; cx.lineWidth = 3;
+      for (let k = 0; k < 8; k++) {
+        const a = (k / 8) * Math.PI * 2;
+        cx.beginPath(); cx.moveTo(Math.cos(a) * m.r, Math.sin(a) * m.r);
+        cx.lineTo(Math.cos(a) * (m.r + 14), Math.sin(a) * (m.r + 14)); cx.stroke();
+      }
 
-    cx.strokeStyle = '#00e5ff'; cx.lineWidth = 3;
-    for (let k = 0; k < 6; k++) {
-      const a = (k / 6) * Math.PI * 2;
-      cx.beginPath(); cx.moveTo(Math.cos(a)*m.r, Math.sin(a)*m.r);
-      cx.lineTo(Math.cos(a)*(m.r + 12), Math.sin(a)*(m.r + 12)); cx.stroke();
+      // Burning Molten Magma Core
+      const mgr = cx.createRadialGradient(-3, -3, 2, 0, 0, m.r);
+      mgr.addColorStop(0, '#ffffff'); mgr.addColorStop(0.35, '#ffaa00'); mgr.addColorStop(0.75, '#ff3300'); mgr.addColorStop(1, '#450a0a');
+      cx.fillStyle = mgr; cx.beginPath(); cx.arc(0, 0, m.r, 0, Math.PI * 2); cx.fill();
+
+      // Pulsing Incendiary Fuse Warning
+      cx.fillStyle = `rgba(255, 255, 255, ${0.8 + Math.sin(t * 16) * 0.2})`;
+      cx.beginPath(); cx.arc(0, 0, 7, 0, Math.PI * 2); cx.fill();
+
+    } else {
+      // ARCHETYPE 1: Quantum Proximity Mine (6 Spikes with 360° Laser Tripwire)
+      cx.strokeStyle = 'rgba(255, 30, 80, 0.45)'; cx.lineWidth = 1.5;
+      cx.beginPath();
+      cx.moveTo(0, 0); cx.lineTo(Math.cos(t * 3) * 60, Math.sin(t * 3) * 60);
+      cx.moveTo(0, 0); cx.lineTo(Math.cos(t * 3 + Math.PI) * 60, Math.sin(t * 3 + Math.PI) * 60);
+      cx.stroke();
+
+      cx.strokeStyle = '#00e5ff'; cx.lineWidth = 3;
+      for (let k = 0; k < 6; k++) {
+        const a = (k / 6) * Math.PI * 2;
+        cx.beginPath(); cx.moveTo(Math.cos(a) * m.r, Math.sin(a) * m.r);
+        cx.lineTo(Math.cos(a) * (m.r + 12), Math.sin(a) * (m.r + 12)); cx.stroke();
+      }
+      
+      const mgr = cx.createRadialGradient(-3, -3, 2, 0, 0, m.r);
+      mgr.addColorStop(0, '#c7f9ff'); mgr.addColorStop(0.5, '#0077ff'); mgr.addColorStop(1, '#001a4d');
+      cx.fillStyle = mgr; cx.beginPath(); cx.arc(0, 0, m.r, 0, Math.PI * 2); cx.fill();
+      
+      cx.fillStyle = `rgba(255,50,80,${0.8 + Math.sin(t * 14) * 0.2})`;
+      cx.beginPath(); cx.arc(0, 0, 6, 0, Math.PI * 2); cx.fill();
     }
-    
-    const mgr = cx.createRadialGradient(-3, -3, 2, 0, 0, m.r);
-    mgr.addColorStop(0, '#c7f9ff'); mgr.addColorStop(0.5, '#0077ff'); mgr.addColorStop(1, '#001a4d');
-    cx.fillStyle = mgr; cx.beginPath(); cx.arc(0, 0, m.r, 0, Math.PI * 2); cx.fill();
-    
-    cx.fillStyle = `rgba(255,50,80,${0.8 + Math.sin(t * 14) * 0.2})`;
-    cx.beginPath(); cx.arc(0, 0, 6, 0, Math.PI * 2); cx.fill();
     cx.restore();
   }
 
@@ -2653,13 +2880,50 @@ function draw() {
     }
     cx.restore();
   }
-  // Enemy Star Wars Green Laser Blasts
+  // Enemy Projectiles (EMP Shockwave Rings, Bio-Acid Spores, Incendiary Shrapnel, Turbo-Lasers)
   for (const eb of eballs) {
     cx.save(); cx.translate(eb.x, eb.y);
-    const mg = cx.createRadialGradient(0, 0, 1, 0, 0, eb.r + 6);
-    mg.addColorStop(0, '#ffffff'); mg.addColorStop(0.4, '#00ff66'); mg.addColorStop(1, 'rgba(0,255,100,0)');
-    cx.fillStyle = mg; cx.beginPath(); cx.arc(0, 0, eb.r + 6, 0, Math.PI * 2); cx.fill();
-    cx.fillStyle = '#ffffff'; cx.fillRect(-10, -3, 20, 6);
+
+    if (eb.type === 'emp') {
+      // Expanding Cobalt EMP Shockwave Ring
+      const eg = cx.createRadialGradient(0, 0, 2, 0, 0, eb.r + 8);
+      eg.addColorStop(0, '#ffffff');
+      eg.addColorStop(0.4, '#00e5ff');
+      eg.addColorStop(1, 'rgba(0, 229, 255, 0)');
+      cx.fillStyle = eg;
+      cx.beginPath(); cx.arc(0, 0, eb.r + 8, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.5;
+      cx.beginPath(); cx.arc(0, 0, eb.r, t * 10, t * 10 + Math.PI); cx.stroke();
+
+    } else if (eb.type === 'spore') {
+      // Bubbling Biohazard Acid Spore Glob
+      const sg = cx.createRadialGradient(0, 0, 2, 0, 0, eb.r + 6);
+      sg.addColorStop(0, '#ffffff');
+      sg.addColorStop(0.35, '#22c55e');
+      sg.addColorStop(0.75, '#d946ef');
+      sg.addColorStop(1, 'rgba(217, 70, 239, 0)');
+      cx.fillStyle = sg;
+      cx.beginPath(); cx.arc(0, 0, eb.r + 5, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#22c55e';
+      cx.beginPath(); cx.arc(Math.cos(t * 16) * (eb.r + 3), Math.sin(t * 16) * (eb.r + 3), 3, 0, Math.PI * 2); cx.fill();
+
+    } else if (eb.type === 'shrapnel') {
+      // Incendiary Magma Shrapnel Fireball
+      const hg = cx.createRadialGradient(0, 0, 1, 0, 0, eb.r + 6);
+      hg.addColorStop(0, '#ffffff');
+      hg.addColorStop(0.4, '#ffaa00');
+      hg.addColorStop(0.8, '#ff3300');
+      hg.addColorStop(1, 'rgba(255, 50, 0, 0)');
+      cx.fillStyle = hg;
+      cx.beginPath(); cx.arc(0, 0, eb.r + 5, 0, Math.PI * 2); cx.fill();
+
+    } else {
+      // Star Wars Alien Turbo-Laser Bolt
+      const mg = cx.createRadialGradient(0, 0, 1, 0, 0, eb.r + 6);
+      mg.addColorStop(0, '#ffffff'); mg.addColorStop(0.4, eb.col || '#00ff66'); mg.addColorStop(1, 'rgba(0,255,100,0)');
+      cx.fillStyle = mg; cx.beginPath(); cx.arc(0, 0, eb.r + 6, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffffff'; cx.fillRect(-10, -3, 20, 6);
+    }
     cx.restore();
   }
 
