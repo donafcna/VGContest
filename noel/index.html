@@ -47,6 +47,47 @@
     letter-spacing: 1.5px; text-transform: uppercase;
   }
   .overlay button:hover { transform: scale(1.05); box-shadow: 0 10px 36px rgba(255, 160, 40, 0.8); }
+
+  .overlay button.net-tab {
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: clamp(0.72rem, 2.4vw, 0.85rem) !important;
+    padding: 8px 12px !important;
+    margin: 0 !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #cfe4ff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 10px !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: rgba(255, 210, 60, 0.4) !important;
+    user-select: none !important;
+    box-shadow: none !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.15s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    min-height: 42px !important;
+    position: relative !important;
+    z-index: 50 !important;
+    flex: 1 1 auto !important;
+  }
+  .overlay button.net-tab:hover {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border-color: #ffd23c !important;
+    transform: translateY(-1px) !important;
+  }
+  .overlay button.net-tab.active {
+    background: linear-gradient(135deg, #ffd23c, #ff9900) !important;
+    color: #050a18 !important;
+    font-weight: 900 !important;
+    border-color: #ffd23c !important;
+    box-shadow: 0 0 16px rgba(255, 210, 60, 0.5) !important;
+    transform: translateY(-1px) !important;
+  }
+
   .hidden { display: none !important; }
   
   #musicbtn, #pausebtn {
@@ -436,6 +477,33 @@
   <a class="exitlink" href="../">🚪 MAIN MENU — VG Contest</a>
 </div>
 
+<script>
+function switchNetTab(mode) {
+  window.netMode = mode;
+  document.querySelectorAll('.net-tab').forEach(function(t) {
+    if (t.getAttribute('data-mode') === mode) {
+      t.classList.add('active');
+    } else {
+      t.classList.remove('active');
+    }
+  });
+
+  var pSolo = document.getElementById('netPanelSolo');
+  var pHost = document.getElementById('netPanelHost');
+  var pJoin = document.getElementById('netPanelJoin');
+  var pCouch = document.getElementById('netPanelCouch');
+
+  if (pSolo) pSolo.style.display = mode === 'solo' ? 'block' : 'none';
+  if (pHost) pHost.style.display = mode === 'host' ? 'block' : 'none';
+  if (pJoin) pJoin.style.display = mode === 'join' ? 'block' : 'none';
+  if (pCouch) pCouch.style.display = mode === 'couch' ? 'block' : 'none';
+
+  if (mode === 'host' && typeof initHostPeer === 'function') {
+    try { initHostPeer(); } catch(e) {}
+  }
+}
+</script>
+
 <div id="menu" class="overlay">
   <h1>🏴‍☠️ SPACE PIRATES</h1>
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
@@ -446,11 +514,11 @@
     <!-- Lobby Mode Tabs -->
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:6px;">
       <span style="font-weight:900; color:#ffd23c; font-size:1.02rem; font-family:'Orbitron',sans-serif; letter-spacing:0.5px">🌐 MULTIPLAYER SQUAD</span>
-      <div style="display:flex; gap:5px;" id="netTabContainer">
-        <button type="button" class="net-tab active" data-mode="solo" style="padding:4px 10px; font-size:0.78rem; background:linear-gradient(135deg,#ffd23c,#ff9900); color:#000; border-radius:6px; font-weight:bold; cursor:pointer;">👤 Solo</button>
-        <button type="button" class="net-tab" data-mode="host" style="padding:4px 10px; font-size:0.78rem; background:rgba(255,255,255,0.1); color:#cfe4ff; border-radius:6px; font-weight:bold; cursor:pointer;">👑 Host Room</button>
-        <button type="button" class="net-tab" data-mode="join" style="padding:4px 10px; font-size:0.78rem; background:rgba(255,255,255,0.1); color:#cfe4ff; border-radius:6px; font-weight:bold; cursor:pointer;">🚀 Join Friend</button>
-        <button type="button" class="net-tab" data-mode="couch" style="padding:4px 10px; font-size:0.78rem; background:rgba(255,255,255,0.1); color:#cfe4ff; border-radius:6px; font-weight:bold; cursor:pointer;">🎮 Same Screen</button>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; width:100%;" id="netTabContainer">
+        <button type="button" class="net-tab active" data-mode="solo" onclick="switchNetTab('solo')" ontouchend="switchNetTab('solo')">👤 Solo</button>
+        <button type="button" class="net-tab" data-mode="host" onclick="switchNetTab('host')" ontouchend="switchNetTab('host')">👑 Host Room</button>
+        <button type="button" class="net-tab" data-mode="join" onclick="switchNetTab('join')" ontouchend="switchNetTab('join')">🚀 Join Friend</button>
+        <button type="button" class="net-tab" data-mode="couch" onclick="switchNetTab('couch')" ontouchend="switchNetTab('couch')">🎮 Same Screen</button>
       </div>
     </div>
 
@@ -2342,33 +2410,44 @@ function broadcastWorldSync() {
 }
 
 // Net Tabs Switching (Solo / Host / Join / Couch)
-document.querySelectorAll('.net-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.net-tab').forEach(t => {
+window.switchNetTab = function(mode) {
+  netMode = mode;
+  document.querySelectorAll('.net-tab').forEach(t => {
+    if (t.dataset.mode === mode) {
+      t.classList.add('active');
+    } else {
       t.classList.remove('active');
-      t.style.background = 'rgba(255,255,255,0.1)';
-      t.style.color = '#cfe4ff';
-    });
-    tab.classList.add('active');
-    tab.style.background = 'linear-gradient(135deg,#ffd23c,#ff9900)';
-    tab.style.color = '#000';
-
-    netMode = tab.dataset.mode;
-    document.querySelectorAll('.net-panel').forEach(p => p.style.display = 'none');
-    
-    if (netMode === 'solo') {
-      document.getElementById('netPanelSolo').style.display = 'block';
-      fleetCount = 1;
-    } else if (netMode === 'host') {
-      document.getElementById('netPanelHost').style.display = 'block';
-      initHostPeer();
-    } else if (netMode === 'join') {
-      document.getElementById('netPanelJoin').style.display = 'block';
-    } else if (netMode === 'couch') {
-      document.getElementById('netPanelCouch').style.display = 'block';
-      fleetCount = 2;
     }
   });
+
+  const pSolo = document.getElementById('netPanelSolo');
+  const pHost = document.getElementById('netPanelHost');
+  const pJoin = document.getElementById('netPanelJoin');
+  const pCouch = document.getElementById('netPanelCouch');
+
+  if (pSolo) pSolo.style.display = mode === 'solo' ? 'block' : 'none';
+  if (pHost) pHost.style.display = mode === 'host' ? 'block' : 'none';
+  if (pJoin) pJoin.style.display = mode === 'join' ? 'block' : 'none';
+  if (pCouch) pCouch.style.display = mode === 'couch' ? 'block' : 'none';
+
+  if (mode === 'solo') {
+    fleetCount = 1;
+  } else if (mode === 'host') {
+    try { initHostPeer(); } catch(e) { console.warn(e); }
+  } else if (mode === 'join') {
+    // Join mode ready
+  } else if (mode === 'couch') {
+    fleetCount = 2;
+  }
+};
+
+document.querySelectorAll('.net-tab').forEach(tab => {
+  const handler = function(e) {
+    if (e) e.preventDefault();
+    switchNetTab(tab.dataset.mode);
+  };
+  tab.addEventListener('click', handler);
+  tab.addEventListener('pointerdown', handler);
 });
 
 // Copy Online Invite Link Button
