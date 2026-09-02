@@ -397,7 +397,8 @@
   #shop h2 { color:#3fd5ff; font-size:1.1rem; margin:1.3rem 0 0.6rem; letter-spacing:1px; text-align:left; font-family:'Orbitron', sans-serif; }
   .shopitem { display:flex; align-items:center; gap:0.9rem; background:rgba(255,255,255,0.05);
     border:1px solid rgba(255, 210, 60, 0.2); border-radius:14px; padding:0.7rem 0.9rem; margin-bottom:0.6rem; text-align:left; }
-  .shopitem .ic { font-size:1.9rem; width:2.4rem; text-align:center; }
+  .shopitem .ic { width:76px; height:50px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.9rem; }
+  .shopitem .ic svg { width:100%; height:100%; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.6)); }
   .shopitem .info { flex:1; min-width:0; }
   .shopitem .info .t { font-weight:bold; color:#fff; font-size:1.02rem; font-family:'Orbitron', sans-serif; }
   .shopitem .info .d { color:#9fb4d4; font-size:0.84rem; }
@@ -1374,6 +1375,81 @@ function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 }
 
+function getShipSvg(shipId, cols) {
+  const c0 = (cols && cols[0]) || '#c88a55';
+  const c1 = (cols && cols[1]) || '#8c5528';
+  const c2 = (cols && cols[2]) || '#3b1c06';
+  
+  if (shipId === 'runner') {
+    // Astral Sloop - Sleek Cyan Trimaran with Forward-Raked Wing Sails & Dual Plasma Jets
+    return `<svg viewBox="0 0 74 48" width="68" height="44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 28L2 28" stroke="#00ffee" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+      <path d="M12 20L2 20" stroke="#00ffee" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+      <path d="M16 16L38 16L48 20L38 24L16 24Z" fill="${c2}" stroke="#00ffee" stroke-width="1.2"/>
+      <path d="M16 28L38 28L48 32L38 36L16 36Z" fill="${c2}" stroke="#00ffee" stroke-width="1.2"/>
+      <path d="M8 20L44 20L68 24L44 28L8 28Z" fill="${c1}" stroke="${c0}" stroke-width="1.8"/>
+      <circle cx="64" cy="24" r="3.5" fill="#00ffee"/>
+      <path d="M22 24L32 6L42 18L26 24Z" fill="${c0}" stroke="#ffffff" stroke-width="1.2" opacity="0.95"/>
+      <path d="M38 24L46 10L54 20L40 24Z" fill="${c0}" stroke="#ffffff" stroke-width="1.2" opacity="0.95"/>
+    </svg>`;
+  }
+
+  if (shipId === 'galleon') {
+    // Armoured Galleon - Heavy Riveted Ironclad Dread-Frigate with Steel Masts & Quad Cannons
+    return `<svg viewBox="0 0 74 48" width="68" height="44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="20" y1="32" x2="20" y2="8" stroke="#1e293b" stroke-width="2.5"/>
+      <line x1="36" y1="32" x2="36" y2="4" stroke="#1e293b" stroke-width="3"/>
+      <line x1="52" y1="32" x2="52" y2="10" stroke="#1e293b" stroke-width="2.5"/>
+      <path d="M12 12C20 16 20 16 28 12L27 24C19 28 19 28 13 24Z" fill="${c0}" stroke="#ffffff" stroke-width="1.2"/>
+      <path d="M27 8C36 12 36 12 45 8L44 22C35 26 35 26 28 22Z" fill="${c0}" stroke="#ffffff" stroke-width="1.2"/>
+      <path d="M44 14C52 18 52 18 60 14L59 26C51 30 51 30 45 26Z" fill="${c0}" stroke="#ffffff" stroke-width="1.2"/>
+      <path d="M6 26L58 26L68 34L54 42L14 42L6 26Z" fill="${c1}" stroke="${c0}" stroke-width="2"/>
+      <circle cx="22" cy="34" r="2.5" fill="#0f172a" stroke="#ffd23c" stroke-width="0.8"/>
+      <circle cx="36" cy="34" r="2.5" fill="#0f172a" stroke="#ffd23c" stroke-width="0.8"/>
+      <circle cx="50" cy="34" r="2.5" fill="#0f172a" stroke="#ffd23c" stroke-width="0.8"/>
+    </svg>`;
+  }
+
+  if (shipId === 'hind') {
+    // Golden Hind - 24K Royal Gilded Galleon with Radiant Solar Sails & Magnetic Core
+    return `<svg viewBox="0 0 74 48" width="68" height="44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="24" y1="32" x2="24" y2="6" stroke="#78350f" stroke-width="2.5"/>
+      <line x1="44" y1="32" x2="44" y2="8" stroke="#78350f" stroke-width="2.5"/>
+      <path d="M14 10C24 14 24 14 34 10L32 24C22 28 22 28 16 24Z" fill="${c0}" stroke="#ffffff" stroke-width="1.2"/>
+      <path d="M34 12C44 16 44 16 54 12L52 25C42 29 42 29 36 25Z" fill="${c0}" stroke="#ffffff" stroke-width="1.2"/>
+      <path d="M8 26L54 26L66 33L50 42L16 42L8 26Z" fill="${c1}" stroke="#ffd23c" stroke-width="2.2"/>
+      <circle cx="60" cy="27" r="4.5" fill="#ffd23c" stroke="#ffffff" stroke-width="1.2"/>
+      <line x1="12" y1="34" x2="56" y2="34" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="3 2"/>
+    </svg>`;
+  }
+
+  if (shipId === 'storm') {
+    // Solar Dreadnought - Twin Heavy Battery Cosmic Destroyer with Purple Nebular Sails
+    return `<svg viewBox="0 0 74 48" width="68" height="44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="22" y1="30" x2="22" y2="6" stroke="#2e1065" stroke-width="3"/>
+      <line x1="42" y1="30" x2="42" y2="4" stroke="#2e1065" stroke-width="3"/>
+      <path d="M12 8L32 14L28 26L10 20Z" fill="${c0}" stroke="#ffffff" stroke-width="1.2"/>
+      <path d="M32 6L56 12L52 24L30 18Z" fill="${c0}" stroke="#ffffff" stroke-width="1.2"/>
+      <path d="M4 24L56 24L70 32L54 43L12 43L4 24Z" fill="${c2}" stroke="${c0}" stroke-width="2.2"/>
+      <rect x="20" y="30" width="8" height="4" fill="#ffd23c" stroke="#2e1065" stroke-width="1"/>
+      <rect x="34" y="30" width="8" height="4" fill="#ffd23c" stroke="#2e1065" stroke-width="1"/>
+      <rect x="48" y="30" width="8" height="4" fill="#ffd23c" stroke="#2e1065" stroke-width="1"/>
+      <circle cx="65" cy="32" r="3" fill="#c084fc"/>
+    </svg>`;
+  }
+
+  // Classic Solar Corsair (cutter) - Wooden 3-Mast Galleon with Jolly Roger Flag
+  return `<svg viewBox="0 0 74 48" width="68" height="44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="26" y1="32" x2="26" y2="6" stroke="#3b1c06" stroke-width="2.5"/>
+    <line x1="46" y1="32" x2="46" y2="10" stroke="#3b1c06" stroke-width="2.2"/>
+    <path d="M26 6L35 9L26 12Z" fill="#111" stroke="#fff" stroke-width="0.8"/>
+    <path d="M16 12C26 16 26 16 36 12L34 25C24 29 24 29 18 25Z" fill="${c0}" stroke="#ffffff" stroke-width="1.2"/>
+    <path d="M36 14C46 18 46 18 56 14L54 26C44 30 44 30 38 26Z" fill="${c0}" stroke="#ffffff" stroke-width="1.2"/>
+    <path d="M8 26L52 26L64 34L48 42L16 42L8 26Z" fill="${c1}" stroke="${c0}" stroke-width="2"/>
+    <line x1="14" y1="33" x2="54" y2="33" stroke="#ffd23c" stroke-width="1.8"/>
+  </svg>`;
+}
+
 let cachedLeaderboardRows = [];
 
 function openDossier(pilotIndex) {
@@ -1402,9 +1478,9 @@ function openDossier(pilotIndex) {
   const sk = skinById(p.skin || 'default');
   const shipBox = document.getElementById('dosShipDisplay');
   if (shipBox) {
-    const swatch = (sk && sk.cols) ? sk.cols[0] : (s.cols ? s.cols[0] : '#c88a55');
+    const shipSvg = getShipSvg(s.id, (sk && sk.cols) ? sk.cols : s.cols);
     shipBox.innerHTML = `
-      <div style="font-size: 2.2rem; filter: drop-shadow(0 0 8px ${swatch})">⛵</div>
+      <div style="width: 76px; height: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">${shipSvg}</div>
       <div style="flex: 1; min-width: 0;">
         <div style="font-weight: bold; color: #ffd23c; font-size: 1.05rem; font-family: 'Orbitron', sans-serif;">${s.name}</div>
         <div style="color: #cfe4ff; font-size: 0.82rem; margin: 2px 0;">🎨 Skin: <b>${sk ? sk.name : 'Classic Oak'}</b></div>
@@ -1420,7 +1496,7 @@ function openDossier(pilotIndex) {
     fleetList.innerHTML = ownedShips.map(shId => {
       const sh = shipById(shId);
       const isCurrent = (p.ship || 'cutter') === shId;
-      return `<span class="dos-fleet-tag" style="${isCurrent ? 'border-color:#ffd23c;color:#ffd23c;background:rgba(255,210,60,0.18)' : ''}">⛵ ${sh.name}${isCurrent ? ' (Active)' : ''}</span>`;
+      return `<span class="dos-fleet-tag" style="${isCurrent ? 'border-color:#ffd23c;color:#ffd23c;background:rgba(255,210,60,0.18)' : ''}">🚀 ${sh.name}${isCurrent ? ' (Active)' : ''}</span>`;
     }).join('');
   }
 
@@ -2070,7 +2146,8 @@ function buildShop() {
     if (sel) btn = `<button class="sel" disabled>✔ IN SERVICE</button>`;
     else if (owned) btn = `<button data-buy="sel" data-key="${s.id}">SELECT</button>`;
     else btn = `<button class="locked" data-buy="ship" data-key="${s.id}"${can ? '' : ' disabled'}>🎟️ ${s.cost}</button>`;
-    h += `<div class="shopitem"><div class="ic" style="filter:drop-shadow(0 0 6px ${s.cols[0]})">⛵</div>` +
+    const shipSvg = getShipSvg(s.id, s.cols);
+    h += `<div class="shopitem"><div class="ic">${shipSvg}</div>` +
       `<div class="info"><div class="t">${s.name}</div><div class="d">${s.power}</div>` +
       `<div class="lv">❤️ ${s.hp} HP · ⚡ ${(1 / s.cool).toFixed(1)} rps · 🚀 ${s.spd.toFixed(2)}x Speed${s.gold > 1 ? ' · 🪙 x' + s.gold : ''}${s.magnet ? ' · 🧲' : ''}</div></div>` +
       btn + `</div>`;
@@ -2079,12 +2156,15 @@ function buildShop() {
   h += '<h2>🎨 GALLEON SKINS — Unlocked by Confirmed UFO Kills ☠️</h2>';
   for (const k of SKINS) {
     const unlocked = SAVE.data.kills >= k.kills, sel = SAVE.data.skin === k.id;
-    const swatch = k.cols ? k.cols[0] : shipById(SAVE.data.sel).cols[0];
+    const curShipId = SAVE.data.sel || 'cutter';
+    const curShip = shipById(curShipId);
+    const skinCols = k.cols ? k.cols : curShip.cols;
+    const skinSvg = getShipSvg(curShipId, skinCols);
     let btn;
     if (sel) btn = `<button class="sel" disabled>✔ IN SERVICE</button>`;
     else if (unlocked) btn = `<button data-buy="skin" data-key="${k.id}">EQUIP</button>`;
     else btn = `<button class="locked" disabled>☠️ ${k.kills}</button>`;
-    h += `<div class="shopitem"><div class="ic" style="filter:drop-shadow(0 0 6px ${swatch})">⛵</div>` +
+    h += `<div class="shopitem"><div class="ic">${skinSvg}</div>` +
       `<div class="info"><div class="t">${k.name}</div>` +
       `<div class="d">${k.id === 'default' ? "Classic pirate galleon wood & solar sails" : 'Cosmic radiant timber & sails'}</div>` +
       `<div class="lv">${unlocked ? '✔ Unlocked' : 'Requires ' + k.kills + ' UFO kills'} · Record: ${SAVE.data.kills} ☠️</div></div>` +
