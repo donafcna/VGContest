@@ -1334,40 +1334,83 @@ async function renderLeaderboard(cid, myScore, myName) {
 }
 
 // ---------- SPAWN ALIEN ENEMY ARCHETYPES WITH UNIQUE POWERS ----------
+// ---------- SPAWN ALIEN ENEMY ARCHETYPES WITH UNIQUE POWERS & SECTOR PROGRESSION ----------
 function spawnFort() {
   const roll = Math.random();
-  let variant = 'cruiser', col = '#00ff66', name = 'TITAN BATTLE-CRUISER', hp = 4, w = 120, h = 65;
-  if (roll < 0.35) {
-    variant = 'cruiser'; col = '#00ffaa'; name = 'VOID ECLIPSE DESTROYER'; hp = 5 + Math.floor(level * 0.6); w = 125; h = 66;
-  } else if (roll < 0.70) {
-    variant = 'tesla'; col = '#00e5ff'; name = 'CYBER-EMP FORTRESS'; hp = 6 + Math.floor(level * 0.8); w = 115; h = 70;
+  let variant = 'cruiser', col = '#00ffaa', name = 'VOID ECLIPSE DESTROYER', hp = 5, w = 125, h = 66;
+  
+  if (level <= 1) {
+    // Sector 1: Void Eclipse Destroyer
+    variant = 'cruiser'; col = '#00ffaa'; name = 'VOID ECLIPSE DESTROYER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
+  } else if (level <= 2) {
+    // Sector 2: + Cyber-EMP Fortress
+    if (roll < 0.5) {
+      variant = 'cruiser'; col = '#00ffaa'; name = 'VOID ECLIPSE DESTROYER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
+    } else {
+      variant = 'tesla'; col = '#00e5ff'; name = 'CYBER-EMP FORTRESS'; hp = 6 + Math.floor(level * 0.9); w = 115; h = 70;
+    }
+  } else if (level <= 3) {
+    // Sector 3: + Solar Inferno Juggernaut
+    if (roll < 0.33) {
+      variant = 'cruiser'; col = '#00ffaa'; name = 'VOID ECLIPSE DESTROYER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
+    } else if (roll < 0.66) {
+      variant = 'tesla'; col = '#00e5ff'; name = 'CYBER-EMP FORTRESS'; hp = 6 + Math.floor(level * 0.9); w = 115; h = 70;
+    } else {
+      variant = 'brood'; col = '#ff4400'; name = 'SOLAR INFERNO JUGGERNAUT'; hp = 7 + Math.floor(level * 0.9); w = 126; h = 68;
+    }
   } else {
-    variant = 'brood'; col = '#ff4400'; name = 'SOLAR INFERNO JUGGERNAUT'; hp = 6 + Math.floor(level * 0.7); w = 126; h = 68;
+    // Sector 4+: All 5 Heavy Warships including Cryo-Frost Gunship & Imperial Dread-Corvette!
+    if (roll < 0.22) {
+      variant = 'cruiser'; col = '#00ffaa'; name = 'VOID ECLIPSE DESTROYER'; hp = 6 + Math.floor(level * 0.8); w = 125; h = 66;
+    } else if (roll < 0.44) {
+      variant = 'tesla'; col = '#00e5ff'; name = 'CYBER-EMP FORTRESS'; hp = 7 + Math.floor(level * 1.0); w = 115; h = 70;
+    } else if (roll < 0.65) {
+      variant = 'brood'; col = '#ff4400'; name = 'SOLAR INFERNO JUGGERNAUT'; hp = 8 + Math.floor(level * 1.0); w = 126; h = 68;
+    } else if (roll < 0.82) {
+      variant = 'cryo_gunship'; col = '#38bdf8'; name = 'CRYO-FROST GUNSHIP'; hp = 7 + Math.floor(level * 0.9); w = 122; h = 64;
+    } else {
+      variant = 'imperial'; col = '#ffd23c'; name = 'IMPERIAL DREAD-CORVETTE'; hp = 9 + Math.floor(level * 1.1); w = 130; h = 72;
+    }
   }
 
   forts.push({
     variant,
     x: W + 140,
     y: 80 + Math.random() * (H - 220),
-    vx: -(140 + level * 20),
+    vx: -(130 + level * 22),
     hp, maxHp: hp,
-    shootT: 1.0 + Math.random() * 1.2,
+    shootT: Math.max(0.7, 1.2 - level * 0.08) + Math.random() * 0.8,
     col, name,
     w, h,
     bob: Math.random() * Math.PI * 2,
     saucerSpin: 0,
     empCharge: 0
   });
-  addAlert(`⚠️ ${name} DETECTED!`, 'incoming');
+  addAlert(`⚠️ [SECTOR ${level}] ${name} DETECTED!`, 'incoming');
 }
 
 function spawnGlider(xPos, yPos, forceType) {
-  const roll = forceType || (Math.random() < 0.45 ? 'tie' : Math.random() < 0.75 ? 'stalker' : 'rammer');
-  let col = '#ff2255', name = 'THE FIGHTER', spd = 270 + level * 35, w = 76, h = 48;
+  let roll = forceType;
+  if (!roll) {
+    const r = Math.random();
+    if (level <= 1) roll = 'tie';
+    else if (level <= 2) roll = r < 0.5 ? 'tie' : 'stalker';
+    else if (level <= 3) roll = r < 0.35 ? 'tie' : r < 0.70 ? 'stalker' : 'rammer';
+    else roll = r < 0.25 ? 'tie' : r < 0.50 ? 'stalker' : r < 0.75 ? 'rammer' : r < 0.88 ? 'drone' : 'phantom';
+  }
+
+  let col = '#ff2255', name = 'THE FIGHTER', spd = 270 + level * 35, w = 76, h = 48, hp = 1;
   if (roll === 'stalker') {
-    col = '#a855f7'; name = 'QUANTUM PHASE STALKER'; spd = 260 + level * 35; w = 48; h = 30;
+    col = '#a855f7'; name = 'QUANTUM PHASE STALKER'; spd = 260 + level * 35; w = 52; h = 32; hp = 1 + (level >= 4 ? 1 : 0);
   } else if (roll === 'rammer') {
-    col = '#ff3344'; name = 'SOLAR KAMIKAZE RAMMER'; spd = 380 + level * 55; w = 54; h = 26;
+    col = '#ff3344'; name = 'SOLAR KAMIKAZE RAMMER'; spd = 370 + level * 55; w = 56; h = 28; hp = 1;
+  } else if (roll === 'drone') {
+    col = '#00ffee'; name = 'TESLA LIGHTNING DRONE'; spd = 340 + level * 45; w = 50; h = 30; hp = 1 + (level >= 3 ? 1 : 0);
+  } else if (roll === 'phantom') {
+    col = '#c084fc'; name = 'SHADOW ECLIPSE PHANTOM'; spd = 300 + level * 40; w = 62; h = 36; hp = 2 + (level >= 5 ? 1 : 0);
+  } else {
+    // THE FIGHTER
+    hp = 1 + (level >= 3 ? 1 : 0) + (level >= 5 ? 1 : 0);
   }
 
   gliders.push({
@@ -1376,14 +1419,14 @@ function spawnGlider(xPos, yPos, forceType) {
     y: yPos !== undefined ? yPos : 60 + Math.random() * (H - 200),
     vx: -spd,
     wob: Math.random() * Math.PI * 2,
-    w, h,
+    w, h, hp, maxHp: hp,
     col, name,
     saucerSpin: 0,
-    blinkT: 1.8 + Math.random() * 1.5,
+    blinkT: 1.6 + Math.random() * 1.4,
     isBlinking: 0,
-    shootT: 1.0 + Math.random() * 1.2
+    shootT: Math.max(0.6, 1.2 - level * 0.1) + Math.random() * 0.8
   });
-  if (xPos === undefined) addAlert(`⚠️ ${name} IN ATTACK VECTOR!`, 'incoming');
+  if (xPos === undefined) addAlert(`⚠️ [SECTOR ${level}] ${name} IN ATTACK VECTOR!`, 'incoming');
 }
 
 function spawnMine() {
@@ -2361,10 +2404,15 @@ function update(dt) {
         }
 
         if (Math.hypot(b.x - g.x, b.y - g.y) < g.w * 0.5 + 12) {
-          explode(g.x, g.y, g.col || '#00ff66', 20); sfx('boom');
-          addScore(5, g.x, g.y); addShake(5); hit = true;
-          if (Math.random() < 0.5) coins.push({ x: g.x, y: g.y, vx: -95, vy: 0 });
-          gliders.splice(j, 1);
+          g.hp = (g.hp || 1) - 1;
+          hit = true;
+          explode(b.x, b.y, '#ffd23c', 8);
+          if (g.hp <= 0) {
+            explode(g.x, g.y, g.col || '#00ff66', 20); sfx('boom');
+            addScore(5 + Math.floor(level * 1.5), g.x, g.y); addShake(5);
+            if (Math.random() < 0.55) coins.push({ x: g.x, y: g.y, vx: -95, vy: 0 });
+            gliders.splice(j, 1);
+          }
           break;
         }
       }
@@ -2411,9 +2459,10 @@ function update(dt) {
     
     f.shootT -= dt;
     if (f.shootT <= 0 && f.x < W - 40 && f.x > 80) {
-      f.shootT = Math.max(1.3, 2.7 - level * 0.3);
+      f.shootT = Math.max(1.0, 2.4 - level * 0.18);
       const dx = ship.x - f.x, dy = ship.y - f.y;
       const dist = Math.hypot(dx, dy) || 1;
+      const spdBonus = 1 + Math.min(0.8, (level - 1) * 0.07);
 
       if (f.variant === 'tesla') {
         // Cyber-EMP Fortress: Expanding EMP Shockwave Ring!
@@ -2421,57 +2470,79 @@ function update(dt) {
           type: 'emp',
           col: '#00e5ff',
           x: f.x - f.w * 0.45, y: f.y,
-          vx: -380, vy: (dy / dist) * 120,
+          vx: -380 * spdBonus, vy: (dy / dist) * 120 * spdBonus,
           r: 18
         });
         sfx('incoming');
       } else if (f.variant === 'brood') {
-        // SOLAR INFERNO JUGGERNAUT Signature Power: Molten Solar Flare Torpedo or Magma Shrapnel Burst!
+        // SOLAR INFERNO JUGGERNAUT: Molten Solar Flare Torpedo or Magma Shrapnel Burst!
         f.altShot = !f.altShot;
         if (f.altShot) {
-          // Heavy Molten Solar Magma Torpedo
           eballs.push({
             type: 'magma',
             col: '#ff4400',
             x: f.x - f.w * 0.45, y: f.y,
-            vx: -420, vy: (dy / dist) * 140,
+            vx: -420 * spdBonus, vy: (dy / dist) * 140 * spdBonus,
             r: 16,
             spin: 0
           });
           popup(f.x, f.y - 28, '🔥 SOLAR MAGMA TORPEDO!', '#ff5500');
           sfx('incoming');
         } else {
-          // 3-Way Incendiary Solar Flare Barrage
           for (const spr of [-0.22, 0, 0.22]) {
             eballs.push({
               type: 'laser',
               col: '#ff5500',
               x: f.x - f.w * 0.45, y: f.y,
-              vx: -520 * Math.cos(spr), vy: 520 * Math.sin(spr),
+              vx: -520 * spdBonus * Math.cos(spr), vy: 520 * spdBonus * Math.sin(spr),
               r: 11
             });
           }
           sfx('laser');
         }
+      } else if (f.variant === 'cryo_gunship') {
+        // CRYO-FROST GUNSHIP: Sub-Zero Glacial Freeze Beams!
+        for (const cy of [-14, 14]) {
+          eballs.push({
+            type: 'emp',
+            col: '#38bdf8',
+            x: f.x - f.w * 0.45, y: f.y + cy,
+            vx: (dx / dist) * 540 * spdBonus, vy: (dy / dist) * 540 * spdBonus,
+            r: 14
+          });
+        }
+        popup(f.x, f.y - 28, '❄️ CRYO-FREEZE BEAM!', '#38bdf8');
+        sfx('incoming');
+      } else if (f.variant === 'imperial') {
+        // IMPERIAL DREAD-CORVETTE: 3-Way Golden Royal Laser Barrage!
+        for (const spr of [-0.18, 0, 0.18]) {
+          eballs.push({
+            type: 'laser',
+            col: '#ffd23c',
+            x: f.x - f.w * 0.45, y: f.y,
+            vx: -560 * spdBonus * Math.cos(spr), vy: 560 * spdBonus * Math.sin(spr),
+            r: 12
+          });
+        }
+        popup(f.x, f.y - 28, '👑 IMPERIAL SALVO!', '#ffd23c');
+        sfx('laser');
       } else {
-        // VOID ECLIPSE DESTROYER Signature Power: Dark Matter Vortex or Dual Turbo-Lasers!
+        // VOID ECLIPSE DESTROYER: Dark Matter Vortex or Dual Turbo-Lasers!
         f.altShot = !f.altShot;
         if (f.altShot) {
-          // Power Attack: Dark Matter Singularity Orb with Gravitational Tractor Pull!
           eballs.push({
             type: 'vortex',
             col: '#00ffaa',
             x: f.x - f.w * 0.45, y: f.y,
-            vx: -320, vy: (dy / dist) * 90,
+            vx: -320 * spdBonus, vy: (dy / dist) * 90 * spdBonus,
             r: 22,
             spin: 0
           });
           popup(f.x, f.y - 28, '🌀 DARK MATTER VORTEX!', '#00ffaa');
           sfx('incoming');
         } else {
-          // Dual Aimed Emerald Turbo-Railgun Lasers!
-          eballs.push({ type: 'laser', col: '#00ffaa', x: f.x - f.w * 0.45, y: f.y - 12, vx: (dx/dist)*540, vy: (dy/dist)*540, r: 11 });
-          eballs.push({ type: 'laser', col: '#00ffaa', x: f.x - f.w * 0.45, y: f.y + 12, vx: (dx/dist)*540, vy: (dy/dist)*540, r: 11 });
+          eballs.push({ type: 'laser', col: '#00ffaa', x: f.x - f.w * 0.45, y: f.y - 12, vx: (dx/dist)*540*spdBonus, vy: (dy/dist)*540*spdBonus, r: 11 });
+          eballs.push({ type: 'laser', col: '#00ffaa', x: f.x - f.w * 0.45, y: f.y + 12, vx: (dx/dist)*540*spdBonus, vy: (dy/dist)*540*spdBonus, r: 11 });
           sfx('laser');
         }
       }
@@ -2483,11 +2554,12 @@ function update(dt) {
     }
   }
 
-  // Update Light Interceptors & Stalkers
+  // Update Light Interceptors & Stalkers (5 Distinct Archetypes)
   for (let i = gliders.length - 1; i >= 0; i--) {
     const g = gliders[i];
     g.x += g.vx * dt;
     g.saucerSpin += dt * 6;
+    const spdBonus = 1 + Math.min(0.8, (level - 1) * 0.07);
 
     if (g.variant === 'stalker') {
       // Quantum Phase Stalker: Periodic Warp Blink
@@ -2509,27 +2581,60 @@ function update(dt) {
           life: 0.18, maxLife: 0.18, r: 4, maxR: 12, col: '#ff5500'
         });
       }
+    } else if (g.variant === 'drone') {
+      // Tesla Lightning Drone: Fast Sinusoidal Weave + Electric Bolt Blasts
+      g.y += Math.sin(t * 8 + g.wob) * 90 * dt;
+      g.shootT = (g.shootT || 1.0) - dt;
+      if (g.shootT <= 0 && g.x < W - 60 && g.x > 100) {
+        g.shootT = Math.max(0.8, 1.8 - level * 0.14) + Math.random() * 0.6;
+        const dx = ship.x - g.x, dy = ship.y - g.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        eballs.push({
+          type: 'emp',
+          col: '#00ffee',
+          x: g.x - 20, y: g.y,
+          vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus,
+          r: 10
+        });
+        sfx('incoming');
+      }
+    } else if (g.variant === 'phantom') {
+      // Shadow Eclipse Phantom: Stealth Phase Cloaking + Amethyst Plasma Burst
+      g.y += (ship.y - g.y) * 1.2 * dt;
+      g.shootT = (g.shootT || 1.1) - dt;
+      if (g.shootT <= 0 && g.x < W - 60 && g.x > 100) {
+        g.shootT = Math.max(0.9, 2.0 - level * 0.14) + Math.random() * 0.6;
+        for (const spr of [-0.14, 0.14]) {
+          eballs.push({
+            type: 'laser',
+            col: '#c084fc',
+            x: g.x - 22, y: g.y,
+            vx: -580 * spdBonus * Math.cos(spr), vy: 580 * spdBonus * Math.sin(spr),
+            r: 10
+          });
+        }
+        sfx('laser');
+      }
     } else {
       // THE FIGHTER: Sinusoidal Evasive Dive + RED LASER CANNON SALVOS!
       g.y += (ship.y - g.y) * 0.9 * dt + Math.sin(t * 6 + g.wob) * 48 * dt;
       g.shootT = (g.shootT || 1.2) - dt;
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 120) {
-        g.shootT = Math.max(1.1, 2.2 - level * 0.15) + Math.random() * 0.8;
+        g.shootT = Math.max(1.0, 2.0 - level * 0.14) + Math.random() * 0.7;
         const dx = ship.x - g.x, dy = ship.y - g.y;
         const dist = Math.hypot(dx, dy) || 1;
-        // Fire twin red laser bolts from wing cannons!
         eballs.push({
           type: 'laser',
           col: '#ff0033',
           x: g.x - 24, y: g.y - 12,
-          vx: (dx / dist) * 560, vy: (dy / dist) * 560,
+          vx: (dx / dist) * 570 * spdBonus, vy: (dy / dist) * 570 * spdBonus,
           r: 10
         });
         eballs.push({
           type: 'laser',
           col: '#ff0033',
           x: g.x - 24, y: g.y + 12,
-          vx: (dx / dist) * 560, vy: (dy / dist) * 560,
+          vx: (dx / dist) * 570 * spdBonus, vy: (dy / dist) * 570 * spdBonus,
           r: 10
         });
         sfx('laser');
@@ -3084,6 +3189,67 @@ function draw() {
         cx.fill();
       }
 
+    } else if (f.variant === 'cryo_gunship') {
+      // ARCHETYPE 4: CRYO-FROST GUNSHIP (Diamond-Faceted Sub-Zero Heavy Bastion)
+      const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.52);
+      sg.addColorStop(0, 'rgba(56, 189, 248, 0.45)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = sg; cx.beginPath(); cx.ellipse(0, 0, f.w * 0.52, f.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
+
+      // Frosted Diamond Ice Hull
+      const cg = cx.createLinearGradient(0, -f.h * 0.45, 0, f.h * 0.45);
+      cg.addColorStop(0, '#e0f2fe'); cg.addColorStop(0.35, '#38bdf8'); cg.addColorStop(0.75, '#0284c7'); cg.addColorStop(1, '#082f49');
+      cx.fillStyle = cg;
+      cx.beginPath();
+      cx.moveTo(-f.w * 0.46, 0);                 // Forward diamond prow
+      cx.lineTo(-f.w * 0.20, -f.h * 0.42);       // Port bow wing
+      cx.lineTo(f.w * 0.32, -f.h * 0.38);        // Port aft
+      cx.lineTo(f.w * 0.44, 0);                  // Aft spine
+      cx.lineTo(f.w * 0.32, f.h * 0.38);         // Starboard aft
+      cx.lineTo(-f.w * 0.20, f.h * 0.42);        // Starboard bow wing
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#e0f2fe'; cx.lineWidth = 2.5; cx.stroke();
+
+      // Absolute Zero Frost Core
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, 11, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2; cx.stroke();
+
+      // Dual Aimed Glacial Cryo-Cannons
+      const aimAng = Math.atan2(ship.y - f.y, ship.x - f.x);
+      for (const wy of [-f.h * 0.30, f.h * 0.30]) {
+        cx.save(); cx.translate(-f.w * 0.12, wy); cx.rotate(aimAng);
+        cx.fillStyle = '#082f49'; cx.fillRect(0, -3, 16, 6);
+        cx.fillStyle = '#38bdf8'; cx.fillRect(14, -2, 4, 4);
+        cx.strokeStyle = '#e0f2fe'; cx.lineWidth = 1; cx.strokeRect(0, -3, 16, 6);
+        cx.restore();
+      }
+
+    } else if (f.variant === 'imperial') {
+      // ARCHETYPE 5: IMPERIAL DREAD-CORVETTE (24K Gilded Alien Heavy Corvette)
+      const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.54);
+      sg.addColorStop(0, 'rgba(255, 210, 60, 0.50)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = sg; cx.beginPath(); cx.ellipse(0, 0, f.w * 0.52, f.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
+
+      // 24K Royal Gilded Multi-Tier Chevron Hull
+      const tg = cx.createLinearGradient(f.w * 0.5, 0, -f.w * 0.5, 0);
+      tg.addColorStop(0, '#78350f'); tg.addColorStop(0.3, '#d97706'); tg.addColorStop(0.7, '#fbbf24'); tg.addColorStop(1, '#fffbeb');
+      cx.fillStyle = tg;
+      cx.beginPath();
+      cx.moveTo(-f.w * 0.48, 0);                 // Royal prow
+      cx.lineTo(-f.w * 0.25, -f.h * 0.44);       // Port chevron wing
+      cx.lineTo(f.w * 0.35, -f.h * 0.38);        // Port aft
+      cx.lineTo(f.w * 0.45, 0);                  // Aft royal notch
+      cx.lineTo(f.w * 0.35, f.h * 0.38);         // Starboard aft
+      cx.lineTo(-f.w * 0.25, f.h * 0.44);        // Starboard chevron wing
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.8; cx.stroke();
+
+      // Imperial Ruby Core
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, 12, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#f59e0b'; cx.beginPath(); cx.arc(0, 0, 7, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.8; cx.stroke();
+
     } else {
       // ARCHETYPE 1: VOID ECLIPSE DESTROYER (Angular Stealth Star-Destroyer Battlecruiser)
       // Subspace Plasma Aura Glow
@@ -3183,7 +3349,7 @@ function draw() {
     cx.restore();
   }
 
-  // 5. Render Light Fighters & Stalkers (3 Distinct Archetypes)
+  // 5. Render Light Fighters, Drones & Phantoms (5 Distinct Archetypes)
   for (const g of gliders) {
     cx.save(); cx.translate(g.x, g.y);
 
@@ -3223,6 +3389,46 @@ function draw() {
       // Molten Ramming Spike on Bow
       cx.fillStyle = '#ff6a00';
       cx.beginPath(); cx.moveTo(-26, 0); cx.lineTo(-34, 0); cx.lineTo(-24, -4); cx.fill();
+
+    } else if (g.variant === 'drone') {
+      // ARCHETYPE 4: Tesla Lightning Drone (High-Velocity Electric Delta Wing)
+      const dg = cx.createLinearGradient(-22, 0, 20, 0);
+      dg.addColorStop(0, '#00ffee'); dg.addColorStop(0.4, '#0284c7'); dg.addColorStop(1, '#082f49');
+      cx.fillStyle = dg;
+      cx.beginPath();
+      cx.moveTo(-22, 0);
+      cx.lineTo(16, -16);
+      cx.lineTo(8, 0);
+      cx.lineTo(16, 16);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#00ffee'; cx.lineWidth = 2; cx.stroke();
+
+      // Electric Pulse Core
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-4, 0, 5, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.arc(-4, 0, 8 + Math.sin(t * 18) * 2, 0, Math.PI * 2); cx.stroke();
+
+    } else if (g.variant === 'phantom') {
+      // ARCHETYPE 5: Shadow Eclipse Phantom (Stealth Phase Cloaked Interceptor)
+      cx.globalAlpha = 0.70 + Math.sin(t * 12) * 0.25;
+      const pg = cx.createLinearGradient(-28, 0, 22, 0);
+      pg.addColorStop(0, '#c084fc'); pg.addColorStop(0.5, '#581c87'); pg.addColorStop(1, '#0f051d');
+      cx.fillStyle = pg;
+      cx.beginPath();
+      cx.moveTo(-28, 0);                 // Forward stealth needle
+      cx.lineTo(-10, -18);
+      cx.lineTo(20, -10);
+      cx.lineTo(12, 0);
+      cx.lineTo(20, 10);
+      cx.lineTo(-10, 18);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#c084fc'; cx.lineWidth = 2; cx.stroke();
+
+      // Dark Matter Eye
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-6, 0, 4, 0, Math.PI * 2); cx.fill();
+      cx.globalAlpha = 1;
 
     } else {
       // ARCHETYPE 1: THE FIGHTER (Star Wars Heavy TIE Fighter — Scaled Up & Armed with Red Lasers!)
