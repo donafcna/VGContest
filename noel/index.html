@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Space Pirates: Galleon vs Star Wars UFOs — Realistic Space Combat by Noel -->
+<!-- Space Pirates: Galleon vs Star Wars UFOs ÔÇö Realistic Space Combat by Noel -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -11,75 +11,56 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { overflow: hidden; height: 100%; background: #020308; touch-action: manipulation;
+  html, body { overflow: hidden; height: 100%; background: #020308; touch-action: none;
     font-family: 'Outfit', system-ui, -apple-system, sans-serif; }
   canvas { display: block; width: 100vw; height: 100vh; }
   
   .overlay {
-    position: fixed; inset: 0; z-index: 50;
-    display: flex; flex-direction: column; justify-content: flex-start; align-items: center;
+    position: fixed; inset: 0; z-index: 10;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
     background: radial-gradient(circle at 50% 35%, rgba(6, 14, 32, 0.95) 0%, rgba(1, 3, 8, 0.98) 100%);
-    color: #fff; text-align: center; padding: 24px 16px 48px;
-    overflow-y: auto; -webkit-overflow-scrolling: touch;
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    color: #fff; text-align: center; padding: 24px;
+    overflow-y: auto; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   }
-  .overlay > * { flex-shrink: 0; }
   .overlay h1 {
     font-family: 'Orbitron', sans-serif;
-    font-size: clamp(2.2rem, 6vw, 3.8rem); margin-bottom: 0.4rem;
+    font-size: clamp(2.4rem, 7vw, 4.2rem); margin-bottom: 0.5rem;
     color: #ffd23c; text-shadow: 0 0 35px rgba(255, 210, 60, 0.7), 0 0 70px rgba(255, 100, 0, 0.4);
-    letter-spacing: 2px; font-weight: 900; text-transform: uppercase;
+    letter-spacing: 2.5px; font-weight: 900; text-transform: uppercase;
   }
-  .overlay p { font-size: 1.05rem; max-width: 620px; line-height: 1.55; color: #cfe4ff; margin-bottom: 0.9rem; }
+  .overlay p { font-size: 1.1rem; max-width: 620px; line-height: 1.65; color: #cfe4ff; margin-bottom: 1.2rem; }
   .overlay .keys {
     background: rgba(255,255,255,0.04); border: 1px solid rgba(255, 210, 60, 0.3);
-    border-radius: 16px; padding: 0.8rem 1.2rem; color: #7fdcff; font-size: 0.9rem;
-    margin-bottom: 1rem; line-height: 1.55; max-width: 90vw;
+    border-radius: 16px; padding: 1rem 1.5rem; color: #7fdcff; font-size: 0.95rem;
+    margin-bottom: 1.3rem; line-height: 1.65;
     box-shadow: inset 0 0 25px rgba(0,0,0,0.5);
     font-family: 'Orbitron', sans-serif;
   }
   .overlay button {
-    position: relative; z-index: 70;
     font-family: 'Orbitron', sans-serif;
-    font-size: 1.2rem; padding: 15px 36px; margin: 0.3rem 0;
+    font-size: 1.25rem; padding: 15px 46px; margin-top: 0.4rem;
     background: linear-gradient(135deg, #ffb834, #ea6c10);
     color: #1a0c00; border: none; border-radius: 14px; cursor: pointer; font-weight: 900;
     box-shadow: 0 8px 28px rgba(255, 160, 40, 0.55);
     transition: transform 0.15s, box-shadow 0.15s;
     letter-spacing: 1.5px; text-transform: uppercase;
-    touch-action: manipulation;
-    pointer-events: auto !important;
-    user-select: none; -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
   }
-  .overlay button:hover, .overlay button:active { transform: scale(1.04); box-shadow: 0 10px 36px rgba(255, 160, 40, 0.8); }
-
-  .hidden, .overlay.hidden {
-    display: none !important;
-    pointer-events: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-  }
+  .overlay button:hover { transform: scale(1.05); box-shadow: 0 10px 36px rgba(255, 160, 40, 0.8); }
+  .hidden { display: none !important; }
   
   #musicbtn, #pausebtn {
-    position: fixed; top: 16px; z-index: 80;
+    position: fixed; top: 16px; z-index: 6;
     background: rgba(6, 14, 30, 0.85); color: #ffd23c;
     border: 1px solid rgba(255, 210, 60, 0.35); border-radius: 10px;
     font-size: 1.2rem; padding: 8px 14px; cursor: pointer;
     backdrop-filter: blur(6px);
     transition: background 0.2s, transform 0.15s;
-    touch-action: manipulation;
-    pointer-events: auto !important;
   }
   #musicbtn:hover, #pausebtn:hover { background: rgba(255, 210, 60, 0.3); transform: scale(1.05); }
   #musicbtn { right: 16px; }
   #pausebtn { right: 76px; display: none; }
   
-  .overlay .btnrow {
-    position: relative; z-index: 65;
-    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
-    margin: 0.4rem 0;
-  }
+  .overlay .btnrow { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
   .overlay a.exitlink {
     display: inline-block; font-size: 1.05rem; padding: 13px 30px; margin-top: 0.6rem;
     background: rgba(255,255,255,0.08); color: #cfe4ff; text-decoration: none;
@@ -440,102 +421,104 @@
 </head>
 <body>
 <canvas id="cv"></canvas>
-<button id="musicbtn">🔊</button>
-<button id="pausebtn">⏸</button>
-<div id="touchHint" style="display:none;">🎯 DRAG FINGER TO SAIL YOUR SPACE GALLEON</div>
+<button id="musicbtn">­ƒöè</button>
+<button id="pausebtn">ÔÅ©</button>
+<div id="touchHint" style="display:none;">­ƒÄ» DRAG FINGER TO SAIL YOUR SPACE GALLEON</div>
 
-<div id="pauseoverlay" class="overlay hidden" style="display:none;">
-  <h1>⏸ WARP STASIS</h1>
-  <p>Solar sails reefed, Captain Noel…</p>
+<div id="pauseoverlay" class="overlay hidden">
+  <h1>ÔÅ© WARP STASIS</h1>
+  <p>Solar sails reefed, Captain NoelÔÇª</p>
   <div class="btnrow">
-    <button id="resumebtn" type="button" onclick="togglePause(event)" ontouchend="togglePause(event)">▶ RESUME BATTLE</button>
-    <button type="button" onclick="location.reload()" ontouchend="location.reload()">↻ RESTART</button>
+    <button id="resumebtn">ÔûÂ RESUME BATTLE</button>
+    <button onclick="location.reload()">Ôå╗ RESTART</button>
   </div>
-  <a class="exitlink" href="../">🚪 MAIN MENU — VG Contest</a>
+  <a class="exitlink" href="../">­ƒÜ¬ MAIN MENU ÔÇö VG Contest</a>
 </div>
 
-<div id="menu" class="overlay" style="display:flex;">
-  <h1>🏴‍☠️ SPACE PIRATES</h1>
+<div id="menu" class="overlay">
+  <h1>­ƒÅ┤ÔÇìÔÿá´©Å SPACE PIRATES</h1>
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
   Sail through deep cosmic space and blast <b>Star Wars-style alien UFO squadrons &amp; Motherships</b> with heavy naval broadsides!</p>
   <div class="keys">
-    🎮 <b>CONTROLS:</b> Move Mouse / Touch to steer • Hold Left Click / Touch to fire 32-pounders • [P] Pause • [M] Music
+    ­ƒÄ» <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM in any direction</b> ÔÇó <b>LEFT CLICK</b> or <b>SPACE</b> = Fire Broadside ­ƒÆÑ<br>
+    ­ƒÄ« <b>Navigation</b>: <b>W A S D</b> or <b>Arrow Keys</b> (Solar Ether Flight &amp; Speed Thrusters)<br>
+    ­ƒô▒ <b>Mobile Touch</b>: Drag anywhere to steer &amp; lock-on auto fire!
   </div>
-  <input id="pname" placeholder="Captain Noel" maxlength="14" value="Noël" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
+  <input id="pname" placeholder="Pirate Name" maxlength="14" autocomplete="off">
   <div class="btnrow">
-    <button id="startbtn" type="button" onclick="startSolarSail(event)" ontouchend="startSolarSail(event)" onpointerdown="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
-    <button id="hangarbtn" type="button" onclick="openHangar(event)" ontouchend="openHangar(event)" onpointerdown="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ PIRATE HANGAR &amp; UPGRADES</button>
+    <button id="startbtn">ÔÜô SET SOLAR SAIL!</button>
+    <button id="hangarbtn" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">­ƒøá´©Å PIRATE HANGAR &amp; UPGRADES</button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.1rem; color:#ffd23c; font-weight:bold"></p>
   <p id="bestline" style="margin-top:0.2rem; font-size:1rem; color:#ffd23c; font-weight:bold; min-height:1.2em"></p>
   <p style="margin-top:0.3rem; font-size:0.85rem; color:#8fa6cb">Designed &amp; Engineered by Noel</p>
-  <div class="lb small" id="lbMenu"><h2>🏆 GALAXY TOP 10 PIRATES</h2><div class="empty">Scanning subspace radar…</div></div>
+  <div class="lb small" id="lbMenu"><h2>­ƒÅå GALAXY TOP 10 PIRATES</h2><div class="empty">Scanning subspace radarÔÇª</div></div>
 </div>
 
-<div id="loseoverlay" class="overlay hidden" style="display:none;">
-  <h1>💥 GALLEON SHIPWRECKED!</h1>
-  <p id="losetext">Your space pirate galleon was blasted into cosmic stardust…</p>
+<div id="loseoverlay" class="overlay hidden">
+  <h1>­ƒÆÑ GALLEON SHIPWRECKED!</h1>
+  <p id="losetext">Your space pirate galleon was blasted into cosmic stardustÔÇª</p>
   <div class="lb" id="lbLose"></div>
-  <button type="button" onclick="location.reload()" ontouchend="location.reload()">↻ RE-ENGAGE</button>
-  <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">← Back to Contest</a></p>
+  <button onclick="location.reload()">Ôå╗ RE-ENGAGE</button>
+  <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">ÔåÉ Back to Contest</a></p>
 </div>
 
-<div id="winoverlay" class="overlay hidden" style="display:none;">
-  <h1>🌌 GALAXY PIRATE KING!</h1>
+<div id="winoverlay" class="overlay hidden">
+  <h1>­ƒîî GALAXY PIRATE KING!</h1>
   <p id="wintext">All alien UFO fleets vanquished across the stars!</p>
   <div class="lb" id="lbWin"></div>
-  <button type="button" onclick="location.reload()" ontouchend="location.reload()">↻ PLAY AGAIN</button>
-  <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">← Back to Contest</a></p>
+  <button onclick="location.reload()">Ôå╗ PLAY AGAIN</button>
+  <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">ÔåÉ Back to Contest</a></p>
 </div>
 
-<div id="shop" class="overlay hidden" style="display:none;">
-  <h1>🛠️ PIRATE DOCKYARD &amp; HANGAR</h1>
+<div id="shop" class="overlay hidden">
+  <h1>­ƒøá´©Å PIRATE DOCKYARD &amp; HANGAR</h1>
   <p id="shopwallet"></p>
-  <p style="font-size:0.92rem;color:#9fb4d4;margin-bottom:0.6rem;max-width:560px">Loot 🪙 gold dubloons from destroyed UFOs and 🎟️ alien plasma cores from UFO motherships.</p>
+  <p style="font-size:0.92rem;color:#9fb4d4;margin-bottom:0.6rem;max-width:560px">Loot ­ƒ¬Ö gold dubloons from destroyed UFOs and ­ƒÄƒ´©Å alien plasma cores from UFO motherships.</p>
   <div id="shopBody"></div>
-  <button id="shopclose" type="button" onclick="closeShop(event)" ontouchend="closeShop(event)" onpointerdown="closeShop(event)" style="margin-top:1.3rem">⬅ RETURN TO QUARTERDECK</button>
+  <button id="shopclose" style="margin-top:1.3rem">Ô¼à RETURN TO QUARTERDECK</button>
 </div>
 
 <!-- Captain's Tactical Fleet Dossier Modal -->
-<div id="dossierModal" class="overlay hidden" style="display:none; z-index: 100;">
+<div id="dossierModal" class="overlay hidden" style="z-index: 100;">
   <div class="dossier-card">
     <div class="dossier-header">
-      <span id="dosRank" class="dos-badge">🥇 RANK #1</span>
+      <span id="dosRank" class="dos-badge">­ƒÑç RANK #1</span>
       <h1 id="dosName">Captain Noel</h1>
       <div id="dosCallsign" class="dos-sub">PILOT ID: pilot_xxxx</div>
     </div>
 
     <div class="dos-grid">
       <div class="dos-panel">
-        <div class="dos-title">⛵ ACTIVE FLAGSHIP</div>
+        <div class="dos-title">ÔøÁ ACTIVE FLAGSHIP</div>
         <div id="dosShipDisplay" class="dos-ship-box"></div>
-        <div class="dos-fleet-title">⚓ FLEET DOCKYARD:</div>
+        <div class="dos-fleet-title">ÔÜô FLEET DOCKYARD:</div>
         <div id="dosFleetList" class="dos-fleet-list"></div>
       </div>
 
       <div class="dos-panel">
-        <div class="dos-title">⚔️ COMBAT SERVICE RECORD</div>
-        <div class="dos-stat-row"><span>🚀 Max Sector Reached</span><strong id="dosSector" class="gold">Sector 1</strong></div>
-        <div class="dos-stat-row"><span>🪙 All-Time Score</span><strong id="dosScore" class="gold">🪙 0</strong></div>
-        <div class="dos-stat-row"><span>☠️ Confirmed UFO Kills</span><strong id="dosKills" class="cyan">0</strong></div>
-        <div class="dos-stat-row"><span>🎟️ Plasma Cores</span><strong id="dosTokens" class="purple">0</strong></div>
+        <div class="dos-title">ÔÜö´©Å COMBAT SERVICE RECORD</div>
+        <div class="dos-stat-row"><span>­ƒÜÇ Max Sector Reached</span><strong id="dosSector" class="gold">Sector 1</strong></div>
+        <div class="dos-stat-row"><span>­ƒ¬Ö All-Time Score</span><strong id="dosScore" class="gold">­ƒ¬Ö 0</strong></div>
+        <div class="dos-stat-row"><span>Ôÿá´©Å Confirmed UFO Kills</span><strong id="dosKills" class="cyan">0</strong></div>
+        <div class="dos-stat-row"><span>­ƒÄƒ´©Å Plasma Cores</span><strong id="dosTokens" class="purple">0</strong></div>
       </div>
     </div>
 
     <div class="dos-panel full-width">
-      <div class="dos-title">⚙️ GALLEON UPGRADES &amp; SYSTEMS</div>
+      <div class="dos-title">ÔÜÖ´©Å GALLEON UPGRADES &amp; SYSTEMS</div>
       <div id="dosUpgList" class="dos-upg-grid"></div>
     </div>
 
-    <button id="dosCloseBtn" type="button" class="dos-close-btn" onclick="closeDossier(event)" ontouchend="closeDossier(event)">✖ CLOSE DOSSIER</button>
+    <button id="dosCloseBtn" class="dos-close-btn">Ô£û CLOSE DOSSIER</button>
   </div>
 </div>
 
 <!-- Roblox Grow a Garden Style Lucky Prize Wheel Modal -->
-<div id="spinModal" class="overlay hidden" style="display:none; z-index: 120;">
+<div id="spinModal" class="overlay hidden" style="z-index: 120;">
   <div class="spin-card">
     <div class="spin-header">
-      <span class="spin-badge">🎡 LUCKY PRIZE WHEEL 🎟️</span>
+      <span class="spin-badge">­ƒÄí LUCKY PRIZE WHEEL ­ƒÄƒ´©Å</span>
       <h1 id="spinTitle">PIRATE LUCKY WHEEL</h1>
       <p id="spinSubtitle">Spin the wheel to win massive gold dubloons &amp; plasma cores!</p>
     </div>
@@ -560,210 +543,45 @@
 
     <!-- Spin Result Banner & Rewards -->
     <div id="spinLootBanner" class="spin-loot-banner hidden">
-      <div id="spinLootTitle" class="spin-loot-title">🎉 WINNER!</div>
-      <div id="spinLootDesc" class="spin-loot-desc">+250 🪙 Gold Dubloons!</div>
+      <div id="spinLootTitle" class="spin-loot-title">­ƒÄë WINNER!</div>
+      <div id="spinLootDesc" class="spin-loot-desc">+250 ­ƒ¬Ö Gold Dubloons!</div>
     </div>
 
     <div class="spin-actions">
-      <button id="spinPullBtn" type="button" class="spin-pull-btn" onclick="triggerSlotSpin(event)" ontouchend="triggerSlotSpin(event)">🎡 SPIN WHEEL (<span id="spinCountLeft">0</span> left)</button>
-      <button id="spinCloseBtn" type="button" class="spin-close-btn" onclick="closeSpinModal(event)" ontouchend="closeSpinModal(event)">✖ CLOSE WHEEL</button>
+      <button id="spinPullBtn" class="spin-pull-btn">­ƒÄí SPIN WHEEL (<span id="spinCountLeft">0</span> left)</button>
+      <button id="spinCloseBtn" class="spin-close-btn">Ô£û CLOSE WHEEL</button>
     </div>
   </div>
 </div>
 
 <script>
+'use strict';
 const cv = document.getElementById('cv');
 const cx = cv.getContext('2d');
 let W = innerWidth, H = innerHeight;
 cv.width = W; cv.height = H;
 addEventListener('resize', () => { W = innerWidth; H = innerHeight; cv.width = W; cv.height = H; });
 
-// ---------- PROGRESSION / SAVE / UPGRADES (INITIALIZED FIRST) ----------
-const ALL_SHIP_IDS = ['cutter', 'galleon', 'runner', 'hind', 'storm'];
-
-const SAVE = {
-  data: {
-    uid: '',
-    coins: 99999,
-    tokens: 999,
-    kills: 2500,
-    spins: 99,
-    skin: 'default',
-    upg: { hull: 3, cannon: 3, engine: 3, magnet: 3 },
-    ships: ['cutter', 'galleon', 'runner', 'hind', 'storm'],
-    sel: 'cutter'
-  },
-  load() {
-    try {
-      const d = JSON.parse(localStorage.getItem('sp_save') || 'null');
-      if (d) {
-        this.data = Object.assign(this.data, d);
-        this.data.upg = Object.assign({ hull: 3, cannon: 3, engine: 3, magnet: 3 }, d.upg || {});
-        for (const sid of ALL_SHIP_IDS) {
-          if (!this.data.ships.includes(sid)) this.data.ships.push(sid);
-        }
-        if (this.data.coins < 99999) this.data.coins = 99999;
-        if (this.data.tokens < 999) this.data.tokens = 999;
-        if (this.data.spins < 99) this.data.spins = 99;
-        if (this.data.kills < 2500) this.data.kills = 2500;
-        this.data.upg.hull = Math.max(3, this.data.upg.hull || 0);
-        this.data.upg.cannon = Math.max(3, this.data.upg.cannon || 0);
-        this.data.upg.engine = Math.max(3, this.data.upg.engine || 0);
-        this.data.upg.magnet = Math.max(3, this.data.upg.magnet || 0);
-      }
-      if (!this.data.uid) {
-        this.data.uid = localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36));
-        localStorage.setItem('sp_uid', this.data.uid);
-      }
-      this.save();
-    } catch (e) {}
-  },
-  save() { try { localStorage.setItem('sp_save', JSON.stringify(this.data)); } catch (e) {} }
-};
-SAVE.load();
-
-const SHIPS = [
-  { id: 'cutter',  name: 'Solar Corsair',    cost: 0,  cols: ['#c88a55', '#8c5528', '#3b1c06'], hp: 5, cool: 0.25, spd: 1,    gold: 1,   magnet: 0,  spread: [0],           power: 'Agile & balanced solar galleon' },
-  { id: 'galleon', name: 'Armoured Galleon', cost: 5,  cols: ['#dde5ed', '#8a97a4', '#3d464f'], hp: 7, cool: 0.30, spd: 0.9,  gold: 1,   magnet: 0,  spread: [0],           power: '+2 Reinforced Oak & Iron Hearts' },
-  { id: 'runner',  name: 'Astral Sloop',     cost: 6,  cols: ['#9effea', '#26c2a4', '#0d6b5c'], hp: 4, cool: 0.16, spd: 1.35, gold: 1,   magnet: 45, spread: [0],           power: 'High-speed solar sails & rapid fire' },
-  { id: 'hind',    name: 'Golden Hind',      cost: 8,  cols: ['#fff0b3', '#f2c14e', '#996f08'], hp: 5, cool: 0.25, spd: 1,    gold: 1.6, magnet: 110, spread: [0],          power: '+60% Gold dubloons & salvage field' },
-  { id: 'storm',   name: 'Solar Dreadnought',cost: 10, cols: ['#e4c4ff', '#9b59d0', '#4a1b6d'], hp: 5, cool: 0.30, spd: 1.05, gold: 1,   magnet: 0,  spread: [-0.14, 0.14], power: 'Twin heavy naval broadside battery' },
-];
-
-const UPG = {
-  hull:   { name: 'Reinforced Mahogany', icon: '🛡️', max: 3, cost: l => 40 + l * 50, desc: '+1 Max Hull Integrity Heart' },
-  cannon: { name: 'Heavy 32-Pounders',   icon: '💥', max: 3, cost: l => 50 + l * 60, desc: 'Faster reload & cannon cycling' },
-  engine: { name: 'Solar Sails & Ether', icon: '⚙️', max: 3, cost: l => 40 + l * 45, desc: 'Enhanced cosmic wind maneuvering' },
-  magnet: { name: 'Pirate Salvage Hook', icon: '🧲', max: 3, cost: l => 30 + l * 40, desc: 'Expanded gold attraction radius' },
-};
-
-const SKINS = [
-  { id: 'default', name: 'Classic Oak & Sails', kills: 0,    cols: null },
-  { id: 'sunset',  name: 'Solar Flare 🌅',     kills: 25,   cols: ['#ffd7a8', '#ff8a3c', '#b3410e'] },
-  { id: 'toxic',   name: 'Alien Plasma 🧪',    kills: 75,   cols: ['#e0ffb0', '#7ed957', '#2e6b22'] },
-  { id: 'ocean',   name: 'Deep Nebula 🌌',     kills: 150,  cols: ['#a9e0ff', '#2f9be6', '#0f3c63'] },
-  { id: 'shadow',  name: 'Black Pearl 🌑',     kills: 300,  cols: ['#9aa0aa', '#3a3f47', '#111316'] },
-  { id: 'royal',   name: 'Royal Navy 👑',      kills: 600,  cols: ['#e6c2ff', '#b06bff', '#53218c'] },
-  { id: 'legend',  name: 'Golden Legend ✨',   kills: 1200, cols: ['#fff2b0', '#ffcf3c', '#946d0a'] },
-];
-
-function skinById(id) { return SKINS.find(k => k.id === id) || SKINS[0]; }
-function shipById(id) { return SHIPS.find(s => s.id === id) || SHIPS[0]; }
-
-function computeLoadout() {
-  const s = shipById(SAVE.data.sel), u = SAVE.data.upg || {};
-  let cols = s.cols ? [...s.cols] : ['#c88a55', '#8c5528', '#3b1c06'];
-  const sk = skinById(SAVE.data.skin);
-  if (sk && sk.cols && SAVE.data.kills >= sk.kills) cols = [...sk.cols];
-  return {
-    maxHp: (s.hp || 5) + (u.hull || 0),
-    baseCool: (s.cool || 0.25) * Math.pow(0.85, u.cannon || 0),
-    spdMul: (s.spd || 1) + (u.engine || 0) * 0.18,
-    magnetBonus: (s.magnet || 0) + (u.magnet || 0) * 60,
-    goldMult: s.gold || 1,
-    baseSpread: s.spread ? [...s.spread] : [0],
-    cols: cols,
-  };
-}
-
-let maxHp = 5, baseCool = 0.25, spdMul = 1, magnetBonus = 0, goldMult = 1;
-let baseSpread = [0], shipCols = ['#c88a55', '#8c5528', '#3b1c06'];
-
-function applyLoadout() {
-  const lo = computeLoadout();
-  maxHp = lo.maxHp;
-  baseCool = lo.baseCool;
-  spdMul = lo.spdMul;
-  magnetBonus = lo.magnetBonus;
-  goldMult = lo.goldMult;
-  baseSpread = lo.baseSpread;
-  shipCols = lo.cols;
-  if (typeof ship !== 'undefined' && ship) ship.hp = maxHp;
-}
-applyLoadout();
-
-function bankRun() {
-  const before = SAVE.data.kills;
-  const c = Math.round(coinsN * goldMult);
-  SAVE.data.coins += c; SAVE.data.tokens += tokensRun; SAVE.data.kills += killsRun; SAVE.data.spins += spinsRun;
-  SAVE.save();
-  const unlocked = SKINS.filter(k => k.cols && k.kills > before && k.kills <= SAVE.data.kills).map(k => k.name);
-  return { coins: c, tokens: tokensRun, kills: killsRun, spins: spinsRun, unlocked };
-}
-
-// ---------- GAME STATE ----------
+// ---------- STATE ----------
 let state = 'menu';
 let level = 1, coinsN = 0, score = 0, best = 0;
 let playerName = 'Captain', scoreSubmitted = false;
 let shake = 0, hurtFlash = 0, muzzleFlash = 0;
 let combo = 0, comboT = 0;
 let rapidT = 0, shieldT = 0, tripleT = 0, slowT = 0;
-let tokensRun = 0, killsRun = 0, spinsRun = 0;
+let maxHp = 5, baseCool = 0.25, spdMul = 1, magnetBonus = 0, goldMult = 1;
+let baseSpread = [0], shipCols = ['#c88a55', '#8c5528', '#3b1c06'], tokensRun = 0, killsRun = 0, spinsRun = 0;
 let introT = 0, storySectorAnnounced = 0;
 let introUfos = [], introShot1 = false, introShot2 = false;
 let wreckage = [], shieldShards = [];
 
-// Multi-Player Space Pirate Fleet Squad (1 - 3 Players Co-op)
-let fleetCount = 1;
-let fleet = [];
-
-function createFleetShip(index, name, shipModel, startY) {
-  const s = shipById(shipModel || 'cutter');
-  const u = SAVE.data.upg || {};
-  const hp = (s.hp || 5) + (u.hull || 0);
-  const cool = (s.cool || 0.25) * Math.pow(0.85, u.cannon || 0);
-  const spd = (s.spd || 1) + (u.engine || 0) * 0.18;
-  const spread = s.spread ? [...s.spread] : [0];
-  const sk = skinById(SAVE.data.skin);
-  let cols = s.cols ? [...s.cols] : ['#c88a55', '#8c5528', '#3b1c06'];
-  if (sk && sk.cols && index === 0) cols = [...sk.cols];
-
-  return {
-    index: index,
-    name: name || (index === 0 ? 'Noël' : index === 1 ? 'First Mate' : 'Gunner'),
-    shipModel: shipModel || (index === 0 ? 'cutter' : index === 1 ? 'runner' : 'storm'),
-    x: 180 - index * 24,
-    y: startY || (H * 0.5),
-    vx: 0, vy: 0,
-    pitch: 0,
-    hp: hp,
-    maxHp: hp,
-    inv: 0,
-    recoil: 0,
-    flagWave: index * 1.5,
-    sailGlow: 0,
-    r: 46,
-    aimAngle: 0,
-    shootCool: 0,
-    cols: cols,
-    spread: spread,
-    cool: cool,
-    spd: spd,
-    dead: false,
-    reviveTimer: 0,
-    score: 0,
-    kills: 0,
-    wantsFire: false
-  };
-}
-
-let ship = createFleetShip(0, 'Noël', 'cutter', H * 0.5);
-fleet = [ship];
-
-function getClosestAliveShip(x, y) {
-  if (!fleet || !fleet.length) return ship;
-  const alive = fleet.filter(p => !p.dead);
-  if (!alive.length) return fleet[0] || ship;
-  let best = alive[0], bestDist = Math.hypot(alive[0].x - x, alive[0].y - y);
-  for (let i = 1; i < alive.length; i++) {
-    const d = Math.hypot(alive[i].x - x, alive[i].y - y);
-    if (d < bestDist) {
-      bestDist = d;
-      best = alive[i];
-    }
-  }
-  return best;
-}
+// High-fidelity Real Space Pirate Galleon
+const ship = {
+  x: 180, y: H * 0.5, vx: 0, vy: 0,
+  pitch: 0, hp: 5, inv: 0, recoil: 0,
+  flagWave: 0, sailGlow: 0, r: 46,
+  aimAngle: 0
+};
 
 // Collections for Space Pirate Combat
 let balls = [];       // player fiery cannonballs moving right
@@ -1257,7 +1075,7 @@ function sfx(type) {
 document.getElementById('musicbtn').addEventListener('click', () => {
   initAudio();
   musicOn = !musicOn;
-  document.getElementById('musicbtn').textContent = musicOn ? '🔊' : '🔇';
+  document.getElementById('musicbtn').textContent = musicOn ? '­ƒöè' : '­ƒöç';
   if (musicOn && ac && ac.state === 'suspended') {
     ac.resume();
   }
@@ -1333,7 +1151,116 @@ function explode(x, y, col, n) {
   }
 }
 
-// ---------- LEADERBOARD (Reliable Persistent & Cloud Sync) ----------
+// ---------- PROGRESSION / SAVE / UPGRADES ----------
+const ALL_SHIP_IDS = ['cutter', 'galleon', 'runner', 'hind', 'storm'];
+
+const SAVE = {
+  data: {
+    uid: '',
+    coins: 99999,
+    tokens: 999,
+    kills: 2500,
+    spins: 99,
+    skin: 'default',
+    upg: { hull: 3, cannon: 3, engine: 3, magnet: 3 },
+    ships: ['cutter', 'galleon', 'runner', 'hind', 'storm'],
+    sel: 'cutter'
+  },
+  load() {
+    try {
+      const d = JSON.parse(localStorage.getItem('sp_save') || 'null');
+      if (d) {
+        this.data = Object.assign(this.data, d);
+        this.data.upg = Object.assign({ hull: 3, cannon: 3, engine: 3, magnet: 3 }, d.upg || {});
+        // Ensure Creator Vault has all ships, skins & max currency
+        for (const sid of ALL_SHIP_IDS) {
+          if (!this.data.ships.includes(sid)) this.data.ships.push(sid);
+        }
+        if (this.data.coins < 99999) this.data.coins = 99999;
+        if (this.data.tokens < 999) this.data.tokens = 999;
+        if (this.data.spins < 99) this.data.spins = 99;
+        if (this.data.kills < 2500) this.data.kills = 2500;
+        this.data.upg.hull = Math.max(3, this.data.upg.hull || 0);
+        this.data.upg.cannon = Math.max(3, this.data.upg.cannon || 0);
+        this.data.upg.engine = Math.max(3, this.data.upg.engine || 0);
+        this.data.upg.magnet = Math.max(3, this.data.upg.magnet || 0);
+      }
+      if (!this.data.uid) {
+        this.data.uid = localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36));
+        localStorage.setItem('sp_uid', this.data.uid);
+      }
+      this.save();
+    } catch (e) {}
+  },
+  save() { try { localStorage.setItem('sp_save', JSON.stringify(this.data)); } catch (e) {} }
+};
+SAVE.load();
+
+const SHIPS = [
+  { id: 'cutter',  name: 'Solar Corsair',    cost: 0,  cols: ['#c88a55', '#8c5528', '#3b1c06'], hp: 5, cool: 0.25, spd: 1,    gold: 1,   magnet: 0,  spread: [0],           power: 'Agile & balanced solar galleon' },
+  { id: 'galleon', name: 'Armoured Galleon', cost: 5,  cols: ['#dde5ed', '#8a97a4', '#3d464f'], hp: 7, cool: 0.30, spd: 0.9,  gold: 1,   magnet: 0,  spread: [0],           power: '+2 Reinforced Oak & Iron Hearts' },
+  { id: 'runner',  name: 'Astral Sloop',     cost: 6,  cols: ['#9effea', '#26c2a4', '#0d6b5c'], hp: 4, cool: 0.16, spd: 1.35, gold: 1,   magnet: 45, spread: [0],           power: 'High-speed solar sails & rapid fire' },
+  { id: 'hind',    name: 'Golden Hind',      cost: 8,  cols: ['#fff0b3', '#f2c14e', '#996f08'], hp: 5, cool: 0.25, spd: 1,    gold: 1.6, magnet: 110, spread: [0],          power: '+60% Gold dubloons & salvage field' },
+  { id: 'storm',   name: 'Solar Dreadnought',cost: 10, cols: ['#e4c4ff', '#9b59d0', '#4a1b6d'], hp: 5, cool: 0.30, spd: 1.05, gold: 1,   magnet: 0,  spread: [-0.14, 0.14], power: 'Twin heavy naval broadside battery' },
+];
+
+const UPG = {
+  hull:   { name: 'Reinforced Mahogany', icon: '­ƒøí´©Å', max: 3, cost: l => 40 + l * 50, desc: '+1 Max Hull Integrity Heart' },
+  cannon: { name: 'Heavy 32-Pounders',   icon: '­ƒÆÑ', max: 3, cost: l => 50 + l * 60, desc: 'Faster reload & cannon cycling' },
+  engine: { name: 'Solar Sails & Ether', icon: 'ÔÜÖ´©Å', max: 3, cost: l => 40 + l * 45, desc: 'Enhanced cosmic wind maneuvering' },
+  magnet: { name: 'Pirate Salvage Hook', icon: '­ƒº▓', max: 3, cost: l => 30 + l * 40, desc: 'Expanded gold attraction radius' },
+};
+
+const SKINS = [
+  { id: 'default', name: 'Classic Oak & Sails', kills: 0,    cols: null },
+  { id: 'sunset',  name: 'Solar Flare ­ƒîà',     kills: 25,   cols: ['#ffd7a8', '#ff8a3c', '#b3410e'] },
+  { id: 'toxic',   name: 'Alien Plasma ­ƒº¬',    kills: 75,   cols: ['#e0ffb0', '#7ed957', '#2e6b22'] },
+  { id: 'ocean',   name: 'Deep Nebula ­ƒîî',     kills: 150,  cols: ['#a9e0ff', '#2f9be6', '#0f3c63'] },
+  { id: 'shadow',  name: 'Black Pearl ­ƒîæ',     kills: 300,  cols: ['#9aa0aa', '#3a3f47', '#111316'] },
+  { id: 'royal',   name: 'Royal Navy ­ƒææ',      kills: 600,  cols: ['#e6c2ff', '#b06bff', '#53218c'] },
+  { id: 'legend',  name: 'Golden Legend Ô£¿',   kills: 1200, cols: ['#fff2b0', '#ffcf3c', '#946d0a'] },
+];
+
+function skinById(id) { return SKINS.find(k => k.id === id) || SKINS[0]; }
+function shipById(id) { return SHIPS.find(s => s.id === id) || SHIPS[0]; }
+
+function computeLoadout() {
+  const s = shipById(SAVE.data.sel), u = SAVE.data.upg || {};
+  let cols = s.cols ? [...s.cols] : ['#c88a55', '#8c5528', '#3b1c06'];
+  const sk = skinById(SAVE.data.skin);
+  if (sk && sk.cols && SAVE.data.kills >= sk.kills) cols = [...sk.cols];
+  return {
+    maxHp: (s.hp || 5) + (u.hull || 0),
+    baseCool: (s.cool || 0.25) * Math.pow(0.85, u.cannon || 0),
+    spdMul: (s.spd || 1) + (u.engine || 0) * 0.18,
+    magnetBonus: (s.magnet || 0) + (u.magnet || 0) * 60,
+    goldMult: s.gold || 1,
+    baseSpread: s.spread ? [...s.spread] : [0],
+    cols: cols,
+  };
+}
+
+function applyLoadout() {
+  const lo = computeLoadout();
+  maxHp = lo.maxHp;
+  baseCool = lo.baseCool;
+  spdMul = lo.spdMul;
+  magnetBonus = lo.magnetBonus;
+  goldMult = lo.goldMult;
+  baseSpread = lo.baseSpread;
+  shipCols = lo.cols;
+  ship.hp = maxHp;
+}
+applyLoadout();
+
+function bankRun() {
+  const before = SAVE.data.kills;
+  const c = Math.round(coinsN * goldMult);
+  SAVE.data.coins += c; SAVE.data.tokens += tokensRun; SAVE.data.kills += killsRun; SAVE.data.spins += spinsRun;
+  SAVE.save();
+  const unlocked = SKINS.filter(k => k.cols && k.kills > before && k.kills <= SAVE.data.kills).map(k => k.name);
+  return { coins: c, tokens: tokensRun, kills: killsRun, spins: spinsRun, unlocked };
+}
 
 // ---------- LEADERBOARD (Reliable Persistent & Cloud Sync) ----------
 // Clean Leaderboard Reset
@@ -1344,21 +1271,11 @@ try {
   }
 } catch (e) {}
 
-const DEFAULT_TOP_PIRATES = [
-  { uid: 'creator_noel', name: 'Noël (Creator) 👑', score: 1480, level: 6, kills: 280, tokens: 45, ship: 'storm', skin: 'legend', upg: { hull: 3, cannon: 3, engine: 3, magnet: 3 }, created_at: Date.now() - 100000 },
-  { uid: 'pilot_blackbeard', name: 'Blackbeard', score: 1120, level: 5, kills: 210, tokens: 30, ship: 'hind', skin: 'royal', upg: { hull: 3, cannon: 2, engine: 3, magnet: 2 }, created_at: Date.now() - 200000 },
-  { uid: 'pilot_astral_ace', name: 'Astral Ace ⚡', score: 940, level: 4, kills: 180, tokens: 22, ship: 'runner', skin: 'ocean', upg: { hull: 2, cannon: 3, engine: 2, magnet: 2 }, created_at: Date.now() - 300000 },
-  { uid: 'pilot_red_corsair', name: 'Red Corsair ⛵', score: 760, level: 3, kills: 140, tokens: 16, ship: 'cutter', skin: 'sunset', upg: { hull: 2, cannon: 2, engine: 2, magnet: 1 }, created_at: Date.now() - 400000 },
-  { uid: 'pilot_star_lord', name: 'Star-Lord Nova 🌌', score: 580, level: 3, kills: 110, tokens: 12, ship: 'galleon', skin: 'toxic', upg: { hull: 3, cannon: 1, engine: 1, magnet: 1 }, created_at: Date.now() - 500000 },
-  { uid: 'pilot_gunner_jack', name: 'Gunner Jack', score: 420, level: 2, kills: 85, tokens: 8, ship: 'storm', skin: 'shadow', upg: { hull: 1, cannon: 2, engine: 1, magnet: 1 }, created_at: Date.now() - 600000 },
-  { uid: 'pilot_space_drake', name: 'Captain Drake', score: 310, level: 2, kills: 60, tokens: 6, ship: 'hind', skin: 'default', upg: { hull: 1, cannon: 1, engine: 1, magnet: 1 }, created_at: Date.now() - 700000 },
-];
-
 const LB = {
   URL: 'https://mxcdlljbbwsqhkpxfhbm.supabase.co',
   KEY: 'sb_publishable_NaWjzK8fltVv7OJUzYye8A_hr39WV51',
   TABLE: 'sky_pirates_scores',
-  online() { return false; }, // Instant local storage + rich galactic roster
+  online() { return false; }, // Default to reliable instant local storage
   _headers(extra) {
     return Object.assign({ apikey: this.KEY, Authorization: 'Bearer ' + this.KEY }, extra || {});
   },
@@ -1377,6 +1294,7 @@ const LB = {
     entry.tokens = typeof entry.tokens === 'number' ? entry.tokens : SAVE.data.tokens;
     entry.spins = typeof entry.spins === 'number' ? entry.spins : SAVE.data.spins;
 
+    // 1. ALWAYS persist immediately to local storage
     try {
       let arr = await this._all();
       const idx = arr.findIndex(r => r.uid && r.uid === entry.uid);
@@ -1398,6 +1316,17 @@ const LB = {
       }
       localStorage.setItem('sp_lb', JSON.stringify(arr));
     } catch (e) {}
+
+    // 2. Background Cloud Sync if available
+    if (this.online()) {
+      try {
+        await fetch(this.URL + '/rest/v1/' + this.TABLE, {
+          method: 'POST',
+          headers: this._headers({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
+          body: JSON.stringify(entry)
+        });
+      } catch (e) {}
+    }
   },
   async updateName(newName) {
     if (!newName) return;
@@ -1429,18 +1358,18 @@ const LB = {
       if (stored) {
         rows = JSON.parse(stored);
       }
+      if (!rows || !Array.isArray(rows)) {
+        rows = [];
+      }
     } catch (e) {
       rows = [];
-    }
-    if (!rows || !Array.isArray(rows) || rows.length === 0) {
-      rows = [...DEFAULT_TOP_PIRATES];
-      try { localStorage.setItem('sp_lb', JSON.stringify(rows)); } catch(e){}
     }
     return rows;
   },
   _dedupe(rows) {
     const best = new Map();
     for (const r of rows) {
+      // Deduplicate strictly by UID if available, otherwise by name
       const key = r.uid ? ('uid:' + r.uid) : ('name:' + (r.name || '').trim().toLowerCase());
       if (!key) continue;
       const p = best.get(key);
@@ -1706,7 +1635,7 @@ function openDossier(pilotIndex) {
   // Header & Rank
   const rankBadge = document.getElementById('dosRank');
   if (rankBadge) {
-    rankBadge.textContent = rankNum === 1 ? '🥇 RANK #1' : rankNum === 2 ? '🥈 RANK #2' : rankNum === 3 ? '🥉 RANK #3' : `⭐ RANK #${rankNum}`;
+    rankBadge.textContent = rankNum === 1 ? '­ƒÑç RANK #1' : rankNum === 2 ? '­ƒÑê RANK #2' : rankNum === 3 ? '­ƒÑë RANK #3' : `Ô¡É RANK #${rankNum}`;
   }
   const nameEl = document.getElementById('dosName');
   if (nameEl) nameEl.textContent = p.name || 'Unknown Corsair';
@@ -1726,7 +1655,7 @@ function openDossier(pilotIndex) {
       <div style="width: 76px; height: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">${shipSvg}</div>
       <div style="flex: 1; min-width: 0;">
         <div style="font-weight: bold; color: #ffd23c; font-size: 1.05rem; font-family: 'Orbitron', sans-serif;">${s.name}</div>
-        <div style="color: #cfe4ff; font-size: 0.82rem; margin: 2px 0;">🎨 Skin: <b>${sk ? sk.name : 'Classic Oak'}</b></div>
+        <div style="color: #cfe4ff; font-size: 0.82rem; margin: 2px 0;">­ƒÄ¿ Skin: <b>${sk ? sk.name : 'Classic Oak'}</b></div>
         <div style="color: #3fd5ff; font-size: 0.78rem;">${s.power}</div>
       </div>
     `;
@@ -1739,7 +1668,7 @@ function openDossier(pilotIndex) {
     fleetList.innerHTML = ownedShips.map(shId => {
       const sh = shipById(shId);
       const isCurrent = (p.ship || 'cutter') === shId;
-      return `<span class="dos-fleet-tag" style="${isCurrent ? 'border-color:#ffd23c;color:#ffd23c;background:rgba(255,210,60,0.18)' : ''}">🚀 ${sh.name}${isCurrent ? ' (Active)' : ''}</span>`;
+      return `<span class="dos-fleet-tag" style="${isCurrent ? 'border-color:#ffd23c;color:#ffd23c;background:rgba(255,210,60,0.18)' : ''}">­ƒÜÇ ${sh.name}${isCurrent ? ' (Active)' : ''}</span>`;
     }).join('');
   }
 
@@ -1747,21 +1676,21 @@ function openDossier(pilotIndex) {
   const secEl = document.getElementById('dosSector');
   if (secEl) secEl.textContent = `Sector ${p.level || 1}`;
   const scEl = document.getElementById('dosScore');
-  if (scEl) scEl.textContent = `🪙 ${p.score || 0}`;
+  if (scEl) scEl.textContent = `­ƒ¬Ö ${p.score || 0}`;
   const klEl = document.getElementById('dosKills');
-  if (klEl) klEl.textContent = `☠️ ${p.kills || 0} UFOs`;
+  if (klEl) klEl.textContent = `Ôÿá´©Å ${p.kills || 0} UFOs`;
   const tkEl = document.getElementById('dosTokens');
-  if (tkEl) tkEl.textContent = `🎟️ ${p.tokens || 0}`;
+  if (tkEl) tkEl.textContent = `­ƒÄƒ´©Å ${p.tokens || 0}`;
 
   // Galleon Upgrades Grid
   const upgGrid = document.getElementById('dosUpgList');
   if (upgGrid) {
     const u = p.upg || {};
     upgGrid.innerHTML = `
-      <div class="dos-upg-item"><span>🛡️ Hull Strength</span><strong style="color:#3eed87">Lv ${u.hull || 0}/3</strong></div>
-      <div class="dos-upg-item"><span>💥 32-Pounders</span><strong style="color:#ff5277">Lv ${u.cannon || 0}/3</strong></div>
-      <div class="dos-upg-item"><span>⚙️ Solar Engines</span><strong style="color:#3fd5ff">Lv ${u.engine || 0}/3</strong></div>
-      <div class="dos-upg-item"><span>🧲 Salvage Hook</span><strong style="color:#ffd23c">Lv ${u.magnet || 0}/3</strong></div>
+      <div class="dos-upg-item"><span>­ƒøí´©Å Hull Strength</span><strong style="color:#3eed87">Lv ${u.hull || 0}/3</strong></div>
+      <div class="dos-upg-item"><span>­ƒÆÑ 32-Pounders</span><strong style="color:#ff5277">Lv ${u.cannon || 0}/3</strong></div>
+      <div class="dos-upg-item"><span>ÔÜÖ´©Å Solar Engines</span><strong style="color:#3fd5ff">Lv ${u.engine || 0}/3</strong></div>
+      <div class="dos-upg-item"><span>­ƒº▓ Salvage Hook</span><strong style="color:#ffd23c">Lv ${u.magnet || 0}/3</strong></div>
     `;
   }
 
@@ -1789,7 +1718,7 @@ if (dBtn) {
 async function renderLeaderboard(cid, myScore, myName) {
   const el = document.getElementById(cid);
   if (!el) return;
-  const title = (cid === 'lbMenu') ? '🏆 GALAXY PIRATE HALL OF FAME' : '🏆 TACTICAL RADAR ROSTER';
+  const title = (cid === 'lbMenu') ? '­ƒÅå GALAXY PIRATE HALL OF FAME' : '­ƒÅå TACTICAL RADAR ROSTER';
   
   let rows = [], myRank = null;
   try {
@@ -1806,35 +1735,30 @@ async function renderLeaderboard(cid, myScore, myName) {
   if (myScore >= 0) { try { myRank = await LB.rank(myScore, myName); } catch (e) {} }
   
   let html = '<h2>' + title + '</h2>';
-  html += '<div class="lb-hint">👆 Click any captain to inspect their flagship, fleet &amp; stats!</div>';
+  html += '<div class="lb-hint">­ƒæå Click any captain to inspect their flagship, fleet &amp; stats!</div>';
   
   if (!rows || !rows.length) {
-    html += '<div class="empty">No pirate flight logs registered yet. Be the first space captain! 🏴‍☠️</div>';
+    html += '<div class="empty">No pirate flight logs registered yet. Be the first space captain! ­ƒÅ┤ÔÇìÔÿá´©Å</div>';
   } else {
     html += '<ol>';
     rows.forEach((r, i) => {
       const isMe = (r.uid && r.uid === SAVE.data.uid) || (myName && (r.name || '').trim().toLowerCase() === myName.trim().toLowerCase());
-      const rk = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
+      const rk = i === 0 ? '­ƒÑç' : i === 1 ? '­ƒÑê' : i === 2 ? '­ƒÑë' : (i + 1) + '.';
       const sh = shipById(r.ship || 'cutter');
       html += `<li class="${isMe ? 'me' : ''}" onclick="openDossier(${i})" title="Click to view Captain ${esc(r.name)}'s stats and fleet!">` +
               `<span class="rk">${rk}</span>` +
               `<span class="nm">${esc(r.name)} <span style="font-size:0.75rem; opacity:0.75; color:#7fdcff">(${sh.name})</span></span>` +
-              `<span class="sc">🪙 ${r.score}</span>` +
+              `<span class="sc">­ƒ¬Ö ${r.score}</span>` +
               `<span class="lv">Sector ${r.level || 1}</span>` +
-              `<span class="inspect">🔍</span></li>`;
+              `<span class="inspect">­ƒöì</span></li>`;
     });
     html += '</ol>';
   }
   if (myScore >= 0 && myRank) {
-    html += '<div class="myrank">⭐ Pirate Rank: #' + myRank + ' — ' + esc(myName) + ' · 🪙 ' + myScore + '</div>';
+    html += '<div class="myrank">Ô¡É Pirate Rank: #' + myRank + ' ÔÇö ' + esc(myName) + ' ┬À ­ƒ¬Ö ' + myScore + '</div>';
   }
   el.innerHTML = html;
 }
-
-// Ensure leaderboard renders immediately and on window load
-try { renderLeaderboard('lbMenu', -1, null); } catch(e) {}
-window.addEventListener('DOMContentLoaded', () => { try { renderLeaderboard('lbMenu', -1, null); } catch(e) {} });
-window.addEventListener('load', () => { try { renderLeaderboard('lbMenu', -1, null); } catch(e) {} });
 
 // ---------- SPAWN ALIEN ENEMY ARCHETYPES WITH UNIQUE POWERS ----------
 // ---------- SPAWN ALIEN ENEMY ARCHETYPES WITH UNIQUE POWERS & SECTOR PROGRESSION ----------
@@ -1889,7 +1813,7 @@ function spawnFort() {
     saucerSpin: 0,
     empCharge: 0
   });
-  addAlert(`⚠️ [SECTOR ${level}] ${name} DETECTED!`, 'incoming');
+  addAlert(`ÔÜá´©Å [SECTOR ${level}] ${name} DETECTED!`, 'incoming');
 }
 
 function spawnGlider(xPos, yPos, forceType) {
@@ -1929,7 +1853,7 @@ function spawnGlider(xPos, yPos, forceType) {
     isBlinking: 0,
     shootT: Math.max(0.6, 1.2 - level * 0.1) + Math.random() * 0.8
   });
-  if (xPos === undefined) addAlert(`⚠️ [SECTOR ${level}] ${name} IN ATTACK VECTOR!`, 'incoming');
+  if (xPos === undefined) addAlert(`ÔÜá´©Å [SECTOR ${level}] ${name} IN ATTACK VECTOR!`, 'incoming');
 }
 
 function spawnMine() {
@@ -1943,7 +1867,7 @@ function spawnMine() {
     col: isCluster ? '#ff5500' : '#00e5ff',
     spin: Math.random() * Math.PI * 2
   });
-  addAlert(isCluster ? '☠️ INCENDIARY CLUSTER MINE DETECTED!' : '☠️ QUANTUM PROXIMITY MINE DETECTED!', 'incoming');
+  addAlert(isCluster ? 'Ôÿá´©Å INCENDIARY CLUSTER MINE DETECTED!' : 'Ôÿá´©Å QUANTUM PROXIMITY MINE DETECTED!', 'incoming');
 }
 
 const BTYPES = [
@@ -1988,59 +1912,62 @@ function spawnBoss() {
 
   addShake(24);
   sfx('boom');
-  addAlert(`☠️ [SECTOR ${level} BOSS] ${b.name.toUpperCase()} (HP: ${hp})!`, 'incoming');
-  popup(W * 0.5, H * 0.35, `🚨 SECTOR ${level} BOSS: ${b.name}!`, '#ffd23c');
+  addAlert(`Ôÿá´©Å [SECTOR ${level} BOSS] ${b.name.toUpperCase()} (HP: ${hp})!`, 'incoming');
+  popup(W * 0.5, H * 0.35, `­ƒÜ¿ SECTOR ${level} BOSS: ${b.name}!`, '#ffd23c');
 }
 
 // ---------- GAME FLOW ----------
 function startCombat() {
-  state = 'play';
-  sfx('incoming');
-  addShake(18);
-  addAlert('🚨 RED ALERT: ALIEN UFO BATTLEGROUP ATTACKING!', 'incoming');
-  spawnGlider();
-  spawnGlider();
-  spawnFort();
-  fortT = 2.4;
+  if (state === 'intro') {
+    state = 'play';
+    sfx('incoming');
+    addShake(18);
+    addAlert('­ƒÜ¿ RED ALERT: ALIEN UFO BATTLEGROUP ATTACKING!', 'incoming');
+    spawnGlider();
+    spawnGlider();
+    spawnFort();
+    fortT = 2.4;
+  }
 }
 
-// Start Game Handler
-function startSolarSail(e) {
-  if (e) {
-    try { e.stopPropagation(); } catch(err) {}
-  }
-  if (window._launching) return;
-  window._launching = true;
-  setTimeout(() => { window._launching = false; }, 300);
-
+document.getElementById('startbtn').addEventListener('click', () => {
+  const inp = document.getElementById('pname');
+  let nm = (inp && inp.value.trim()) || localStorage.getItem('sp_name') || 'Captain';
+  playerName = nm.slice(0, 14);
+  try { localStorage.setItem('sp_name', playerName); } catch (e) {}
   scoreSubmitted = false;
   applyLoadout();
-
-  const p1Name = (document.getElementById('pname') && document.getElementById('pname').value.trim()) || 'Noël';
-  playerName = p1Name.slice(0, 14);
-  try { localStorage.setItem('sp_name', playerName); } catch (e) {}
-
-  ship = createFleetShip(0, playerName, SAVE.data.sel || 'cutter', H * 0.5);
-  fleet = [ship];
-
+  ship.hp = maxHp; ship.inv = 0; ship.x = W * 0.22; ship.y = H * 0.5;
+  ship.vx = 0; ship.vy = 0; ship.pitch = 0;
+  introT = 0;
+  introShot1 = false;
+  introShot2 = false;
+  wreckage = [];
+  shieldShards = [];
+  introUfos = [
+    {
+      x: W * 0.82, y: H * 0.35, targetX: W * 0.58, targetY: H * 0.38,
+      vx: -180, vy: 20, pitch: 0.12, roll: 0.15,
+      col: '#00ff66', w: 70, h: 44, saucerSpin: 0,
+      shield: 1.0, dead: false, engineGlow: 1.0
+    },
+    {
+      x: W * 0.88, y: H * 0.65, targetX: W * 0.64, targetY: H * 0.62,
+      vx: -190, vy: -20, pitch: -0.12, roll: -0.15,
+      col: '#00e5ff', w: 70, h: 44, saucerSpin: 0,
+      shield: 1.0, dead: false, engineGlow: 1.0
+    }
+  ];
+  storySectorAnnounced = 1;
   tokensRun = 0; killsRun = 0; spinsRun = 0;
   balls = []; eballs = []; forts = []; gliders = []; mines = []; coins = []; powerups = []; parts = [];
   boss = null; bossT = 26; score = 0; coinsN = 0; level = 1; t = 0;
   
-  const m = document.getElementById('menu');
-  if (m) {
-    m.classList.add('hidden');
-    m.style.display = 'none';
-  }
-  const pb = document.getElementById('pausebtn');
-  if (pb) pb.style.display = 'block';
+  document.getElementById('menu').classList.add('hidden');
+  document.getElementById('pausebtn').style.display = 'block';
   initAudio();
-  startCombat();
-}
-window.startSolarSail = startSolarSail;
-
-const startBtnEl = document.getElementById('startbtn');
-if (startBtnEl) startBtnEl.addEventListener('click', startSolarSail);
+  state = 'intro';
+});
 
 function togglePause() {
   if (state === 'play') {
@@ -2090,31 +2017,31 @@ function lose() {
   const pb = saveBest();
   const bank = bankRun();
   document.getElementById('losetext').textContent =
-    `Pirate galleon destroyed in Sector ${level}… Final Score: ${score}` +
-    (pb ? '  🏅 NEW GALAXY RECORD!' : `  · Personal Best: ${best} 🏅`) +
-    `\nSalvage banked: +${bank.coins} 🪙  +${bank.tokens} 🎟️  +${bank.spins} 🎡  +${bank.kills} ☠️` +
-    (bank.unlocked.length ? `\n🎨 New galleon paint unlocked: ${bank.unlocked.join(', ')}!` : '');
+    `Pirate galleon destroyed in Sector ${level}ÔÇª Final Score: ${score}` +
+    (pb ? '  ­ƒÅà NEW GALAXY RECORD!' : `  ┬À Personal Best: ${best} ­ƒÅà`) +
+    `\nSalvage banked: +${bank.coins} ­ƒ¬Ö  +${bank.tokens} ­ƒÄƒ´©Å  +${bank.spins} ­ƒÄí  +${bank.kills} Ôÿá´©Å` +
+    (bank.unlocked.length ? `\n­ƒÄ¿ New galleon paint unlocked: ${bank.unlocked.join(', ')}!` : '');
   document.getElementById('loseoverlay').classList.remove('hidden');
   endGame('lbLose');
 }
 
 // ---------- HANGAR UI ----------
 function renderWallet() {
-  const w = `🪙 ${SAVE.data.coins}  🎟️ ${SAVE.data.tokens}  🎡 ${SAVE.data.spins}  ☠️ ${SAVE.data.kills}`;
+  const w = `­ƒ¬Ö ${SAVE.data.coins}  ­ƒÄƒ´©Å ${SAVE.data.tokens}  ­ƒÄí ${SAVE.data.spins}  Ôÿá´©Å ${SAVE.data.kills}`;
   const ml = document.getElementById('walletline'); if (ml) ml.textContent = w;
   const sw = document.getElementById('shopwallet'); if (sw) sw.textContent = w;
 }
 
 // ---------- ROBLOX GROW A GARDEN STYLE LUCKY PRIZE WHEEL ENGINE ----------
 const WHEEL_SLICES = [
-  { id: 0, label: '50 🪙',    icon: '🪙', color: '#f59e0b', stroke: '#ffd23c', type: 'coin',  amt: 50,  weight: 35 },
-  { id: 1, label: '+1 🎟️',   icon: '🎟️', color: '#8b5cf6', stroke: '#c084fc', type: 'token', amt: 1,   weight: 22 },
-  { id: 2, label: '150 🪙',   icon: '🪙', color: '#10b981', stroke: '#34d399', type: 'coin',  amt: 150, weight: 18 },
-  { id: 3, label: '+2 🎟️',   icon: '🎟️', color: '#06b6d4', stroke: '#38bdf8', type: 'token', amt: 2,   weight: 12 },
-  { id: 4, label: '300 💰',   icon: '💰', color: '#ea580c', stroke: '#fb923c', type: 'coin',  amt: 300, weight: 7 },
-  { id: 5, label: '⭐ +3 🎟️', icon: '⭐', color: '#3b82f6', stroke: '#60a5fa', type: 'token', amt: 3,   weight: 4 },
-  { id: 6, label: '600 💎',   icon: '💎', color: '#eab308', stroke: '#fef08a', type: 'coin',  amt: 600, weight: 1.5 },
-  { id: 7, label: '👑 +8 🎟️', icon: '👑', color: '#ec4899', stroke: '#f472b6', type: 'token', amt: 8,   weight: 0.5 },
+  { id: 0, label: '50 ­ƒ¬Ö',    icon: '­ƒ¬Ö', color: '#f59e0b', stroke: '#ffd23c', type: 'coin',  amt: 50,  weight: 35 },
+  { id: 1, label: '+1 ­ƒÄƒ´©Å',   icon: '­ƒÄƒ´©Å', color: '#8b5cf6', stroke: '#c084fc', type: 'token', amt: 1,   weight: 22 },
+  { id: 2, label: '150 ­ƒ¬Ö',   icon: '­ƒ¬Ö', color: '#10b981', stroke: '#34d399', type: 'coin',  amt: 150, weight: 18 },
+  { id: 3, label: '+2 ­ƒÄƒ´©Å',   icon: '­ƒÄƒ´©Å', color: '#06b6d4', stroke: '#38bdf8', type: 'token', amt: 2,   weight: 12 },
+  { id: 4, label: '300 ­ƒÆ░',   icon: '­ƒÆ░', color: '#ea580c', stroke: '#fb923c', type: 'coin',  amt: 300, weight: 7 },
+  { id: 5, label: 'Ô¡É +3 ­ƒÄƒ´©Å', icon: 'Ô¡É', color: '#3b82f6', stroke: '#60a5fa', type: 'token', amt: 3,   weight: 4 },
+  { id: 6, label: '600 ­ƒÆÄ',   icon: '­ƒÆÄ', color: '#eab308', stroke: '#fef08a', type: 'coin',  amt: 600, weight: 1.5 },
+  { id: 7, label: '­ƒææ +8 ­ƒÄƒ´©Å', icon: '­ƒææ', color: '#ec4899', stroke: '#f472b6', type: 'token', amt: 8,   weight: 0.5 },
 ];
 
 let wheelAngle = 0;
@@ -2227,7 +2154,7 @@ function drawLuckyWheel() {
   wcx.font = '32px sans-serif';
   wcx.textAlign = 'center';
   wcx.textBaseline = 'middle';
-  wcx.fillText('⚓', 0, 2);
+  wcx.fillText('ÔÜô', 0, 2);
 
   wcx.restore();
 }
@@ -2337,7 +2264,7 @@ function triggerSlotSpin() {
       SAVE.save();
 
       if (banner) {
-        document.getElementById('spinLootTitle').textContent = `🎉 YOU WON ${winningSlice.label}!`;
+        document.getElementById('spinLootTitle').textContent = `­ƒÄë YOU WON ${winningSlice.label}!`;
         document.getElementById('spinLootDesc').textContent = winningSlice.type === 'coin' ?
           `+${winningSlice.amt} Gold Dubloons added to your stash!` :
           `+${winningSlice.amt} Alien Plasma Core${winningSlice.amt > 1 ? 's' : ''} added to your fleet vault!`;
@@ -2364,11 +2291,11 @@ function buildShop() {
   
   // VIP Creator Banner
   h += `<div style="background:linear-gradient(135deg,rgba(255,210,60,0.22),rgba(168,85,247,0.18));border:2px solid #ffd23c;border-radius:14px;padding:12px 16px;margin-bottom:16px;text-align:center;box-shadow:0 0 20px rgba(255,210,60,0.3)">` +
-    `<div style="color:#ffd23c;font-weight:900;font-size:1.1rem;font-family:'Orbitron',sans-serif;letter-spacing:1px">👑 GAME CREATOR VIP PASS ACTIVE 👑</div>` +
+    `<div style="color:#ffd23c;font-weight:900;font-size:1.1rem;font-family:'Orbitron',sans-serif;letter-spacing:1px">­ƒææ GAME CREATOR VIP PASS ACTIVE ­ƒææ</div>` +
     `<div style="color:#cfe4ff;font-size:0.86rem;margin-top:4px">Welcome Captain Noel! All 5 Fleet Ships, 7 Skins &amp; Max Galleon Upgrades Unlocked!</div></div>`;
 
   // 1. COIN UPGRADES AT THE TOP
-  h += '<h2>⚙️ SOLAR GALLEON UPGRADES — Buy with Coins 🪙</h2>';
+  h += '<h2>ÔÜÖ´©Å SOLAR GALLEON UPGRADES ÔÇö Buy with Coins ­ƒ¬Ö</h2>';
   for (const key in UPG) {
     const u = UPG[key], lv = SAVE.data.upg[key], maxed = lv >= u.max;
     const cost = maxed ? 0 : u.cost(lv);
@@ -2376,34 +2303,34 @@ function buildShop() {
     h += `<div class="shopitem"><div class="ic">${u.icon}</div>` +
       `<div class="info"><div class="t">${u.name}</div><div class="d">${u.desc}</div>` +
       `<div class="lv">Engineering Level ${lv}/${u.max}</div></div>` +
-      (maxed ? `<span class="maxed">✔ MAXED</span>` : `<button data-buy="upg" data-key="${key}"${can ? '' : ' disabled'}>🪙 ${cost}</button>`) +
+      (maxed ? `<span class="maxed">Ô£ö MAXED</span>` : `<button data-buy="upg" data-key="${key}"${can ? '' : ' disabled'}>­ƒ¬Ö ${cost}</button>`) +
       `</div>`;
   }
 
   // 2. PIRATE LUCKY PRIZE WHEEL
-  h += '<h2>🎡 PIRATE LUCKY WHEEL — UFO Boss Loot 🎟️</h2>';
-  h += `<div class="shopitem"><div class="ic">🎡</div>` +
+  h += '<h2>­ƒÄí PIRATE LUCKY WHEEL ÔÇö UFO Boss Loot ­ƒÄƒ´©Å</h2>';
+  h += `<div class="shopitem"><div class="ic">­ƒÄí</div>` +
     `<div class="info"><div class="t">Spin Pirate Lucky Wheel</div>` +
-    `<div class="d">Win gold dubloons, alien plasma cores… or Mega Jackpot!</div>` +
-    `<div class="lv" id="spinResult">You possess ${SAVE.data.spins} 🎡 spins</div></div>` +
-    `<button data-buy="spin" data-key="1"${SAVE.data.spins > 0 ? '' : ' disabled'}>🎡 SPIN</button></div>`;
+    `<div class="d">Win gold dubloons, alien plasma coresÔÇª or Mega Jackpot!</div>` +
+    `<div class="lv" id="spinResult">You possess ${SAVE.data.spins} ­ƒÄí spins</div></div>` +
+    `<button data-buy="spin" data-key="1"${SAVE.data.spins > 0 ? '' : ' disabled'}>­ƒÄí SPIN</button></div>`;
   
-  h += '<h2>🚢 PIRATE FLEET SHIPS — Spend Plasma Cores 🎟️</h2>';
+  h += '<h2>­ƒÜó PIRATE FLEET SHIPS ÔÇö Spend Plasma Cores ­ƒÄƒ´©Å</h2>';
   for (const s of SHIPS) {
     const owned = SAVE.data.ships.includes(s.id), sel = SAVE.data.sel === s.id;
     const can = SAVE.data.tokens >= s.cost;
     let btn;
-    if (sel) btn = `<button class="sel" disabled>✔ IN SERVICE</button>`;
+    if (sel) btn = `<button class="sel" disabled>Ô£ö IN SERVICE</button>`;
     else if (owned) btn = `<button data-buy="sel" data-key="${s.id}">SELECT</button>`;
-    else btn = `<button class="locked" data-buy="ship" data-key="${s.id}"${can ? '' : ' disabled'}>🎟️ ${s.cost}</button>`;
+    else btn = `<button class="locked" data-buy="ship" data-key="${s.id}"${can ? '' : ' disabled'}>­ƒÄƒ´©Å ${s.cost}</button>`;
     const shipSvg = getShipSvg(s.id, s.cols);
     h += `<div class="shopitem"><div class="ic">${shipSvg}</div>` +
       `<div class="info"><div class="t">${s.name}</div><div class="d">${s.power}</div>` +
-      `<div class="lv">❤️ ${s.hp} HP · ⚡ ${(1 / s.cool).toFixed(1)} rps · 🚀 ${s.spd.toFixed(2)}x Speed${s.gold > 1 ? ' · 🪙 x' + s.gold : ''}${s.magnet ? ' · 🧲' : ''}</div></div>` +
+      `<div class="lv">ÔØñ´©Å ${s.hp} HP ┬À ÔÜí ${(1 / s.cool).toFixed(1)} rps ┬À ­ƒÜÇ ${s.spd.toFixed(2)}x Speed${s.gold > 1 ? ' ┬À ­ƒ¬Ö x' + s.gold : ''}${s.magnet ? ' ┬À ­ƒº▓' : ''}</div></div>` +
       btn + `</div>`;
   }
   
-  h += '<h2>🎨 GALLEON SKINS — Unlocked by Confirmed UFO Kills ☠️</h2>';
+  h += '<h2>­ƒÄ¿ GALLEON SKINS ÔÇö Unlocked by Confirmed UFO Kills Ôÿá´©Å</h2>';
   for (const k of SKINS) {
     const unlocked = SAVE.data.kills >= k.kills, sel = SAVE.data.skin === k.id;
     const curShipId = SAVE.data.sel || 'cutter';
@@ -2411,13 +2338,13 @@ function buildShop() {
     const skinCols = k.cols ? k.cols : curShip.cols;
     const skinSvg = getShipSvg(curShipId, skinCols);
     let btn;
-    if (sel) btn = `<button class="sel" disabled>✔ IN SERVICE</button>`;
+    if (sel) btn = `<button class="sel" disabled>Ô£ö IN SERVICE</button>`;
     else if (unlocked) btn = `<button data-buy="skin" data-key="${k.id}">EQUIP</button>`;
-    else btn = `<button class="locked" disabled>☠️ ${k.kills}</button>`;
+    else btn = `<button class="locked" disabled>Ôÿá´©Å ${k.kills}</button>`;
     h += `<div class="shopitem"><div class="ic">${skinSvg}</div>` +
       `<div class="info"><div class="t">${k.name}</div>` +
       `<div class="d">${k.id === 'default' ? "Classic pirate galleon wood & solar sails" : 'Cosmic radiant timber & sails'}</div>` +
-      `<div class="lv">${unlocked ? '✔ Unlocked' : 'Requires ' + k.kills + ' UFO kills'} · Record: ${SAVE.data.kills} ☠️</div></div>` +
+      `<div class="lv">${unlocked ? 'Ô£ö Unlocked' : 'Requires ' + k.kills + ' UFO kills'} ┬À Record: ${SAVE.data.kills} Ôÿá´©Å</div></div>` +
       btn + `</div>`;
   }
   document.getElementById('shopBody').innerHTML = h;
@@ -2477,47 +2404,17 @@ document.getElementById('spinCloseBtn').addEventListener('click', () => {
   closeSpinModal();
 });
 
-function openHangar(e) {
-  if (e) {
-    try { e.stopPropagation(); } catch(err) {}
-  }
+document.getElementById('hangarbtn').addEventListener('click', () => {
   initAudio();
-  const m = document.getElementById('menu');
-  if (m) {
-    m.classList.add('hidden');
-    m.style.display = 'none';
-  }
-  const s = document.getElementById('shop');
-  if (s) {
-    s.classList.remove('hidden');
-    s.style.display = 'flex';
-  }
+  document.getElementById('menu').classList.add('hidden');
+  document.getElementById('shop').classList.remove('hidden');
   buildShop();
-}
-window.openHangar = openHangar;
-
-function closeShop(e) {
-  if (e) {
-    try { e.stopPropagation(); } catch(err) {}
-  }
-  const s = document.getElementById('shop');
-  if (s) {
-    s.classList.add('hidden');
-    s.style.display = 'none';
-  }
-  const m = document.getElementById('menu');
-  if (m) {
-    m.classList.remove('hidden');
-    m.style.display = 'flex';
-  }
+});
+document.getElementById('shopclose').addEventListener('click', () => {
+  document.getElementById('shop').classList.add('hidden');
+  document.getElementById('menu').classList.remove('hidden');
   renderWallet();
-}
-window.closeShop = closeShop;
-
-const hBtn = document.getElementById('hangarbtn');
-if (hBtn) hBtn.addEventListener('click', openHangar);
-const sCloseBtn = document.getElementById('shopclose');
-if (sCloseBtn) sCloseBtn.addEventListener('click', closeShop);
+});
 
 (function () {
   try {
@@ -2526,7 +2423,7 @@ if (sCloseBtn) sCloseBtn.addEventListener('click', closeShop);
     if (i && n) i.value = n;
     best = +localStorage.getItem('sp_best') || 0;
     const bl = document.getElementById('bestline');
-    if (bl && best > 0) bl.textContent = '🏅 Sector Record: ' + best;
+    if (bl && best > 0) bl.textContent = '­ƒÅà Sector Record: ' + best;
 
     if (i) {
       i.addEventListener('input', () => {
@@ -2690,7 +2587,7 @@ function update(dt) {
         const baseX = b.sx + (b.tx - b.sx) * p;
         const baseY = b.sy + (b.ty - b.sy) * p;
 
-        // Acrobatic Corkscrew Loop (Smooth envelope starting at 0, doing a 360° loop, and homing into UFO!)
+        // Acrobatic Corkscrew Loop (Smooth envelope starting at 0, doing a 360┬░ loop, and homing into UFO!)
         const env = Math.sin(p * Math.PI);
         const loopAngle = p * Math.PI * 3.6 * (b.loopDir || 1);
         const loopR = 78 * env;
@@ -2822,182 +2719,153 @@ function update(dt) {
 
   if (state !== 'play') return;
 
-  // Multi-Player Space Pirate Fleet Navigation & Controls (1 - 3 Players Co-op)
+  // Space Pirate Galleon Navigation & Solar Ether Inertia
   slowT = Math.max(0, slowT - dt);
   const curSpdMul = spdMul * (slowT > 0 ? 0.55 : 1.0);
+  const ACC = 1450 * curSpdMul, MAX_SPD = 480 * curSpdMul;
+  let ax = 0, ay = 0;
+  if (keys['KeyW'] || keys['ArrowUp']) ay -= 1;
+  if (keys['KeyS'] || keys['ArrowDown']) ay += 1;
+  if (keys['KeyA'] || keys['ArrowLeft']) ax -= 1;
+  if (keys['KeyD'] || keys['ArrowRight']) ax += 1;
+
+  if (isTouch && touchOn) {
+    ax = (mouse.x - ship.x) * 0.022;
+    ay = (mouse.y - ship.y) * 0.022;
+  }
+
+  ship.vx += ax * ACC * dt;
+  ship.vy += ay * ACC * dt;
+  ship.vx *= Math.pow(0.025, dt);
+  ship.vy *= Math.pow(0.025, dt);
+  ship.vx = Math.max(-MAX_SPD, Math.min(MAX_SPD, ship.vx));
+  ship.vy = Math.max(-MAX_SPD, Math.min(MAX_SPD, ship.vy));
+
+  ship.x += ship.vx * dt;
+  ship.y += ship.vy * dt;
+  ship.x = Math.max(80, Math.min(W - 140, ship.x));
+  ship.y = Math.max(70, Math.min(H - 80, ship.y));
+
+  // Dynamic Galleon Pitch & Flag Flutter
+  const targetPitch = (ship.vy / MAX_SPD) * 0.25;
+  ship.pitch += (targetPitch - ship.pitch) * Math.min(1, dt * 10);
+  ship.flagWave += dt * 12;
+
+  // Aim angle directed towards world mouse pointer
+  const wm = getWorldMouse();
+  const cannonOriginX = ship.x + 36;
+  const cannonOriginY = ship.y + 18;
+  ship.aimAngle = Math.atan2(wm.y - cannonOriginY, wm.x - cannonOriginX);
+
+  ship.inv = Math.max(0, ship.inv - dt);
+  ship.recoil = Math.max(0, ship.recoil - dt * 8);
   rapidT = Math.max(0, rapidT - dt);
   shieldT = Math.max(0, shieldT - dt);
   tripleT = Math.max(0, tripleT - dt);
+  if (shieldT > 0) ship.inv = Math.max(ship.inv, 0.18);
   if (comboT > 0) { comboT -= dt; if (comboT <= 0) combo = 0; }
 
-  // Poll Gamepads for Couch Co-op
-  const gpList = (navigator.getGamepads && navigator.getGamepads()) || [];
+  // Glowing Solar Wake & Signature Skin Aura Particles
+  const activeSkin = (SAVE.data.skin && SAVE.data.kills >= (skinById(SAVE.data.skin).kills || 0)) ? SAVE.data.skin : 'default';
 
-  for (let pi = 0; pi < fleet.length; pi++) {
-    const p = fleet[pi];
-
-    // Downed Ghost Ship Revival Check
-    if (p.dead) {
-      p.vx *= 0.92; p.vy *= 0.92;
-      p.x += p.vx * dt; p.y += p.vy * dt;
-      let revivingAlly = null;
-      for (let oj = 0; oj < fleet.length; oj++) {
-        if (oj !== pi && !fleet[oj].dead && Math.hypot(fleet[oj].x - p.x, fleet[oj].y - p.y) < 130) {
-          revivingAlly = fleet[oj];
-          break;
-        }
-      }
-      if (revivingAlly) {
-        p.reviveTimer += dt;
-        if (Math.random() < 0.3) {
-          parts.push({
-            type: 'ring', x: p.x, y: p.y, r: 10, maxR: 55, lw: 2.5, col: '#3fd07a', life: 0.35, maxLife: 0.35
-          });
-        }
-        if (p.reviveTimer >= 2.0) {
-          p.dead = false;
-          p.hp = Math.max(2, Math.ceil(p.maxHp * 0.6));
-          p.inv = 3.2;
-          p.reviveTimer = 0;
-          sfx('win');
-          addShake(16);
-          popup(p.x, p.y - 45, `💚 ${p.name.toUpperCase()} REVIVED!`, '#3fd07a');
-        }
-      } else {
-        p.reviveTimer = Math.max(0, p.reviveTimer - dt * 0.8);
-      }
-      continue;
+  if (Math.random() < 0.90) {
+    let auraCol = '#ffd23c', auraSize = 5 + Math.random() * 5;
+    if (activeSkin === 'sunset') {
+      auraCol = Math.random() < 0.6 ? '#ff5500' : '#ffd23c';
+      auraSize = 6 + Math.random() * 6;
+    } else if (activeSkin === 'toxic') {
+      auraCol = Math.random() < 0.7 ? '#7ed957' : '#00ff66';
+      auraSize = 4 + Math.random() * 6;
+    } else if (activeSkin === 'ocean') {
+      auraCol = Math.random() < 0.6 ? '#2f9be6' : '#a9e0ff';
+      auraSize = 5 + Math.random() * 5;
+    } else if (activeSkin === 'shadow') {
+      auraCol = Math.random() < 0.7 ? '#111316' : '#ff0044';
+      auraSize = 6 + Math.random() * 7;
+    } else if (activeSkin === 'royal') {
+      auraCol = Math.random() < 0.5 ? '#b06bff' : '#ffd700';
+      auraSize = 5 + Math.random() * 6;
+    } else if (activeSkin === 'legend') {
+      auraCol = Math.random() < 0.5 ? '#ffffff' : '#ffd700';
+      auraSize = 7 + Math.random() * 6;
     }
 
-    const ACC = 1450 * (p.spd || 1) * curSpdMul, MAX_SPD = 480 * (p.spd || 1) * curSpdMul;
-    let ax = 0, ay = 0, wantShoot = false;
-
-    // Primary Controls (WASD, Arrows, Mouse, Touch, Gamepad)
-    if (keys['KeyW'] || keys['ArrowUp']) ay -= 1;
-    if (keys['KeyS'] || keys['ArrowDown']) ay += 1;
-    if (keys['KeyA'] || keys['ArrowLeft']) ax -= 1;
-    if (keys['KeyD'] || keys['ArrowRight']) ax += 1;
-    if (isTouch && touchOn) {
-      ax = (mouse.x - p.x) * 0.022;
-      ay = (mouse.y - p.y) * 0.022;
-    }
-    const wm = getWorldMouse();
-    const cannonOriginX = p.x + 36, cannonOriginY = p.y + 18;
-    p.aimAngle = Math.atan2(wm.y - cannonOriginY, wm.x - cannonOriginX);
-    wantShoot = mouse.down || keys['Space'] || keys['KeyF'] || (isTouch && touchOn);
-
-    // Gamepad controller support
-    const gp = gpList[0];
-    if (gp && gp.connected) {
-      const stickX = Math.abs(gp.axes[0]) > 0.18 ? gp.axes[0] : 0;
-      const stickY = Math.abs(gp.axes[1]) > 0.18 ? gp.axes[1] : 0;
-      if (stickX !== 0 || stickY !== 0) {
-        ax = stickX; ay = stickY;
-      }
-      if (gp.axes[2] !== undefined && gp.axes[3] !== undefined && Math.hypot(gp.axes[2], gp.axes[3]) > 0.25) {
-        p.aimAngle = Math.atan2(gp.axes[3], gp.axes[2]);
-      }
-      if (gp.buttons[0]?.pressed || gp.buttons[7]?.pressed || gp.buttons[5]?.pressed) {
-        wantShoot = true;
-      }
-    }
-
-    p.vx += ax * ACC * dt;
-    p.vy += ay * ACC * dt;
-    p.vx *= Math.pow(0.025, dt);
-    p.vy *= Math.pow(0.025, dt);
-    p.vx = Math.max(-MAX_SPD, Math.min(MAX_SPD, p.vx));
-    p.vy = Math.max(-MAX_SPD, Math.min(MAX_SPD, p.vy));
-
-    p.x += p.vx * dt;
-    p.y += p.vy * dt;
-    p.x = Math.max(80, Math.min(W - 140, p.x));
-    p.y = Math.max(70, Math.min(H - 80, p.y));
-
-    const targetPitch = (p.vy / MAX_SPD) * 0.25;
-    p.pitch += (targetPitch - p.pitch) * Math.min(1, dt * 10);
-
-    p.flagWave += dt * 12;
-    p.inv = Math.max(0, p.inv - dt);
-    p.recoil = Math.max(0, p.recoil - dt * 8);
-    if (shieldT > 0) p.inv = Math.max(p.inv, 0.18);
-
-    // Ship Solar Wake & Aura Particles
-    if (Math.random() < 0.85) {
-      parts.push({
-        x: p.x - 50 + (Math.random() - 0.5) * 12,
-        y: p.y + 14 + (Math.random() - 0.5) * 14,
-        vx: -240 - Math.random() * 90,
-        vy: (Math.random() - 0.5) * 35,
-        life: 0.38,
-        col: p.cols ? p.cols[0] : '#ffd23c',
-        size: 5 + Math.random() * 4
-      });
-    }
-
-    // Ship Cannons Salvo
-    p.shootCool = Math.max(0, (p.shootCool || 0) - dt);
-    if (wantShoot && p.shootCool <= 0) {
-      const coolBase = p.cool || baseCool;
-      p.shootCool = rapidT > 0 ? coolBase * 0.45 : coolBase;
-      p.recoil = 1.0;
-      muzzleFlash = 0.8;
-      
-      const spreadAngles = tripleT > 0 ? [-0.16, 0, 0.16] : (p.spread || [0]);
-      const baseAim = p.aimAngle;
-      const muzzleX = p.x + 36 + Math.cos(baseAim) * 22;
-      const muzzleY = p.y + 18 + Math.sin(baseAim) * 22;
-
-      const shipModel = p.shipModel || 'cutter';
-      const cannonLevel = (SAVE.data.upg && SAVE.data.upg.cannon) || 0;
-      let bRadius = 10 + cannonLevel * 1.5;
-      if (shipModel === 'galleon') bRadius = 13 + cannonLevel * 2;
-      else if (shipModel === 'runner') bRadius = 8 + cannonLevel * 1.2;
-      else if (shipModel === 'hind') bRadius = 11 + cannonLevel * 1.5;
-      else if (shipModel === 'storm') bRadius = 12 + cannonLevel * 1.8;
-
-      for (const spr of spreadAngles) {
-        const ang = baseAim + spr;
-        const spd = shipModel === 'runner' ? 1600 : 1350;
-        balls.push({
-          x: muzzleX,
-          y: muzzleY,
-          vx: Math.cos(ang) * spd,
-          vy: Math.sin(ang) * spd,
-          r: bRadius,
-          shipModel: shipModel,
-          skinId: pi === 0 ? SAVE.data.skin : 'default',
-          cannonLevel: cannonLevel,
-          ownerIndex: pi
-        });
-        
-        let mCol = p.cols ? p.cols[0] : '#ffd23c';
-        for (let k = 0; k < 5; k++) {
-          parts.push({
-            x: muzzleX,
-            y: muzzleY,
-            vx: Math.cos(ang) * (120 + Math.random() * 180) + (Math.random() - 0.5) * 60,
-            vy: Math.sin(ang) * (120 + Math.random() * 180) + (Math.random() - 0.5) * 60,
-            life: 0.20,
-            col: mCol,
-            size: 7 + cannonLevel * 1.8
-          });
-        }
-      }
-      sfx('shot');
-    }
+    parts.push({
+      x: ship.x - 52 + (Math.random() - 0.5) * 12,
+      y: ship.y + 14 + (Math.random() - 0.5) * 14,
+      vx: -240 - Math.random() * 90,
+      vy: (Math.random() - 0.5) * 35,
+      life: 0.45,
+      col: auraCol,
+      size: auraSize
+    });
   }
 
-  // Keep ship alias synced to fleet[0]
-  if (fleet.length > 0) ship = fleet[0];
+  // Directed Pirate Naval Cannon Salvo (Fires directly at aim target)
+  shootCool -= dt;
+  let wantShoot = mouse.down || keys['Space'] || (isTouch && touchOn);
+  if (wantShoot && shootCool <= 0) {
+    shootCool = rapidT > 0 ? baseCool * 0.45 : baseCool;
+    ship.recoil = 1.0;
+    muzzleFlash = 1.0;
+    
+    const spreadAngles = tripleT > 0 ? [-0.16, 0, 0.16] : baseSpread;
+    const baseAim = ship.aimAngle;
+    const muzzleX = cannonOriginX + Math.cos(baseAim) * 22;
+    const muzzleY = cannonOriginY + Math.sin(baseAim) * 22;
+
+    const shipModel = SAVE.data.sel || 'cutter';
+    const cannonLevel = (SAVE.data.upg && SAVE.data.upg.cannon) || 0;
+    let bRadius = 10 + cannonLevel * 1.5;
+    if (shipModel === 'galleon') bRadius = 13 + cannonLevel * 2;
+    else if (shipModel === 'runner') bRadius = 8 + cannonLevel * 1.2;
+    else if (shipModel === 'hind') bRadius = 11 + cannonLevel * 1.5;
+    else if (shipModel === 'storm') bRadius = 12 + cannonLevel * 1.8;
+
+    for (const spr of spreadAngles) {
+      const ang = baseAim + spr;
+      const spd = shipModel === 'runner' ? 1600 : 1350;
+      balls.push({
+        x: muzzleX,
+        y: muzzleY,
+        vx: Math.cos(ang) * spd,
+        vy: Math.sin(ang) * spd,
+        r: bRadius,
+        shipModel: shipModel,
+        skinId: activeSkin,
+        cannonLevel: cannonLevel
+      });
+      
+      let mCol = shipModel === 'runner' ? '#00ffee' : shipModel === 'storm' ? '#c084fc' : shipModel === 'hind' ? '#ffd700' : '#ffd23c';
+      if (activeSkin === 'toxic') mCol = '#7ed957';
+      else if (activeSkin === 'sunset') mCol = '#ff5500';
+      else if (activeSkin === 'ocean') mCol = '#2f9be6';
+      else if (activeSkin === 'shadow') mCol = '#ff0044';
+      else if (activeSkin === 'royal') mCol = '#b06bff';
+      else if (activeSkin === 'legend') mCol = '#ffffff';
+
+      for (let k = 0; k < 6; k++) {
+        parts.push({
+          x: muzzleX,
+          y: muzzleY,
+          vx: Math.cos(ang) * (120 + Math.random() * 180) + (Math.random() - 0.5) * 60,
+          vy: Math.sin(ang) * (120 + Math.random() * 180) + (Math.random() - 0.5) * 60,
+          life: 0.22,
+          col: mCol,
+          size: 8 + cannonLevel * 2
+        });
+      }
+    }
+    sfx('shot');
+  }
 
   const newLevel = 1 + Math.floor(t / 26);
   if (newLevel > level) {
     level = newLevel;
-    if (level === 2) addAlert('🛰️ SECTOR 2: ASTEROID GRAVEYARD — Heavy UFO Cruisers Engaging!', 'incoming');
-    else if (level === 3) addAlert('🛰️ SECTOR 3: QUANTUM NEBULA — Proximity Mines Detected!', 'incoming');
-    else if (level === 4) addAlert('🛰️ SECTOR 4: DEEP ORION ABYSS — Hostile Flagship Inbound!', 'incoming');
-    else addAlert(`🛰️ SECTOR ${level}: UNCHARTED SPACE — UFO Fleet Inbound!`, 'incoming');
+    if (level === 2) addAlert('­ƒø░´©Å SECTOR 2: ASTEROID GRAVEYARD ÔÇö Heavy UFO Cruisers Engaging!', 'incoming');
+    else if (level === 3) addAlert('­ƒø░´©Å SECTOR 3: QUANTUM NEBULA ÔÇö Proximity Mines Detected!', 'incoming');
+    else if (level === 4) addAlert('­ƒø░´©Å SECTOR 4: DEEP ORION ABYSS ÔÇö Hostile Flagship Inbound!', 'incoming');
+    else addAlert(`­ƒø░´©Å SECTOR ${level}: UNCHARTED SPACE ÔÇö UFO Fleet Inbound!`, 'incoming');
   }
 
   // Spawns: ONLY spawn regular enemies when NOT fighting a boss!
@@ -3022,10 +2890,10 @@ function update(dt) {
     // Enrage phase transition when boss HP drops below 50%
     if (boss.hp <= boss.maxhp * 0.5 && !boss.enraged) {
       boss.enraged = true;
-      popup(boss.x, boss.y - 45, '🔥 BOSS ENRAGED: HYPER-DRIVE OVERLOAD!', '#ff0033');
+      popup(boss.x, boss.y - 45, '­ƒöÑ BOSS ENRAGED: HYPER-DRIVE OVERLOAD!', '#ff0033');
       addShake(24);
       sfx('incoming');
-      addAlert(`🚨 ${boss.name.toUpperCase()} HAS ENTERED OVERLOAD PHASE!`, 'incoming');
+      addAlert(`­ƒÜ¿ ${boss.name.toUpperCase()} HAS ENTERED OVERLOAD PHASE!`, 'incoming');
     }
     
     boss.atkT -= dt;
@@ -3050,7 +2918,7 @@ function update(dt) {
             eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.45, y: boss.y, vx: -640 * spdBonus * Math.cos(ang), vy: 640 * spdBonus * Math.sin(ang), r: 14 });
           }
           addShake(20);
-          popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: TACHYON DEATH RAY!', '#00ffaa');
+          popup(boss.x - 40, boss.y - 45, 'ÔÜí ULTIMATE: TACHYON DEATH RAY!', '#00ffaa');
           sfx('laser');
         } else if (boss.atkCycle === 1) {
           for (const cy of [-36, 36]) {
@@ -3069,13 +2937,13 @@ function update(dt) {
       } else if (boss.type === 'hive') {
         // Boss 2: CHRONOS TESLA CITADEL
         if (boss.atkCycle === 2) {
-          // ULTIMATE: 360° Tesla Tempest Overload (8 radial EMP shockwave rings)!
+          // ULTIMATE: 360┬░ Tesla Tempest Overload (8 radial EMP shockwave rings)!
           for (let k = 0; k < 8; k++) {
             const ang = (k / 8) * Math.PI * 2;
             eballs.push({ type: 'emp', col: '#00e5ff', x: boss.x - boss.w * 0.2, y: boss.y, vx: Math.cos(ang) * 440 * spdBonus, vy: Math.sin(ang) * 440 * spdBonus, r: 20 });
           }
           addShake(22);
-          popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: 360° TESLA TEMPEST!', '#00e5ff');
+          popup(boss.x - 40, boss.y - 45, 'ÔÜí ULTIMATE: 360┬░ TESLA TEMPEST!', '#00e5ff');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
           for (const cy of [-40, 40]) {
@@ -3086,7 +2954,7 @@ function update(dt) {
           for (const ang of [-0.20, 0, 0.20]) {
             eballs.push({ type: 'emp', col: '#00e5ff', x: boss.x - boss.w * 0.42, y: boss.y, vx: -480 * spdBonus * Math.cos(ang), vy: 480 * spdBonus * Math.sin(ang), r: 20 });
           }
-          popup(boss.x - 40, boss.y - 45, '⚡ EMP OVERLOAD CASCADE!', '#00e5ff');
+          popup(boss.x - 40, boss.y - 45, 'ÔÜí EMP OVERLOAD CASCADE!', '#00e5ff');
           sfx('incoming');
         }
 
@@ -3096,13 +2964,13 @@ function update(dt) {
           // ULTIMATE: Supernova Meteor Strike (Colossal Molten Sun Meteor)!
           eballs.push({ type: 'magma', col: '#ff3300', x: boss.x - boss.w * 0.45, y: boss.y, vx: (dx / dist) * 560 * spdBonus, vy: (dy / dist) * 560 * spdBonus, r: 30, spin: 0 });
           addShake(22);
-          popup(boss.x - 40, boss.y - 45, '🔥 ULTIMATE: SUPERNOVA METEOR STRIKE!', '#ff3300');
+          popup(boss.x - 40, boss.y - 45, '­ƒöÑ ULTIMATE: SUPERNOVA METEOR STRIKE!', '#ff3300');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
           for (const cy of [-32, 32]) {
             eballs.push({ type: 'magma', col: '#ff4400', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: (dx / dist) * 530 * spdBonus, vy: (dy / dist) * 530 * spdBonus, r: 22, spin: 0 });
           }
-          popup(boss.x - 40, boss.y - 45, '🔥 SOLAR MAGMA BARRAGE!', '#ff5500');
+          popup(boss.x - 40, boss.y - 45, '­ƒöÑ SOLAR MAGMA BARRAGE!', '#ff5500');
           sfx('incoming');
         } else {
           const angles = level >= 3 ? [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36] : [-0.30, -0.15, 0, 0.15, 0.30];
@@ -3120,7 +2988,7 @@ function update(dt) {
             eballs.push({ type: 'vortex', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: -360 * spdBonus, vy: (dy / dist) * 120, r: 26, spin: 0 });
           }
           addShake(20);
-          popup(boss.x - 40, boss.y - 45, '🌀 ULTIMATE: DUAL EVENT HORIZON!', '#c084fc');
+          popup(boss.x - 40, boss.y - 45, '­ƒîÇ ULTIMATE: DUAL EVENT HORIZON!', '#c084fc');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
           for (const cy of [-38, 0, 38]) {
@@ -3129,7 +2997,7 @@ function update(dt) {
           sfx('laser');
         } else {
           eballs.push({ type: 'vortex', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y, vx: -340 * spdBonus, vy: (dy / dist) * 110, r: 28, spin: 0 });
-          popup(boss.x - 40, boss.y - 45, '🌀 QUANTUM VOID SINGULARITY!', '#c084fc');
+          popup(boss.x - 40, boss.y - 45, '­ƒîÇ QUANTUM VOID SINGULARITY!', '#c084fc');
           sfx('incoming');
         }
 
@@ -3142,7 +3010,7 @@ function update(dt) {
             eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.45, y: boss.y, vx: -540 * spdBonus * Math.cos(spr), vy: 540 * spdBonus * Math.sin(spr), r: 16 });
           }
           addShake(20);
-          popup(boss.x - 40, boss.y - 45, '❄️ ULTIMATE: BLIZZARD CRYO-VOLLEY!', '#38bdf8');
+          popup(boss.x - 40, boss.y - 45, 'ÔØä´©Å ULTIMATE: BLIZZARD CRYO-VOLLEY!', '#38bdf8');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
           for (const cy of [-34, 34]) {
@@ -3153,7 +3021,7 @@ function update(dt) {
           for (const ang of [-0.28, -0.10, 0.10, 0.28]) {
             eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.45, y: boss.y, vx: -500 * spdBonus * Math.cos(ang), vy: 500 * spdBonus * Math.sin(ang), r: 18 });
           }
-          popup(boss.x - 40, boss.y - 45, '❄️ ABSOLUTE ZERO CRYO-NOVA!', '#38bdf8');
+          popup(boss.x - 40, boss.y - 45, 'ÔØä´©Å ABSOLUTE ZERO CRYO-NOVA!', '#38bdf8');
           sfx('incoming');
         }
 
@@ -3168,7 +3036,7 @@ function update(dt) {
             eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 24, spin: 0 });
           }
           addShake(24);
-          popup(boss.x - 40, boss.y - 45, '👑 ULTIMATE: ROYAL SOVEREIGN JUDGEMENT!', '#ffd23c');
+          popup(boss.x - 40, boss.y - 45, '­ƒææ ULTIMATE: ROYAL SOVEREIGN JUDGEMENT!', '#ffd23c');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
           for (const cy of [-44, 44]) {
@@ -3179,7 +3047,7 @@ function update(dt) {
           for (const ang of [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36]) {
             eballs.push({ type: 'laser', col: '#ffd23c', x: boss.x - boss.w * 0.45, y: boss.y, vx: -640 * spdBonus * Math.cos(ang), vy: 640 * spdBonus * Math.sin(ang), r: 16 });
           }
-          popup(boss.x - 40, boss.y - 45, '👑 GILDED ROYAL BARRAGE!', '#ffd23c');
+          popup(boss.x - 40, boss.y - 45, '­ƒææ GILDED ROYAL BARRAGE!', '#ffd23c');
           sfx('laser');
         }
       }
@@ -3208,7 +3076,7 @@ function update(dt) {
         const bScore = 50 + bLevel * 25;
         addScore(bScore, boss.x, boss.y);
         tokensRun += bTokens; spinsRun += 1;
-        popup(W / 2, H * 0.35, `${boss.name.toUpperCase()} DESTROYED! +${bTokens} 🎟️ +1 🎡`, '#ffd23c');
+        popup(W / 2, H * 0.35, `${boss.name.toUpperCase()} DESTROYED! +${bTokens} ­ƒÄƒ´©Å +1 ­ƒÄí`, '#ffd23c');
         for (let k = 0; k < 18; k++) coins.push({ x: boss.x + (Math.random()-0.5)*140, y: boss.y + (Math.random()-0.5)*100, vx: -130 + (Math.random()-0.5)*60, vy: (Math.random()-0.5)*60 });
         if (Math.random() < 0.85) powerups.push({ x: boss.x, y: boss.y, type: 'heart', vx: -85, vy: 0 });
         boss = null; bossT = 28 + Math.random() * 8;
@@ -3229,7 +3097,7 @@ function update(dt) {
 
             // Solar Juggernaut Special Death Power: Supernova Thermal Core Explosion!
             if (f.variant === 'brood') {
-              popup(f.x, f.y - 30, '💥 SUPERNOVA CORE DETONATION!', '#ff4400');
+              popup(f.x, f.y - 30, '­ƒÆÑ SUPERNOVA CORE DETONATION!', '#ff4400');
               explode(f.x, f.y, '#ff4400', 65);
               addShake(18);
               // Radial molten shrapnel bursts
@@ -3328,8 +3196,7 @@ function update(dt) {
     f.shootT -= dt;
     if (f.shootT <= 0 && f.x < W - 40 && f.x > 80) {
       f.shootT = Math.max(1.0, 2.4 - level * 0.18);
-      const ts = getClosestAliveShip(f.x, f.y);
-      const dx = ts.x - f.x, dy = ts.y - f.y;
+      const dx = ship.x - f.x, dy = ship.y - f.y;
       const dist = Math.hypot(dx, dy) || 1;
       const spdBonus = 1 + Math.min(0.8, (level - 1) * 0.07);
 
@@ -3355,7 +3222,7 @@ function update(dt) {
             r: 16,
             spin: 0
           });
-          popup(f.x, f.y - 28, '🔥 SOLAR MAGMA TORPEDO!', '#ff5500');
+          popup(f.x, f.y - 28, '­ƒöÑ SOLAR MAGMA TORPEDO!', '#ff5500');
           sfx('incoming');
         } else {
           for (const spr of [-0.22, 0, 0.22]) {
@@ -3380,7 +3247,7 @@ function update(dt) {
             r: 14
           });
         }
-        popup(f.x, f.y - 28, '❄️ CRYO-FREEZE BEAM!', '#38bdf8');
+        popup(f.x, f.y - 28, 'ÔØä´©Å CRYO-FREEZE BEAM!', '#38bdf8');
         sfx('incoming');
       } else if (f.variant === 'imperial') {
         // IMPERIAL DREAD-CORVETTE: 3-Way Golden Royal Laser Barrage!
@@ -3393,7 +3260,7 @@ function update(dt) {
             r: 12
           });
         }
-        popup(f.x, f.y - 28, '👑 IMPERIAL SALVO!', '#ffd23c');
+        popup(f.x, f.y - 28, '­ƒææ IMPERIAL SALVO!', '#ffd23c');
         sfx('laser');
       } else {
         // VOID ECLIPSE DESTROYER: Dark Matter Vortex or Dual Turbo-Lasers!
@@ -3407,7 +3274,7 @@ function update(dt) {
             r: 22,
             spin: 0
           });
-          popup(f.x, f.y - 28, '🌀 DARK MATTER VORTEX!', '#00ffaa');
+          popup(f.x, f.y - 28, '­ƒîÇ DARK MATTER VORTEX!', '#00ffaa');
           sfx('incoming');
         } else {
           eballs.push({ type: 'laser', col: '#00ffaa', x: f.x - f.w * 0.45, y: f.y - 12, vx: (dx/dist)*540*spdBonus, vy: (dy/dist)*540*spdBonus, r: 11 });
@@ -3417,15 +3284,9 @@ function update(dt) {
       }
     }
     
-    if (f.x < -f.w) {
-      forts.splice(i, 1);
-    } else {
-      for (const p of fleet) {
-        if (!p.dead && p.inv <= 0 && Math.hypot(f.x - p.x, f.y - p.y) < p.r + f.w * 0.35) {
-          damageShip(p);
-          break;
-        }
-      }
+    if (f.x < -f.w) forts.splice(i, 1);
+    else if (ship.inv <= 0 && Math.hypot(f.x - ship.x, f.y - ship.y) < ship.r + f.w * 0.35) {
+      damageShip();
     }
   }
 
@@ -3435,7 +3296,6 @@ function update(dt) {
     g.x += g.vx * dt;
     g.saucerSpin += dt * 6;
     const spdBonus = 1 + Math.min(0.8, (level - 1) * 0.07);
-    const ts = getClosestAliveShip(g.x, g.y);
 
     if (g.variant === 'stalker') {
       // Quantum Phase Stalker: Periodic Warp Blink
@@ -3445,10 +3305,10 @@ function update(dt) {
         g.y = Math.max(70, Math.min(H - 90, g.y + (Math.random() < 0.5 ? -95 : 95)));
         explode(g.x, g.y, '#a855f7', 14);
       }
-      g.y += (ts.y - g.y) * 0.6 * dt;
+      g.y += (ship.y - g.y) * 0.6 * dt;
     } else if (g.variant === 'rammer') {
       // Solar Kamikaze Rammer: Aggressive Altitude Homing with Rocket Flame Trail
-      g.y += (ts.y - g.y) * 2.8 * dt;
+      g.y += (ship.y - g.y) * 2.8 * dt;
       if (Math.random() < 0.65) {
         parts.push({
           type: 'fireball',
@@ -3463,7 +3323,7 @@ function update(dt) {
       g.shootT = (g.shootT || 1.0) - dt;
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 100) {
         g.shootT = Math.max(0.8, 1.8 - level * 0.14) + Math.random() * 0.6;
-        const dx = ts.x - g.x, dy = ts.y - g.y;
+        const dx = ship.x - g.x, dy = ship.y - g.y;
         const dist = Math.hypot(dx, dy) || 1;
         eballs.push({
           type: 'emp',
@@ -3476,7 +3336,7 @@ function update(dt) {
       }
     } else if (g.variant === 'phantom') {
       // Shadow Eclipse Phantom: Stealth Phase Cloaking + Amethyst Plasma Burst
-      g.y += (ts.y - g.y) * 1.2 * dt;
+      g.y += (ship.y - g.y) * 1.2 * dt;
       g.shootT = (g.shootT || 1.1) - dt;
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 100) {
         g.shootT = Math.max(0.9, 2.0 - level * 0.14) + Math.random() * 0.6;
@@ -3493,11 +3353,11 @@ function update(dt) {
       }
     } else {
       // THE FIGHTER: Sinusoidal Evasive Dive + RED LASER CANNON SALVOS!
-      g.y += (ts.y - g.y) * 0.9 * dt + Math.sin(t * 6 + g.wob) * 48 * dt;
+      g.y += (ship.y - g.y) * 0.9 * dt + Math.sin(t * 6 + g.wob) * 48 * dt;
       g.shootT = (g.shootT || 1.2) - dt;
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 120) {
         g.shootT = Math.max(1.0, 2.0 - level * 0.14) + Math.random() * 0.7;
-        const dx = ts.x - g.x, dy = ts.y - g.y;
+        const dx = ship.x - g.x, dy = ship.y - g.y;
         const dist = Math.hypot(dx, dy) || 1;
         eballs.push({
           type: 'laser',
@@ -3517,17 +3377,11 @@ function update(dt) {
       }
     }
     
-    if (g.x < -80) {
+    if (g.x < -80) gliders.splice(i, 1);
+    else if (ship.inv <= 0 && Math.hypot(g.x - ship.x, g.y - ship.y) < ship.r + 32) {
+      damageShip();
+      explode(g.x, g.y, g.col || '#ff2255', 24);
       gliders.splice(i, 1);
-    } else {
-      for (const p of fleet) {
-        if (!p.dead && p.inv <= 0 && Math.hypot(g.x - p.x, g.y - p.y) < p.r + 32) {
-          damageShip(p);
-          explode(g.x, g.y, g.col || '#ff2255', 24);
-          gliders.splice(i, 1);
-          break;
-        }
-      }
     }
   }
 
@@ -3535,21 +3389,14 @@ function update(dt) {
   for (let i = mines.length - 1; i >= 0; i--) {
     const m = mines[i];
     m.x += m.vx * dt;
-    m.pulse = (m.pulse || 0) + dt * 5;
-    m.spin = (m.spin || 0) + dt * 2.5;
-
-    if (m.x < -40) {
+    m.spin += 2.8 * dt;
+    m.y += Math.sin(t * 2 + m.r) * 22 * dt;
+    
+    if (m.x < -50) mines.splice(i, 1);
+    else if (ship.inv <= 0 && Math.hypot(m.x - ship.x, m.y - ship.y) < ship.r + m.r) {
+      explode(m.x, m.y, m.col || '#00e5ff', 28); sfx('boom');
+      damageShip();
       mines.splice(i, 1);
-    } else {
-      for (const p of fleet) {
-        if (!p.dead && p.inv <= 0 && Math.hypot(m.x - p.x, m.y - p.y) < p.r + m.r) {
-          explode(m.x, m.y, m.col || '#00e5ff', 36);
-          sfx('boom');
-          damageShip(p);
-          mines.splice(i, 1);
-          break;
-        }
-      }
     }
   }
 
@@ -3557,49 +3404,45 @@ function update(dt) {
   for (let i = eballs.length - 1; i >= 0; i--) {
     const b = eballs[i];
     b.x += b.vx * dt; b.y += b.vy * dt;
-    b.spin = (b.spin || 0) + dt * 6;
 
-    // Dark Matter Singularity Gravity Well Pull
     if (b.type === 'vortex') {
-      for (const p of fleet) {
-        if (!p.dead) {
-          const dx = b.x - p.x, dy = b.y - p.y;
-          const dist = Math.hypot(dx, dy);
-          if (dist < 340 && dist > 15) {
-            const pull = (1 - dist / 340) * 160 * dt;
-            p.x += (dx / dist) * pull;
-            p.y += (dy / dist) * pull;
-          }
+      b.spin = (b.spin || 0) + 10 * dt;
+      // Gravitational Tractor Vortex Pull on player galleon
+      const dx = b.x - ship.x, dy = b.y - ship.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 340 && dist > 15) {
+        const pull = (1 - dist / 340) * 160 * dt;
+        ship.x += (dx / dist) * pull;
+        ship.y += (dy / dist) * pull;
+        if (Math.random() < 0.35) {
+          parts.push({
+            type: 'ring',
+            x: b.x, y: b.y,
+            r: 6 + Math.random() * 18,
+            life: 0.18, maxLife: 0.18,
+            col: '#00ffaa', lw: 1.5
+          });
         }
       }
     }
     
-    let hitP = null;
-    for (const p of fleet) {
-      if (!p.dead && p.inv <= 0 && Math.hypot(b.x - p.x, b.y - p.y) < p.r + b.r - 5) {
-        hitP = p;
-        break;
-      }
-    }
-
-    if (hitP) {
+    if (b.x < -40 || b.y < -40 || b.y > H + 40) eballs.splice(i, 1);
+    else if (ship.inv <= 0 && Math.hypot(b.x - ship.x, b.y - ship.y) < ship.r + b.r - 5) {
       if (b.type === 'emp') {
         slowT = 2.8;
-        popup(hitP.x, hitP.y - 30, '⚡ EMP SHOCK — ENGINES DISRUPTED!', '#00e5ff');
+        popup(ship.x, ship.y - 30, 'ÔÜí EMP SHOCK ÔÇö ENGINES DISRUPTED!', '#00e5ff');
       } else if (b.type === 'magma') {
-        popup(hitP.x, hitP.y - 30, '🔥 SOLAR INFERNO BURN!', '#ff5500');
+        popup(ship.x, ship.y - 30, '­ƒöÑ SOLAR INFERNO BURN!', '#ff5500');
         explode(b.x, b.y, '#ff4400', 32);
         addShake(16);
       } else if (b.type === 'spore') {
-        popup(hitP.x, hitP.y - 30, '☣ ACID SPORE HIT!', '#d946ef');
+        popup(ship.x, ship.y - 30, 'Ôÿú ACID SPORE HIT!', '#d946ef');
       } else if (b.type === 'vortex') {
-        popup(hitP.x, hitP.y - 30, '🌀 VOID SINGULARITY CRUSH!', '#00ffaa');
+        popup(ship.x, ship.y - 30, '­ƒîÇ VOID SINGULARITY CRUSH!', '#00ffaa');
         explode(b.x, b.y, '#00ffaa', 30);
         addShake(16);
       }
-      damageShip(hitP);
-      eballs.splice(i, 1);
-    } else if (b.x < -40 || b.y < -40 || b.y > H + 40) {
+      damageShip();
       eballs.splice(i, 1);
     }
   }
@@ -3610,16 +3453,14 @@ function update(dt) {
     c.x += (c.vx || -110) * dt; c.y += (c.vy || 0) * dt;
     c.spin = (c.spin || 0) + 7 * dt;
     
-    const ts = getClosestAliveShip(c.x, c.y);
-    const dist = Math.hypot(c.x - ts.x, c.y - ts.y);
+    const dist = Math.hypot(c.x - ship.x, c.y - ship.y);
     if (dist < 230 + magnetBonus) {
-      c.x += (ts.x - c.x) * 7.0 * dt;
-      c.y += (ts.y - c.y) * 7.0 * dt;
+      c.x += (ship.x - c.x) * 7.0 * dt;
+      c.y += (ship.y - c.y) * 7.0 * dt;
     }
     
     if (dist < 48) {
       coinsN++; score += 2; sfx('coin');
-      ts.score = (ts.score || 0) + 2;
       coins.splice(i, 1);
     } else if (c.x < -40) coins.splice(i, 1);
   }
@@ -3629,21 +3470,20 @@ function update(dt) {
     const p = powerups[i];
     p.x += (p.vx || -95) * dt; p.y += (p.vy || 0) * dt;
     
-    const ts = getClosestAliveShip(p.x, p.y);
-    const dist = Math.hypot(p.x - ts.x, p.y - ts.y);
+    const dist = Math.hypot(p.x - ship.x, p.y - ship.y);
     if (dist < 230 + magnetBonus) {
-      p.x += (ts.x - p.x) * 7.0 * dt;
-      p.y += (ts.y - p.y) * 7.0 * dt;
+      p.x += (ship.x - p.x) * 7.0 * dt;
+      p.y += (ship.y - p.y) * 7.0 * dt;
     }
     
     if (dist < 52) {
       sfx('map');
-      if (p.type === 'heart') { ts.hp = Math.min(ts.maxHp, ts.hp + 1); popup(ts.x, ts.y - 45, '+1 ❤️ HULL REPAIR', '#ff6b6b'); }
-      else if (p.type === 'rapid') { rapidT = 7; popup(ts.x, ts.y - 45, 'FLEET RAPID CANNONS! ⚡', '#3fd5ff'); }
-      else if (p.type === 'shield') { shieldT = 6; for (const sp of fleet) sp.inv = Math.max(sp.inv, 6); popup(ts.x, ts.y - 45, 'FLEET DEFLECTOR SHIELDS! 🛡️', '#00dfa2'); }
-      else if (p.type === 'triple') { tripleT = 8; popup(ts.x, ts.y - 45, 'FLEET TRIPLE BROADSIDES! 🔱', '#ffd23c'); }
+      if (p.type === 'heart') { ship.hp = Math.min(maxHp, ship.hp + 1); popup(ship.x, ship.y - 45, '+1 ÔØñ´©Å HULL REPAIR', '#ff6b6b'); }
+      else if (p.type === 'rapid') { rapidT = 7; popup(ship.x, ship.y - 45, 'RAPID CANNONS! ÔÜí', '#3fd5ff'); }
+      else if (p.type === 'shield') { shieldT = 6; ship.inv = Math.max(ship.inv, 6); popup(ship.x, ship.y - 45, 'ENERGY DEFLECTOR SHIELD! ­ƒøí´©Å', '#00dfa2'); }
+      else if (p.type === 'triple') { tripleT = 8; popup(ship.x, ship.y - 45, 'TRIPLE BROADSIDE! ­ƒö▒', '#ffd23c'); }
       else if (p.type === 'bomb') {
-        popup(ts.x, ts.y - 45, '💥 FLEET BROADSIDE EMP WAVE!', '#ff0055'); addShake(24); sfx('boom');
+        popup(ship.x, ship.y - 45, '­ƒÆÑ BROADSIDE EMP WAVE!', '#ff0055'); addShake(24); sfx('boom');
         for (const f of forts) { explode(f.x, f.y, f.col, 34); addScore(10, f.x, f.y); coins.push({ x: f.x, y: f.y }); }
         for (const g of gliders) { explode(g.x, g.y, '#00ff66', 18); addScore(5, g.x, g.y); }
         for (const m of mines) explode(m.x, m.y, '#00e5ff', 24);
@@ -3675,27 +3515,12 @@ function update(dt) {
   }
 }
 
-function damageShip(target) {
-  const p = target || (fleet && fleet[0]) || ship;
-  if (!p || p.dead) return;
-  p.hp--;
-  p.inv = 1.7;
+function damageShip() {
+  ship.hp--; ship.inv = 1.7;
   sfx('hit'); addShake(20); hurtFlash = 0.7;
   combo = 0; comboT = 0;
-  explode(p.x, p.y, (p.cols && p.cols[0]) || '#ffd23c', 28);
-  if (p.hp <= 0) {
-    p.hp = 0;
-    p.dead = true;
-    p.reviveTimer = 0;
-    addAlert(`💥 ${p.name.toUpperCase()} SHIPWRECKED! FLY NEAR TO REVIVE!`, 'incoming');
-    popup(p.x, p.y - 40, `💀 ${p.name} DOWN!`, '#ff3344');
-    
-    // Check if entire fleet is destroyed
-    const anyAlive = fleet && fleet.some(f => !f.dead);
-    if (!anyAlive) {
-      lose();
-    }
-  }
+  explode(ship.x, ship.y, '#ffd23c', 28);
+  if (ship.hp <= 0) lose();
 }
 
 // Draw Solar Pirate Galleon in Forward 3D Perspective (View from Behind)
@@ -3755,7 +3580,7 @@ function drawGalleonForward(cx, x, y, scale=1.0) {
   cx.quadraticCurveTo(10, -63, 0, -65);
   cx.closePath(); cx.fill();
   cx.fillStyle = '#fff'; cx.font = 'bold 9px serif'; cx.textAlign = 'center';
-  cx.fillText('☠', 12, -65);
+  cx.fillText('Ôÿá', 12, -65);
 
   // Rear Transom Stern Galleon Hull
   const hg = cx.createLinearGradient(0, -10, 0, 32);
@@ -3972,7 +3797,7 @@ function draw() {
   // 3. Render Pirate Powerup Supply Chests
   for (const pu of powerups) {
     const col = pu.type === 'heart' ? '#ff3366' : pu.type === 'rapid' ? '#00e5ff' : pu.type === 'shield' ? '#00dfa2' : pu.type === 'triple' ? '#ffd23c' : '#ff0055';
-    const ic  = pu.type === 'heart' ? '❤️' : pu.type === 'rapid' ? '⚡' : pu.type === 'shield' ? '🛡️' : pu.type === 'triple' ? '🔱' : '💣';
+    const ic  = pu.type === 'heart' ? 'ÔØñ´©Å' : pu.type === 'rapid' ? 'ÔÜí' : pu.type === 'shield' ? '­ƒøí´©Å' : pu.type === 'triple' ? '­ƒö▒' : '­ƒÆú';
     
     cx.save(); cx.translate(pu.x, pu.y);
     const glow = cx.createRadialGradient(0, 0, 5, 0, 0, 32);
@@ -4347,7 +4172,7 @@ function draw() {
       cx.globalAlpha = 1;
 
     } else {
-      // ARCHETYPE 1: THE FIGHTER (Star Wars Heavy TIE Fighter — Scaled Up & Armed with Red Lasers!)
+      // ARCHETYPE 1: THE FIGHTER (Star Wars Heavy TIE Fighter ÔÇö Scaled Up & Armed with Red Lasers!)
       const bank = Math.sin(t * 8 + g.x * 0.05) * 0.2;
       cx.rotate(bank);
 
@@ -4540,7 +4365,7 @@ function draw() {
       cx.beginPath(); cx.arc(0, 0, 7, 0, Math.PI * 2); cx.fill();
 
     } else {
-      // ARCHETYPE 1: Quantum Proximity Mine (6 Spikes with 360° Laser Tripwire)
+      // ARCHETYPE 1: Quantum Proximity Mine (6 Spikes with 360┬░ Laser Tripwire)
       cx.strokeStyle = 'rgba(255, 30, 80, 0.45)'; cx.lineWidth = 1.5;
       cx.beginPath();
       cx.moveTo(0, 0); cx.lineTo(Math.cos(t * 3) * 60, Math.sin(t * 3) * 60);
@@ -4821,7 +4646,7 @@ function draw() {
     cx.fillStyle = boss.enraged ? '#ff3344' : (boss.col || '#00ffaa');
     cx.shadowColor = boss.col || '#00ffaa';
     cx.shadowBlur = 8;
-    cx.fillText(`${boss.name.toUpperCase()} ${boss.enraged ? '⚡ [OVERLOAD ENRAGED]' : ''} [${Math.ceil(boss.hp)}/${boss.maxhp} HP]`, 0, barY - 8);
+    cx.fillText(`${boss.name.toUpperCase()} ${boss.enraged ? 'ÔÜí [OVERLOAD ENRAGED]' : ''} [${Math.ceil(boss.hp)}/${boss.maxhp} HP]`, 0, barY - 8);
     cx.shadowBlur = 0;
 
     // Health Bar Frame
@@ -4846,7 +4671,7 @@ function draw() {
 
     // 1. SKIN SIGNATURE PROJECTILES
     if (sk === 'sunset') {
-      // Solar Flare 🌅: Sunburst Plasma Flare (Fiery Solar Corona with blazing flares)
+      // Solar Flare ­ƒîà: Sunburst Plasma Flare (Fiery Solar Corona with blazing flares)
       const sg = cx.createRadialGradient(0, 0, 1, 0, 0, b.r + 7);
       sg.addColorStop(0, '#ffffff');
       sg.addColorStop(0.3, '#ffcc00');
@@ -4856,7 +4681,7 @@ function draw() {
       cx.beginPath(); cx.arc(0, 0, b.r + 6, 0, Math.PI * 2); cx.fill();
       cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, b.r * 0.6, 0, Math.PI * 2); cx.fill();
     } else if (sk === 'toxic') {
-      // Alien Plasma 🧪: Bubbling Toxic Acid Sphere (Glowing Biohazard Green with orbiting acid bubbles)
+      // Alien Plasma ­ƒº¬: Bubbling Toxic Acid Sphere (Glowing Biohazard Green with orbiting acid bubbles)
       const tg = cx.createRadialGradient(-2, -2, 1, 0, 0, b.r + 6);
       tg.addColorStop(0, '#ffffff');
       tg.addColorStop(0.35, '#88ff00');
@@ -4867,7 +4692,7 @@ function draw() {
       cx.fillStyle = '#00ff66';
       cx.beginPath(); cx.arc(Math.cos(t * 16) * (b.r + 4), Math.sin(t * 16) * (b.r + 4), 3, 0, Math.PI * 2); cx.fill();
     } else if (sk === 'ocean') {
-      // Deep Nebula 🌌: Cosmic Nebula Comet (Deep Blue starlight sphere with shimmering planetary rings)
+      // Deep Nebula ­ƒîî: Cosmic Nebula Comet (Deep Blue starlight sphere with shimmering planetary rings)
       const ng = cx.createRadialGradient(0, 0, 2, 0, 0, b.r + 8);
       ng.addColorStop(0, '#ffffff');
       ng.addColorStop(0.35, '#2f9be6');
@@ -4878,7 +4703,7 @@ function draw() {
       cx.strokeStyle = '#a9e0ff'; cx.lineWidth = 1.8;
       cx.beginPath(); cx.ellipse(0, 0, b.r * 1.5, b.r * 0.5, t * 4, 0, Math.PI * 2); cx.stroke();
     } else if (sk === 'shadow') {
-      // Black Pearl 🌑: Ghostly Spectral Skull Cannonball (Dark Phantom Void with blood-red core)
+      // Black Pearl ­ƒîæ: Ghostly Spectral Skull Cannonball (Dark Phantom Void with blood-red core)
       const bg = cx.createRadialGradient(0, 0, 1, 0, 0, b.r + 7);
       bg.addColorStop(0, '#ff0044');
       bg.addColorStop(0.4, '#1c1e24');
@@ -4890,7 +4715,7 @@ function draw() {
       cx.beginPath(); cx.arc(-3, -2, 2, 0, Math.PI * 2); cx.fill();
       cx.beginPath(); cx.arc(3, -2, 2, 0, Math.PI * 2); cx.fill();
     } else if (sk === 'royal') {
-      // Royal Navy 👑: Gilded Imperial Diamond Shot (Purple & Gold Royal Crest with radiant diamond flash)
+      // Royal Navy ­ƒææ: Gilded Imperial Diamond Shot (Purple & Gold Royal Crest with radiant diamond flash)
       const rg = cx.createRadialGradient(-2, -2, 1, 0, 0, b.r + 5);
       rg.addColorStop(0, '#ffffff');
       rg.addColorStop(0.35, '#ffd700');
@@ -4901,7 +4726,7 @@ function draw() {
       cx.strokeStyle = '#ffd700'; cx.lineWidth = 1.5;
       cx.strokeRect(-b.r * 0.5, -b.r * 0.5, b.r, b.r);
     } else if (sk === 'legend') {
-      // Golden Legend ✨: Divine Supernova Orb (Blinding Pure White-Gold Star with prismatic cross-flares)
+      // Golden Legend Ô£¿: Divine Supernova Orb (Blinding Pure White-Gold Star with prismatic cross-flares)
       const lg = cx.createRadialGradient(0, 0, 1, 0, 0, b.r + 10);
       lg.addColorStop(0, '#ffffff');
       lg.addColorStop(0.3, '#fff280');
@@ -5122,25 +4947,21 @@ function draw() {
     }
   }
 
-  // 10. REALISTIC PIRATE SHIPS (CUSTOM ARCHITECTURE & MULTI-PLAYER FLEET RENDERING)
-  function drawSinglePlayerShip(cx, p, t) {
+  // 10. REALISTIC PIRATE SHIP (CUSTOM ARCHITECTURE FOR EACH SHIP & UPGRADE)
+  if (state === 'intro' || state === 'play' || state === 'pause') {
     cx.save();
-    cx.translate(p.x, p.y);
-    cx.rotate(p.pitch || 0);
+    cx.translate(ship.x, ship.y);
+    cx.rotate(ship.pitch);
 
-    if (p.dead) {
-      cx.globalAlpha = 0.45 + Math.sin(t * 6) * 0.15;
-    } else if (p.inv > 0 && Math.floor(t * 14) % 2 === 0) {
-      cx.globalAlpha = 0.4;
-    }
+    if (ship.inv > 0 && Math.floor(t * 14) % 2 === 0) cx.globalAlpha = 0.4;
 
-    const curShip = p.shipModel || 'cutter';
+    const curShip = SAVE.data.sel || 'cutter';
     const cLv = (SAVE.data.upg && SAVE.data.upg.cannon) || 0;
     const hLv = (SAVE.data.upg && SAVE.data.upg.hull) || 0;
 
-    const col0 = (p.cols && p.cols[0]) || '#c88a55';
-    const col1 = (p.cols && p.cols[1]) || '#8c5528';
-    const col2 = (p.cols && p.cols[2]) || '#3b1c06';
+    const col0 = (shipCols && shipCols[0]) || '#c88a55';
+    const col1 = (shipCols && shipCols[1]) || '#8c5528';
+    const col2 = (shipCols && shipCols[2]) || '#3b1c06';
 
     // Ambient Glowing Solar Energy Field
     const shipAura = cx.createRadialGradient(0, 16, 8, 0, 16, 75);
@@ -5151,7 +4972,7 @@ function draw() {
     cx.beginPath(); cx.ellipse(0, 16, 75, 48, 0, 0, Math.PI * 2); cx.fill();
 
     // -------------------------------------------------------------
-    // SHAPE 1: ASTRAL SLOOP (runner) — Sleek Futuristic Aerodynamic Trimaran
+    // SHAPE 1: ASTRAL SLOOP (runner) ÔÇö Sleek Futuristic Aerodynamic Trimaran
     // -------------------------------------------------------------
     if (curShip === 'runner') {
       // Dual Ether Jet Thrusters (Streaming cyan engine plasma!)
@@ -5217,7 +5038,7 @@ function draw() {
       cx.fillStyle = '#00ffee'; cx.beginPath(); cx.arc(58, 19, 3.5, 0, Math.PI * 2); cx.fill();
 
     // -------------------------------------------------------------
-    // SHAPE 2: ARMOURED GALLEON (galleon) — Heavy Riveted Ironclad Fortress
+    // SHAPE 2: ARMOURED GALLEON (galleon) ÔÇö Heavy Riveted Ironclad Fortress
     // -------------------------------------------------------------
     } else if (curShip === 'galleon') {
       // Twin Cobalt Heavy Ion Exhaust Thrusters
@@ -5290,7 +5111,7 @@ function draw() {
       cx.fill(); cx.stroke();
 
     // -------------------------------------------------------------
-    // SHAPE 3: GOLDEN HIND (hind) — Ornate Royal Flagship with Dragon Prow & Attractor Spire
+    // SHAPE 3: GOLDEN HIND (hind) ÔÇö Ornate Royal Flagship with Dragon Prow & Attractor Spire
     // -------------------------------------------------------------
     } else if (curShip === 'hind') {
       // Golden Starlight Thruster Wake
@@ -5360,7 +5181,7 @@ function draw() {
       cx.fill();
 
     // -------------------------------------------------------------
-    // SHAPE 4: SOLAR DREADNOUGHT (storm) — Colossal Double-Deck Titan Warship
+    // SHAPE 4: SOLAR DREADNOUGHT (storm) ÔÇö Colossal Double-Deck Titan Warship
     // -------------------------------------------------------------
     } else if (curShip === 'storm') {
       // Dark Matter Void Thruster Exhaust
@@ -5435,7 +5256,7 @@ function draw() {
       cx.fillRect(28, 22, 10, 6);
 
     // -------------------------------------------------------------
-    // SHAPE 5: SOLAR CORSAIR (cutter) — Classic Agile Pirate Galleon
+    // SHAPE 5: SOLAR CORSAIR (cutter) ÔÇö Classic Agile Pirate Galleon
     // -------------------------------------------------------------
     } else {
       // Golden Ether Solar Thruster Wake
@@ -5489,44 +5310,57 @@ function draw() {
     }
 
     // Dynamic Themed Pirate Flag for each Unlocked Skin!
-    const activeSkin = p.index === 0 && SAVE.data.skin && SAVE.data.kills >= (skinById(SAVE.data.skin).kills || 0) ? SAVE.data.skin : 'default';
+    const activeSkin = (SAVE.data.skin && SAVE.data.kills >= (skinById(SAVE.data.skin).kills || 0)) ? SAVE.data.skin : 'default';
 
-    let flagBg = '#111', flagSym = '☠', flagSymCol = '#fff';
-    if (activeSkin === 'sunset') { flagBg = '#ff5500'; flagSym = '☀️'; flagSymCol = '#fff'; }
-    else if (activeSkin === 'toxic') { flagBg = '#1a330e'; flagSym = '☣'; flagSymCol = '#7ed957'; }
-    else if (activeSkin === 'ocean') { flagBg = '#0a192f'; flagSym = '🌌'; flagSymCol = '#64ffda'; }
-    else if (activeSkin === 'shadow') { flagBg = '#05070a'; flagSym = '☠️'; flagSymCol = '#ff0033'; }
-    else if (activeSkin === 'royal') { flagBg = '#3b0764'; flagSym = '👑'; flagSymCol = '#ffd700'; }
-    else if (activeSkin === 'legend') { flagBg = '#ffd700'; flagSym = '⭐'; flagSymCol = '#ffffff'; }
+    let flagBg = '#111', flagSym = 'Ôÿá', flagSymCol = '#fff';
+    if (activeSkin === 'sunset') { flagBg = '#ff5500'; flagSym = 'ÔÿÇ´©Å'; flagSymCol = '#fff'; }
+    else if (activeSkin === 'toxic') { flagBg = '#1a330e'; flagSym = 'Ôÿú'; flagSymCol = '#7ed957'; }
+    else if (activeSkin === 'ocean') { flagBg = '#0a192f'; flagSym = '­ƒîî'; flagSymCol = '#64ffda'; }
+    else if (activeSkin === 'shadow') { flagBg = '#05070a'; flagSym = 'Ôÿá´©Å'; flagSymCol = '#ff0033'; }
+    else if (activeSkin === 'royal') { flagBg = '#3b0764'; flagSym = '­ƒææ'; flagSymCol = '#ffd700'; }
+    else if (activeSkin === 'legend') { flagBg = '#ffd700'; flagSym = 'Ô¡É'; flagSymCol = '#ffffff'; }
 
     cx.fillStyle = flagBg;
     cx.beginPath();
     cx.moveTo(-18, -52);
-    cx.quadraticCurveTo(-34, -50 + Math.sin(p.flagWave) * 4, -48, -48 + Math.sin(p.flagWave) * 5);
-    cx.lineTo(-42, -36 + Math.sin(p.flagWave + 1) * 4);
+    cx.quadraticCurveTo(-34, -50 + Math.sin(ship.flagWave) * 4, -48, -48 + Math.sin(ship.flagWave) * 5);
+    cx.lineTo(-42, -36 + Math.sin(ship.flagWave + 1) * 4);
     cx.quadraticCurveTo(-28, -40, -18, -40);
     cx.closePath(); cx.fill();
     cx.fillStyle = flagSymCol; cx.font = 'bold 11px serif'; cx.textAlign = 'center';
     cx.fillText(flagSym, -30, -42);
 
-    // Skin-Specific Prow Ornaments
+    // Skin-Specific Prow Ornaments & Hull Sculptures
     if (activeSkin === 'sunset') {
-      cx.fillStyle = '#ff6a00'; cx.beginPath(); cx.arc(48, 14, 5, 0, Math.PI * 2); cx.fill();
+      // Solar Flare Sunburst Prow Crest
+      cx.fillStyle = '#ff6a00';
+      cx.beginPath(); cx.arc(48, 14, 5, 0, Math.PI * 2); cx.fill();
       cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.5; cx.stroke();
     } else if (activeSkin === 'toxic') {
+      // Alien Plasma Spines & Bioluminescent Hull Veins
       cx.strokeStyle = '#7ed957'; cx.lineWidth = 2.5;
       cx.beginPath(); cx.moveTo(42, 14); cx.lineTo(54, 8); cx.lineTo(48, 22); cx.stroke();
       cx.strokeStyle = '#00ff66'; cx.lineWidth = 1.8;
       cx.beginPath(); cx.moveTo(-34, 20); cx.lineTo(0, 22); cx.lineTo(36, 18); cx.stroke();
     } else if (activeSkin === 'ocean') {
-      cx.fillStyle = '#64ffda'; cx.fillRect(48, 12, 10, 2.5); cx.fillRect(56, 7, 2.5, 12);
+      // Celestial Crystal Trident Prow
+      cx.fillStyle = '#64ffda';
+      cx.fillRect(48, 12, 10, 2.5);
+      cx.fillRect(56, 7, 2.5, 12);
     } else if (activeSkin === 'shadow') {
-      cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(46, 17, 2, 0, Math.PI * 2); cx.fill();
+      // Cursed Phantom Crimson Eyes on Prow
+      cx.fillStyle = '#ff0033';
+      cx.beginPath(); cx.arc(46, 17, 2, 0, Math.PI * 2); cx.fill();
       cx.beginPath(); cx.arc(50, 17, 2, 0, Math.PI * 2); cx.fill();
     } else if (activeSkin === 'royal') {
-      cx.fillStyle = '#ffd700'; cx.fillRect(-38, 13, 76, 2.5);
-      for (let rx = -34; rx <= 34; rx += 10) { cx.beginPath(); cx.arc(rx, 14, 2, 0, Math.PI * 2); cx.fill(); }
+      // Gilded Royal Filigree Railing
+      cx.fillStyle = '#ffd700';
+      cx.fillRect(-38, 13, 76, 2.5);
+      for (let rx = -34; rx <= 34; rx += 10) {
+        cx.beginPath(); cx.arc(rx, 14, 2, 0, Math.PI * 2); cx.fill();
+      }
     } else if (activeSkin === 'legend') {
+      // Divine Floating Halo Ring above Mast!
       cx.save(); cx.translate(12, -68);
       cx.strokeStyle = '#ffd700'; cx.lineWidth = 2;
       cx.beginPath(); cx.ellipse(0, 0, 12, 4, 0, 0, Math.PI * 2); cx.stroke();
@@ -5534,7 +5368,7 @@ function draw() {
       cx.restore();
     }
 
-    // Captain's Stained Glass Windows
+    // Captain's Stained Glass Stern Windows (Lit Warmly)
     cx.fillStyle = '#ffd23c';
     cx.beginPath(); cx.roundRect(-38, 16, 12, 10, 2); cx.fill();
     cx.fillStyle = 'rgba(255, 210, 60, 0.45)';
@@ -5545,16 +5379,17 @@ function draw() {
     cx.fillStyle = '#ff3344'; cx.beginPath(); cx.arc(-42, 16, 3.5, 0, Math.PI * 2); cx.fill();
 
     // -------------------------------------------------------------
-    // DYNAMIC SWIVEL DECK CANNON
+    // DYNAMIC SWIVEL DECK CANNON (Visually Evolves with Cannon Upgrades 0-3!)
     // -------------------------------------------------------------
-    const localAim = (p.aimAngle || 0) - (p.pitch || 0);
-    const recoilDist = (p.recoil || 0) * (6 + cLv);
+    const localAim = (ship.aimAngle || 0) - ship.pitch;
+    const recoilDist = ship.recoil * (6 + cLv);
 
     cx.save();
     cx.translate(36, 16);
     cx.rotate(localAim);
 
     if (cLv === 0) {
+      // Level 0: Standard Cast-Iron 18-Pdr
       const cgrad = cx.createLinearGradient(0, -4, 0, 4);
       cgrad.addColorStop(0, '#64748b'); cgrad.addColorStop(0.5, '#1e293b'); cgrad.addColorStop(1, '#0f172a');
       cx.fillStyle = cgrad;
@@ -5562,6 +5397,7 @@ function draw() {
       cx.strokeStyle = '#f59e0b'; cx.lineWidth = 1; cx.stroke();
       cx.fillStyle = '#f59e0b'; cx.fillRect(15 - recoilDist, -4, 3, 8);
     } else if (cLv === 1) {
+      // Level 1: Lengthened Rifled 24-Pdr with Reinforced Brass Bands
       const cgrad = cx.createLinearGradient(0, -5, 0, 5);
       cgrad.addColorStop(0, '#94a3b8'); cgrad.addColorStop(0.5, '#334155'); cgrad.addColorStop(1, '#0f172a');
       cx.fillStyle = cgrad;
@@ -5571,6 +5407,7 @@ function draw() {
       cx.fillRect(19 - recoilDist, -5, 3.5, 10);
       cx.fillRect(5 - recoilDist, -5, 2.5, 10);
     } else if (cLv === 2) {
+      // Level 2: Heavy 32-Pdr Siege Cannon with Glowing Heat Vents
       const cgrad = cx.createLinearGradient(0, -6, 0, 6);
       cgrad.addColorStop(0, '#cbd5e1'); cgrad.addColorStop(0.5, '#475569'); cgrad.addColorStop(1, '#020617');
       cx.fillStyle = cgrad;
@@ -5581,6 +5418,7 @@ function draw() {
       cx.fillRect(2 - recoilDist, 1, 14, 2);
       cx.fillStyle = '#fbbf24'; cx.fillRect(21 - recoilDist, -6.5, 4, 13);
     } else {
+      // Level 3: Mastercrafted Triple Rotary Gatling Cannon
       cx.fillStyle = '#1e293b';
       cx.beginPath(); cx.roundRect(-10 - recoilDist, -6, 16, 12, 2); cx.fill();
       for (const by of [-4, 0, 4]) {
@@ -5609,7 +5447,7 @@ function draw() {
     }
 
     // Active Energy Shield Bubble
-    if (shieldT > 0 || (p.inv > 1.8 && !p.dead)) {
+    if (shieldT > 0) {
       cx.globalAlpha = 0.6 + Math.sin(t * 8) * 0.2;
       cx.strokeStyle = '#00dfa2'; cx.lineWidth = 3.5;
       cx.beginPath(); cx.arc(0, 0, 70, 0, Math.PI * 2); cx.stroke();
@@ -5619,41 +5457,6 @@ function draw() {
     }
 
     cx.restore();
-
-    // Callsign Badge & Revival Halo in World Space
-    cx.save();
-    cx.translate(p.x, p.y);
-    const pBadgeCol = p.index === 0 ? '#ffd23c' : p.index === 1 ? '#00ffee' : '#c084fc';
-    if (p.dead) {
-      // Revival Pulse Halo
-      cx.strokeStyle = '#3fd07a'; cx.lineWidth = 3;
-      cx.beginPath(); cx.arc(0, 0, 75 + Math.sin(t * 6) * 8, 0, Math.PI * 2); cx.stroke();
-      cx.fillStyle = 'rgba(63, 208, 122, 0.12)'; cx.beginPath(); cx.arc(0, 0, 75, 0, Math.PI * 2); cx.fill();
-
-      // Revive status bar
-      cx.fillStyle = 'rgba(6, 14, 30, 0.9)';
-      cx.beginPath(); cx.roundRect(-65, -78, 130, 26, 6); cx.fill();
-      cx.strokeStyle = '#3fd07a'; cx.lineWidth = 1.5; cx.stroke();
-      if (p.reviveTimer > 0) {
-        cx.fillStyle = '#3fd07a'; cx.fillRect(-62, -75, 124 * Math.min(1, p.reviveTimer / 2.0), 20);
-      }
-      cx.fillStyle = '#ffffff'; cx.font = 'bold 11px "Orbitron", sans-serif'; cx.textAlign = 'center';
-      cx.fillText(p.reviveTimer > 0 ? `REVIVING ${(p.reviveTimer / 2.0 * 100).toFixed(0)}%` : 'FLY NEAR TO REVIVE', 0, -61);
-    } else {
-      // Callsign Badge above mast
-      cx.fillStyle = 'rgba(6, 14, 30, 0.75)';
-      cx.beginPath(); cx.roundRect(-42, -72, 84, 20, 5); cx.fill();
-      cx.strokeStyle = pBadgeCol; cx.lineWidth = 1.5; cx.stroke();
-      cx.fillStyle = pBadgeCol; cx.font = 'bold 10px "Orbitron", sans-serif'; cx.textAlign = 'center';
-      cx.fillText(`P${p.index + 1} ${p.name}`, 0, -58);
-    }
-    cx.restore();
-  }
-
-  if (state === 'intro' || state === 'play' || state === 'pause') {
-    for (let pi = 0; pi < fleet.length; pi++) {
-      drawSinglePlayerShip(cx, fleet[pi], t);
-    }
   }
 
   // Tactical Popups
@@ -5681,92 +5484,41 @@ function draw() {
     cx.fillRect(0, 0, W, H);
   }
 
-  // 11. Multi-Player Flight HUD (Sci-Fi Holographic Cockpit Telemetry)
+  // 11. Flight HUD (Sci-Fi Holographic Cockpit Telemetry)
   if (state === 'play' || state === 'pause') {
-    if (fleet.length === 1) {
-      // Classic Detailed Single-Player HUD Panel
-      cx.save();
-      cx.fillStyle = 'rgba(6, 14, 30, 0.65)';
-      cx.strokeStyle = 'rgba(255, 210, 60, 0.35)';
-      cx.lineWidth = 1.5;
-      cx.beginPath();
-      cx.roundRect(14, 14, 280, 140, 10);
-      cx.fill(); cx.stroke();
+    // Holographic Top Left Status Panel
+    cx.save();
+    cx.fillStyle = 'rgba(6, 14, 30, 0.65)';
+    cx.strokeStyle = 'rgba(255, 210, 60, 0.35)';
+    cx.lineWidth = 1.5;
+    cx.beginPath();
+    cx.roundRect(14, 14, 280, 140, 10);
+    cx.fill(); cx.stroke();
 
-      cx.font = '24px sans-serif';
-      for (let i = 0; i < maxHp; i++) {
-        cx.fillText(i < ship.hp ? '❤️' : '🖤', 26 + (i % 6) * 30, 44 + Math.floor(i / 6) * 26);
-      }
-      
-      cx.fillStyle = '#ffd23c'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.textAlign = 'left';
-      cx.fillText(`🪙 GOLD: ${score}`, 26, 96);
-      cx.fillStyle = '#3fd5ff';
-      cx.fillText(`🌌 SECTOR: ${level}`, 26, 122);
-      cx.fillStyle = '#8fa6cb'; cx.font = '12px "Orbitron", sans-serif';
-      const speedKnots = Math.round(Math.hypot(ship.vx, ship.vy) * 0.4);
-      cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, 26, 144);
-      cx.restore();
-    } else {
-      // Co-op Multi-Player Fleet HUD Panels
-      for (let pi = 0; pi < fleet.length; pi++) {
-        const p = fleet[pi];
-        const panelX = 14 + pi * 230;
-        const panelY = 14;
-        const pCol = pi === 0 ? '#ffd23c' : pi === 1 ? '#00ffee' : '#c084fc';
-
-        cx.save();
-        cx.fillStyle = 'rgba(6, 14, 30, 0.75)';
-        cx.strokeStyle = pCol;
-        cx.lineWidth = 1.5;
-        cx.beginPath();
-        cx.roundRect(panelX, panelY, 218, 118, 10);
-        cx.fill(); cx.stroke();
-
-        cx.fillStyle = pCol; cx.font = 'bold 13px "Orbitron", sans-serif'; cx.textAlign = 'left';
-        cx.fillText(`P${pi + 1}: ${p.name.toUpperCase()}`, panelX + 12, panelY + 22);
-
-        cx.font = '17px sans-serif';
-        if (p.dead) {
-          cx.fillStyle = '#ff3344'; cx.font = 'bold 11px "Orbitron", sans-serif';
-          cx.fillText('💀 DOWNED — FLY NEAR!', panelX + 12, panelY + 48);
-        } else {
-          for (let h = 0; h < p.maxHp; h++) {
-            cx.fillText(h < p.hp ? '❤️' : '🖤', panelX + 12 + (h % 6) * 20, panelY + 48 + Math.floor(h / 6) * 18);
-          }
-        }
-
-        cx.fillStyle = '#ffd23c'; cx.font = 'bold 12px "Orbitron", sans-serif';
-        cx.fillText(`🪙 SCORE: ${p.score || 0}`, panelX + 12, panelY + 84);
-        cx.fillStyle = '#8fa6cb'; cx.font = '11px "Orbitron", sans-serif';
-        const spdKts = Math.round(Math.hypot(p.vx, p.vy) * 0.4);
-        cx.fillText(`⚡ SPEED: ${spdKts} KTS`, panelX + 12, panelY + 104);
-        cx.restore();
-      }
-
-      // Shared Fleet Score & Sector Badge at top right
-      cx.save();
-      cx.fillStyle = 'rgba(6, 14, 30, 0.75)';
-      cx.strokeStyle = '#ffd23c';
-      cx.lineWidth = 1.5;
-      cx.beginPath();
-      cx.roundRect(W - 220, 14, 206, 68, 10);
-      cx.fill(); cx.stroke();
-      cx.fillStyle = '#ffd23c'; cx.font = 'bold 14px "Orbitron", sans-serif'; cx.textAlign = 'left';
-      cx.fillText(`🪙 FLEET: ${score}`, W - 208, 38);
-      cx.fillStyle = '#3fd5ff'; cx.font = 'bold 12px "Orbitron", sans-serif';
-      cx.fillText(`🌌 SECTOR: ${level}`, W - 208, 62);
-      cx.restore();
+    // Hull Health Hearts
+    cx.font = '24px sans-serif';
+    for (let i = 0; i < maxHp; i++) {
+      cx.fillText(i < ship.hp ? 'ÔØñ´©Å' : '­ƒûñ', 26 + (i % 6) * 30, 44 + Math.floor(i / 6) * 26);
     }
+    
+    cx.fillStyle = '#ffd23c'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.textAlign = 'left';
+    cx.fillText(`­ƒ¬Ö GOLD: ${score}`, 26, 96);
+    cx.fillStyle = '#3fd5ff';
+    cx.fillText(`­ƒîî SECTOR: ${level}`, 26, 122);
+    cx.fillStyle = '#8fa6cb'; cx.font = '12px "Orbitron", sans-serif';
+    const speedKnots = Math.round(Math.hypot(ship.vx, ship.vy) * 0.4);
+    cx.fillText(`ÔÜí SPEED: ${speedKnots} KTS`, 26, 144);
+    cx.restore();
     
     if (combo >= 2 && comboT > 0) {
       cx.fillStyle = '#00d2ff'; cx.font = 'bold 24px "Orbitron", sans-serif';
-      cx.fillText(`🔥 STREAK x${Math.min(5, combo)}`, 22, 185);
+      cx.fillText(`­ƒöÑ STREAK x${Math.min(5, combo)}`, 22, 185);
     }
     
     let puy = combo >= 2 ? 218 : 185;
-    if (rapidT > 0) { cx.fillStyle = '#3fd5ff'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.fillText(`⚡ RAPID CANNONS: ${rapidT.toFixed(1)}s`, 22, puy); puy += 26; }
-    if (shieldT > 0) { cx.fillStyle = '#00dfa2'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.fillText(`🛡️ DEFLECTOR: ${shieldT.toFixed(1)}s`, 22, puy); puy += 26; }
-    if (tripleT > 0) { cx.fillStyle = '#ffd23c'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.fillText(`🔱 TRIPLE BROADSIDE: ${tripleT.toFixed(1)}s`, 22, puy); puy += 26; }
+    if (rapidT > 0) { cx.fillStyle = '#3fd5ff'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.fillText(`ÔÜí RAPID CANNONS: ${rapidT.toFixed(1)}s`, 22, puy); puy += 26; }
+    if (shieldT > 0) { cx.fillStyle = '#00dfa2'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.fillText(`­ƒøí´©Å DEFLECTOR: ${shieldT.toFixed(1)}s`, 22, puy); puy += 26; }
+    if (tripleT > 0) { cx.fillStyle = '#ffd23c'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.fillText(`­ƒö▒ TRIPLE BROADSIDE: ${tripleT.toFixed(1)}s`, 22, puy); puy += 26; }
 
     // Boss Colossal Super-Saucer Health Bar
     if (boss) {
@@ -5776,7 +5528,7 @@ function draw() {
       cx.fillStyle = boss.col; cx.fillRect(bx, by, bw * Math.max(0, boss.hp / boss.maxhp), 22);
       cx.strokeStyle = '#00ff66'; cx.lineWidth = 2; cx.strokeRect(bx, by, bw, 22);
       cx.fillStyle = '#fff'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.textAlign = 'center';
-      cx.fillText('☠️ ' + boss.name.toUpperCase(), W / 2, by + 46);
+      cx.fillText('Ôÿá´©Å ' + boss.name.toUpperCase(), W / 2, by + 46);
     }
 
     // Threat Alerts
@@ -5894,14 +5646,14 @@ function draw() {
     cx.textAlign = 'center';
     cx.font = 'bold 12px "Orbitron", sans-serif';
     cx.fillStyle = '#4bd5ee';
-    cx.fillText('✨ A LONG TIME AGO IN A STAR CLUSTER FAR, FAR AWAY....', W / 2, barH - 24);
+    cx.fillText('Ô£¿ A LONG TIME AGO IN A STAR CLUSTER FAR, FAR AWAY....', W / 2, barH - 24);
 
     // Narrative Stage Content
     if (introT < 2.0) {
       // Stage 1: The Galactic Prologue
       cx.font = 'bold 15px "Orbitron", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('🌌 EPISODE I: THE COSMIC CORSAIR', W / 2, H - barH + 34);
+      cx.fillText('­ƒîî EPISODE I: THE COSMIC CORSAIR', W / 2, H - barH + 34);
 
       cx.font = '15px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
@@ -5910,7 +5662,7 @@ function draw() {
       // Stage 2: Action-Cam Cannon Zoom & Acrobatic Looping Broadside
       cx.font = 'bold 15px "Orbitron", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('⚔️ ACTION-CAM LOCK: ACROBATIC BROADSIDE SALVO!', W / 2, H - barH + 34);
+      cx.fillText('ÔÜö´©Å ACTION-CAM LOCK: ACROBATIC BROADSIDE SALVO!', W / 2, H - barH + 34);
 
       cx.font = '15px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
@@ -5919,7 +5671,7 @@ function draw() {
       // Stage 3: Simultaneous Dual Explosions
       cx.font = 'bold 15px "Orbitron", sans-serif';
       cx.fillStyle = '#00dfa2';
-      cx.fillText('💥 DIRECT HITS! BOTH IMPERIAL SCOUTS VAPORIZED!', W / 2, H - barH + 34);
+      cx.fillText('­ƒÆÑ DIRECT HITS! BOTH IMPERIAL SCOUTS VAPORIZED!', W / 2, H - barH + 34);
 
       cx.font = '15px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
@@ -5929,7 +5681,7 @@ function draw() {
       const flash = Math.sin(introT * 18) > 0;
       cx.font = 'bold 15px "Orbitron", sans-serif';
       cx.fillStyle = flash ? '#ff0055' : '#ffffff';
-      cx.fillText('🚨 RED ALERT: THE IMPERIAL UFO BATTLE FLEET HAS ARRIVED!', W / 2, H - barH + 34);
+      cx.fillText('­ƒÜ¿ RED ALERT: THE IMPERIAL UFO BATTLE FLEET HAS ARRIVED!', W / 2, H - barH + 34);
 
       cx.font = 'bold 15px "Outfit", sans-serif';
       cx.fillStyle = '#ffd23c';
@@ -5940,7 +5692,7 @@ function draw() {
     cx.textAlign = 'right';
     cx.font = '12px "Orbitron", sans-serif';
     cx.fillStyle = 'rgba(255, 210, 60, 0.85)';
-    cx.fillText('[ SPACE / CLICK TO SKIP PROLOGUE ▶ ]', W - 24, H - barH - 14);
+    cx.fillText('[ SPACE / CLICK TO SKIP PROLOGUE ÔûÂ ]', W - 24, H - barH - 14);
   }
 }
 
