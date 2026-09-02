@@ -1383,7 +1383,7 @@ function getShipSvg(shipId, cols) {
   const uid = 's' + Math.random().toString(36).substr(2, 6);
   
   if (shipId === 'runner') {
-    // ASTRAL SLOOP: Futuristic Cyan Cyber Trimaran Interceptor with Plasma Thrusters
+    // ASTRAL SLOOP: Futuristic Cyan Cyber Trimaran Interceptor with Dual Plasma Thrusters
     return `<svg viewBox="0 0 92 60" width="88" height="56" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="r_hull_${uid}" x1="0" y1="20" x2="80" y2="40" gradientUnits="userSpaceOnUse">
@@ -1425,7 +1425,7 @@ function getShipSvg(shipId, cols) {
   }
 
   if (shipId === 'galleon') {
-    // ARMOURED GALLEON: Heavy Multi-Plate Titanium Ironclad Dreadnought
+    // ARMOURED GALLEON: Heavy Multi-Plate Titanium Ironclad Dreadnought with Heavy Ion Drive
     return `<svg viewBox="0 0 92 60" width="88" height="56" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="g_hull_${uid}" x1="0" y1="28" x2="80" y2="55" gradientUnits="userSpaceOnUse">
@@ -1439,15 +1439,23 @@ function getShipSvg(shipId, cols) {
           <stop offset="40%" stop-color="${c0}"/>
           <stop offset="100%" stop-color="${c2}"/>
         </linearGradient>
+        <linearGradient id="g_jet_${uid}" x1="10" y1="0" x2="0" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="40%" stop-color="#38bdf8"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </linearGradient>
       </defs>
+      <!-- Heavy Cobalt Ion Thruster Wake -->
+      <path d="M10 40L0 42L10 44Z" fill="url(#g_jet_${uid})"/>
+      <path d="M10 47L0 49L10 51Z" fill="url(#g_jet_${uid})"/>
       <!-- Heavy Iron Masts & Crossbeams -->
       <line x1="26" y1="36" x2="26" y2="10" stroke="#0f172a" stroke-width="3"/>
       <line x1="46" y1="36" x2="46" y2="6" stroke="#0f172a" stroke-width="3.5"/>
       <line x1="66" y1="36" x2="66" y2="12" stroke="#0f172a" stroke-width="3"/>
       <!-- Armored Square Sails with Reinforcement Grid -->
-      <path d="M16 14C26 18 26 18 36 14L34 28C24 32 24 32 18 28Z" fill="url(#g_sail_${uid})" stroke="#94a3b8" stroke-width="1.5"/>
-      <path d="M35 10C46 14 46 14 57 10L55 26C44 30 44 30 37 26Z" fill="url(#g_sail_${uid})" stroke="#94a3b8" stroke-width="1.5"/>
-      <path d="M56 16C65 20 65 20 74 16L73 29C64 33 64 33 57 29Z" fill="url(#g_sail_${uid})" stroke="#94a3b8" stroke-width="1.5"/>
+      <path d="M16 14C26 18 26 18 36 14L34 28C24 32 24 32 18 28Z" fill="url(#g_sail_${uid})" stroke="#38bdf8" stroke-width="1.5"/>
+      <path d="M35 10C46 14 46 14 57 10L55 26C44 30 44 30 37 26Z" fill="url(#g_sail_${uid})" stroke="#38bdf8" stroke-width="1.5"/>
+      <path d="M56 16C65 20 65 20 74 16L73 29C64 33 64 33 57 29Z" fill="url(#g_sail_${uid})" stroke="#38bdf8" stroke-width="1.5"/>
       <!-- Armored Heavy Beveled Hull -->
       <path d="M10 32L68 32L82 40L64 52L18 52L10 32Z" fill="url(#g_hull_${uid})" stroke="#ffd23c" stroke-width="2.5"/>
       <!-- Heavy Ram Beakhead & Citadel Bridge -->
@@ -1462,7 +1470,7 @@ function getShipSvg(shipId, cols) {
   }
 
   if (shipId === 'hind') {
-    // GOLDEN HIND: Pure 24K Royal Gilded Treasure Flagship
+    // GOLDEN HIND: Pure 24K Royal Gilded Treasure Flagship with Radiant Starlight Wake
     return `<svg viewBox="0 0 92 60" width="88" height="56" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="h_hull_${uid}" x1="0" y1="28" x2="80" y2="55" gradientUnits="userSpaceOnUse">
@@ -1477,7 +1485,14 @@ function getShipSvg(shipId, cols) {
           <stop offset="70%" stop-color="${c0}"/>
           <stop offset="100%" stop-color="#b45309"/>
         </linearGradient>
+        <linearGradient id="h_jet_${uid}" x1="12" y1="0" x2="0" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="50%" stop-color="#ffd23c"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </linearGradient>
       </defs>
+      <!-- Golden Solar Ether Flame -->
+      <path d="M12 40L0 42L12 44Z" fill="url(#h_jet_${uid})"/>
       <!-- Golden Masts -->
       <line x1="30" y1="36" x2="30" y2="8" stroke="#78350f" stroke-width="3"/>
       <line x1="54" y1="36" x2="54" y2="10" stroke="#78350f" stroke-width="3"/>
@@ -1499,7 +1514,7 @@ function getShipSvg(shipId, cols) {
   }
 
   if (shipId === 'storm') {
-    // SOLAR DREADNOUGHT: Colossal Obsidian Battlecruiser with Purple Nebular Sails
+    // SOLAR DREADNOUGHT: Colossal Obsidian Battlecruiser with Purple Nebular Sails & Void Thruster
     return `<svg viewBox="0 0 92 60" width="88" height="56" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="s_hull_${uid}" x1="0" y1="28" x2="80" y2="55" gradientUnits="userSpaceOnUse">
@@ -1514,7 +1529,15 @@ function getShipSvg(shipId, cols) {
           <stop offset="80%" stop-color="${c1}"/>
           <stop offset="100%" stop-color="#3b0764"/>
         </linearGradient>
+        <linearGradient id="s_jet_${uid}" x1="10" y1="0" x2="0" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="40%" stop-color="#c084fc"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </linearGradient>
       </defs>
+      <!-- Void Magenta Engine Wake -->
+      <path d="M8 38L0 40L8 42Z" fill="url(#s_jet_${uid})"/>
+      <path d="M8 45L0 47L8 49Z" fill="url(#s_jet_${uid})"/>
       <!-- Heavy Void Masts -->
       <line x1="28" y1="36" x2="28" y2="6" stroke="#2e1065" stroke-width="3.5"/>
       <line x1="52" y1="36" x2="52" y2="4" stroke="#2e1065" stroke-width="3.5"/>
@@ -1534,7 +1557,7 @@ function getShipSvg(shipId, cols) {
     </svg>`;
   }
 
-  // SOLAR CORSAIR: Classic Legendary Wooden 3-Mast Pirate Galleon
+  // SOLAR CORSAIR: Classic Legendary Wooden 3-Mast Pirate Galleon with Amber Solar Thrusters
   return `<svg viewBox="0 0 92 60" width="88" height="56" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="c_hull_${uid}" x1="0" y1="28" x2="80" y2="55" gradientUnits="userSpaceOnUse">
@@ -1549,7 +1572,14 @@ function getShipSvg(shipId, cols) {
         <stop offset="75%" stop-color="${c0}"/>
         <stop offset="100%" stop-color="${c1}"/>
       </linearGradient>
+      <linearGradient id="c_jet_${uid}" x1="10" y1="0" x2="0" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="50%" stop-color="#ff9900"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </linearGradient>
     </defs>
+    <!-- Solar Thruster Flame -->
+    <path d="M10 40L0 42L10 44Z" fill="url(#c_jet_${uid})"/>
     <!-- 3 Wooden Masts & Rigging -->
     <line x1="32" y1="36" x2="32" y2="6" stroke="#271304" stroke-width="3"/>
     <line x1="56" y1="36" x2="56" y2="10" stroke="#271304" stroke-width="2.5"/>
@@ -4908,25 +4938,34 @@ function draw() {
     const col1 = (shipCols && shipCols[1]) || '#8c5528';
     const col2 = (shipCols && shipCols[2]) || '#3b1c06';
 
+    // Ambient Glowing Solar Energy Field
+    const shipAura = cx.createRadialGradient(0, 16, 8, 0, 16, 75);
+    shipAura.addColorStop(0, col0 + '25');
+    shipAura.addColorStop(0.5, col1 + '10');
+    shipAura.addColorStop(1, 'rgba(0,0,0,0)');
+    cx.fillStyle = shipAura;
+    cx.beginPath(); cx.ellipse(0, 16, 75, 48, 0, 0, Math.PI * 2); cx.fill();
+
     // -------------------------------------------------------------
     // SHAPE 1: ASTRAL SLOOP (runner) — Sleek Futuristic Aerodynamic Trimaran
     // -------------------------------------------------------------
     if (curShip === 'runner') {
       // Dual Ether Jet Thrusters (Streaming cyan engine plasma!)
       for (const ey of [-8, 8]) {
-        const jg = cx.createLinearGradient(-42, ey, -68, ey);
-        jg.addColorStop(0, '#00ffee');
-        jg.addColorStop(0.4, '#0099ff');
+        const jg = cx.createLinearGradient(-42, ey, -72, ey);
+        jg.addColorStop(0, '#ffffff');
+        jg.addColorStop(0.3, '#00ffee');
+        jg.addColorStop(0.7, '#0099ff');
         jg.addColorStop(1, 'rgba(0,100,255,0)');
         cx.fillStyle = jg;
         cx.beginPath();
         cx.moveTo(-42, ey - 5);
-        cx.lineTo(-65 - Math.random() * 14, ey);
+        cx.lineTo(-68 - Math.random() * 16, ey);
         cx.lineTo(-42, ey + 5);
         cx.closePath();
         cx.fill();
         cx.fillStyle = '#1e2836'; cx.fillRect(-44, ey - 6, 6, 12);
-        cx.strokeStyle = '#00ffee'; cx.lineWidth = 1; cx.strokeRect(-44, ey - 6, 6, 12);
+        cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.2; cx.strokeRect(-44, ey - 6, 6, 12);
       }
 
       // Aerodynamic Forward-Swept Wing Sails
@@ -4946,7 +4985,10 @@ function draw() {
         cx.lineTo(0, myOff + 22);
         cx.closePath();
         cx.fill();
-        cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.5; cx.stroke();
+        cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.8; cx.stroke();
+        // Energy Pulse Circuit on Sail
+        cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.2;
+        cx.beginPath(); cx.moveTo(4, myOff + 6); cx.lineTo(20, myOff + 12); cx.stroke();
         cx.restore();
       }
 
@@ -4959,21 +5001,37 @@ function draw() {
       cx.beginPath();
       cx.moveTo(-42, 10);
       cx.lineTo(38, 10);
-      cx.lineTo(62, 19); // Long Sharp Needle Prow
+      cx.lineTo(64, 19); // Long Sharp Needle Prow
       cx.lineTo(38, 28);
       cx.lineTo(-38, 26);
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#00ffee'; cx.lineWidth = 2; cx.stroke();
+      cx.strokeStyle = '#00ffee'; cx.lineWidth = 2.2; cx.stroke();
 
       // Glowing Crystal Energy Prow Core
-      cx.fillStyle = '#00ffee';
-      cx.beginPath(); cx.arc(56, 19, 4, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(58, 19, 5, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#00ffee'; cx.beginPath(); cx.arc(58, 19, 3.5, 0, Math.PI * 2); cx.fill();
 
     // -------------------------------------------------------------
     // SHAPE 2: ARMOURED GALLEON (galleon) — Heavy Riveted Ironclad Fortress
     // -------------------------------------------------------------
     } else if (curShip === 'galleon') {
+      // Twin Cobalt Heavy Ion Exhaust Thrusters
+      for (const ey of [16, 26]) {
+        const jg = cx.createLinearGradient(-46, ey, -70, ey);
+        jg.addColorStop(0, '#ffffff');
+        jg.addColorStop(0.35, '#38bdf8');
+        jg.addColorStop(0.75, '#0284c7');
+        jg.addColorStop(1, 'rgba(2, 132, 199, 0)');
+        cx.fillStyle = jg;
+        cx.beginPath();
+        cx.moveTo(-46, ey - 4);
+        cx.lineTo(-65 - Math.random() * 12, ey);
+        cx.lineTo(-46, ey + 4);
+        cx.closePath();
+        cx.fill();
+      }
+
       // 4 Heavy Reinforced Masts
       for (const [mx, mh, myOff] of [[-26, 46, -24], [-6, 56, -30], [14, 52, -28], [34, 40, -20]]) {
         cx.strokeStyle = '#1a1f26'; cx.lineWidth = 4;
@@ -4990,7 +5048,7 @@ function draw() {
         cx.lineTo(mx - 14, myOff + 22);
         cx.closePath();
         cx.fill();
-        cx.strokeStyle = '#334155'; cx.lineWidth = 1.5; cx.stroke();
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.5; cx.stroke();
       }
 
       // Massive Heavy Ironclad Fortress Hull (Riveted Steel Plates)
@@ -5024,13 +5082,27 @@ function draw() {
       // Massive Iron Ram Prow Spike
       cx.fillStyle = '#475569';
       cx.beginPath();
-      cx.moveTo(48, 16); cx.lineTo(64, 24); cx.lineTo(44, 28); cx.closePath();
+      cx.moveTo(48, 16); cx.lineTo(66, 24); cx.lineTo(44, 28); cx.closePath();
       cx.fill(); cx.stroke();
 
     // -------------------------------------------------------------
     // SHAPE 3: GOLDEN HIND (hind) — Ornate Royal Flagship with Dragon Prow & Attractor Spire
     // -------------------------------------------------------------
     } else if (curShip === 'hind') {
+      // Golden Starlight Thruster Wake
+      const jg = cx.createLinearGradient(-44, 20, -70, 20);
+      jg.addColorStop(0, '#ffffff');
+      jg.addColorStop(0.4, '#ffd23c');
+      jg.addColorStop(0.8, '#f59e0b');
+      jg.addColorStop(1, 'rgba(245, 158, 11, 0)');
+      cx.fillStyle = jg;
+      cx.beginPath();
+      cx.moveTo(-44, 14);
+      cx.lineTo(-68 - Math.random() * 14, 20);
+      cx.lineTo(-44, 26);
+      cx.closePath();
+      cx.fill();
+
       // 3 Golden Masts with Royal Crown Finials
       for (const [mx, mh, myOff] of [[-18, 54, -30], [12, 62, -36], [34, 46, -24]]) {
         cx.strokeStyle = col2; cx.lineWidth = 3.5;
@@ -5049,14 +5121,14 @@ function draw() {
         cx.lineTo(mx - 14, myOff + 26);
         cx.closePath();
         cx.fill();
-        cx.strokeStyle = col0; cx.lineWidth = 2; cx.stroke();
+        cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.8; cx.stroke();
       }
 
       // Gold Attractor Beacon (Spire radiating magnetic waves)
       cx.save(); cx.translate(12, -42);
       cx.fillStyle = col0;
       cx.beginPath(); cx.arc(0, 0, 4 + Math.sin(t * 8) * 1.5, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = col0 + '66'; cx.lineWidth = 1.5;
+      cx.strokeStyle = col0 + '88'; cx.lineWidth = 1.5;
       cx.beginPath(); cx.arc(0, 0, 10 + Math.sin(t * 8) * 4, 0, Math.PI * 2); cx.stroke();
       cx.restore();
 
@@ -5075,18 +5147,34 @@ function draw() {
       cx.quadraticCurveTo(-50, 24, -46, 10);
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = col0; cx.lineWidth = 2.5; cx.stroke();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.5; cx.stroke();
 
       // Golden Dragon Figurehead
       cx.fillStyle = col0;
       cx.beginPath();
-      cx.moveTo(48, 12); cx.lineTo(60, 8); cx.lineTo(56, 20); cx.closePath();
+      cx.moveTo(48, 12); cx.lineTo(62, 8); cx.lineTo(56, 20); cx.closePath();
       cx.fill();
 
     // -------------------------------------------------------------
     // SHAPE 4: SOLAR DREADNOUGHT (storm) — Colossal Double-Deck Titan Warship
     // -------------------------------------------------------------
     } else if (curShip === 'storm') {
+      // Dark Matter Void Thruster Exhaust
+      for (const ey of [14, 28]) {
+        const jg = cx.createLinearGradient(-48, ey, -72, ey);
+        jg.addColorStop(0, '#ffffff');
+        jg.addColorStop(0.35, '#c084fc');
+        jg.addColorStop(0.8, '#581c87');
+        jg.addColorStop(1, 'rgba(88, 28, 135, 0)');
+        cx.fillStyle = jg;
+        cx.beginPath();
+        cx.moveTo(-48, ey - 4);
+        cx.lineTo(-70 - Math.random() * 14, ey);
+        cx.lineTo(-48, ey + 4);
+        cx.closePath();
+        cx.fill();
+      }
+
       // 3 Thunder Masts with Dark Ribbed Void Sails
       for (const [mx, mh, myOff] of [[-22, 58, -32], [8, 66, -38], [34, 50, -26]]) {
         cx.strokeStyle = col2; cx.lineWidth = 4;
@@ -5104,12 +5192,12 @@ function draw() {
         cx.lineTo(mx - 16, myOff + 26);
         cx.closePath();
         cx.fill();
-        cx.strokeStyle = col0; cx.lineWidth = 2; cx.stroke();
+        cx.strokeStyle = '#e9d5ff'; cx.lineWidth = 2; cx.stroke();
       }
 
       // Purple Lightning Arc between masts
-      if (Math.random() < 0.35) {
-        cx.strokeStyle = col0; cx.lineWidth = 1.8;
+      if (Math.random() < 0.4) {
+        cx.strokeStyle = '#e9d5ff'; cx.lineWidth = 2;
         cx.beginPath();
         cx.moveTo(-22, -40);
         cx.lineTo(-6, -46 + (Math.random() - 0.5) * 6);
@@ -5128,12 +5216,12 @@ function draw() {
       cx.lineTo(-20, 6);
       cx.lineTo(-20, 10);
       cx.lineTo(40, 10);
-      cx.lineTo(60, 20); // Spiked Obsidian Ram
+      cx.lineTo(62, 20); // Spiked Obsidian Ram
       cx.lineTo(46, 36);
       cx.lineTo(-48, 36);
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = col0; cx.lineWidth = 2.5; cx.stroke();
+      cx.strokeStyle = col0; cx.lineWidth = 2.8; cx.stroke();
 
       // Lower Broadside Gun Ports
       cx.fillStyle = col2;
@@ -5146,6 +5234,20 @@ function draw() {
     // SHAPE 5: SOLAR CORSAIR (cutter) — Classic Agile Pirate Galleon
     // -------------------------------------------------------------
     } else {
+      // Golden Ether Solar Thruster Wake
+      const jg = cx.createLinearGradient(-42, 21, -66, 21);
+      jg.addColorStop(0, '#ffffff');
+      jg.addColorStop(0.35, '#ffaa00');
+      jg.addColorStop(0.8, '#ff4400');
+      jg.addColorStop(1, 'rgba(255, 68, 0, 0)');
+      cx.fillStyle = jg;
+      cx.beginPath();
+      cx.moveTo(-42, 16);
+      cx.lineTo(-64 - Math.random() * 12, 21);
+      cx.lineTo(-42, 26);
+      cx.closePath();
+      cx.fill();
+
       // 3 Classic Masts & Billowing Solar Canvas
       for (const [mx, mh, myOff] of [[-18, 52, -28], [12, 60, -34], [34, 44, -22]]) {
         cx.strokeStyle = '#26160c'; cx.lineWidth = 3;
@@ -5162,7 +5264,7 @@ function draw() {
         cx.lineTo(mx - 12, myOff + 26);
         cx.closePath();
         cx.fill();
-        cx.strokeStyle = col0; cx.lineWidth = 1.5; cx.stroke();
+        cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.6; cx.stroke();
       }
 
       // Classic Wooden Galleon Hull
@@ -5179,7 +5281,7 @@ function draw() {
       cx.quadraticCurveTo(-48, 26, -44, 12);
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#1e0c02'; cx.lineWidth = 2.5; cx.stroke();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.5; cx.stroke();
     }
 
     // Dynamic Themed Pirate Flag for each Unlocked Skin!
