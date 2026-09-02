@@ -95,8 +95,15 @@
   .lb .empty { opacity: 0.6; font-size: 0.92rem; padding: 0.5rem; }
   .lb.small { max-width: 420px; margin-top: 1.2rem; }
   
+  #shop.overlay {
+    justify-content: flex-start;
+    padding-top: 36px;
+    padding-bottom: 70px;
+    overflow-y: auto;
+  }
+  #shop h1 { margin-top: 0; font-size: clamp(1.8rem, 5vw, 2.8rem); }
   #shopwallet { color:#ffd23c; font-weight:bold; font-size:1.35rem; margin-bottom:0.4rem; font-family:'Orbitron', sans-serif; }
-  #shopBody { width:100%; max-width:580px; }
+  #shopBody { width:100%; max-width:580px; margin: 0 auto; }
   #shop h2 { color:#3fd5ff; font-size:1.1rem; margin:1.3rem 0 0.6rem; letter-spacing:1px; text-align:left; font-family:'Orbitron', sans-serif; }
   .shopitem { display:flex; align-items:center; gap:0.9rem; background:rgba(255,255,255,0.05);
     border:1px solid rgba(255, 210, 60, 0.2); border-radius:14px; padding:0.7rem 0.9rem; margin-bottom:0.6rem; text-align:left; }
@@ -1105,14 +1112,10 @@ function doSpin() {
 
 function buildShop() {
   renderWallet();
-  let h = '<h2>🎰 PIRATE TREASURE CHEST — UFO Boss Loot</h2>';
-  h += `<div class="shopitem"><div class="ic">🎰</div>` +
-    `<div class="info"><div class="t">Unlock Space Treasure Chest</div>` +
-    `<div class="d">Win gold dubloons, alien plasma cores… or Mega Jackpot!</div>` +
-    `<div class="lv" id="spinResult">You possess ${SAVE.data.spins} 🎰 chests</div></div>` +
-    `<button data-buy="spin" data-key="1"${SAVE.data.spins > 0 ? '' : ' disabled'}>🎰 UNLOCK</button></div>`;
+  let h = '';
   
-  h += '<h2>⚙️ SOLAR GALLEON UPGRADES — Spend Coins 🪙</h2>';
+  // 1. COIN UPGRADES AT THE TOP
+  h += '<h2>⚙️ SOLAR GALLEON UPGRADES — Buy with Coins 🪙</h2>';
   for (const key in UPG) {
     const u = UPG[key], lv = SAVE.data.upg[key], maxed = lv >= u.max;
     const cost = maxed ? 0 : u.cost(lv);
@@ -1123,6 +1126,14 @@ function buildShop() {
       (maxed ? `<span class="maxed">✔ MAXED</span>` : `<button data-buy="upg" data-key="${key}"${can ? '' : ' disabled'}>🪙 ${cost}</button>`) +
       `</div>`;
   }
+
+  // 2. PIRATE TREASURE CHEST
+  h += '<h2>🎰 PIRATE TREASURE CHEST — UFO Boss Loot 🎟️</h2>';
+  h += `<div class="shopitem"><div class="ic">🎰</div>` +
+    `<div class="info"><div class="t">Unlock Space Treasure Chest</div>` +
+    `<div class="d">Win gold dubloons, alien plasma cores… or Mega Jackpot!</div>` +
+    `<div class="lv" id="spinResult">You possess ${SAVE.data.spins} 🎰 chests</div></div>` +
+    `<button data-buy="spin" data-key="1"${SAVE.data.spins > 0 ? '' : ' disabled'}>🎰 UNLOCK</button></div>`;
   
   h += '<h2>🚢 PIRATE FLEET SHIPS — Spend Plasma Cores 🎟️</h2>';
   for (const s of SHIPS) {
