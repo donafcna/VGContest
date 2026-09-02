@@ -88,15 +88,22 @@
     transform: translateY(-1px) !important;
   }
 
-  .hidden { display: none !important; }
+  .hidden, .overlay.hidden {
+    display: none !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
   
   #musicbtn, #pausebtn {
-    position: fixed; top: 16px; z-index: 6;
+    position: fixed; top: 16px; z-index: 60;
     background: rgba(6, 14, 30, 0.85); color: #ffd23c;
     border: 1px solid rgba(255, 210, 60, 0.35); border-radius: 10px;
     font-size: 1.2rem; padding: 8px 14px; cursor: pointer;
     backdrop-filter: blur(6px);
     transition: background 0.2s, transform 0.15s;
+    touch-action: manipulation;
+    pointer-events: auto;
   }
   #musicbtn:hover, #pausebtn:hover { background: rgba(255, 210, 60, 0.3); transform: scale(1.05); }
   #musicbtn { right: 16px; }
@@ -615,8 +622,8 @@ function switchNetTab(mode) {
 
   <input id="pname" type="hidden" value="Noël">
   <div class="btnrow">
-    <button id="startbtn">⚓ SET SOLAR SAIL!</button>
-    <button id="hangarbtn" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ PIRATE HANGAR &amp; UPGRADES</button>
+    <button id="startbtn" onclick="startSolarSail()">⚓ SET SOLAR SAIL!</button>
+    <button id="hangarbtn" onclick="openHangar()" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ PIRATE HANGAR &amp; UPGRADES</button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.1rem; color:#ffd23c; font-weight:bold"></p>
   <p id="bestline" style="margin-top:0.2rem; font-size:1rem; color:#ffd23c; font-weight:bold; min-height:1.2em"></p>
@@ -2502,8 +2509,8 @@ try {
 } catch(e) {}
 
 // Start Game Handler
-document.getElementById('startbtn').addEventListener('click', () => {
-  if (netMode === 'client') {
+window.startSolarSail = function() {
+  if (window.netMode === 'client') {
     alert('You are in a friend\'s room! Waiting for the Host Captain to launch the fleet.');
     return;
   }
@@ -2511,7 +2518,7 @@ document.getElementById('startbtn').addEventListener('click', () => {
   scoreSubmitted = false;
   applyLoadout();
 
-  if (netMode === 'host') {
+  if (window.netMode === 'host') {
     isOnline = true;
     myPlayerIndex = 0;
     fleetCount = Math.max(1, hostSquadData.length);
@@ -2526,7 +2533,7 @@ document.getElementById('startbtn').addEventListener('click', () => {
       fleetCount: fleetCount,
       fleetConfig: hostSquadData
     });
-  } else if (netMode === 'couch') {
+  } else if (window.netMode === 'couch') {
     const p1Name = (document.getElementById('pnameSolo') && document.getElementById('pnameSolo').value.trim()) || 'Noël';
     const p1Ship = (document.getElementById('pshipSolo') && document.getElementById('pshipSolo').value) || 'cutter';
     playerName = p1Name.slice(0, 14);
@@ -2570,14 +2577,18 @@ document.getElementById('startbtn').addEventListener('click', () => {
   balls = []; eballs = []; forts = []; gliders = []; mines = []; coins = []; powerups = []; parts = [];
   boss = null; bossT = 26; score = 0; coinsN = 0; level = 1; t = 0;
   
-  document.getElementById('menu').classList.add('hidden');
-  document.getElementById('pausebtn').style.display = 'block';
+  const m = document.getElementById('menu');
+  if (m) m.classList.add('hidden');
+  const pb = document.getElementById('pausebtn');
+  if (pb) pb.style.display = 'block';
   initAudio();
   state = 'intro';
-  if (netMode === 'host' || netMode === 'client') {
+  if (window.netMode === 'host' || window.netMode === 'client') {
     startCombat(); // jump straight into battle for multiplayer!
   }
-});
+};
+const startBtnEl = document.getElementById('startbtn');
+if (startBtnEl) startBtnEl.addEventListener('click', window.startSolarSail);
 
 function togglePause() {
   if (state === 'play') {
@@ -3014,17 +3025,26 @@ document.getElementById('spinCloseBtn').addEventListener('click', () => {
   closeSpinModal();
 });
 
-document.getElementById('hangarbtn').addEventListener('click', () => {
+window.openHangar = function() {
   initAudio();
-  document.getElementById('menu').classList.add('hidden');
-  document.getElementById('shop').classList.remove('hidden');
+  const m = document.getElementById('menu');
+  if (m) m.classList.add('hidden');
+  const s = document.getElementById('shop');
+  if (s) s.classList.remove('hidden');
   buildShop();
-});
-document.getElementById('shopclose').addEventListener('click', () => {
-  document.getElementById('shop').classList.add('hidden');
-  document.getElementById('menu').classList.remove('hidden');
+};
+window.closeShop = function() {
+  const s = document.getElementById('shop');
+  if (s) s.classList.add('hidden');
+  const m = document.getElementById('menu');
+  if (m) m.classList.remove('hidden');
   renderWallet();
-});
+};
+
+const hBtn = document.getElementById('hangarbtn');
+if (hBtn) hBtn.addEventListener('click', window.openHangar);
+const sCloseBtn = document.getElementById('shopclose');
+if (sCloseBtn) sCloseBtn.addEventListener('click', window.closeShop);
 
 (function () {
   try {
