@@ -1942,6 +1942,31 @@ function startSolarSail(e) {
   applyLoadout();
   ship.hp = maxHp; ship.inv = 0; ship.x = W * 0.22; ship.y = H * 0.5;
   ship.vx = 0; ship.vy = 0; ship.pitch = 0;
+
+  introT = 0;
+  introShot1 = false;
+  introShot2 = false;
+  wreckage = [];
+  shieldShards = [];
+  introUfos = [
+    {
+      type: 'tie_fighter',
+      name: 'Imperial TIE Heavy Fighter',
+      x: W * 0.84, y: H * 0.35, targetX: W * 0.58, targetY: H * 0.38,
+      vx: -180, vy: 20, pitch: 0.12, roll: 0.15,
+      col: '#ff0033', w: 74, h: 56, saucerSpin: 0,
+      shield: 1.0, dead: false, engineGlow: 1.0
+    },
+    {
+      type: 'interceptor',
+      name: 'Imperial Plasma Interceptor',
+      x: W * 0.90, y: H * 0.65, targetX: W * 0.64, targetY: H * 0.62,
+      vx: -190, vy: -20, pitch: -0.12, roll: -0.15,
+      col: '#00ffee', w: 74, h: 52, saucerSpin: 0,
+      shield: 1.0, dead: false, engineGlow: 1.0
+    }
+  ];
+  storySectorAnnounced = 1;
   tokensRun = 0; killsRun = 0; spinsRun = 0;
   balls = []; eballs = []; forts = []; gliders = []; mines = []; coins = []; powerups = []; parts = [];
   boss = null; bossT = 26; score = 0; coinsN = 0; level = 1; t = 0;
@@ -1951,7 +1976,7 @@ function startSolarSail(e) {
   const pb = document.getElementById('pausebtn');
   if (pb) pb.style.display = 'block';
   initAudio();
-  startCombat();
+  state = 'intro';
 }
 window.startSolarSail = startSolarSail;
 
@@ -4232,59 +4257,93 @@ function draw() {
   }
 
   // 5.5 Render Intro UFO Scouts & Fractured Wreckage
+  // 5.5 Render Intro Imperial Star Wars Fighters & Fractured Wreckage
   if (state === 'intro') {
     for (const u of introUfos) {
       if (!u.dead) {
         cx.save();
         cx.translate(u.x, u.y);
         cx.rotate(u.pitch || 0);
-        
-        const sg = cx.createRadialGradient(0, 0, 10, 0, 0, u.w * 0.55);
-        sg.addColorStop(0, u.col + 'aa');
-        sg.addColorStop(0.6, u.col + '33');
-        sg.addColorStop(1, 'rgba(0,0,0,0)');
-        cx.fillStyle = sg;
-        cx.beginPath(); cx.ellipse(0, 0, u.w * 0.55, u.h * 0.52, 0, 0, Math.PI * 2); cx.fill();
 
-        const tg = cx.createLinearGradient(u.w * 0.35, 0, u.w * 0.75, 0);
-        tg.addColorStop(0, u.col);
-        tg.addColorStop(1, 'rgba(0,0,0,0)');
-        cx.fillStyle = tg;
-        cx.beginPath();
-        cx.moveTo(u.w * 0.35, -8);
-        cx.lineTo(u.w * 0.75 + Math.sin(t * 16) * 10, 0);
-        cx.lineTo(u.w * 0.35, 8);
-        cx.closePath();
-        cx.fill();
+        if (u.type === 'tie_fighter') {
+          // IMPERIAL TIE HEAVY FIGHTER
+          const bank = Math.sin(t * 8 + u.x * 0.05) * 0.15;
+          cx.rotate(bank);
 
-        const dg = cx.createLinearGradient(0, -u.h * 0.5, 0, u.h * 0.5);
-        dg.addColorStop(0, '#e8f1fa');
-        dg.addColorStop(0.3, '#738499');
-        dg.addColorStop(0.7, '#232b36');
-        dg.addColorStop(1, '#0e1217');
-        cx.fillStyle = dg;
-        cx.beginPath(); cx.ellipse(0, 0, u.w * 0.48, u.h * 0.34, 0, 0, Math.PI * 2); cx.fill();
-        cx.strokeStyle = '#0a0e13'; cx.lineWidth = 2.5; cx.stroke();
+          // Central Spherical Armored Cockpit Ball
+          const cg = cx.createRadialGradient(-6, -6, 3, 0, 0, 22);
+          cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.35, '#475569'); cg.addColorStop(1, '#0f172a');
+          cx.fillStyle = cg;
+          cx.beginPath(); cx.arc(0, 0, 20, 0, Math.PI * 2); cx.fill();
+          cx.strokeStyle = '#020617'; cx.lineWidth = 3; cx.stroke();
 
-        const ckg = cx.createRadialGradient(-6, -8, 2, 0, -4, 16);
-        ckg.addColorStop(0, '#ffffff');
-        ckg.addColorStop(0.4, u.col);
-        ckg.addColorStop(1, '#02240e');
-        cx.fillStyle = ckg;
-        cx.beginPath(); cx.ellipse(0, -6, 16, 11, 0, 0, Math.PI * 2); cx.fill();
-        cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.5; cx.stroke();
+          // Octagonal Cockpit Viewport with Pulsing Ruby Aiming Core
+          cx.fillStyle = '#0f172a';
+          cx.beginPath(); cx.arc(-7, 0, 8, 0, Math.PI * 2); cx.fill();
+          cx.fillStyle = '#ff0033';
+          cx.beginPath(); cx.arc(-7, 0, 4 + Math.sin(t * 14) * 0.8, 0, Math.PI * 2); cx.fill();
 
-        for (let k = 0; k < 6; k++) {
-          const a = (k / 6) * Math.PI * 2 + u.saucerSpin;
-          const lx = Math.cos(a) * (u.w * 0.38);
-          const ly = Math.sin(a) * (u.h * 0.22);
-          cx.fillStyle = (k % 2 === 0) ? '#ffffff' : u.col;
-          cx.beginPath(); cx.arc(lx, ly, 3.5, 0, Math.PI * 2); cx.fill();
+          // Heavy Twin Chin Red Laser Blaster Barrels
+          for (const cy of [-6, 6]) {
+            cx.fillStyle = '#0f172a';
+            cx.fillRect(-24, cy - 2, 12, 4);
+            cx.fillStyle = '#ff0033';
+            cx.fillRect(-26, cy - 1.5, 3, 3);
+          }
+
+          // Massive Vertical Hexagonal Solar Radiator Panels
+          for (const wx of [-22, 22]) {
+            cx.fillStyle = '#1e293b';
+            cx.strokeStyle = '#64748b'; cx.lineWidth = 2.5;
+            cx.beginPath();
+            cx.moveTo(wx, -26);
+            cx.lineTo(wx - 8, -34);
+            cx.lineTo(wx - 8, 34);
+            cx.lineTo(wx, 26);
+            cx.closePath();
+            cx.fill(); cx.stroke();
+
+            // Photovoltaic Crimson Power Grid Rails
+            cx.strokeStyle = '#ff0033'; cx.lineWidth = 1.2;
+            cx.beginPath();
+            cx.moveTo(wx - 4, -24); cx.lineTo(wx - 4, 24);
+            cx.stroke();
+          }
+
+          // Twin Rear Ion Thruster Plasma Flares
+          cx.fillStyle = '#00ffee';
+          cx.beginPath(); cx.arc(20, -5, 4.5 + Math.sin(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
+          cx.beginPath(); cx.arc(20, 5, 4.5 + Math.cos(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
+
+        } else {
+          // IMPERIAL DAGGER INTERCEPTOR
+          const bank = Math.sin(t * 7 + u.x * 0.05) * 0.18;
+          cx.rotate(bank);
+
+          const ig = cx.createLinearGradient(-32, 0, 24, 0);
+          ig.addColorStop(0, '#38bdf8'); ig.addColorStop(0.4, '#0284c7'); ig.addColorStop(1, '#082f49');
+          cx.fillStyle = ig;
+          cx.beginPath();
+          cx.moveTo(-32, 0);               // Forward Arrow Prow
+          cx.lineTo(-12, -22);             // Upper Wing Fin
+          cx.lineTo(22, -14);              // Upper Rear
+          cx.lineTo(14, 0);                // Engine Core
+          cx.lineTo(22, 14);               // Lower Rear
+          cx.lineTo(-12, 22);              // Lower Wing Fin
+          cx.closePath();
+          cx.fill();
+          cx.strokeStyle = '#00ffee'; cx.lineWidth = 2; cx.stroke();
+
+          // Glowing Cyan Plasma Viewport
+          cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-8, 0, 5, 0, Math.PI * 2); cx.fill();
+          cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.5;
+          cx.beginPath(); cx.arc(-8, 0, 8 + Math.sin(t * 16) * 1.5, 0, Math.PI * 2); cx.stroke();
+
+          // Rear Ion Plumes
+          cx.fillStyle = '#38bdf8';
+          cx.beginPath(); cx.arc(22, 0, 5 + Math.sin(t * 22) * 2, 0, Math.PI * 2); cx.fill();
         }
 
-        cx.fillStyle = '#1b222c';
-        cx.fillRect(-18, u.h * 0.22, 10, 4);
-        cx.fillRect(8, u.h * 0.22, 10, 4);
         cx.restore();
       }
     }
@@ -5664,7 +5723,7 @@ function draw() {
 
       cx.font = '15px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('"A lone wooden Solar Pirate Galleon sails deep space. Two Imperial Alien UFO scouts advance on intercept vector..."', W / 2, H - barH + 64);
+      cx.fillText('"A lone wooden Solar Pirate Galleon sails deep space. Two Imperial TIE Starfighters advance on intercept vector..."', W / 2, H - barH + 64);
     } else if (introT < 3.8) {
       // Stage 2: Action-Cam Cannon Zoom & Acrobatic Looping Broadside
       cx.font = 'bold 15px "Orbitron", sans-serif';
@@ -5673,16 +5732,16 @@ function draw() {
 
       cx.font = '15px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('"Firing twin corkscrew cannonballs... Looping acrobatically through the cosmic void!"', W / 2, H - barH + 64);
+      cx.fillText('"Firing twin corkscrew cannonballs... Looping acrobatically to blast the incoming Imperial Fighters!"', W / 2, H - barH + 64);
     } else if (introT < 5.5) {
       // Stage 3: Simultaneous Dual Explosions
       cx.font = 'bold 15px "Orbitron", sans-serif';
       cx.fillStyle = '#00dfa2';
-      cx.fillText('💥 DIRECT HITS! BOTH IMPERIAL SCOUTS VAPORIZED!', W / 2, H - barH + 34);
+      cx.fillText('💥 DIRECT HITS! BOTH IMPERIAL FIGHTERS VAPORIZED!', W / 2, H - barH + 34);
 
       cx.font = '15px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('"Alien reactor cores catastrophically overload in twin plasma blast waves! Salvaging dubloons..."', W / 2, H - barH + 64);
+      cx.fillText('"Imperial ion cores catastrophically overload in twin plasma blast waves! Salvaging dubloons..."', W / 2, H - barH + 64);
     } else {
       // Stage 4: Massive Alien Armada Inbound
       const flash = Math.sin(introT * 18) > 0;
