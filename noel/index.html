@@ -2518,10 +2518,10 @@ function update(dt) {
   // CINEMATIC HIGH-OCTANE STORYLINE PROLOGUE LOGIC
   if (state === 'intro') {
     introT += dt;
-    const targetX = W * 0.22;
-    ship.x += (targetX - ship.x) * Math.min(1, dt * 2.5);
+    const targetX = introT >= 6.4 ? W * 0.36 : W * 0.22;
+    ship.x += (targetX - ship.x) * Math.min(1, dt * 3.2);
 
-    // Evasive Flight Dynamics & Acrobatic Rolls
+    // Evasive Flight Dynamics, Acrobatic Rolls & Warp Acceleration
     if (introT < 2.4) {
       // High-speed evasive wave
       ship.y = H * 0.5 + Math.sin(introT * 3.2) * 26;
@@ -2531,6 +2531,10 @@ function update(dt) {
       const rollP = (introT - 2.4) / 1.8;
       ship.y = H * 0.5 + Math.sin(introT * 2.0) * 14;
       ship.pitch = Math.sin(rollP * Math.PI * 2) * 0.35;
+    } else if (introT >= 6.4) {
+      // Surging directly forward into the battle!
+      ship.y = H * 0.5 + Math.sin(introT * 4.0) * 10;
+      ship.pitch = 0.08;
     } else {
       ship.y = H * 0.5 + Math.sin(introT * 1.5) * 12;
       ship.pitch = Math.sin(introT * 1.5) * 0.04;
@@ -2817,25 +2821,37 @@ function update(dt) {
       if (p.life <= 0) parts.splice(i, 1);
     }
 
-    // Act IV: Massive Imperial Armada Advances Towards Player!
+    // Act IV: Massive Imperial Armada & Pirate Galleon Charge Head-On Into Battle!
     if (introT >= 6.4) {
       if (introArmada.length === 0) {
         sfx('incoming');
-        addShake(30);
-        hurtFlash = 0.6;
+        addShake(22);
         // Spawn full battle fleet advancing aggressively towards player!
         introArmada = [
           // Heavy Imperial War Cruiser in the center
-          { type: 'cruiser', x: W + 80, y: H * 0.48, vx: -360, vy: 0, w: 140, h: 72, col: '#00ffaa', name: 'IMPERIAL WAR-CRUISER' },
+          { type: 'cruiser', x: W + 80, y: H * 0.48, vx: -380, vy: 0, w: 140, h: 72, col: '#00ffaa', name: 'IMPERIAL WAR-CRUISER' },
           // 2 Heavy Gunship Escorts flanking
-          { type: 'gunship', x: W + 180, y: H * 0.22, vx: -420, vy: 16, w: 112, h: 58, col: '#00e5ff', name: 'CYBER-EMP GUNSHIP' },
-          { type: 'gunship', x: W + 180, y: H * 0.74, vx: -420, vy: -16, w: 112, h: 58, col: '#ff4400', name: 'INFERNO GUNSHIP' },
+          { type: 'gunship', x: W + 180, y: H * 0.22, vx: -440, vy: 16, w: 112, h: 58, col: '#00e5ff', name: 'CYBER-EMP GUNSHIP' },
+          { type: 'gunship', x: W + 180, y: H * 0.74, vx: -440, vy: -16, w: 112, h: 58, col: '#ff4400', name: 'INFERNO GUNSHIP' },
           // 4 Imperial Starfighters in V-formation charging forward
-          { type: 'fighter', x: W + 280, y: H * 0.12, vx: -480, vy: 30, w: 64, h: 46, col: '#ff0033' },
-          { type: 'fighter', x: W + 310, y: H * 0.36, vx: -500, vy: 10, w: 64, h: 46, col: '#38bdf8' },
-          { type: 'fighter', x: W + 310, y: H * 0.60, vx: -500, vy: -10, w: 64, h: 46, col: '#38bdf8' },
-          { type: 'fighter', x: W + 280, y: H * 0.86, vx: -480, vy: -30, w: 64, h: 46, col: '#ff0033' }
+          { type: 'fighter', x: W + 280, y: H * 0.12, vx: -500, vy: 30, w: 64, h: 46, col: '#ff0033' },
+          { type: 'fighter', x: W + 310, y: H * 0.36, vx: -520, vy: 10, w: 64, h: 46, col: '#38bdf8' },
+          { type: 'fighter', x: W + 310, y: H * 0.60, vx: -520, vy: -10, w: 64, h: 46, col: '#38bdf8' },
+          { type: 'fighter', x: W + 280, y: H * 0.86, vx: -500, vy: -30, w: 64, h: 46, col: '#ff0033' }
         ];
+      }
+
+      // Galleon Warp Thruster Plasma Stream charging into the fight!
+      for (let p = 0; p < 3; p++) {
+        parts.push({
+          x: ship.x - 50,
+          y: ship.y + 14 + (Math.random() - 0.5) * 16,
+          vx: -350 - Math.random() * 150,
+          vy: (Math.random() - 0.5) * 20,
+          life: 0.4, maxLife: 0.4,
+          col: '#ffd23c',
+          size: 6 + Math.random() * 6
+        });
       }
 
       // Advance all armada warships towards the player
@@ -2857,8 +2873,8 @@ function update(dt) {
       }
     }
 
-    // End of storyline -> launch smoothly into combat!
-    if (introT >= 8.8) {
+    // End of storyline -> charge seamlessly into combat!
+    if (introT >= 8.2) {
       startCombat();
     }
     return;
