@@ -439,12 +439,67 @@
   <h1>🏴‍☠️ SPACE PIRATES</h1>
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
   Sail through deep cosmic space and blast <b>Star Wars-style alien UFO squadrons &amp; Motherships</b> with heavy naval broadsides!</p>
-  <div class="keys">
-    🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM in any direction</b> • <b>LEFT CLICK</b> or <b>SPACE</b> = Fire Broadside 💥<br>
-    🎮 <b>Navigation</b>: <b>W A S D</b> or <b>Arrow Keys</b> (Solar Ether Flight &amp; Speed Thrusters)<br>
-    📱 <b>Mobile Touch</b>: Drag anywhere to steer &amp; lock-on auto fire!
+  <!-- 👥 1-3 PLAYER FLEET CO-OP SQUAD SYSTEM -->
+  <div id="fleetSetupBox" style="background: rgba(15,23,42,0.85); border: 2px solid rgba(255,210,60,0.4); border-radius: 16px; padding: 14px 18px; margin: 12px auto; max-width: 520px; text-align: left; box-shadow: 0 0 24px rgba(0,0,0,0.7);">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+      <span style="font-weight:900; color:#ffd23c; font-size:1.02rem; font-family:'Orbitron',sans-serif; letter-spacing:0.5px">👥 CO-OP FLEET SQUAD</span>
+      <div style="display:flex; gap:6px;" id="fleetTabContainer">
+        <button type="button" class="fleet-tab active" data-players="1" style="padding:4px 12px; font-size:0.8rem; background:linear-gradient(135deg,#ffd23c,#ff9900); color:#000; border-radius:6px; font-weight:bold; cursor:pointer;">1 Solo</button>
+        <button type="button" class="fleet-tab" data-players="2" style="padding:4px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1); color:#cfe4ff; border-radius:6px; font-weight:bold; cursor:pointer;">2 Duo</button>
+        <button type="button" class="fleet-tab" data-players="3" style="padding:4px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1); color:#cfe4ff; border-radius:6px; font-weight:bold; cursor:pointer;">3 Trio 🚀</button>
+      </div>
+    </div>
+
+    <!-- Player 1 (Captain) -->
+    <div class="player-slot" id="slotP1" style="display:flex; align-items:center; gap:8px; margin-bottom:8px; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px; border-left:4px solid #ffd23c;">
+      <span style="font-weight:bold; color:#ffd23c; font-size:0.85rem; width:88px; font-family:'Orbitron',sans-serif">P1 (Captain):</span>
+      <input id="pname1" placeholder="Captain Noel" maxlength="14" style="flex:1; padding:6px 10px; font-size:0.88rem; margin:0;" value="Noël">
+      <select id="pship1" style="background:#0f172a; color:#ffd23c; border:1px solid #ffd23c; border-radius:8px; padding:6px 8px; font-size:0.8rem; font-family:'Orbitron',sans-serif">
+        <option value="cutter">Solar Corsair ⛵</option>
+        <option value="galleon">Armoured Galleon 🛡️</option>
+        <option value="runner">Astral Sloop ⚡</option>
+        <option value="hind">Golden Hind 👑</option>
+        <option value="storm">Solar Dreadnought 🌌</option>
+      </select>
+    </div>
+
+    <!-- Player 2 (Friend 1) -->
+    <div class="player-slot" id="slotP2" style="display:none; align-items:center; gap:8px; margin-bottom:8px; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px; border-left:4px solid #00ffee;">
+      <span style="font-weight:bold; color:#00ffee; font-size:0.85rem; width:88px; font-family:'Orbitron',sans-serif">P2 (Wingman):</span>
+      <input id="pname2" placeholder="Friend 1 Name" maxlength="14" style="flex:1; padding:6px 10px; font-size:0.88rem; margin:0;" value="First Mate">
+      <select id="pship2" style="background:#0f172a; color:#00ffee; border:1px solid #00ffee; border-radius:8px; padding:6px 8px; font-size:0.8rem; font-family:'Orbitron',sans-serif">
+        <option value="runner">Astral Sloop ⚡</option>
+        <option value="cutter">Solar Corsair ⛵</option>
+        <option value="galleon">Armoured Galleon 🛡️</option>
+        <option value="hind">Golden Hind 👑</option>
+        <option value="storm">Solar Dreadnought 🌌</option>
+      </select>
+    </div>
+
+    <!-- Player 3 (Friend 2) -->
+    <div class="player-slot" id="slotP3" style="display:none; align-items:center; gap:8px; margin-bottom:8px; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px; border-left:4px solid #c084fc;">
+      <span style="font-weight:bold; color:#c084fc; font-size:0.85rem; width:88px; font-family:'Orbitron',sans-serif">P3 (Gunner):</span>
+      <input id="pname3" placeholder="Friend 2 Name" maxlength="14" style="flex:1; padding:6px 10px; font-size:0.88rem; margin:0;" value="Gunner">
+      <select id="pship3" style="background:#0f172a; color:#c084fc; border:1px solid #c084fc; border-radius:8px; padding:6px 8px; font-size:0.8rem; font-family:'Orbitron',sans-serif">
+        <option value="storm">Solar Dreadnought 🌌</option>
+        <option value="cutter">Solar Corsair ⛵</option>
+        <option value="galleon">Armoured Galleon 🛡️</option>
+        <option value="runner">Astral Sloop ⚡</option>
+        <option value="hind">Golden Hind 👑</option>
+      </select>
+    </div>
+
+    <!-- Fleet Controls Guide & Room Invite -->
+    <div style="font-size:0.78rem; color:#94a3b8; line-height:1.45; margin-top:8px; border-top:1px solid rgba(255,255,255,0.1); padding-top:8px;">
+      <div>🎮 <b>P1</b>: WASD + Mouse/Space • <b>P2</b>: Arrow Keys + NumPad 0/K/Enter • <b>P3</b>: IJKL + O/P/Space (Controllers supported!)</div>
+      <div style="margin-top:6px; display:flex; align-items:center; gap:8px;">
+        <button type="button" id="copyFleetLinkBtn" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,210,60,0.4); color:#ffd23c; font-size:0.75rem; padding:4px 10px; border-radius:6px; cursor:pointer;">📋 Copy Fleet Invite Link</button>
+        <span id="fleetLinkCopied" style="color:#3fd07a; font-size:0.78rem; display:none;">✔ Link copied!</span>
+      </div>
+    </div>
   </div>
-  <input id="pname" placeholder="Pirate Name" maxlength="14" autocomplete="off">
+
+  <input id="pname" type="hidden" value="Noël">
   <div class="btnrow">
     <button id="startbtn">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ PIRATE HANGAR &amp; UPGRADES</button>
@@ -575,13 +630,67 @@ let introT = 0, storySectorAnnounced = 0;
 let introUfos = [], introShot1 = false, introShot2 = false;
 let wreckage = [], shieldShards = [];
 
-// High-fidelity Real Space Pirate Galleon
-const ship = {
-  x: 180, y: H * 0.5, vx: 0, vy: 0,
-  pitch: 0, hp: 5, inv: 0, recoil: 0,
-  flagWave: 0, sailGlow: 0, r: 46,
-  aimAngle: 0
-};
+// Multi-Player Space Pirate Fleet Squad (1 - 3 Players Co-op)
+let fleetCount = 1;
+let fleet = [];
+
+function createFleetShip(index, name, shipModel, startY) {
+  const s = shipById(shipModel || 'cutter');
+  const u = SAVE.data.upg || {};
+  const hp = (s.hp || 5) + (u.hull || 0);
+  const cool = (s.cool || 0.25) * Math.pow(0.85, u.cannon || 0);
+  const spd = (s.spd || 1) + (u.engine || 0) * 0.18;
+  const spread = s.spread ? [...s.spread] : [0];
+  const sk = skinById(SAVE.data.skin);
+  let cols = s.cols ? [...s.cols] : ['#c88a55', '#8c5528', '#3b1c06'];
+  if (sk && sk.cols && index === 0) cols = [...sk.cols];
+
+  return {
+    index: index,
+    name: name || (index === 0 ? 'Noël' : index === 1 ? 'First Mate' : 'Gunner'),
+    shipModel: shipModel || (index === 0 ? 'cutter' : index === 1 ? 'runner' : 'storm'),
+    x: 180 - index * 24,
+    y: startY || (H * 0.5),
+    vx: 0, vy: 0,
+    pitch: 0,
+    hp: hp,
+    maxHp: hp,
+    inv: 0,
+    recoil: 0,
+    flagWave: index * 1.5,
+    sailGlow: 0,
+    r: 46,
+    aimAngle: 0,
+    shootCool: 0,
+    cols: cols,
+    spread: spread,
+    cool: cool,
+    spd: spd,
+    dead: false,
+    reviveTimer: 0,
+    score: 0,
+    kills: 0,
+    wantsFire: false
+  };
+}
+
+let ship = createFleetShip(0, 'Noël', 'cutter', H * 0.5);
+fleet = [ship];
+
+function getClosestAliveShip(x, y) {
+  if (!fleet || !fleet.length) return ship;
+  const alive = fleet.filter(p => !p.dead);
+  if (!alive.length) return fleet[0] || ship;
+  let best = alive[0], bestDist = Math.hypot(alive[0].x - x, alive[0].y - y);
+  for (let i = 1; i < alive.length; i++) {
+    const d = Math.hypot(alive[i].x - x, alive[i].y - y);
+    if (d < bestDist) {
+      bestDist = d;
+      best = alive[i];
+    }
+  }
+  return best;
+}
 
 // Collections for Space Pirate Combat
 let balls = [];       // player fiery cannonballs moving right
@@ -1930,15 +2039,84 @@ function startCombat() {
   }
 }
 
+// Co-op Fleet Tab Selection (1, 2, or 3 Players)
+document.querySelectorAll('.fleet-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.fleet-tab').forEach(t => {
+      t.classList.remove('active');
+      t.style.background = 'rgba(255,255,255,0.1)';
+      t.style.color = '#cfe4ff';
+    });
+    tab.classList.add('active');
+    tab.style.background = 'linear-gradient(135deg,#ffd23c,#ff9900)';
+    tab.style.color = '#000';
+    fleetCount = parseInt(tab.dataset.players) || 1;
+    const s2 = document.getElementById('slotP2');
+    const s3 = document.getElementById('slotP3');
+    if (s2) s2.style.display = fleetCount >= 2 ? 'flex' : 'none';
+    if (s3) s3.style.display = fleetCount >= 3 ? 'flex' : 'none';
+  });
+});
+
+// Copy Fleet Invite Link for Friends
+const copyFleetBtn = document.getElementById('copyFleetLinkBtn');
+if (copyFleetBtn) {
+  copyFleetBtn.addEventListener('click', () => {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('fleet', fleetCount);
+      url.searchParams.set('p1', (document.getElementById('pname1') && document.getElementById('pname1').value.trim()) || 'Noël');
+      if (fleetCount >= 2) url.searchParams.set('p2', (document.getElementById('pname2') && document.getElementById('pname2').value.trim()) || 'Friend1');
+      if (fleetCount >= 3) url.searchParams.set('p3', (document.getElementById('pname3') && document.getElementById('pname3').value.trim()) || 'Friend2');
+      navigator.clipboard.writeText(url.toString()).then(() => {
+        const notice = document.getElementById('fleetLinkCopied');
+        if (notice) {
+          notice.style.display = 'inline';
+          setTimeout(() => notice.style.display = 'none', 3500);
+        }
+      }).catch(() => {});
+    } catch(e) {}
+  });
+}
+
+// Read Fleet URL Invite parameters
+try {
+  const params = new URLSearchParams(window.location.search);
+  const fl = parseInt(params.get('fleet'));
+  if (fl >= 1 && fl <= 3) {
+    const tab = document.querySelector(`.fleet-tab[data-players="${fl}"]`);
+    if (tab) tab.click();
+  }
+  if (params.get('p1') && document.getElementById('pname1')) document.getElementById('pname1').value = params.get('p1');
+  if (params.get('p2') && document.getElementById('pname2')) document.getElementById('pname2').value = params.get('p2');
+  if (params.get('p3') && document.getElementById('pname3')) document.getElementById('pname3').value = params.get('p3');
+} catch(e) {}
+
 document.getElementById('startbtn').addEventListener('click', () => {
-  const inp = document.getElementById('pname');
-  let nm = (inp && inp.value.trim()) || localStorage.getItem('sp_name') || 'Captain';
-  playerName = nm.slice(0, 14);
+  const p1Name = (document.getElementById('pname1') && document.getElementById('pname1').value.trim()) || 'Noël';
+  const p1Ship = (document.getElementById('pship1') && document.getElementById('pship1').value) || SAVE.data.sel || 'cutter';
+
+  const p2Name = (document.getElementById('pname2') && document.getElementById('pname2').value.trim()) || 'First Mate';
+  const p2Ship = (document.getElementById('pship2') && document.getElementById('pship2').value) || 'runner';
+
+  const p3Name = (document.getElementById('pname3') && document.getElementById('pname3').value.trim()) || 'Gunner';
+  const p3Ship = (document.getElementById('pship3') && document.getElementById('pship3').value) || 'storm';
+
+  playerName = p1Name.slice(0, 14);
   try { localStorage.setItem('sp_name', playerName); } catch (e) {}
   scoreSubmitted = false;
   applyLoadout();
-  ship.hp = maxHp; ship.inv = 0; ship.x = W * 0.22; ship.y = H * 0.5;
-  ship.vx = 0; ship.vy = 0; ship.pitch = 0;
+
+  fleet = [];
+  fleet.push(createFleetShip(0, p1Name, p1Ship, fleetCount === 1 ? H * 0.5 : H * 0.45));
+  if (fleetCount >= 2) {
+    fleet.push(createFleetShip(1, p2Name, p2Ship, H * 0.28));
+  }
+  if (fleetCount >= 3) {
+    fleet.push(createFleetShip(2, p3Name, p3Ship, H * 0.72));
+  }
+  ship = fleet[0];
+
   introT = 0;
   introShot1 = false;
   introShot2 = false;
@@ -2719,145 +2897,196 @@ function update(dt) {
 
   if (state !== 'play') return;
 
-  // Space Pirate Galleon Navigation & Solar Ether Inertia
+  // Multi-Player Space Pirate Fleet Navigation & Controls (1 - 3 Players Co-op)
   slowT = Math.max(0, slowT - dt);
   const curSpdMul = spdMul * (slowT > 0 ? 0.55 : 1.0);
-  const ACC = 1450 * curSpdMul, MAX_SPD = 480 * curSpdMul;
-  let ax = 0, ay = 0;
-  if (keys['KeyW'] || keys['ArrowUp']) ay -= 1;
-  if (keys['KeyS'] || keys['ArrowDown']) ay += 1;
-  if (keys['KeyA'] || keys['ArrowLeft']) ax -= 1;
-  if (keys['KeyD'] || keys['ArrowRight']) ax += 1;
-
-  if (isTouch && touchOn) {
-    ax = (mouse.x - ship.x) * 0.022;
-    ay = (mouse.y - ship.y) * 0.022;
-  }
-
-  ship.vx += ax * ACC * dt;
-  ship.vy += ay * ACC * dt;
-  ship.vx *= Math.pow(0.025, dt);
-  ship.vy *= Math.pow(0.025, dt);
-  ship.vx = Math.max(-MAX_SPD, Math.min(MAX_SPD, ship.vx));
-  ship.vy = Math.max(-MAX_SPD, Math.min(MAX_SPD, ship.vy));
-
-  ship.x += ship.vx * dt;
-  ship.y += ship.vy * dt;
-  ship.x = Math.max(80, Math.min(W - 140, ship.x));
-  ship.y = Math.max(70, Math.min(H - 80, ship.y));
-
-  // Dynamic Galleon Pitch & Flag Flutter
-  const targetPitch = (ship.vy / MAX_SPD) * 0.25;
-  ship.pitch += (targetPitch - ship.pitch) * Math.min(1, dt * 10);
-  ship.flagWave += dt * 12;
-
-  // Aim angle directed towards world mouse pointer
-  const wm = getWorldMouse();
-  const cannonOriginX = ship.x + 36;
-  const cannonOriginY = ship.y + 18;
-  ship.aimAngle = Math.atan2(wm.y - cannonOriginY, wm.x - cannonOriginX);
-
-  ship.inv = Math.max(0, ship.inv - dt);
-  ship.recoil = Math.max(0, ship.recoil - dt * 8);
   rapidT = Math.max(0, rapidT - dt);
   shieldT = Math.max(0, shieldT - dt);
   tripleT = Math.max(0, tripleT - dt);
-  if (shieldT > 0) ship.inv = Math.max(ship.inv, 0.18);
   if (comboT > 0) { comboT -= dt; if (comboT <= 0) combo = 0; }
 
-  // Glowing Solar Wake & Signature Skin Aura Particles
-  const activeSkin = (SAVE.data.skin && SAVE.data.kills >= (skinById(SAVE.data.skin).kills || 0)) ? SAVE.data.skin : 'default';
+  // Poll Gamepads for Couch Co-op
+  const gpList = (navigator.getGamepads && navigator.getGamepads()) || [];
 
-  if (Math.random() < 0.90) {
-    let auraCol = '#ffd23c', auraSize = 5 + Math.random() * 5;
-    if (activeSkin === 'sunset') {
-      auraCol = Math.random() < 0.6 ? '#ff5500' : '#ffd23c';
-      auraSize = 6 + Math.random() * 6;
-    } else if (activeSkin === 'toxic') {
-      auraCol = Math.random() < 0.7 ? '#7ed957' : '#00ff66';
-      auraSize = 4 + Math.random() * 6;
-    } else if (activeSkin === 'ocean') {
-      auraCol = Math.random() < 0.6 ? '#2f9be6' : '#a9e0ff';
-      auraSize = 5 + Math.random() * 5;
-    } else if (activeSkin === 'shadow') {
-      auraCol = Math.random() < 0.7 ? '#111316' : '#ff0044';
-      auraSize = 6 + Math.random() * 7;
-    } else if (activeSkin === 'royal') {
-      auraCol = Math.random() < 0.5 ? '#b06bff' : '#ffd700';
-      auraSize = 5 + Math.random() * 6;
-    } else if (activeSkin === 'legend') {
-      auraCol = Math.random() < 0.5 ? '#ffffff' : '#ffd700';
-      auraSize = 7 + Math.random() * 6;
+  for (let pi = 0; pi < fleet.length; pi++) {
+    const p = fleet[pi];
+
+    // Downed Ghost Ship Revival Check
+    if (p.dead) {
+      p.vx *= 0.92; p.vy *= 0.92;
+      p.x += p.vx * dt; p.y += p.vy * dt;
+      let revivingAlly = null;
+      for (let oj = 0; oj < fleet.length; oj++) {
+        if (oj !== pi && !fleet[oj].dead && Math.hypot(fleet[oj].x - p.x, fleet[oj].y - p.y) < 130) {
+          revivingAlly = fleet[oj];
+          break;
+        }
+      }
+      if (revivingAlly) {
+        p.reviveTimer += dt;
+        if (Math.random() < 0.3) {
+          parts.push({
+            type: 'ring', x: p.x, y: p.y, r: 10, maxR: 55, lw: 2.5, col: '#3fd07a', life: 0.35, maxLife: 0.35
+          });
+        }
+        if (p.reviveTimer >= 2.0) {
+          p.dead = false;
+          p.hp = Math.max(2, Math.ceil(p.maxHp * 0.6));
+          p.inv = 3.2;
+          p.reviveTimer = 0;
+          sfx('win');
+          addShake(16);
+          popup(p.x, p.y - 45, `💚 ${p.name.toUpperCase()} REVIVED!`, '#3fd07a');
+        }
+      } else {
+        p.reviveTimer = Math.max(0, p.reviveTimer - dt * 0.8);
+      }
+      continue;
     }
 
-    parts.push({
-      x: ship.x - 52 + (Math.random() - 0.5) * 12,
-      y: ship.y + 14 + (Math.random() - 0.5) * 14,
-      vx: -240 - Math.random() * 90,
-      vy: (Math.random() - 0.5) * 35,
-      life: 0.45,
-      col: auraCol,
-      size: auraSize
-    });
-  }
+    const ACC = 1450 * (p.spd || 1) * curSpdMul, MAX_SPD = 480 * (p.spd || 1) * curSpdMul;
+    let ax = 0, ay = 0, wantShoot = false;
 
-  // Directed Pirate Naval Cannon Salvo (Fires directly at aim target)
-  shootCool -= dt;
-  let wantShoot = mouse.down || keys['Space'] || (isTouch && touchOn);
-  if (wantShoot && shootCool <= 0) {
-    shootCool = rapidT > 0 ? baseCool * 0.45 : baseCool;
-    ship.recoil = 1.0;
-    muzzleFlash = 1.0;
-    
-    const spreadAngles = tripleT > 0 ? [-0.16, 0, 0.16] : baseSpread;
-    const baseAim = ship.aimAngle;
-    const muzzleX = cannonOriginX + Math.cos(baseAim) * 22;
-    const muzzleY = cannonOriginY + Math.sin(baseAim) * 22;
+    // Player 1 (Captain) Controls: WASD or Arrow Keys (if solo), Mouse / Touch / Space
+    if (pi === 0) {
+      if (keys['KeyW'] || (fleetCount === 1 && keys['ArrowUp'])) ay -= 1;
+      if (keys['KeyS'] || (fleetCount === 1 && keys['ArrowDown'])) ay += 1;
+      if (keys['KeyA'] || (fleetCount === 1 && keys['ArrowLeft'])) ax -= 1;
+      if (keys['KeyD'] || (fleetCount === 1 && keys['ArrowRight'])) ax += 1;
+      if (isTouch && touchOn) {
+        ax = (mouse.x - p.x) * 0.022;
+        ay = (mouse.y - p.y) * 0.022;
+      }
+      const wm = getWorldMouse();
+      const cannonOriginX = p.x + 36, cannonOriginY = p.y + 18;
+      p.aimAngle = Math.atan2(wm.y - cannonOriginY, wm.x - cannonOriginX);
+      wantShoot = mouse.down || keys['Space'] || keys['KeyF'] || (isTouch && touchOn);
+    }
+    // Player 2 (Wingman) Controls: Arrow Keys, NumPad 0 / Enter / K / L
+    else if (pi === 1) {
+      if (keys['ArrowUp']) ay -= 1;
+      if (keys['ArrowDown']) ay += 1;
+      if (keys['ArrowLeft']) ax -= 1;
+      if (keys['ArrowRight']) ax += 1;
+      if (ax !== 0 || ay !== 0) p.aimAngle = Math.atan2(ay, ax);
+      else p.aimAngle = 0;
+      wantShoot = keys['Numpad0'] || keys['ControlRight'] || keys['KeyK'] || keys['KeyL'] || keys['Enter'];
+    }
+    // Player 3 (Gunner) Controls: IJKL Keys, O / P / Space / NumPad .
+    else if (pi === 2) {
+      if (keys['KeyI']) ay -= 1;
+      if (keys['KeyK']) ay += 1;
+      if (keys['KeyJ']) ax -= 1;
+      if (keys['KeyL']) ax += 1;
+      if (ax !== 0 || ay !== 0) p.aimAngle = Math.atan2(ay, ax);
+      else p.aimAngle = 0;
+      wantShoot = keys['KeyO'] || keys['KeyP'] || keys['NumpadDecimal'] || keys['Period'] || keys['Quote'];
+    }
 
-    const shipModel = SAVE.data.sel || 'cutter';
-    const cannonLevel = (SAVE.data.upg && SAVE.data.upg.cannon) || 0;
-    let bRadius = 10 + cannonLevel * 1.5;
-    if (shipModel === 'galleon') bRadius = 13 + cannonLevel * 2;
-    else if (shipModel === 'runner') bRadius = 8 + cannonLevel * 1.2;
-    else if (shipModel === 'hind') bRadius = 11 + cannonLevel * 1.5;
-    else if (shipModel === 'storm') bRadius = 12 + cannonLevel * 1.8;
-
-    for (const spr of spreadAngles) {
-      const ang = baseAim + spr;
-      const spd = shipModel === 'runner' ? 1600 : 1350;
-      balls.push({
-        x: muzzleX,
-        y: muzzleY,
-        vx: Math.cos(ang) * spd,
-        vy: Math.sin(ang) * spd,
-        r: bRadius,
-        shipModel: shipModel,
-        skinId: activeSkin,
-        cannonLevel: cannonLevel
-      });
-      
-      let mCol = shipModel === 'runner' ? '#00ffee' : shipModel === 'storm' ? '#c084fc' : shipModel === 'hind' ? '#ffd700' : '#ffd23c';
-      if (activeSkin === 'toxic') mCol = '#7ed957';
-      else if (activeSkin === 'sunset') mCol = '#ff5500';
-      else if (activeSkin === 'ocean') mCol = '#2f9be6';
-      else if (activeSkin === 'shadow') mCol = '#ff0044';
-      else if (activeSkin === 'royal') mCol = '#b06bff';
-      else if (activeSkin === 'legend') mCol = '#ffffff';
-
-      for (let k = 0; k < 6; k++) {
-        parts.push({
-          x: muzzleX,
-          y: muzzleY,
-          vx: Math.cos(ang) * (120 + Math.random() * 180) + (Math.random() - 0.5) * 60,
-          vy: Math.sin(ang) * (120 + Math.random() * 180) + (Math.random() - 0.5) * 60,
-          life: 0.22,
-          col: mCol,
-          size: 8 + cannonLevel * 2
-        });
+    // Gamepad controller support
+    const gp = gpList[pi];
+    if (gp && gp.connected) {
+      const stickX = Math.abs(gp.axes[0]) > 0.18 ? gp.axes[0] : 0;
+      const stickY = Math.abs(gp.axes[1]) > 0.18 ? gp.axes[1] : 0;
+      if (stickX !== 0 || stickY !== 0) {
+        ax = stickX; ay = stickY;
+      }
+      if (gp.axes[2] !== undefined && gp.axes[3] !== undefined && Math.hypot(gp.axes[2], gp.axes[3]) > 0.25) {
+        p.aimAngle = Math.atan2(gp.axes[3], gp.axes[2]);
+      }
+      if (gp.buttons[0]?.pressed || gp.buttons[7]?.pressed || gp.buttons[5]?.pressed) {
+        wantShoot = true;
       }
     }
-    sfx('shot');
+
+    p.vx += ax * ACC * dt;
+    p.vy += ay * ACC * dt;
+    p.vx *= Math.pow(0.025, dt);
+    p.vy *= Math.pow(0.025, dt);
+    p.vx = Math.max(-MAX_SPD, Math.min(MAX_SPD, p.vx));
+    p.vy = Math.max(-MAX_SPD, Math.min(MAX_SPD, p.vy));
+
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+    p.x = Math.max(80, Math.min(W - 140, p.x));
+    p.y = Math.max(70, Math.min(H - 80, p.y));
+
+    const targetPitch = (p.vy / MAX_SPD) * 0.25;
+    p.pitch += (targetPitch - p.pitch) * Math.min(1, dt * 10);
+    p.flagWave += dt * 12;
+
+    p.inv = Math.max(0, p.inv - dt);
+    p.recoil = Math.max(0, p.recoil - dt * 8);
+    if (shieldT > 0) p.inv = Math.max(p.inv, 0.18);
+
+    // Fleet Ship Solar Wake & Aura Particles
+    if (Math.random() < 0.85) {
+      parts.push({
+        x: p.x - 50 + (Math.random() - 0.5) * 12,
+        y: p.y + 14 + (Math.random() - 0.5) * 14,
+        vx: -240 - Math.random() * 90,
+        vy: (Math.random() - 0.5) * 35,
+        life: 0.38,
+        col: p.cols ? p.cols[0] : '#ffd23c',
+        size: 5 + Math.random() * 4
+      });
+    }
+
+    // Ship Cannons Salvo
+    p.shootCool = Math.max(0, (p.shootCool || 0) - dt);
+    if (wantShoot && p.shootCool <= 0) {
+      const coolBase = p.cool || baseCool;
+      p.shootCool = rapidT > 0 ? coolBase * 0.45 : coolBase;
+      p.recoil = 1.0;
+      muzzleFlash = 0.8;
+      
+      const spreadAngles = tripleT > 0 ? [-0.16, 0, 0.16] : (p.spread || [0]);
+      const baseAim = p.aimAngle;
+      const muzzleX = p.x + 36 + Math.cos(baseAim) * 22;
+      const muzzleY = p.y + 18 + Math.sin(baseAim) * 22;
+
+      const shipModel = p.shipModel || 'cutter';
+      const cannonLevel = (SAVE.data.upg && SAVE.data.upg.cannon) || 0;
+      let bRadius = 10 + cannonLevel * 1.5;
+      if (shipModel === 'galleon') bRadius = 13 + cannonLevel * 2;
+      else if (shipModel === 'runner') bRadius = 8 + cannonLevel * 1.2;
+      else if (shipModel === 'hind') bRadius = 11 + cannonLevel * 1.5;
+      else if (shipModel === 'storm') bRadius = 12 + cannonLevel * 1.8;
+
+      for (const spr of spreadAngles) {
+        const ang = baseAim + spr;
+        const spd = shipModel === 'runner' ? 1600 : 1350;
+        balls.push({
+          x: muzzleX,
+          y: muzzleY,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd,
+          r: bRadius,
+          shipModel: shipModel,
+          skinId: pi === 0 ? SAVE.data.skin : 'default',
+          cannonLevel: cannonLevel,
+          ownerIndex: pi
+        });
+        
+        let mCol = p.cols ? p.cols[0] : '#ffd23c';
+        for (let k = 0; k < 5; k++) {
+          parts.push({
+            x: muzzleX,
+            y: muzzleY,
+            vx: Math.cos(ang) * (120 + Math.random() * 180) + (Math.random() - 0.5) * 60,
+            vy: Math.sin(ang) * (120 + Math.random() * 180) + (Math.random() - 0.5) * 60,
+            life: 0.20,
+            col: mCol,
+            size: 7 + cannonLevel * 1.8
+          });
+        }
+      }
+      sfx('shot');
+    }
   }
+
+  // Keep ship alias synced to fleet[0]
+  if (fleet.length > 0) ship = fleet[0];
 
   const newLevel = 1 + Math.floor(t / 26);
   if (newLevel > level) {
@@ -3196,7 +3425,8 @@ function update(dt) {
     f.shootT -= dt;
     if (f.shootT <= 0 && f.x < W - 40 && f.x > 80) {
       f.shootT = Math.max(1.0, 2.4 - level * 0.18);
-      const dx = ship.x - f.x, dy = ship.y - f.y;
+      const ts = getClosestAliveShip(f.x, f.y);
+      const dx = ts.x - f.x, dy = ts.y - f.y;
       const dist = Math.hypot(dx, dy) || 1;
       const spdBonus = 1 + Math.min(0.8, (level - 1) * 0.07);
 
@@ -3284,9 +3514,15 @@ function update(dt) {
       }
     }
     
-    if (f.x < -f.w) forts.splice(i, 1);
-    else if (ship.inv <= 0 && Math.hypot(f.x - ship.x, f.y - ship.y) < ship.r + f.w * 0.35) {
-      damageShip();
+    if (f.x < -f.w) {
+      forts.splice(i, 1);
+    } else {
+      for (const p of fleet) {
+        if (!p.dead && p.inv <= 0 && Math.hypot(f.x - p.x, f.y - p.y) < p.r + f.w * 0.35) {
+          damageShip(p);
+          break;
+        }
+      }
     }
   }
 
@@ -3296,6 +3532,7 @@ function update(dt) {
     g.x += g.vx * dt;
     g.saucerSpin += dt * 6;
     const spdBonus = 1 + Math.min(0.8, (level - 1) * 0.07);
+    const ts = getClosestAliveShip(g.x, g.y);
 
     if (g.variant === 'stalker') {
       // Quantum Phase Stalker: Periodic Warp Blink
@@ -3305,10 +3542,10 @@ function update(dt) {
         g.y = Math.max(70, Math.min(H - 90, g.y + (Math.random() < 0.5 ? -95 : 95)));
         explode(g.x, g.y, '#a855f7', 14);
       }
-      g.y += (ship.y - g.y) * 0.6 * dt;
+      g.y += (ts.y - g.y) * 0.6 * dt;
     } else if (g.variant === 'rammer') {
       // Solar Kamikaze Rammer: Aggressive Altitude Homing with Rocket Flame Trail
-      g.y += (ship.y - g.y) * 2.8 * dt;
+      g.y += (ts.y - g.y) * 2.8 * dt;
       if (Math.random() < 0.65) {
         parts.push({
           type: 'fireball',
@@ -3323,7 +3560,7 @@ function update(dt) {
       g.shootT = (g.shootT || 1.0) - dt;
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 100) {
         g.shootT = Math.max(0.8, 1.8 - level * 0.14) + Math.random() * 0.6;
-        const dx = ship.x - g.x, dy = ship.y - g.y;
+        const dx = ts.x - g.x, dy = ts.y - g.y;
         const dist = Math.hypot(dx, dy) || 1;
         eballs.push({
           type: 'emp',
@@ -3336,7 +3573,7 @@ function update(dt) {
       }
     } else if (g.variant === 'phantom') {
       // Shadow Eclipse Phantom: Stealth Phase Cloaking + Amethyst Plasma Burst
-      g.y += (ship.y - g.y) * 1.2 * dt;
+      g.y += (ts.y - g.y) * 1.2 * dt;
       g.shootT = (g.shootT || 1.1) - dt;
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 100) {
         g.shootT = Math.max(0.9, 2.0 - level * 0.14) + Math.random() * 0.6;
@@ -3353,11 +3590,11 @@ function update(dt) {
       }
     } else {
       // THE FIGHTER: Sinusoidal Evasive Dive + RED LASER CANNON SALVOS!
-      g.y += (ship.y - g.y) * 0.9 * dt + Math.sin(t * 6 + g.wob) * 48 * dt;
+      g.y += (ts.y - g.y) * 0.9 * dt + Math.sin(t * 6 + g.wob) * 48 * dt;
       g.shootT = (g.shootT || 1.2) - dt;
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 120) {
         g.shootT = Math.max(1.0, 2.0 - level * 0.14) + Math.random() * 0.7;
-        const dx = ship.x - g.x, dy = ship.y - g.y;
+        const dx = ts.x - g.x, dy = ts.y - g.y;
         const dist = Math.hypot(dx, dy) || 1;
         eballs.push({
           type: 'laser',
@@ -3377,11 +3614,17 @@ function update(dt) {
       }
     }
     
-    if (g.x < -80) gliders.splice(i, 1);
-    else if (ship.inv <= 0 && Math.hypot(g.x - ship.x, g.y - ship.y) < ship.r + 32) {
-      damageShip();
-      explode(g.x, g.y, g.col || '#ff2255', 24);
+    if (g.x < -80) {
       gliders.splice(i, 1);
+    } else {
+      for (const p of fleet) {
+        if (!p.dead && p.inv <= 0 && Math.hypot(g.x - p.x, g.y - p.y) < p.r + 32) {
+          damageShip(p);
+          explode(g.x, g.y, g.col || '#ff2255', 24);
+          gliders.splice(i, 1);
+          break;
+        }
+      }
     }
   }
 
@@ -3389,14 +3632,21 @@ function update(dt) {
   for (let i = mines.length - 1; i >= 0; i--) {
     const m = mines[i];
     m.x += m.vx * dt;
-    m.spin += 2.8 * dt;
-    m.y += Math.sin(t * 2 + m.r) * 22 * dt;
-    
-    if (m.x < -50) mines.splice(i, 1);
-    else if (ship.inv <= 0 && Math.hypot(m.x - ship.x, m.y - ship.y) < ship.r + m.r) {
-      explode(m.x, m.y, m.col || '#00e5ff', 28); sfx('boom');
-      damageShip();
+    m.pulse = (m.pulse || 0) + dt * 5;
+    m.spin = (m.spin || 0) + dt * 2.5;
+
+    if (m.x < -40) {
       mines.splice(i, 1);
+    } else {
+      for (const p of fleet) {
+        if (!p.dead && p.inv <= 0 && Math.hypot(m.x - p.x, m.y - p.y) < p.r + m.r) {
+          explode(m.x, m.y, m.col || '#00e5ff', 36);
+          sfx('boom');
+          damageShip(p);
+          mines.splice(i, 1);
+          break;
+        }
+      }
     }
   }
 
@@ -3404,45 +3654,49 @@ function update(dt) {
   for (let i = eballs.length - 1; i >= 0; i--) {
     const b = eballs[i];
     b.x += b.vx * dt; b.y += b.vy * dt;
+    b.spin = (b.spin || 0) + dt * 6;
 
+    // Dark Matter Singularity Gravity Well Pull
     if (b.type === 'vortex') {
-      b.spin = (b.spin || 0) + 10 * dt;
-      // Gravitational Tractor Vortex Pull on player galleon
-      const dx = b.x - ship.x, dy = b.y - ship.y;
-      const dist = Math.hypot(dx, dy);
-      if (dist < 340 && dist > 15) {
-        const pull = (1 - dist / 340) * 160 * dt;
-        ship.x += (dx / dist) * pull;
-        ship.y += (dy / dist) * pull;
-        if (Math.random() < 0.35) {
-          parts.push({
-            type: 'ring',
-            x: b.x, y: b.y,
-            r: 6 + Math.random() * 18,
-            life: 0.18, maxLife: 0.18,
-            col: '#00ffaa', lw: 1.5
-          });
+      for (const p of fleet) {
+        if (!p.dead) {
+          const dx = b.x - p.x, dy = b.y - p.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 340 && dist > 15) {
+            const pull = (1 - dist / 340) * 160 * dt;
+            p.x += (dx / dist) * pull;
+            p.y += (dy / dist) * pull;
+          }
         }
       }
     }
     
-    if (b.x < -40 || b.y < -40 || b.y > H + 40) eballs.splice(i, 1);
-    else if (ship.inv <= 0 && Math.hypot(b.x - ship.x, b.y - ship.y) < ship.r + b.r - 5) {
+    let hitP = null;
+    for (const p of fleet) {
+      if (!p.dead && p.inv <= 0 && Math.hypot(b.x - p.x, b.y - p.y) < p.r + b.r - 5) {
+        hitP = p;
+        break;
+      }
+    }
+
+    if (hitP) {
       if (b.type === 'emp') {
         slowT = 2.8;
-        popup(ship.x, ship.y - 30, '⚡ EMP SHOCK — ENGINES DISRUPTED!', '#00e5ff');
+        popup(hitP.x, hitP.y - 30, '⚡ EMP SHOCK — ENGINES DISRUPTED!', '#00e5ff');
       } else if (b.type === 'magma') {
-        popup(ship.x, ship.y - 30, '🔥 SOLAR INFERNO BURN!', '#ff5500');
+        popup(hitP.x, hitP.y - 30, '🔥 SOLAR INFERNO BURN!', '#ff5500');
         explode(b.x, b.y, '#ff4400', 32);
         addShake(16);
       } else if (b.type === 'spore') {
-        popup(ship.x, ship.y - 30, '☣ ACID SPORE HIT!', '#d946ef');
+        popup(hitP.x, hitP.y - 30, '☣ ACID SPORE HIT!', '#d946ef');
       } else if (b.type === 'vortex') {
-        popup(ship.x, ship.y - 30, '🌀 VOID SINGULARITY CRUSH!', '#00ffaa');
+        popup(hitP.x, hitP.y - 30, '🌀 VOID SINGULARITY CRUSH!', '#00ffaa');
         explode(b.x, b.y, '#00ffaa', 30);
         addShake(16);
       }
-      damageShip();
+      damageShip(hitP);
+      eballs.splice(i, 1);
+    } else if (b.x < -40 || b.y < -40 || b.y > H + 40) {
       eballs.splice(i, 1);
     }
   }
@@ -3453,14 +3707,16 @@ function update(dt) {
     c.x += (c.vx || -110) * dt; c.y += (c.vy || 0) * dt;
     c.spin = (c.spin || 0) + 7 * dt;
     
-    const dist = Math.hypot(c.x - ship.x, c.y - ship.y);
+    const ts = getClosestAliveShip(c.x, c.y);
+    const dist = Math.hypot(c.x - ts.x, c.y - ts.y);
     if (dist < 230 + magnetBonus) {
-      c.x += (ship.x - c.x) * 7.0 * dt;
-      c.y += (ship.y - c.y) * 7.0 * dt;
+      c.x += (ts.x - c.x) * 7.0 * dt;
+      c.y += (ts.y - c.y) * 7.0 * dt;
     }
     
     if (dist < 48) {
       coinsN++; score += 2; sfx('coin');
+      ts.score = (ts.score || 0) + 2;
       coins.splice(i, 1);
     } else if (c.x < -40) coins.splice(i, 1);
   }
@@ -3470,20 +3726,21 @@ function update(dt) {
     const p = powerups[i];
     p.x += (p.vx || -95) * dt; p.y += (p.vy || 0) * dt;
     
-    const dist = Math.hypot(p.x - ship.x, p.y - ship.y);
+    const ts = getClosestAliveShip(p.x, p.y);
+    const dist = Math.hypot(p.x - ts.x, p.y - ts.y);
     if (dist < 230 + magnetBonus) {
-      p.x += (ship.x - p.x) * 7.0 * dt;
-      p.y += (ship.y - p.y) * 7.0 * dt;
+      p.x += (ts.x - p.x) * 7.0 * dt;
+      p.y += (ts.y - p.y) * 7.0 * dt;
     }
     
     if (dist < 52) {
       sfx('map');
-      if (p.type === 'heart') { ship.hp = Math.min(maxHp, ship.hp + 1); popup(ship.x, ship.y - 45, '+1 ❤️ HULL REPAIR', '#ff6b6b'); }
-      else if (p.type === 'rapid') { rapidT = 7; popup(ship.x, ship.y - 45, 'RAPID CANNONS! ⚡', '#3fd5ff'); }
-      else if (p.type === 'shield') { shieldT = 6; ship.inv = Math.max(ship.inv, 6); popup(ship.x, ship.y - 45, 'ENERGY DEFLECTOR SHIELD! 🛡️', '#00dfa2'); }
-      else if (p.type === 'triple') { tripleT = 8; popup(ship.x, ship.y - 45, 'TRIPLE BROADSIDE! 🔱', '#ffd23c'); }
+      if (p.type === 'heart') { ts.hp = Math.min(ts.maxHp, ts.hp + 1); popup(ts.x, ts.y - 45, '+1 ❤️ HULL REPAIR', '#ff6b6b'); }
+      else if (p.type === 'rapid') { rapidT = 7; popup(ts.x, ts.y - 45, 'FLEET RAPID CANNONS! ⚡', '#3fd5ff'); }
+      else if (p.type === 'shield') { shieldT = 6; for (const sp of fleet) sp.inv = Math.max(sp.inv, 6); popup(ts.x, ts.y - 45, 'FLEET DEFLECTOR SHIELDS! 🛡️', '#00dfa2'); }
+      else if (p.type === 'triple') { tripleT = 8; popup(ts.x, ts.y - 45, 'FLEET TRIPLE BROADSIDES! 🔱', '#ffd23c'); }
       else if (p.type === 'bomb') {
-        popup(ship.x, ship.y - 45, '💥 BROADSIDE EMP WAVE!', '#ff0055'); addShake(24); sfx('boom');
+        popup(ts.x, ts.y - 45, '💥 FLEET BROADSIDE EMP WAVE!', '#ff0055'); addShake(24); sfx('boom');
         for (const f of forts) { explode(f.x, f.y, f.col, 34); addScore(10, f.x, f.y); coins.push({ x: f.x, y: f.y }); }
         for (const g of gliders) { explode(g.x, g.y, '#00ff66', 18); addScore(5, g.x, g.y); }
         for (const m of mines) explode(m.x, m.y, '#00e5ff', 24);
@@ -3515,12 +3772,27 @@ function update(dt) {
   }
 }
 
-function damageShip() {
-  ship.hp--; ship.inv = 1.7;
+function damageShip(target) {
+  const p = target || (fleet && fleet[0]) || ship;
+  if (!p || p.dead) return;
+  p.hp--;
+  p.inv = 1.7;
   sfx('hit'); addShake(20); hurtFlash = 0.7;
   combo = 0; comboT = 0;
-  explode(ship.x, ship.y, '#ffd23c', 28);
-  if (ship.hp <= 0) lose();
+  explode(p.x, p.y, (p.cols && p.cols[0]) || '#ffd23c', 28);
+  if (p.hp <= 0) {
+    p.hp = 0;
+    p.dead = true;
+    p.reviveTimer = 0;
+    addAlert(`💥 ${p.name.toUpperCase()} SHIPWRECKED! FLY NEAR TO REVIVE!`, 'incoming');
+    popup(p.x, p.y - 40, `💀 ${p.name} DOWN!`, '#ff3344');
+    
+    // Check if entire fleet is destroyed
+    const anyAlive = fleet && fleet.some(f => !f.dead);
+    if (!anyAlive) {
+      lose();
+    }
+  }
 }
 
 // Draw Solar Pirate Galleon in Forward 3D Perspective (View from Behind)
@@ -4947,21 +5219,25 @@ function draw() {
     }
   }
 
-  // 10. REALISTIC PIRATE SHIP (CUSTOM ARCHITECTURE FOR EACH SHIP & UPGRADE)
-  if (state === 'intro' || state === 'play' || state === 'pause') {
+  // 10. REALISTIC PIRATE SHIPS (CUSTOM ARCHITECTURE & MULTI-PLAYER FLEET RENDERING)
+  function drawSinglePlayerShip(cx, p, t) {
     cx.save();
-    cx.translate(ship.x, ship.y);
-    cx.rotate(ship.pitch);
+    cx.translate(p.x, p.y);
+    cx.rotate(p.pitch || 0);
 
-    if (ship.inv > 0 && Math.floor(t * 14) % 2 === 0) cx.globalAlpha = 0.4;
+    if (p.dead) {
+      cx.globalAlpha = 0.45 + Math.sin(t * 6) * 0.15;
+    } else if (p.inv > 0 && Math.floor(t * 14) % 2 === 0) {
+      cx.globalAlpha = 0.4;
+    }
 
-    const curShip = SAVE.data.sel || 'cutter';
+    const curShip = p.shipModel || 'cutter';
     const cLv = (SAVE.data.upg && SAVE.data.upg.cannon) || 0;
     const hLv = (SAVE.data.upg && SAVE.data.upg.hull) || 0;
 
-    const col0 = (shipCols && shipCols[0]) || '#c88a55';
-    const col1 = (shipCols && shipCols[1]) || '#8c5528';
-    const col2 = (shipCols && shipCols[2]) || '#3b1c06';
+    const col0 = (p.cols && p.cols[0]) || '#c88a55';
+    const col1 = (p.cols && p.cols[1]) || '#8c5528';
+    const col2 = (p.cols && p.cols[2]) || '#3b1c06';
 
     // Ambient Glowing Solar Energy Field
     const shipAura = cx.createRadialGradient(0, 16, 8, 0, 16, 75);
@@ -5310,7 +5586,7 @@ function draw() {
     }
 
     // Dynamic Themed Pirate Flag for each Unlocked Skin!
-    const activeSkin = (SAVE.data.skin && SAVE.data.kills >= (skinById(SAVE.data.skin).kills || 0)) ? SAVE.data.skin : 'default';
+    const activeSkin = p.index === 0 && SAVE.data.skin && SAVE.data.kills >= (skinById(SAVE.data.skin).kills || 0) ? SAVE.data.skin : 'default';
 
     let flagBg = '#111', flagSym = '☠', flagSymCol = '#fff';
     if (activeSkin === 'sunset') { flagBg = '#ff5500'; flagSym = '☀️'; flagSymCol = '#fff'; }
@@ -5323,44 +5599,31 @@ function draw() {
     cx.fillStyle = flagBg;
     cx.beginPath();
     cx.moveTo(-18, -52);
-    cx.quadraticCurveTo(-34, -50 + Math.sin(ship.flagWave) * 4, -48, -48 + Math.sin(ship.flagWave) * 5);
-    cx.lineTo(-42, -36 + Math.sin(ship.flagWave + 1) * 4);
+    cx.quadraticCurveTo(-34, -50 + Math.sin(p.flagWave) * 4, -48, -48 + Math.sin(p.flagWave) * 5);
+    cx.lineTo(-42, -36 + Math.sin(p.flagWave + 1) * 4);
     cx.quadraticCurveTo(-28, -40, -18, -40);
     cx.closePath(); cx.fill();
     cx.fillStyle = flagSymCol; cx.font = 'bold 11px serif'; cx.textAlign = 'center';
     cx.fillText(flagSym, -30, -42);
 
-    // Skin-Specific Prow Ornaments & Hull Sculptures
+    // Skin-Specific Prow Ornaments
     if (activeSkin === 'sunset') {
-      // Solar Flare Sunburst Prow Crest
-      cx.fillStyle = '#ff6a00';
-      cx.beginPath(); cx.arc(48, 14, 5, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ff6a00'; cx.beginPath(); cx.arc(48, 14, 5, 0, Math.PI * 2); cx.fill();
       cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.5; cx.stroke();
     } else if (activeSkin === 'toxic') {
-      // Alien Plasma Spines & Bioluminescent Hull Veins
       cx.strokeStyle = '#7ed957'; cx.lineWidth = 2.5;
       cx.beginPath(); cx.moveTo(42, 14); cx.lineTo(54, 8); cx.lineTo(48, 22); cx.stroke();
       cx.strokeStyle = '#00ff66'; cx.lineWidth = 1.8;
       cx.beginPath(); cx.moveTo(-34, 20); cx.lineTo(0, 22); cx.lineTo(36, 18); cx.stroke();
     } else if (activeSkin === 'ocean') {
-      // Celestial Crystal Trident Prow
-      cx.fillStyle = '#64ffda';
-      cx.fillRect(48, 12, 10, 2.5);
-      cx.fillRect(56, 7, 2.5, 12);
+      cx.fillStyle = '#64ffda'; cx.fillRect(48, 12, 10, 2.5); cx.fillRect(56, 7, 2.5, 12);
     } else if (activeSkin === 'shadow') {
-      // Cursed Phantom Crimson Eyes on Prow
-      cx.fillStyle = '#ff0033';
-      cx.beginPath(); cx.arc(46, 17, 2, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(46, 17, 2, 0, Math.PI * 2); cx.fill();
       cx.beginPath(); cx.arc(50, 17, 2, 0, Math.PI * 2); cx.fill();
     } else if (activeSkin === 'royal') {
-      // Gilded Royal Filigree Railing
-      cx.fillStyle = '#ffd700';
-      cx.fillRect(-38, 13, 76, 2.5);
-      for (let rx = -34; rx <= 34; rx += 10) {
-        cx.beginPath(); cx.arc(rx, 14, 2, 0, Math.PI * 2); cx.fill();
-      }
+      cx.fillStyle = '#ffd700'; cx.fillRect(-38, 13, 76, 2.5);
+      for (let rx = -34; rx <= 34; rx += 10) { cx.beginPath(); cx.arc(rx, 14, 2, 0, Math.PI * 2); cx.fill(); }
     } else if (activeSkin === 'legend') {
-      // Divine Floating Halo Ring above Mast!
       cx.save(); cx.translate(12, -68);
       cx.strokeStyle = '#ffd700'; cx.lineWidth = 2;
       cx.beginPath(); cx.ellipse(0, 0, 12, 4, 0, 0, Math.PI * 2); cx.stroke();
@@ -5368,7 +5631,7 @@ function draw() {
       cx.restore();
     }
 
-    // Captain's Stained Glass Stern Windows (Lit Warmly)
+    // Captain's Stained Glass Windows
     cx.fillStyle = '#ffd23c';
     cx.beginPath(); cx.roundRect(-38, 16, 12, 10, 2); cx.fill();
     cx.fillStyle = 'rgba(255, 210, 60, 0.45)';
@@ -5379,17 +5642,16 @@ function draw() {
     cx.fillStyle = '#ff3344'; cx.beginPath(); cx.arc(-42, 16, 3.5, 0, Math.PI * 2); cx.fill();
 
     // -------------------------------------------------------------
-    // DYNAMIC SWIVEL DECK CANNON (Visually Evolves with Cannon Upgrades 0-3!)
+    // DYNAMIC SWIVEL DECK CANNON
     // -------------------------------------------------------------
-    const localAim = (ship.aimAngle || 0) - ship.pitch;
-    const recoilDist = ship.recoil * (6 + cLv);
+    const localAim = (p.aimAngle || 0) - (p.pitch || 0);
+    const recoilDist = (p.recoil || 0) * (6 + cLv);
 
     cx.save();
     cx.translate(36, 16);
     cx.rotate(localAim);
 
     if (cLv === 0) {
-      // Level 0: Standard Cast-Iron 18-Pdr
       const cgrad = cx.createLinearGradient(0, -4, 0, 4);
       cgrad.addColorStop(0, '#64748b'); cgrad.addColorStop(0.5, '#1e293b'); cgrad.addColorStop(1, '#0f172a');
       cx.fillStyle = cgrad;
@@ -5397,7 +5659,6 @@ function draw() {
       cx.strokeStyle = '#f59e0b'; cx.lineWidth = 1; cx.stroke();
       cx.fillStyle = '#f59e0b'; cx.fillRect(15 - recoilDist, -4, 3, 8);
     } else if (cLv === 1) {
-      // Level 1: Lengthened Rifled 24-Pdr with Reinforced Brass Bands
       const cgrad = cx.createLinearGradient(0, -5, 0, 5);
       cgrad.addColorStop(0, '#94a3b8'); cgrad.addColorStop(0.5, '#334155'); cgrad.addColorStop(1, '#0f172a');
       cx.fillStyle = cgrad;
@@ -5407,7 +5668,6 @@ function draw() {
       cx.fillRect(19 - recoilDist, -5, 3.5, 10);
       cx.fillRect(5 - recoilDist, -5, 2.5, 10);
     } else if (cLv === 2) {
-      // Level 2: Heavy 32-Pdr Siege Cannon with Glowing Heat Vents
       const cgrad = cx.createLinearGradient(0, -6, 0, 6);
       cgrad.addColorStop(0, '#cbd5e1'); cgrad.addColorStop(0.5, '#475569'); cgrad.addColorStop(1, '#020617');
       cx.fillStyle = cgrad;
@@ -5418,7 +5678,6 @@ function draw() {
       cx.fillRect(2 - recoilDist, 1, 14, 2);
       cx.fillStyle = '#fbbf24'; cx.fillRect(21 - recoilDist, -6.5, 4, 13);
     } else {
-      // Level 3: Mastercrafted Triple Rotary Gatling Cannon
       cx.fillStyle = '#1e293b';
       cx.beginPath(); cx.roundRect(-10 - recoilDist, -6, 16, 12, 2); cx.fill();
       for (const by of [-4, 0, 4]) {
@@ -5447,7 +5706,7 @@ function draw() {
     }
 
     // Active Energy Shield Bubble
-    if (shieldT > 0) {
+    if (shieldT > 0 || (p.inv > 1.8 && !p.dead)) {
       cx.globalAlpha = 0.6 + Math.sin(t * 8) * 0.2;
       cx.strokeStyle = '#00dfa2'; cx.lineWidth = 3.5;
       cx.beginPath(); cx.arc(0, 0, 70, 0, Math.PI * 2); cx.stroke();
@@ -5457,6 +5716,41 @@ function draw() {
     }
 
     cx.restore();
+
+    // Callsign Badge & Revival Halo in World Space
+    cx.save();
+    cx.translate(p.x, p.y);
+    const pBadgeCol = p.index === 0 ? '#ffd23c' : p.index === 1 ? '#00ffee' : '#c084fc';
+    if (p.dead) {
+      // Revival Pulse Halo
+      cx.strokeStyle = '#3fd07a'; cx.lineWidth = 3;
+      cx.beginPath(); cx.arc(0, 0, 75 + Math.sin(t * 6) * 8, 0, Math.PI * 2); cx.stroke();
+      cx.fillStyle = 'rgba(63, 208, 122, 0.12)'; cx.beginPath(); cx.arc(0, 0, 75, 0, Math.PI * 2); cx.fill();
+
+      // Revive status bar
+      cx.fillStyle = 'rgba(6, 14, 30, 0.9)';
+      cx.beginPath(); cx.roundRect(-65, -78, 130, 26, 6); cx.fill();
+      cx.strokeStyle = '#3fd07a'; cx.lineWidth = 1.5; cx.stroke();
+      if (p.reviveTimer > 0) {
+        cx.fillStyle = '#3fd07a'; cx.fillRect(-62, -75, 124 * Math.min(1, p.reviveTimer / 2.0), 20);
+      }
+      cx.fillStyle = '#ffffff'; cx.font = 'bold 11px "Orbitron", sans-serif'; cx.textAlign = 'center';
+      cx.fillText(p.reviveTimer > 0 ? `REVIVING ${(p.reviveTimer / 2.0 * 100).toFixed(0)}%` : 'FLY NEAR TO REVIVE', 0, -61);
+    } else {
+      // Callsign Badge above mast
+      cx.fillStyle = 'rgba(6, 14, 30, 0.75)';
+      cx.beginPath(); cx.roundRect(-42, -72, 84, 20, 5); cx.fill();
+      cx.strokeStyle = pBadgeCol; cx.lineWidth = 1.5; cx.stroke();
+      cx.fillStyle = pBadgeCol; cx.font = 'bold 10px "Orbitron", sans-serif'; cx.textAlign = 'center';
+      cx.fillText(`P${p.index + 1} ${p.name}`, 0, -58);
+    }
+    cx.restore();
+  }
+
+  if (state === 'intro' || state === 'play' || state === 'pause') {
+    for (let pi = 0; pi < fleet.length; pi++) {
+      drawSinglePlayerShip(cx, fleet[pi], t);
+    }
   }
 
   // Tactical Popups
@@ -5484,31 +5778,82 @@ function draw() {
     cx.fillRect(0, 0, W, H);
   }
 
-  // 11. Flight HUD (Sci-Fi Holographic Cockpit Telemetry)
+  // 11. Multi-Player Flight HUD (Sci-Fi Holographic Cockpit Telemetry)
   if (state === 'play' || state === 'pause') {
-    // Holographic Top Left Status Panel
-    cx.save();
-    cx.fillStyle = 'rgba(6, 14, 30, 0.65)';
-    cx.strokeStyle = 'rgba(255, 210, 60, 0.35)';
-    cx.lineWidth = 1.5;
-    cx.beginPath();
-    cx.roundRect(14, 14, 280, 140, 10);
-    cx.fill(); cx.stroke();
+    if (fleet.length === 1) {
+      // Classic Detailed Single-Player HUD Panel
+      cx.save();
+      cx.fillStyle = 'rgba(6, 14, 30, 0.65)';
+      cx.strokeStyle = 'rgba(255, 210, 60, 0.35)';
+      cx.lineWidth = 1.5;
+      cx.beginPath();
+      cx.roundRect(14, 14, 280, 140, 10);
+      cx.fill(); cx.stroke();
 
-    // Hull Health Hearts
-    cx.font = '24px sans-serif';
-    for (let i = 0; i < maxHp; i++) {
-      cx.fillText(i < ship.hp ? '❤️' : '🖤', 26 + (i % 6) * 30, 44 + Math.floor(i / 6) * 26);
+      cx.font = '24px sans-serif';
+      for (let i = 0; i < maxHp; i++) {
+        cx.fillText(i < ship.hp ? '❤️' : '🖤', 26 + (i % 6) * 30, 44 + Math.floor(i / 6) * 26);
+      }
+      
+      cx.fillStyle = '#ffd23c'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.textAlign = 'left';
+      cx.fillText(`🪙 GOLD: ${score}`, 26, 96);
+      cx.fillStyle = '#3fd5ff';
+      cx.fillText(`🌌 SECTOR: ${level}`, 26, 122);
+      cx.fillStyle = '#8fa6cb'; cx.font = '12px "Orbitron", sans-serif';
+      const speedKnots = Math.round(Math.hypot(ship.vx, ship.vy) * 0.4);
+      cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, 26, 144);
+      cx.restore();
+    } else {
+      // Co-op Multi-Player Fleet HUD Panels
+      for (let pi = 0; pi < fleet.length; pi++) {
+        const p = fleet[pi];
+        const panelX = 14 + pi * 230;
+        const panelY = 14;
+        const pCol = pi === 0 ? '#ffd23c' : pi === 1 ? '#00ffee' : '#c084fc';
+
+        cx.save();
+        cx.fillStyle = 'rgba(6, 14, 30, 0.75)';
+        cx.strokeStyle = pCol;
+        cx.lineWidth = 1.5;
+        cx.beginPath();
+        cx.roundRect(panelX, panelY, 218, 118, 10);
+        cx.fill(); cx.stroke();
+
+        cx.fillStyle = pCol; cx.font = 'bold 13px "Orbitron", sans-serif'; cx.textAlign = 'left';
+        cx.fillText(`P${pi + 1}: ${p.name.toUpperCase()}`, panelX + 12, panelY + 22);
+
+        cx.font = '17px sans-serif';
+        if (p.dead) {
+          cx.fillStyle = '#ff3344'; cx.font = 'bold 11px "Orbitron", sans-serif';
+          cx.fillText('💀 DOWNED — FLY NEAR!', panelX + 12, panelY + 48);
+        } else {
+          for (let h = 0; h < p.maxHp; h++) {
+            cx.fillText(h < p.hp ? '❤️' : '🖤', panelX + 12 + (h % 6) * 20, panelY + 48 + Math.floor(h / 6) * 18);
+          }
+        }
+
+        cx.fillStyle = '#ffd23c'; cx.font = 'bold 12px "Orbitron", sans-serif';
+        cx.fillText(`🪙 SCORE: ${p.score || 0}`, panelX + 12, panelY + 84);
+        cx.fillStyle = '#8fa6cb'; cx.font = '11px "Orbitron", sans-serif';
+        const spdKts = Math.round(Math.hypot(p.vx, p.vy) * 0.4);
+        cx.fillText(`⚡ SPEED: ${spdKts} KTS`, panelX + 12, panelY + 104);
+        cx.restore();
+      }
+
+      // Shared Fleet Score & Sector Badge at top right
+      cx.save();
+      cx.fillStyle = 'rgba(6, 14, 30, 0.75)';
+      cx.strokeStyle = '#ffd23c';
+      cx.lineWidth = 1.5;
+      cx.beginPath();
+      cx.roundRect(W - 220, 14, 206, 68, 10);
+      cx.fill(); cx.stroke();
+      cx.fillStyle = '#ffd23c'; cx.font = 'bold 14px "Orbitron", sans-serif'; cx.textAlign = 'left';
+      cx.fillText(`🪙 FLEET: ${score}`, W - 208, 38);
+      cx.fillStyle = '#3fd5ff'; cx.font = 'bold 12px "Orbitron", sans-serif';
+      cx.fillText(`🌌 SECTOR: ${level}`, W - 208, 62);
+      cx.restore();
     }
-    
-    cx.fillStyle = '#ffd23c'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.textAlign = 'left';
-    cx.fillText(`🪙 GOLD: ${score}`, 26, 96);
-    cx.fillStyle = '#3fd5ff';
-    cx.fillText(`🌌 SECTOR: ${level}`, 26, 122);
-    cx.fillStyle = '#8fa6cb'; cx.font = '12px "Orbitron", sans-serif';
-    const speedKnots = Math.round(Math.hypot(ship.vx, ship.vy) * 0.4);
-    cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, 26, 144);
-    cx.restore();
     
     if (combo >= 2 && comboT > 0) {
       cx.fillStyle = '#00d2ff'; cx.font = 'bold 24px "Orbitron", sans-serif';
