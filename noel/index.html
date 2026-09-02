@@ -1920,16 +1920,14 @@ function spawnBoss() {
 
 // ---------- GAME FLOW ----------
 function startCombat() {
-  if (state === 'intro') {
-    state = 'play';
-    sfx('incoming');
-    addShake(18);
-    addAlert('🚨 RED ALERT: ALIEN UFO BATTLEGROUP ATTACKING!', 'incoming');
-    spawnGlider();
-    spawnGlider();
-    spawnFort();
-    fortT = 2.4;
-  }
+  state = 'play';
+  sfx('incoming');
+  addShake(18);
+  addAlert('🚨 RED ALERT: ALIEN UFO BATTLEGROUP ATTACKING!', 'incoming');
+  spawnGlider();
+  spawnGlider();
+  spawnFort();
+  fortT = 2.4;
 }
 
 function startSolarSail(e) {
@@ -1944,26 +1942,6 @@ function startSolarSail(e) {
   applyLoadout();
   ship.hp = maxHp; ship.inv = 0; ship.x = W * 0.22; ship.y = H * 0.5;
   ship.vx = 0; ship.vy = 0; ship.pitch = 0;
-  introT = 0;
-  introShot1 = false;
-  introShot2 = false;
-  wreckage = [];
-  shieldShards = [];
-  introUfos = [
-    {
-      x: W * 0.82, y: H * 0.35, targetX: W * 0.58, targetY: H * 0.38,
-      vx: -180, vy: 20, pitch: 0.12, roll: 0.15,
-      col: '#00ff66', w: 70, h: 44, saucerSpin: 0,
-      shield: 1.0, dead: false, engineGlow: 1.0
-    },
-    {
-      x: W * 0.88, y: H * 0.65, targetX: W * 0.64, targetY: H * 0.62,
-      vx: -190, vy: -20, pitch: -0.12, roll: -0.15,
-      col: '#00e5ff', w: 70, h: 44, saucerSpin: 0,
-      shield: 1.0, dead: false, engineGlow: 1.0
-    }
-  ];
-  storySectorAnnounced = 1;
   tokensRun = 0; killsRun = 0; spinsRun = 0;
   balls = []; eballs = []; forts = []; gliders = []; mines = []; coins = []; powerups = []; parts = [];
   boss = null; bossT = 26; score = 0; coinsN = 0; level = 1; t = 0;
@@ -1973,7 +1951,7 @@ function startSolarSail(e) {
   const pb = document.getElementById('pausebtn');
   if (pb) pb.style.display = 'block';
   initAudio();
-  state = 'intro';
+  startCombat();
 }
 window.startSolarSail = startSolarSail;
 
