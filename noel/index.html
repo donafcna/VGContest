@@ -1494,11 +1494,21 @@ try {
   }
 } catch (e) {}
 
+const DEFAULT_TOP_PIRATES = [
+  { uid: 'creator_noel', name: 'Noël (Creator) 👑', score: 1480, level: 6, kills: 280, tokens: 45, ship: 'storm', skin: 'legend', upg: { hull: 3, cannon: 3, engine: 3, magnet: 3 }, created_at: Date.now() - 100000 },
+  { uid: 'pilot_blackbeard', name: 'Blackbeard', score: 1120, level: 5, kills: 210, tokens: 30, ship: 'hind', skin: 'royal', upg: { hull: 3, cannon: 2, engine: 3, magnet: 2 }, created_at: Date.now() - 200000 },
+  { uid: 'pilot_astral_ace', name: 'Astral Ace ⚡', score: 940, level: 4, kills: 180, tokens: 22, ship: 'runner', skin: 'ocean', upg: { hull: 2, cannon: 3, engine: 2, magnet: 2 }, created_at: Date.now() - 300000 },
+  { uid: 'pilot_red_corsair', name: 'Red Corsair ⛵', score: 760, level: 3, kills: 140, tokens: 16, ship: 'cutter', skin: 'sunset', upg: { hull: 2, cannon: 2, engine: 2, magnet: 1 }, created_at: Date.now() - 400000 },
+  { uid: 'pilot_star_lord', name: 'Star-Lord Nova 🌌', score: 580, level: 3, kills: 110, tokens: 12, ship: 'galleon', skin: 'toxic', upg: { hull: 3, cannon: 1, engine: 1, magnet: 1 }, created_at: Date.now() - 500000 },
+  { uid: 'pilot_gunner_jack', name: 'Gunner Jack', score: 420, level: 2, kills: 85, tokens: 8, ship: 'storm', skin: 'shadow', upg: { hull: 1, cannon: 2, engine: 1, magnet: 1 }, created_at: Date.now() - 600000 },
+  { uid: 'pilot_space_drake', name: 'Captain Drake', score: 310, level: 2, kills: 60, tokens: 6, ship: 'hind', skin: 'default', upg: { hull: 1, cannon: 1, engine: 1, magnet: 1 }, created_at: Date.now() - 700000 },
+];
+
 const LB = {
   URL: 'https://mxcdlljbbwsqhkpxfhbm.supabase.co',
   KEY: 'sb_publishable_NaWjzK8fltVv7OJUzYye8A_hr39WV51',
   TABLE: 'sky_pirates_scores',
-  online() { return false; }, // Default to reliable instant local storage
+  online() { return false; }, // Instant local storage + rich galactic roster
   _headers(extra) {
     return Object.assign({ apikey: this.KEY, Authorization: 'Bearer ' + this.KEY }, extra || {});
   },
@@ -1517,7 +1527,6 @@ const LB = {
     entry.tokens = typeof entry.tokens === 'number' ? entry.tokens : SAVE.data.tokens;
     entry.spins = typeof entry.spins === 'number' ? entry.spins : SAVE.data.spins;
 
-    // 1. ALWAYS persist immediately to local storage
     try {
       let arr = await this._all();
       const idx = arr.findIndex(r => r.uid && r.uid === entry.uid);
@@ -1539,17 +1548,6 @@ const LB = {
       }
       localStorage.setItem('sp_lb', JSON.stringify(arr));
     } catch (e) {}
-
-    // 2. Background Cloud Sync if available
-    if (this.online()) {
-      try {
-        await fetch(this.URL + '/rest/v1/' + this.TABLE, {
-          method: 'POST',
-          headers: this._headers({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
-          body: JSON.stringify(entry)
-        });
-      } catch (e) {}
-    }
   },
   async updateName(newName) {
     if (!newName) return;
@@ -1581,18 +1579,18 @@ const LB = {
       if (stored) {
         rows = JSON.parse(stored);
       }
-      if (!rows || !Array.isArray(rows)) {
-        rows = [];
-      }
     } catch (e) {
       rows = [];
+    }
+    if (!rows || !Array.isArray(rows) || rows.length === 0) {
+      rows = [...DEFAULT_TOP_PIRATES];
+      try { localStorage.setItem('sp_lb', JSON.stringify(rows)); } catch(e){}
     }
     return rows;
   },
   _dedupe(rows) {
     const best = new Map();
     for (const r of rows) {
-      // Deduplicate strictly by UID if available, otherwise by name
       const key = r.uid ? ('uid:' + r.uid) : ('name:' + (r.name || '').trim().toLowerCase());
       if (!key) continue;
       const p = best.get(key);
@@ -1982,6 +1980,11 @@ async function renderLeaderboard(cid, myScore, myName) {
   }
   el.innerHTML = html;
 }
+
+// Ensure leaderboard renders immediately and on window load
+try { renderLeaderboard('lbMenu', -1, null); } catch(e) {}
+window.addEventListener('DOMContentLoaded', () => { try { renderLeaderboard('lbMenu', -1, null); } catch(e) {} });
+window.addEventListener('load', () => { try { renderLeaderboard('lbMenu', -1, null); } catch(e) {} });
 
 // ---------- SPAWN ALIEN ENEMY ARCHETYPES WITH UNIQUE POWERS ----------
 // ---------- SPAWN ALIEN ENEMY ARCHETYPES WITH UNIQUE POWERS & SECTOR PROGRESSION ----------
