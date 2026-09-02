@@ -5856,11 +5856,10 @@ function draw() {
     cx.restore();
   }
 
-  // 13. CINEMATIC STAR WARS STORYLINE PROLOGUE OVERLAY
+  // 13. CINEMATIC BLOCKBUSTER MOVIE-GRADE STORYLINE PROLOGUE OVERLAY
   if (state === 'intro') {
-    // Cinematic Black Letterbox Bars
-    // Cinematic Black Letterbox Bars with Sci-Fi Holographic Trim
-    const barH = Math.min(110, H * 0.17);
+    // Cinematic Black Letterbox Bars with Sci-Fi Holographic HUD Trim
+    const barH = Math.min(118, H * 0.18);
     cx.fillStyle = '#010206';
     cx.fillRect(0, 0, W, barH);
     cx.fillRect(0, H - barH, W, barH);
@@ -5873,83 +5872,112 @@ function draw() {
     cx.moveTo(0, H - barH); cx.lineTo(W, H - barH);
     cx.stroke();
 
-    // Corner Tactical HUD Notches
+    // Corner Tactical HUD Notches & Neon Diodes
     cx.fillStyle = '#00ffee';
-    cx.fillRect(20, barH - 4, 30, 4);
-    cx.fillRect(W - 50, barH - 4, 30, 4);
-    cx.fillRect(20, H - barH, 30, 4);
-    cx.fillRect(W - 50, H - barH, 30, 4);
+    cx.fillRect(20, barH - 4, 34, 4);
+    cx.fillRect(W - 54, barH - 4, 34, 4);
+    cx.fillRect(20, H - barH, 34, 4);
+    cx.fillRect(W - 54, H - barH, 34, 4);
 
-    // Top Header: High-Tech Mission Dispatch
+    // Audio Waveform Visualizer in Top Letterbox
+    cx.strokeStyle = 'rgba(75, 213, 238, 0.45)';
+    cx.lineWidth = 1.5;
+    cx.beginPath();
+    for (let x = 30; x < W - 30; x += 8) {
+      const wv = Math.sin(t * 14 + x * 0.1) * 6 * Math.sin(t * 3);
+      cx.moveTo(x, barH - 12 - wv);
+      cx.lineTo(x, barH - 12 + wv);
+    }
+    cx.stroke();
+
+    // Top Header: High-Tech Mission Dispatch & Live Telemetry
     cx.textAlign = 'center';
     cx.font = 'bold 12px "Orbitron", sans-serif';
     cx.fillStyle = '#4bd5ee';
-    cx.fillText('⚡ OPERATION: THE OMEGA PLASMA CORE HEIST • DEEP ORION SECTOR', W / 2, barH - 22);
+    cx.fillText('⚡ OPERATION: THE OMEGA PLASMA CORE HEIST • DEEP ORION SECTOR • [LIVE COMM LINK]', W / 2, barH - 24);
 
-    // Narrative Acts Content (Ultra-Cool Space Pirate Saga)
-    if (introT < 2.5) {
-      // ACT I: The Great Cosmic Heist
-      cx.font = 'bold 16px "Orbitron", sans-serif';
+    // Narrative Acts Content (Hollywood / Anime Style Blockbuster Saga)
+    if (introT < 2.4) {
+      // ACT I: The Great Cosmic Heist & Interceptor Ambush
+      cx.font = 'bold 17px "Orbitron", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('🏴‍☠️ ACT I: THE GALAXY\'S GREATEST HEIST', W / 2, H - barH + 32);
+      cx.fillText('🏴‍☠️ ACT I: THE GALAXY\'S GREATEST PIRATE HEIST', W / 2, H - barH + 32);
 
+      // Character Dialogue Card 1
       cx.font = '14px "Outfit", sans-serif';
       cx.fillStyle = '#ff385c';
-      cx.fillText('🤖 [EMPEROR\'S COMM]: "Pirate Outlaw Noël! Surrender the stolen Omega Plasma Core or be vaporized!"', W / 2, H - barH + 58);
+      cx.fillText('🤖 [IMPERIAL COMMAND AI]: "Pirate Outlaw Noël! Surrender the stolen Omega Plasma Core or face immediate obliteration!"', W / 2, H - barH + 58);
 
-      cx.font = 'bold 14px "Outfit", sans-serif';
+      // Character Dialogue Card 2
+      cx.font = 'bold 15px "Outfit", sans-serif';
       cx.fillStyle = '#ffd23c';
       cx.fillText('👑 [CAPTAIN NOËL]: "You want the Core back? Tell your Emperor to come and take it himself!"', W / 2, H - barH + 82);
 
+      cx.font = '12px "Orbitron", sans-serif';
+      cx.fillStyle = '#00ffee';
+      cx.fillText('🛡️ [TACTICAL DEFLECTOR SHIELD]: ENERGIZED — DEFLECTING ENEMY LASER BARRAGE!', W / 2, H - barH + 102);
+
     } else if (introT < 4.8) {
-      // ACT II: Supercharged Broadside Salvo
-      cx.font = 'bold 16px "Orbitron", sans-serif';
+      // ACT II: Supercharged 360° Corkscrew Broadside
+      cx.font = 'bold 17px "Orbitron", sans-serif';
       cx.fillStyle = '#38bdf8';
-      cx.fillText('⚔️ ACT II: SUPERCHARGED CORKSCREW BROADSIDES', W / 2, H - barH + 32);
+      cx.fillText('⚔️ ACT II: 360° COMBAT ROLL & QUAD PLASMA BROADSIDES', W / 2, H - barH + 32);
 
       cx.font = '14px "Outfit", sans-serif';
       cx.fillStyle = '#38bdf8';
-      cx.fillText('🚨 [TACTICAL AI]: "WARNING: Twin Imperial Shadow-Interceptors locking plasma torpedoes on our hull!"', W / 2, H - barH + 58);
+      cx.fillText('🚨 [TACTICAL AI]: "TARGET LOCK ACQUIRED: Twin Shadow-Interceptors on collision course!"', W / 2, H - barH + 58);
+
+      cx.font = 'bold 15px "Outfit", sans-serif';
+      cx.fillStyle = '#ffd23c';
+      cx.fillText('💥 [CAPTAIN NOËL]: "OVERDRIVE THE OMEGA CORE INTO THE 32-POUNDERS... UNLEASH THE SALVO!"', W / 2, H - barH + 82);
+
+      cx.font = '12px "Orbitron", sans-serif';
+      cx.fillStyle = '#ff9900';
+      cx.fillText('⚡ [BROADSIDE SYSTEM]: 4 CORKSCREW CANNONBALLS TRACKING TARGET POWER CORES!', W / 2, H - barH + 102);
+
+    } else if (introT < 6.8) {
+      // ACT III: Supernova Obliteration & Magnetic Quantum Loot
+      cx.font = 'bold 17px "Orbitron", sans-serif';
+      cx.fillStyle = '#00dfa2';
+      cx.fillText('💥 ACT III: SUPERNOVA OBLITERATION — SHADOW FIGHTERS SHATTERED!', W / 2, H - barH + 32);
+
+      cx.font = '14px "Outfit", sans-serif';
+      cx.fillStyle = '#ffffff';
+      cx.fillText('⚡ "Direct impacts trigger twin catastrophic plasma overloads! Blinding shockwaves tear through space!"', W / 2, H - barH + 58);
 
       cx.font = 'bold 14px "Outfit", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('💥 [CAPTAIN NOËL]: "Channel the Omega Core into the 32-pounders... FIRE FULL BROADSIDE!"', W / 2, H - barH + 82);
+      cx.fillText('🪙 [CARGO TELEMETRY]: "+2,500 Gold Dubloons & Plasma Relics Magnetically Salvaged!"', W / 2, H - barH + 82);
 
-    } else if (introT < 6.8) {
-      // ACT III: Supernova Obliteration
-      cx.font = 'bold 16px "Orbitron", sans-serif';
-      cx.fillStyle = '#00dfa2';
-      cx.fillText('💥 ACT III: SUPERNOVA DETONATION — SHADOW FIGHTERS OBLITERATED!', W / 2, H - barH + 32);
-
-      cx.font = '14px "Outfit", sans-serif';
-      cx.fillStyle = '#ffffff';
-      cx.fillText('⚡ "Twin corkscrew cannonballs vaporize the Imperial Interceptors in a blinding plasma shockwave!"', W / 2, H - barH + 58);
-
-      cx.font = '14px "Outfit", sans-serif';
-      cx.fillStyle = '#ffd23c';
-      cx.fillText('🪙 "Looting +2,500 Gold Dubloons! But subspace gravitational sensors are screaming..."', W / 2, H - barH + 82);
+      cx.font = '12px "Orbitron", sans-serif';
+      cx.fillStyle = '#c084fc';
+      cx.fillText('🌌 [SUBSPACE RADAR]: CRITICAL GRAVITATIONAL ANOMALY DETECTED IN LOCAL CLUSTER!', W / 2, H - barH + 102);
 
     } else {
-      // ACT IV: The Entire Imperial Mother-Armada Warps In!
+      // ACT IV: The Entire Imperial Mother-Armada Drops Out of Hyperspace!
       const flash = Math.sin(introT * 18) > 0;
-      cx.font = 'bold 16px "Orbitron", sans-serif';
+      cx.font = 'bold 17px "Orbitron", sans-serif';
       cx.fillStyle = flash ? '#ff0055' : '#ffd23c';
-      cx.fillText('🚨 ACT IV: THE ENTIRE IMPERIAL MOTHER-FLEET DROPS OUT OF WARP!', W / 2, H - barH + 32);
+      cx.fillText('🚨 ACT IV: THE IMPERIAL TITAN MOTHER-ARMADA DROPS OUT OF WARP!', W / 2, H - barH + 32);
 
       cx.font = '14px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('🚨 [FIRST MATE]: "CAPTAIN! The Imperial Mother-Fleet just blocked our escape route! We\'re outnumbered 1,000 to 1!"', W / 2, H - barH + 58);
+      cx.fillText('🚨 [FIRST MATE]: "CAPTAIN! 1,000 Imperial Dreadnoughts just surrounded our sector! We\'re outnumbered!"', W / 2, H - barH + 58);
 
       cx.font = 'bold 15px "Orbitron", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('👑 [CAPTAIN NOËL]: "Good. That just means we can fire in any direction! SET SOLAR SAILS FOR WAR!"', W / 2, H - barH + 82);
+      cx.fillText('👑 [CAPTAIN NOËL]: "THEY HAVE US SURROUNDED? PERFECT! ALL CANNONS TO FULL BATTERY — SET SOLAR SAILS FOR WAR!"', W / 2, H - barH + 82);
+
+      cx.font = 'bold 13px "Orbitron", sans-serif';
+      cx.fillStyle = flash ? '#ffd23c' : '#ff0055';
+      cx.fillText('⚔️ ENGAGING FLEET BATTLE STATIONS IN 3... 2... 1... ⚔️', W / 2, H - barH + 104);
     }
 
-    // Interactive Skip Button on bottom right
+    // Interactive Skip Button on bottom right with glowing pulse
     cx.textAlign = 'right';
-    cx.font = 'bold 11px "Orbitron", sans-serif';
-    cx.fillStyle = 'rgba(255, 210, 60, 0.9)';
-    cx.fillText('⏩ TAP ANYWHERE / SPACE TO ENGAGE ▶', W - 20, H - barH - 12);
+    cx.font = 'bold 12px "Orbitron", sans-serif';
+    cx.fillStyle = Math.sin(t * 8) > 0 ? '#ffd23c' : '#ffffff';
+    cx.fillText('⏩ TAP ANYWHERE / SPACE TO ENGAGE INSTANTLY ▶', W - 20, H - barH - 14);
   }
 }
 
