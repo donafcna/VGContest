@@ -5695,70 +5695,97 @@ function draw() {
   // 13. CINEMATIC STAR WARS STORYLINE PROLOGUE OVERLAY
   if (state === 'intro') {
     // Cinematic Black Letterbox Bars
-    const barH = Math.min(94, H * 0.15);
+    // Cinematic Black Letterbox Bars with Sci-Fi HUD Trim
+    const barH = Math.min(106, H * 0.16);
     cx.fillStyle = '#010206';
     cx.fillRect(0, 0, W, barH);
     cx.fillRect(0, H - barH, W, barH);
     
-    // Glowing Gold Trim
+    // Glowing Holographic Golden & Cyan Trim
     cx.strokeStyle = '#ffd23c';
-    cx.lineWidth = 2;
+    cx.lineWidth = 2.5;
     cx.beginPath();
     cx.moveTo(0, barH); cx.lineTo(W, barH);
     cx.moveTo(0, H - barH); cx.lineTo(W, H - barH);
     cx.stroke();
 
-    // Top Header: Iconic Star Wars Universe Header
+    // Corner Tactical HUD Notches
+    cx.fillStyle = '#00ffee';
+    cx.fillRect(20, barH - 4, 30, 4);
+    cx.fillRect(W - 50, barH - 4, 30, 4);
+    cx.fillRect(20, H - barH, 30, 4);
+    cx.fillRect(W - 50, H - barH, 30, 4);
+
+    // Top Header: Dramatic Star Cluster Header
     cx.textAlign = 'center';
     cx.font = 'bold 12px "Orbitron", sans-serif';
     cx.fillStyle = '#4bd5ee';
-    cx.fillText('✨ A LONG TIME AGO IN A STAR CLUSTER FAR, FAR AWAY....', W / 2, barH - 24);
+    cx.fillText('✨ A LONG TIME AGO IN A STAR CLUSTER FAR, FAR AWAY....', W / 2, barH - 22);
 
-    // Narrative Stage Content
-    if (introT < 2.0) {
-      // Stage 1: The Galactic Prologue
-      cx.font = 'bold 15px "Orbitron", sans-serif';
+    // Narrative Acts Content
+    if (introT < 2.5) {
+      // ACT I: The Lone Solar Corsair
+      cx.font = 'bold 16px "Orbitron", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('🌌 EPISODE I: THE COSMIC CORSAIR', W / 2, H - barH + 34);
+      cx.fillText('🌌 ACT I: THE LAST SOLAR GALLEON IN THE VOID', W / 2, H - barH + 32);
 
       cx.font = '15px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('"A lone wooden Solar Pirate Galleon sails deep space. Two Imperial TIE Starfighters advance on intercept vector..."', W / 2, H - barH + 64);
-    } else if (introT < 3.8) {
-      // Stage 2: Action-Cam Cannon Zoom & Acrobatic Looping Broadside
-      cx.font = 'bold 15px "Orbitron", sans-serif';
-      cx.fillStyle = '#ffd23c';
-      cx.fillText('⚔️ ACTION-CAM LOCK: ACROBATIC BROADSIDE SALVO!', W / 2, H - barH + 34);
+      cx.fillText('"Deep in the Orion Abyss... Captain Noël stands at the helm of the legendary Solar Galleon."', W / 2, H - barH + 58);
+
+      cx.font = '13px "Outfit", sans-serif';
+      cx.fillStyle = '#ff4d6d';
+      cx.fillText('📡 "RADAR KLAXONS SHRIEKS: Two Imperial Starfighter Interceptors detected on collision vector!"', W / 2, H - barH + 80);
+
+    } else if (introT < 4.8) {
+      // ACT II: Tactical Lock & Acrobatic Broadside Salvo
+      cx.font = 'bold 16px "Orbitron", sans-serif';
+      cx.fillStyle = '#38bdf8';
+      cx.fillText('⚔️ ACT II: ACROBATIC BROADSIDE SALVO LOCKED!', W / 2, H - barH + 32);
 
       cx.font = '15px "Outfit", sans-serif';
+      cx.fillStyle = '#ffd23c';
+      cx.fillText('🎯 Captain Noël: "Hold fast crew! Target their ion thrusters and FIRE 32-POUNDERS!"', W / 2, H - barH + 58);
+
+      cx.font = '13px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('"Firing twin corkscrew cannonballs... Looping acrobatically to blast the incoming Imperial Fighters!"', W / 2, H - barH + 64);
-    } else if (introT < 5.5) {
-      // Stage 3: Simultaneous Dual Explosions
-      cx.font = 'bold 15px "Orbitron", sans-serif';
+      cx.fillText('💥 "Twin fiery cannonballs loop in lethal 360° corkscrew trajectories through the cosmic void!"', W / 2, H - barH + 80);
+
+    } else if (introT < 6.8) {
+      // ACT III: Simultaneous Vaporization
+      cx.font = 'bold 16px "Orbitron", sans-serif';
       cx.fillStyle = '#00dfa2';
-      cx.fillText('💥 DIRECT HITS! BOTH IMPERIAL FIGHTERS VAPORIZED!', W / 2, H - barH + 34);
+      cx.fillText('💥 ACT III: VANGUARD STARFIGHTERS VAPORIZED!', W / 2, H - barH + 32);
 
       cx.font = '15px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('"Imperial ion cores catastrophically overload in twin plasma blast waves! Salvaging dubloons..."', W / 2, H - barH + 64);
-    } else {
-      // Stage 4: Massive Alien Armada Inbound
-      const flash = Math.sin(introT * 18) > 0;
-      cx.font = 'bold 15px "Orbitron", sans-serif';
-      cx.fillStyle = flash ? '#ff0055' : '#ffffff';
-      cx.fillText('🚨 RED ALERT: THE IMPERIAL UFO BATTLE FLEET HAS ARRIVED!', W / 2, H - barH + 34);
+      cx.fillText('⚡ "Direct impacts trigger catastrophic ion reactor overloads! Salvaging gold dubloons..."', W / 2, H - barH + 58);
 
-      cx.font = 'bold 15px "Outfit", sans-serif';
+      cx.font = '13px "Outfit", sans-serif';
+      cx.fillStyle = '#38bdf8';
+      cx.fillText('🌌 "Sensors detect massive gravitational shockwaves tearing through subspace..."', W / 2, H - barH + 80);
+
+    } else {
+      // ACT IV: The Imperial Armada Drops Out of Hyperspace!
+      const flash = Math.sin(introT * 18) > 0;
+      cx.font = 'bold 16px "Orbitron", sans-serif';
+      cx.fillStyle = flash ? '#ff0055' : '#ffd23c';
+      cx.fillText('🚨 ACT IV: THE IMPERIAL MOTHER-ARMADA DROPS OUT OF HYPERSPACE!', W / 2, H - barH + 32);
+
+      cx.font = '15px "Outfit", sans-serif';
+      cx.fillStyle = '#ffffff';
+      cx.fillText('🚨 First Mate: "CAPTAIN! Imperial Battleships & Cruisers have completely surrounded our sector!"', W / 2, H - barH + 58);
+
+      cx.font = 'bold 14px "Orbitron", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('"MASSIVE ENEMY WARSHIPS ADVANCING IN ATTACK FORMATION! ALL HANDS TO BATTLE STATIONS!"', W / 2, H - barH + 64);
+      cx.fillText('⚔️ Captain Noël: "SOUND THE BATTLE HORN! ALL HANDS TO BROADSIDE CANNONS! SET SOLAR SAILS FOR WAR!"', W / 2, H - barH + 80);
     }
 
-    // Skip Button Indicator
+    // Interactive Skip Button on bottom right
     cx.textAlign = 'right';
-    cx.font = '12px "Orbitron", sans-serif';
-    cx.fillStyle = 'rgba(255, 210, 60, 0.85)';
-    cx.fillText('[ SPACE / CLICK TO SKIP PROLOGUE ▶ ]', W - 24, H - barH - 14);
+    cx.font = 'bold 11px "Orbitron", sans-serif';
+    cx.fillStyle = 'rgba(255, 210, 60, 0.9)';
+    cx.fillText('⏩ TAP ANYWHERE / SPACE TO ENGAGE ▶', W - 20, H - barH - 12);
   }
 }
 
