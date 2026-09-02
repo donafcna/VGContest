@@ -153,7 +153,7 @@
     🎮 <b>Navigation</b>: <b>W A S D</b> or <b>Arrow Keys</b> (Solar Ether Flight &amp; Speed Thrusters)<br>
     📱 <b>Mobile Touch</b>: Drag anywhere to steer &amp; lock-on auto fire!
   </div>
-  <input id="pname" placeholder="Captain Callsign" maxlength="14" autocomplete="off">
+  <input id="pname" placeholder="Pirate Name" maxlength="14" autocomplete="off">
   <div class="btnrow">
     <button id="startbtn">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ PIRATE HANGAR &amp; UPGRADES</button>
@@ -1021,7 +1021,7 @@ async function renderLeaderboard(cid, myScore, myName) {
     html += '</ol>';
   }
   if (myScore >= 0 && myRank) {
-    html += '<div class="myrank">⭐ Callsign Rank: #' + myRank + ' — ' + esc(myName) + ' · 🪙 ' + myScore + '</div>';
+    html += '<div class="myrank">⭐ Pirate Rank: #' + myRank + ' — ' + esc(myName) + ' · 🪙 ' + myScore + '</div>';
   }
   el.innerHTML = html;
 }
