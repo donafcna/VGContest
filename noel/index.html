@@ -600,35 +600,35 @@ let boss = null, bossT = 26;
 let fortT = 1.6, gliderT = 4.5, mineT = 7.5, shootCool = 0, t = 0;
 
 function getCameraTransform() {
-  let zoom = 1.08;
+  let zoom = 1.05;
   let camX = W * 0.5, camY = H * 0.5;
   
   if (state === 'intro') {
     if (introT < 1.9) {
-      // Act 1: Wide cinematic view of galleon and advancing UFO scouts
-      zoom = 1.08;
+      // Act 1: Wide cinematic panoramic view of galleon and advancing starfighters
+      zoom = 1.05;
       camX = W * 0.5;
       camY = H * 0.5;
     } else if (introT < 2.4) {
-      // Smoothly zoom in on the cannons and UFOs
+      // Smoothly zoom slightly closer for the broadside action
       const p = (introT - 1.9) / 0.5;
-      zoom = 1.08 + p * (2.35 - 1.08);
-      camX = (W * 0.5) + p * (W * 0.44 - W * 0.5);
+      zoom = 1.05 + p * (1.35 - 1.05);
+      camX = (W * 0.5) + p * (W * 0.48 - W * 0.5);
       camY = H * 0.5;
     } else if (introT < 5.2) {
-      // Act 2: ACTION-CAM SHOT ZOOM (Cannons, looping corkscrews, and exploding UFOs!)
-      zoom = 2.35;
-      camX = W * 0.44;
+      // Act 2: Perfect widescreen action view of all 4 corkscrewing cannonballs & starfighters
+      zoom = 1.35;
+      camX = W * 0.48;
       camY = H * 0.5;
-    } else if (introT < 7.6) {
-      // Act 3: Smoothly zoom back out to wide galactic view!
-      const p = (introT - 5.2) / 2.4;
-      zoom = 2.35 - p * (2.35 - 1.08);
-      camX = (W * 0.44) - p * (W * 0.44 - W * 0.5);
+    } else if (introT < 7.2) {
+      // Act 3: Smoothly zoom back out as the supernova shockwaves and dubloons burst
+      const p = (introT - 5.2) / 2.0;
+      zoom = 1.35 - p * (1.35 - 1.05);
+      camX = (W * 0.48) - p * (W * 0.48 - W * 0.5);
       camY = H * 0.5;
     } else {
-      // Act 4: Wide galactic combat battle view
-      zoom = 1.08;
+      // Act 4: Full panoramic view as the massive Imperial Armada drops out of warp
+      zoom = 1.05;
       camX = W * 0.5;
       camY = H * 0.5;
     }
