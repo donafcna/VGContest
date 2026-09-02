@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { overflow: hidden; height: 100%; background: #020308; touch-action: none;
@@ -439,64 +440,104 @@
   <h1>🏴‍☠️ SPACE PIRATES</h1>
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
   Sail through deep cosmic space and blast <b>Star Wars-style alien UFO squadrons &amp; Motherships</b> with heavy naval broadsides!</p>
-  <!-- 👥 1-3 PLAYER FLEET CO-OP SQUAD SYSTEM -->
-  <div id="fleetSetupBox" style="background: rgba(15,23,42,0.85); border: 2px solid rgba(255,210,60,0.4); border-radius: 16px; padding: 14px 18px; margin: 12px auto; max-width: 520px; text-align: left; box-shadow: 0 0 24px rgba(0,0,0,0.7);">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-      <span style="font-weight:900; color:#ffd23c; font-size:1.02rem; font-family:'Orbitron',sans-serif; letter-spacing:0.5px">👥 CO-OP FLEET SQUAD</span>
-      <div style="display:flex; gap:6px;" id="fleetTabContainer">
-        <button type="button" class="fleet-tab active" data-players="1" style="padding:4px 12px; font-size:0.8rem; background:linear-gradient(135deg,#ffd23c,#ff9900); color:#000; border-radius:6px; font-weight:bold; cursor:pointer;">1 Solo</button>
-        <button type="button" class="fleet-tab" data-players="2" style="padding:4px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1); color:#cfe4ff; border-radius:6px; font-weight:bold; cursor:pointer;">2 Duo</button>
-        <button type="button" class="fleet-tab" data-players="3" style="padding:4px 12px; font-size:0.8rem; background:rgba(255,255,255,0.1); color:#cfe4ff; border-radius:6px; font-weight:bold; cursor:pointer;">3 Trio 🚀</button>
+  <!-- 🌐 ONLINE SQUAD & CO-OP (DIFFERENT DEVICES & ROOMS) -->
+  <div id="fleetSetupBox" style="background: rgba(15,23,42,0.92); border: 2px solid rgba(255,210,60,0.45); border-radius: 18px; padding: 14px 18px; margin: 12px auto; max-width: 540px; text-align: left; box-shadow: 0 0 30px rgba(0,0,0,0.85);">
+    
+    <!-- Lobby Mode Tabs -->
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:6px;">
+      <span style="font-weight:900; color:#ffd23c; font-size:1.02rem; font-family:'Orbitron',sans-serif; letter-spacing:0.5px">🌐 MULTIPLAYER SQUAD</span>
+      <div style="display:flex; gap:5px;" id="netTabContainer">
+        <button type="button" class="net-tab active" data-mode="solo" style="padding:4px 10px; font-size:0.78rem; background:linear-gradient(135deg,#ffd23c,#ff9900); color:#000; border-radius:6px; font-weight:bold; cursor:pointer;">👤 Solo</button>
+        <button type="button" class="net-tab" data-mode="host" style="padding:4px 10px; font-size:0.78rem; background:rgba(255,255,255,0.1); color:#cfe4ff; border-radius:6px; font-weight:bold; cursor:pointer;">👑 Host Room</button>
+        <button type="button" class="net-tab" data-mode="join" style="padding:4px 10px; font-size:0.78rem; background:rgba(255,255,255,0.1); color:#cfe4ff; border-radius:6px; font-weight:bold; cursor:pointer;">🚀 Join Friend</button>
+        <button type="button" class="net-tab" data-mode="couch" style="padding:4px 10px; font-size:0.78rem; background:rgba(255,255,255,0.1); color:#cfe4ff; border-radius:6px; font-weight:bold; cursor:pointer;">🎮 Same Screen</button>
       </div>
     </div>
 
-    <!-- Player 1 (Captain) -->
-    <div class="player-slot" id="slotP1" style="display:flex; align-items:center; gap:8px; margin-bottom:8px; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px; border-left:4px solid #ffd23c;">
-      <span style="font-weight:bold; color:#ffd23c; font-size:0.85rem; width:88px; font-family:'Orbitron',sans-serif">P1 (Captain):</span>
-      <input id="pname1" placeholder="Captain Noel" maxlength="14" style="flex:1; padding:6px 10px; font-size:0.88rem; margin:0;" value="Noël">
-      <select id="pship1" style="background:#0f172a; color:#ffd23c; border:1px solid #ffd23c; border-radius:8px; padding:6px 8px; font-size:0.8rem; font-family:'Orbitron',sans-serif">
-        <option value="cutter">Solar Corsair ⛵</option>
-        <option value="galleon">Armoured Galleon 🛡️</option>
-        <option value="runner">Astral Sloop ⚡</option>
-        <option value="hind">Golden Hind 👑</option>
-        <option value="storm">Solar Dreadnought 🌌</option>
-      </select>
+    <!-- Section A: Solo Profile -->
+    <div id="netPanelSolo" class="net-panel">
+      <div style="display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px; border-left:4px solid #ffd23c;">
+        <span style="font-weight:bold; color:#ffd23c; font-size:0.85rem; width:88px; font-family:'Orbitron',sans-serif">Captain:</span>
+        <input id="pnameSolo" placeholder="Noël" maxlength="14" style="flex:1; padding:6px 10px; font-size:0.88rem; margin:0;" value="Noël">
+        <select id="pshipSolo" style="background:#0f172a; color:#ffd23c; border:1px solid #ffd23c; border-radius:8px; padding:6px 8px; font-size:0.8rem; font-family:'Orbitron',sans-serif">
+          <option value="cutter">Solar Corsair ⛵</option>
+          <option value="galleon">Armoured Galleon 🛡️</option>
+          <option value="runner">Astral Sloop ⚡</option>
+          <option value="hind">Golden Hind 👑</option>
+          <option value="storm">Solar Dreadnought 🌌</option>
+        </select>
+      </div>
+      <p style="font-size:0.8rem; color:#94a3b8; margin-top:8px; margin-bottom:0;">Sail solo through cosmic space, earn gold, spin the wheel, and vanquish alien flagships!</p>
     </div>
 
-    <!-- Player 2 (Friend 1) -->
-    <div class="player-slot" id="slotP2" style="display:none; align-items:center; gap:8px; margin-bottom:8px; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px; border-left:4px solid #00ffee;">
-      <span style="font-weight:bold; color:#00ffee; font-size:0.85rem; width:88px; font-family:'Orbitron',sans-serif">P2 (Wingman):</span>
-      <input id="pname2" placeholder="Friend 1 Name" maxlength="14" style="flex:1; padding:6px 10px; font-size:0.88rem; margin:0;" value="First Mate">
-      <select id="pship2" style="background:#0f172a; color:#00ffee; border:1px solid #00ffee; border-radius:8px; padding:6px 8px; font-size:0.8rem; font-family:'Orbitron',sans-serif">
-        <option value="runner">Astral Sloop ⚡</option>
-        <option value="cutter">Solar Corsair ⛵</option>
-        <option value="galleon">Armoured Galleon 🛡️</option>
-        <option value="hind">Golden Hind 👑</option>
-        <option value="storm">Solar Dreadnought 🌌</option>
-      </select>
-    </div>
+    <!-- Section B: Host Online Room -->
+    <div id="netPanelHost" class="net-panel" style="display:none;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px; border-left:4px solid #ffd23c;">
+        <span style="font-weight:bold; color:#ffd23c; font-size:0.85rem; width:88px; font-family:'Orbitron',sans-serif">Host Name:</span>
+        <input id="pnameHost" placeholder="Noël" maxlength="14" style="flex:1; padding:6px 10px; font-size:0.88rem; margin:0;" value="Noël">
+        <select id="pshipHost" style="background:#0f172a; color:#ffd23c; border:1px solid #ffd23c; border-radius:8px; padding:6px 8px; font-size:0.8rem; font-family:'Orbitron',sans-serif">
+          <option value="cutter">Solar Corsair ⛵</option>
+          <option value="galleon">Armoured Galleon 🛡️</option>
+          <option value="runner">Astral Sloop ⚡</option>
+          <option value="hind">Golden Hind 👑</option>
+          <option value="storm">Solar Dreadnought 🌌</option>
+        </select>
+      </div>
 
-    <!-- Player 3 (Friend 2) -->
-    <div class="player-slot" id="slotP3" style="display:none; align-items:center; gap:8px; margin-bottom:8px; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px; border-left:4px solid #c084fc;">
-      <span style="font-weight:bold; color:#c084fc; font-size:0.85rem; width:88px; font-family:'Orbitron',sans-serif">P3 (Gunner):</span>
-      <input id="pname3" placeholder="Friend 2 Name" maxlength="14" style="flex:1; padding:6px 10px; font-size:0.88rem; margin:0;" value="Gunner">
-      <select id="pship3" style="background:#0f172a; color:#c084fc; border:1px solid #c084fc; border-radius:8px; padding:6px 8px; font-size:0.8rem; font-family:'Orbitron',sans-serif">
-        <option value="storm">Solar Dreadnought 🌌</option>
-        <option value="cutter">Solar Corsair ⛵</option>
-        <option value="galleon">Armoured Galleon 🛡️</option>
-        <option value="runner">Astral Sloop ⚡</option>
-        <option value="hind">Golden Hind 👑</option>
-      </select>
-    </div>
+      <!-- Room Code Banner -->
+      <div style="background:rgba(255,210,60,0.12); border:1px dashed #ffd23c; border-radius:10px; padding:10px 14px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <div>
+          <span style="font-size:0.75rem; color:#cfe4ff; font-family:'Orbitron',sans-serif;">ROOM CODE (SHARE WITH FRIENDS):</span><br>
+          <span id="hostRoomCodeDisplay" style="font-size:1.35rem; font-weight:900; color:#ffd23c; font-family:'Orbitron',sans-serif; letter-spacing:2px;">GENERATING...</span>
+        </div>
+        <button type="button" id="copyOnlineInviteBtn" style="background:linear-gradient(135deg,#ffd23c,#ff9900); color:#000; border:none; font-size:0.78rem; padding:6px 12px; border-radius:8px; font-weight:bold; cursor:pointer; font-family:'Orbitron',sans-serif;">📋 Copy Invite Link</button>
+      </div>
 
-    <!-- Fleet Controls Guide & Room Invite -->
-    <div style="font-size:0.78rem; color:#94a3b8; line-height:1.45; margin-top:8px; border-top:1px solid rgba(255,255,255,0.1); padding-top:8px;">
-      <div>🎮 <b>P1</b>: WASD + Mouse/Space • <b>P2</b>: Arrow Keys + NumPad 0/K/Enter • <b>P3</b>: IJKL + O/P/Space (Controllers supported!)</div>
-      <div style="margin-top:6px; display:flex; align-items:center; gap:8px;">
-        <button type="button" id="copyFleetLinkBtn" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,210,60,0.4); color:#ffd23c; font-size:0.75rem; padding:4px 10px; border-radius:6px; cursor:pointer;">📋 Copy Fleet Invite Link</button>
-        <span id="fleetLinkCopied" style="color:#3fd07a; font-size:0.78rem; display:none;">✔ Link copied!</span>
+      <!-- Connected Squad Roster -->
+      <div style="background:rgba(0,0,0,0.4); border-radius:10px; padding:8px 12px; font-size:0.82rem;">
+        <div style="font-weight:bold; color:#3fd5ff; font-family:'Orbitron',sans-serif; margin-bottom:6px;">👥 CONNECTED FLEET (Up to 3 Devices):</div>
+        <div id="hostSlot0" style="color:#ffd23c; padding:3px 0;">👑 P1 (Host): Noël (Ready)</div>
+        <div id="hostSlot1" style="color:#64748b; padding:3px 0;">⏳ P2 (Wingman): Waiting for friend to connect...</div>
+        <div id="hostSlot2" style="color:#64748b; padding:3px 0;">⏳ P3 (Gunner): Waiting for friend to connect...</div>
       </div>
     </div>
+
+    <!-- Section C: Join Online Room -->
+    <div id="netPanelJoin" class="net-panel" style="display:none;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:10px; border-left:4px solid #00ffee;">
+        <span style="font-weight:bold; color:#00ffee; font-size:0.85rem; width:88px; font-family:'Orbitron',sans-serif">Pilot Name:</span>
+        <input id="pnameJoin" placeholder="Your Name" maxlength="14" style="flex:1; padding:6px 10px; font-size:0.88rem; margin:0;" value="Wingman">
+        <select id="pshipJoin" style="background:#0f172a; color:#00ffee; border:1px solid #00ffee; border-radius:8px; padding:6px 8px; font-size:0.8rem; font-family:'Orbitron',sans-serif">
+          <option value="runner">Astral Sloop ⚡</option>
+          <option value="cutter">Solar Corsair ⛵</option>
+          <option value="galleon">Armoured Galleon 🛡️</option>
+          <option value="hind">Golden Hind 👑</option>
+          <option value="storm">Solar Dreadnought 🌌</option>
+        </select>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <input id="joinRoomCodeInp" placeholder="Room Code (e.g. PIRATE-123)" maxlength="18" style="flex:1; padding:8px 12px; font-size:0.95rem; font-family:'Orbitron',sans-serif; text-transform:uppercase; background:#0b1329; border:1px solid #00ffee; color:#00ffee; border-radius:8px;">
+        <button type="button" id="joinRoomBtn" style="background:linear-gradient(135deg,#00ffee,#0088ff); color:#000; border:none; padding:8px 16px; font-size:0.85rem; font-weight:bold; border-radius:8px; cursor:pointer; font-family:'Orbitron',sans-serif;">🚀 CONNECT</button>
+      </div>
+
+      <div id="joinStatusText" style="font-size:0.82rem; color:#94a3b8; padding:4px;">Enter the Room Code from your friend or click their invite link!</div>
+    </div>
+
+    <!-- Section D: Couch Same-Screen Mode -->
+    <div id="netPanelCouch" class="net-panel" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:0.82rem; color:#cfe4ff;">Same-Screen Players:</span>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="couch-cnt active" data-cnt="2" style="padding:3px 10px; font-size:0.75rem; background:#ffd23c; color:#000; border-radius:4px; font-weight:bold; cursor:pointer;">2 Players</button>
+          <button type="button" class="couch-cnt" data-cnt="3" style="padding:3px 10px; font-size:0.75rem; background:rgba(255,255,255,0.1); color:#cfe4ff; border-radius:4px; font-weight:bold; cursor:pointer;">3 Players</button>
+        </div>
+      </div>
+      <div style="font-size:0.78rem; color:#94a3b8; line-height:1.45; background:rgba(0,0,0,0.3); padding:8px 12px; border-radius:8px;">
+        🎮 <b>P1</b>: WASD + Mouse • <b>P2</b>: Arrow Keys + NumPad 0/K • <b>P3</b>: IJKL + O/P (Controllers supported!)
+      </div>
+    </div>
+
   </div>
 
   <input id="pname" type="hidden" value="Noël">
@@ -2039,10 +2080,254 @@ function startCombat() {
   }
 }
 
-// Co-op Fleet Tab Selection (1, 2, or 3 Players)
-document.querySelectorAll('.fleet-tab').forEach(tab => {
+// =========================================================================
+// 🌐 REAL-TIME ONLINE MULTIPLAYER ENGINE (CROSS-DEVICE WEBRTC via PeerJS)
+// =========================================================================
+let netMode = 'solo'; // 'solo', 'host', 'client', 'couch'
+let peer = null;
+let hostConnList = []; // on host: list of client connections
+let clientConn = null; // on client: connection to host
+let myPlayerIndex = 0; // 0 for host, 1 for client1, 2 for client2
+let onlineRoomCode = '';
+let isOnline = false;
+let hostSquadData = [];
+
+function generateRoomCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 4; i++) code += chars[(Math.random() * chars.length) | 0];
+  return 'GALAXY-' + code;
+}
+
+function initHostPeer() {
+  if (peer) { try { peer.destroy(); } catch(e){} }
+  onlineRoomCode = generateRoomCode();
+  const roomDisplay = document.getElementById('hostRoomCodeDisplay');
+  if (roomDisplay) roomDisplay.innerText = onlineRoomCode;
+
+  const hName = (document.getElementById('pnameHost') && document.getElementById('pnameHost').value.trim()) || 'Noël';
+  const hShip = (document.getElementById('pshipHost') && document.getElementById('pshipHost').value) || SAVE.data.sel || 'storm';
+  hostSquadData = [{ index: 0, name: hName, shipModel: hShip, ready: true }];
+  updateHostLobbyRoster();
+
+  const peerId = 'vgcontest-sp-' + onlineRoomCode.toLowerCase().replace(/[^a-z0-9]/g, '');
+  try {
+    peer = new Peer(peerId);
+    peer.on('open', id => {
+      console.log('Host room ready:', id);
+    });
+    peer.on('connection', conn => {
+      if (hostConnList.length >= 2) {
+        conn.send({ type: 'error', msg: 'Fleet is full (3/3 players)!' });
+        setTimeout(() => conn.close(), 500);
+        return;
+      }
+      conn.on('open', () => {
+        const assignedSlot = hostSquadData.length;
+        conn.assignedSlot = assignedSlot;
+        hostConnList.push(conn);
+
+        conn.on('data', data => {
+          handleHostIncomingData(conn, data);
+        });
+
+        conn.on('close', () => {
+          hostConnList = hostConnList.filter(c => c !== conn);
+          hostSquadData = hostSquadData.filter(s => s.index !== conn.assignedSlot);
+          updateHostLobbyRoster();
+          broadcastToClients({ type: 'lobby_squad', squad: hostSquadData });
+        });
+      });
+    });
+    peer.on('error', err => {
+      console.warn('Peer host error:', err);
+      if (roomDisplay) roomDisplay.innerText = onlineRoomCode;
+    });
+  } catch(e) {
+    console.error('PeerJS init failed:', e);
+  }
+}
+
+function updateHostLobbyRoster() {
+  for (let i = 0; i < 3; i++) {
+    const el = document.getElementById('hostSlot' + i);
+    if (!el) continue;
+    if (i < hostSquadData.length) {
+      const p = hostSquadData[i];
+      el.style.color = i === 0 ? '#ffd23c' : i === 1 ? '#00ffee' : '#c084fc';
+      const sName = shipById(p.shipModel).name || 'Pirate Galleon';
+      el.innerText = `${i === 0 ? '👑 P1 (Host)' : '🚀 P' + (i + 1)}: ${p.name} [${sName}] ✔ Connected`;
+    } else {
+      el.style.color = '#64748b';
+      el.innerText = `⏳ P${i + 1} (${i === 1 ? 'Wingman' : 'Gunner'}): Waiting for friend to connect on their device...`;
+    }
+  }
+}
+
+function handleHostIncomingData(conn, data) {
+  if (!data) return;
+  if (data.type === 'join_request') {
+    const slot = conn.assignedSlot;
+    hostSquadData[slot] = { index: slot, name: data.name || ('Friend ' + slot), shipModel: data.shipModel || 'runner', ready: true };
+    updateHostLobbyRoster();
+    conn.send({ type: 'welcome', playerIndex: slot, hostSquad: hostSquadData });
+    broadcastToClients({ type: 'lobby_squad', squad: hostSquadData });
+  } else if (data.type === 'client_update') {
+    if (fleet && fleet[data.index]) {
+      const p = fleet[data.index];
+      p.x = data.x; p.y = data.y;
+      p.vx = data.vx; p.vy = data.vy;
+      p.pitch = data.pitch;
+      p.aimAngle = data.aimAngle;
+      if (data.hp !== undefined) p.hp = data.hp;
+    }
+  } else if (data.type === 'client_shoot') {
+    const shipModel = data.shipModel || 'cutter';
+    const cannonLevel = data.cannonLevel || 0;
+    const bRadius = 10 + cannonLevel * 1.5;
+    if (data.spreadAngles) {
+      for (const spr of data.spreadAngles) {
+        const ang = (data.aimAngle || 0) + spr;
+        const spd = shipModel === 'runner' ? 1600 : 1350;
+        balls.push({
+          x: data.muzzleX,
+          y: data.muzzleY,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd,
+          r: bRadius,
+          shipModel: shipModel,
+          skinId: 'default',
+          cannonLevel: cannonLevel,
+          ownerIndex: data.index
+        });
+      }
+      sfx('shot');
+    }
+  }
+}
+
+function connectToHostRoom(targetRoomCode) {
+  if (peer) { try { peer.destroy(); } catch(e){} }
+  const statusEl = document.getElementById('joinStatusText');
+  if (statusEl) statusEl.innerHTML = '<span style="color:#ffd23c;">🟡 Connecting to Captain\'s Room...</span>';
+
+  onlineRoomCode = targetRoomCode.trim().toUpperCase();
+  const peerId = 'vgcontest-sp-' + onlineRoomCode.toLowerCase().replace(/[^a-z0-9]/g, '');
+  try {
+    peer = new Peer();
+    peer.on('open', () => {
+      clientConn = peer.connect(peerId, { reliable: true });
+      clientConn.on('open', () => {
+        const myName = (document.getElementById('pnameJoin') && document.getElementById('pnameJoin').value.trim()) || 'Wingman';
+        const myShip = (document.getElementById('pshipJoin') && document.getElementById('pshipJoin').value) || 'runner';
+        clientConn.send({ type: 'join_request', name: myName, shipModel: myShip });
+      });
+      clientConn.on('data', data => {
+        handleClientIncomingData(data);
+      });
+      clientConn.on('close', () => {
+        if (statusEl) statusEl.innerHTML = '<span style="color:#ff3344;">❌ Disconnected from Host.</span>';
+      });
+      clientConn.on('error', err => {
+        if (statusEl) statusEl.innerHTML = '<span style="color:#ff3344;">❌ Could not reach Room Code. Check code and retry.</span>';
+      });
+    });
+    peer.on('error', err => {
+      if (statusEl) statusEl.innerHTML = '<span style="color:#ff3344;">❌ Connection error: Room Code not found.</span>';
+    });
+  } catch(e) {
+    if (statusEl) statusEl.innerText = '❌ WebRTC error';
+  }
+}
+
+function handleClientIncomingData(data) {
+  if (!data) return;
+  const statusEl = document.getElementById('joinStatusText');
+  if (data.type === 'welcome') {
+    myPlayerIndex = data.playerIndex;
+    isOnline = true;
+    netMode = 'client';
+    if (statusEl) {
+      statusEl.innerHTML = `<span style="color:#3fd07a; font-weight:bold;">🟢 CONNECTED AS P${myPlayerIndex + 1}!</span><br><span style="color:#cfe4ff;">Waiting for Captain to launch the armada...</span>`;
+    }
+  } else if (data.type === 'game_start') {
+    isOnline = true;
+    netMode = 'client';
+    fleetCount = data.fleetCount || 2;
+    fleet = data.fleetConfig.map((fc, idx) => createFleetShip(idx, fc.name, fc.shipModel, H * (0.32 + idx * 0.22)));
+    ship = fleet[myPlayerIndex] || fleet[0];
+    playerName = ship.name;
+    document.getElementById('menu').classList.add('hidden');
+    state = 'play';
+  } else if (data.type === 'sync') {
+    t = data.t;
+    score = data.score;
+    level = data.level;
+    boss = data.boss;
+    forts = data.forts || [];
+    gliders = data.gliders || [];
+    mines = data.mines || [];
+    eballs = data.eballs || [];
+    coins = data.coins || [];
+    powerups = data.powerups || [];
+    if (data.fleet) {
+      for (let i = 0; i < data.fleet.length; i++) {
+        if (i !== myPlayerIndex && fleet[i]) {
+          const sf = data.fleet[i];
+          const pf = fleet[i];
+          pf.x += (sf.x - pf.x) * 0.55;
+          pf.y += (sf.y - pf.y) * 0.55;
+          pf.vx = sf.vx; pf.vy = sf.vy;
+          pf.pitch = sf.pitch;
+          pf.aimAngle = sf.aimAngle;
+          pf.hp = sf.hp;
+          pf.maxHp = sf.maxHp;
+          pf.inv = sf.inv;
+          pf.dead = sf.dead;
+          pf.reviveTimer = sf.reviveTimer;
+          pf.score = sf.score;
+        }
+      }
+    }
+  }
+}
+
+function broadcastToClients(data) {
+  for (const conn of hostConnList) {
+    if (conn.open) conn.send(data);
+  }
+}
+
+function broadcastWorldSync() {
+  if (!hostConnList.length) return;
+  const pkt = {
+    type: 'sync',
+    t, score, level,
+    boss: boss ? {
+      type: boss.type, name: boss.name, hp: boss.hp, maxhp: boss.maxhp,
+      x: boss.x, y: boss.y, col: boss.col, w: boss.w, h: boss.h,
+      phase: boss.phase, spinRing: boss.spinRing, enraged: boss.enraged
+    } : null,
+    forts: forts.map(f => ({ x: f.x, y: f.y, col: f.col, w: f.w, h: f.h, hp: f.hp, maxhp: f.maxhp, variant: f.variant, saucerSpin: f.saucerSpin })),
+    gliders: gliders.map(g => ({ x: g.x, y: g.y, col: g.col, variant: g.variant, saucerSpin: g.saucerSpin })),
+    mines: mines.map(m => ({ x: m.x, y: m.y, col: m.col, r: m.r, spin: m.spin, variant: m.variant })),
+    eballs: eballs.map(e => ({ x: e.x, y: e.y, col: e.col, r: e.r, type: e.type, spin: e.spin })),
+    coins: coins.map(c => ({ x: c.x, y: c.y, spin: c.spin })),
+    powerups: powerups.map(p => ({ x: p.x, y: p.y, type: p.type })),
+    fleet: fleet.map(p => ({
+      index: p.index, name: p.name, shipModel: p.shipModel, cols: p.cols,
+      x: p.x, y: p.y, vx: p.vx, vy: p.vy, pitch: p.pitch,
+      aimAngle: p.aimAngle, hp: p.hp, maxHp: p.maxHp, inv: p.inv,
+      dead: p.dead, reviveTimer: p.reviveTimer, score: p.score
+    }))
+  };
+  broadcastToClients(pkt);
+}
+
+// Net Tabs Switching (Solo / Host / Join / Couch)
+document.querySelectorAll('.net-tab').forEach(tab => {
   tab.addEventListener('click', () => {
-    document.querySelectorAll('.fleet-tab').forEach(t => {
+    document.querySelectorAll('.net-tab').forEach(t => {
       t.classList.remove('active');
       t.style.background = 'rgba(255,255,255,0.1)';
       t.style.color = '#cfe4ff';
@@ -2050,72 +2335,106 @@ document.querySelectorAll('.fleet-tab').forEach(tab => {
     tab.classList.add('active');
     tab.style.background = 'linear-gradient(135deg,#ffd23c,#ff9900)';
     tab.style.color = '#000';
-    fleetCount = parseInt(tab.dataset.players) || 1;
-    const s2 = document.getElementById('slotP2');
-    const s3 = document.getElementById('slotP3');
-    if (s2) s2.style.display = fleetCount >= 2 ? 'flex' : 'none';
-    if (s3) s3.style.display = fleetCount >= 3 ? 'flex' : 'none';
+
+    netMode = tab.dataset.mode;
+    document.querySelectorAll('.net-panel').forEach(p => p.style.display = 'none');
+    
+    if (netMode === 'solo') {
+      document.getElementById('netPanelSolo').style.display = 'block';
+      fleetCount = 1;
+    } else if (netMode === 'host') {
+      document.getElementById('netPanelHost').style.display = 'block';
+      initHostPeer();
+    } else if (netMode === 'join') {
+      document.getElementById('netPanelJoin').style.display = 'block';
+    } else if (netMode === 'couch') {
+      document.getElementById('netPanelCouch').style.display = 'block';
+      fleetCount = 2;
+    }
   });
 });
 
-// Copy Fleet Invite Link for Friends
-const copyFleetBtn = document.getElementById('copyFleetLinkBtn');
-if (copyFleetBtn) {
-  copyFleetBtn.addEventListener('click', () => {
+// Copy Online Invite Link Button
+const copyOnlineBtn = document.getElementById('copyOnlineInviteBtn');
+if (copyOnlineBtn) {
+  copyOnlineBtn.addEventListener('click', () => {
     try {
       const url = new URL(window.location.href);
-      url.searchParams.set('fleet', fleetCount);
-      url.searchParams.set('p1', (document.getElementById('pname1') && document.getElementById('pname1').value.trim()) || 'Noël');
-      if (fleetCount >= 2) url.searchParams.set('p2', (document.getElementById('pname2') && document.getElementById('pname2').value.trim()) || 'Friend1');
-      if (fleetCount >= 3) url.searchParams.set('p3', (document.getElementById('pname3') && document.getElementById('pname3').value.trim()) || 'Friend2');
+      url.searchParams.set('room', onlineRoomCode);
       navigator.clipboard.writeText(url.toString()).then(() => {
-        const notice = document.getElementById('fleetLinkCopied');
-        if (notice) {
-          notice.style.display = 'inline';
-          setTimeout(() => notice.style.display = 'none', 3500);
-        }
+        copyOnlineBtn.innerText = '✔ LINK COPIED!';
+        setTimeout(() => copyOnlineBtn.innerText = '📋 Copy Invite Link', 3000);
       }).catch(() => {});
     } catch(e) {}
   });
 }
 
-// Read Fleet URL Invite parameters
+// Join Room Button
+const joinBtn = document.getElementById('joinRoomBtn');
+if (joinBtn) {
+  joinBtn.addEventListener('click', () => {
+    const code = document.getElementById('joinRoomCodeInp').value.trim();
+    if (code) connectToHostRoom(code);
+  });
+}
+
+// Auto-Join from URL parameter ?room=...
 try {
   const params = new URLSearchParams(window.location.search);
-  const fl = parseInt(params.get('fleet'));
-  if (fl >= 1 && fl <= 3) {
-    const tab = document.querySelector(`.fleet-tab[data-players="${fl}"]`);
-    if (tab) tab.click();
+  const roomParam = params.get('room');
+  if (roomParam) {
+    const joinTab = document.querySelector('.net-tab[data-mode="join"]');
+    if (joinTab) joinTab.click();
+    const joinInp = document.getElementById('joinRoomCodeInp');
+    if (joinInp) joinInp.value = roomParam.toUpperCase();
+    setTimeout(() => { connectToHostRoom(roomParam); }, 600);
   }
-  if (params.get('p1') && document.getElementById('pname1')) document.getElementById('pname1').value = params.get('p1');
-  if (params.get('p2') && document.getElementById('pname2')) document.getElementById('pname2').value = params.get('p2');
-  if (params.get('p3') && document.getElementById('pname3')) document.getElementById('pname3').value = params.get('p3');
 } catch(e) {}
 
+// Start Game Handler
 document.getElementById('startbtn').addEventListener('click', () => {
-  const p1Name = (document.getElementById('pname1') && document.getElementById('pname1').value.trim()) || 'Noël';
-  const p1Ship = (document.getElementById('pship1') && document.getElementById('pship1').value) || SAVE.data.sel || 'cutter';
+  if (netMode === 'client') {
+    alert('You are in a friend\'s room! Waiting for the Host Captain to launch the fleet.');
+    return;
+  }
 
-  const p2Name = (document.getElementById('pname2') && document.getElementById('pname2').value.trim()) || 'First Mate';
-  const p2Ship = (document.getElementById('pship2') && document.getElementById('pship2').value) || 'runner';
-
-  const p3Name = (document.getElementById('pname3') && document.getElementById('pname3').value.trim()) || 'Gunner';
-  const p3Ship = (document.getElementById('pship3') && document.getElementById('pship3').value) || 'storm';
-
-  playerName = p1Name.slice(0, 14);
-  try { localStorage.setItem('sp_name', playerName); } catch (e) {}
   scoreSubmitted = false;
   applyLoadout();
 
-  fleet = [];
-  fleet.push(createFleetShip(0, p1Name, p1Ship, fleetCount === 1 ? H * 0.5 : H * 0.45));
-  if (fleetCount >= 2) {
-    fleet.push(createFleetShip(1, p2Name, p2Ship, H * 0.28));
+  if (netMode === 'host') {
+    isOnline = true;
+    myPlayerIndex = 0;
+    fleetCount = Math.max(1, hostSquadData.length);
+    fleet = hostSquadData.map((p, idx) => createFleetShip(idx, p.name, p.shipModel, H * (0.32 + idx * 0.22)));
+    ship = fleet[0];
+    playerName = ship.name;
+    try { localStorage.setItem('sp_name', playerName); } catch (e) {}
+
+    // Broadcast launch to all connected client devices!
+    broadcastToClients({
+      type: 'game_start',
+      fleetCount: fleetCount,
+      fleetConfig: hostSquadData
+    });
+  } else if (netMode === 'couch') {
+    const p1Name = (document.getElementById('pnameSolo') && document.getElementById('pnameSolo').value.trim()) || 'Noël';
+    const p1Ship = (document.getElementById('pshipSolo') && document.getElementById('pshipSolo').value) || 'cutter';
+    playerName = p1Name.slice(0, 14);
+    try { localStorage.setItem('sp_name', playerName); } catch (e) {}
+    fleet = [];
+    fleet.push(createFleetShip(0, p1Name, p1Ship, H * 0.4));
+    fleet.push(createFleetShip(1, 'Friend 1', 'runner', H * 0.28));
+    if (fleetCount >= 3) fleet.push(createFleetShip(2, 'Friend 2', 'storm', H * 0.72));
+    ship = fleet[0];
+  } else {
+    // Solo Mode
+    const p1Name = (document.getElementById('pnameSolo') && document.getElementById('pnameSolo').value.trim()) || 'Noël';
+    const p1Ship = (document.getElementById('pshipSolo') && document.getElementById('pshipSolo').value) || SAVE.data.sel || 'cutter';
+    playerName = p1Name.slice(0, 14);
+    try { localStorage.setItem('sp_name', playerName); } catch (e) {}
+    fleet = [createFleetShip(0, p1Name, p1Ship, H * 0.5)];
+    ship = fleet[0];
   }
-  if (fleetCount >= 3) {
-    fleet.push(createFleetShip(2, p3Name, p3Ship, H * 0.72));
-  }
-  ship = fleet[0];
 
   introT = 0;
   introShot1 = false;
@@ -2145,6 +2464,9 @@ document.getElementById('startbtn').addEventListener('click', () => {
   document.getElementById('pausebtn').style.display = 'block';
   initAudio();
   state = 'intro';
+  if (netMode === 'host' || netMode === 'client') {
+    startCombat(); // jump straight into battle for multiplayer!
+  }
 });
 
 function togglePause() {
@@ -2947,74 +3269,90 @@ function update(dt) {
     const ACC = 1450 * (p.spd || 1) * curSpdMul, MAX_SPD = 480 * (p.spd || 1) * curSpdMul;
     let ax = 0, ay = 0, wantShoot = false;
 
-    // Player 1 (Captain) Controls: WASD or Arrow Keys (if solo), Mouse / Touch / Space
-    if (pi === 0) {
-      if (keys['KeyW'] || (fleetCount === 1 && keys['ArrowUp'])) ay -= 1;
-      if (keys['KeyS'] || (fleetCount === 1 && keys['ArrowDown'])) ay += 1;
-      if (keys['KeyA'] || (fleetCount === 1 && keys['ArrowLeft'])) ax -= 1;
-      if (keys['KeyD'] || (fleetCount === 1 && keys['ArrowRight'])) ax += 1;
-      if (isTouch && touchOn) {
-        ax = (mouse.x - p.x) * 0.022;
-        ay = (mouse.y - p.y) * 0.022;
+    // Check if this ship is controlled locally on this device
+    const isLocalControl = (netMode === 'solo' && pi === 0) ||
+                           (netMode === 'couch') ||
+                           (netMode === 'host' && pi === 0) ||
+                           (netMode === 'client' && pi === myPlayerIndex);
+
+    if (isLocalControl) {
+      if (netMode === 'couch' && pi === 1) {
+        // Couch Player 2
+        if (keys['ArrowUp']) ay -= 1;
+        if (keys['ArrowDown']) ay += 1;
+        if (keys['ArrowLeft']) ax -= 1;
+        if (keys['ArrowRight']) ax += 1;
+        if (ax !== 0 || ay !== 0) p.aimAngle = Math.atan2(ay, ax);
+        else p.aimAngle = 0;
+        wantShoot = keys['Numpad0'] || keys['ControlRight'] || keys['KeyK'] || keys['KeyL'] || keys['Enter'];
+      } else if (netMode === 'couch' && pi === 2) {
+        // Couch Player 3
+        if (keys['KeyI']) ay -= 1;
+        if (keys['KeyK']) ay += 1;
+        if (keys['KeyJ']) ax -= 1;
+        if (keys['KeyL']) ax += 1;
+        if (ax !== 0 || ay !== 0) p.aimAngle = Math.atan2(ay, ax);
+        else p.aimAngle = 0;
+        wantShoot = keys['KeyO'] || keys['KeyP'] || keys['NumpadDecimal'] || keys['Period'] || keys['Quote'];
+      } else {
+        // Primary Device Controls (WASD, Arrows, Mouse, Touch, Gamepad)
+        if (keys['KeyW'] || keys['ArrowUp']) ay -= 1;
+        if (keys['KeyS'] || keys['ArrowDown']) ay += 1;
+        if (keys['KeyA'] || keys['ArrowLeft']) ax -= 1;
+        if (keys['KeyD'] || keys['ArrowRight']) ax += 1;
+        if (isTouch && touchOn) {
+          ax = (mouse.x - p.x) * 0.022;
+          ay = (mouse.y - p.y) * 0.022;
+        }
+        const wm = getWorldMouse();
+        const cannonOriginX = p.x + 36, cannonOriginY = p.y + 18;
+        p.aimAngle = Math.atan2(wm.y - cannonOriginY, wm.x - cannonOriginX);
+        wantShoot = mouse.down || keys['Space'] || keys['KeyF'] || (isTouch && touchOn);
       }
-      const wm = getWorldMouse();
-      const cannonOriginX = p.x + 36, cannonOriginY = p.y + 18;
-      p.aimAngle = Math.atan2(wm.y - cannonOriginY, wm.x - cannonOriginX);
-      wantShoot = mouse.down || keys['Space'] || keys['KeyF'] || (isTouch && touchOn);
-    }
-    // Player 2 (Wingman) Controls: Arrow Keys, NumPad 0 / Enter / K / L
-    else if (pi === 1) {
-      if (keys['ArrowUp']) ay -= 1;
-      if (keys['ArrowDown']) ay += 1;
-      if (keys['ArrowLeft']) ax -= 1;
-      if (keys['ArrowRight']) ax += 1;
-      if (ax !== 0 || ay !== 0) p.aimAngle = Math.atan2(ay, ax);
-      else p.aimAngle = 0;
-      wantShoot = keys['Numpad0'] || keys['ControlRight'] || keys['KeyK'] || keys['KeyL'] || keys['Enter'];
-    }
-    // Player 3 (Gunner) Controls: IJKL Keys, O / P / Space / NumPad .
-    else if (pi === 2) {
-      if (keys['KeyI']) ay -= 1;
-      if (keys['KeyK']) ay += 1;
-      if (keys['KeyJ']) ax -= 1;
-      if (keys['KeyL']) ax += 1;
-      if (ax !== 0 || ay !== 0) p.aimAngle = Math.atan2(ay, ax);
-      else p.aimAngle = 0;
-      wantShoot = keys['KeyO'] || keys['KeyP'] || keys['NumpadDecimal'] || keys['Period'] || keys['Quote'];
+
+      // Gamepad controller support on this device
+      const gp = gpList[0];
+      if (gp && gp.connected) {
+        const stickX = Math.abs(gp.axes[0]) > 0.18 ? gp.axes[0] : 0;
+        const stickY = Math.abs(gp.axes[1]) > 0.18 ? gp.axes[1] : 0;
+        if (stickX !== 0 || stickY !== 0) {
+          ax = stickX; ay = stickY;
+        }
+        if (gp.axes[2] !== undefined && gp.axes[3] !== undefined && Math.hypot(gp.axes[2], gp.axes[3]) > 0.25) {
+          p.aimAngle = Math.atan2(gp.axes[3], gp.axes[2]);
+        }
+        if (gp.buttons[0]?.pressed || gp.buttons[7]?.pressed || gp.buttons[5]?.pressed) {
+          wantShoot = true;
+        }
+      }
+
+      p.vx += ax * ACC * dt;
+      p.vy += ay * ACC * dt;
+      p.vx *= Math.pow(0.025, dt);
+      p.vy *= Math.pow(0.025, dt);
+      p.vx = Math.max(-MAX_SPD, Math.min(MAX_SPD, p.vx));
+      p.vy = Math.max(-MAX_SPD, Math.min(MAX_SPD, p.vy));
+
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.x = Math.max(80, Math.min(W - 140, p.x));
+      p.y = Math.max(70, Math.min(H - 80, p.y));
+
+      const targetPitch = (p.vy / MAX_SPD) * 0.25;
+      p.pitch += (targetPitch - p.pitch) * Math.min(1, dt * 10);
+
+      // If playing as online client on a different device, broadcast position to host
+      if (netMode === 'client' && clientConn && clientConn.open) {
+        clientConn.send({
+          type: 'client_update',
+          index: myPlayerIndex,
+          x: p.x, y: p.y, vx: p.vx, vy: p.vy, pitch: p.pitch,
+          aimAngle: p.aimAngle, hp: p.hp
+        });
+      }
     }
 
-    // Gamepad controller support
-    const gp = gpList[pi];
-    if (gp && gp.connected) {
-      const stickX = Math.abs(gp.axes[0]) > 0.18 ? gp.axes[0] : 0;
-      const stickY = Math.abs(gp.axes[1]) > 0.18 ? gp.axes[1] : 0;
-      if (stickX !== 0 || stickY !== 0) {
-        ax = stickX; ay = stickY;
-      }
-      if (gp.axes[2] !== undefined && gp.axes[3] !== undefined && Math.hypot(gp.axes[2], gp.axes[3]) > 0.25) {
-        p.aimAngle = Math.atan2(gp.axes[3], gp.axes[2]);
-      }
-      if (gp.buttons[0]?.pressed || gp.buttons[7]?.pressed || gp.buttons[5]?.pressed) {
-        wantShoot = true;
-      }
-    }
-
-    p.vx += ax * ACC * dt;
-    p.vy += ay * ACC * dt;
-    p.vx *= Math.pow(0.025, dt);
-    p.vy *= Math.pow(0.025, dt);
-    p.vx = Math.max(-MAX_SPD, Math.min(MAX_SPD, p.vx));
-    p.vy = Math.max(-MAX_SPD, Math.min(MAX_SPD, p.vy));
-
-    p.x += p.vx * dt;
-    p.y += p.vy * dt;
-    p.x = Math.max(80, Math.min(W - 140, p.x));
-    p.y = Math.max(70, Math.min(H - 80, p.y));
-
-    const targetPitch = (p.vy / MAX_SPD) * 0.25;
-    p.pitch += (targetPitch - p.pitch) * Math.min(1, dt * 10);
     p.flagWave += dt * 12;
-
     p.inv = Math.max(0, p.inv - dt);
     p.recoil = Math.max(0, p.recoil - dt * 8);
     if (shieldT > 0) p.inv = Math.max(p.inv, 0.18);
@@ -3034,7 +3372,7 @@ function update(dt) {
 
     // Ship Cannons Salvo
     p.shootCool = Math.max(0, (p.shootCool || 0) - dt);
-    if (wantShoot && p.shootCool <= 0) {
+    if (isLocalControl && wantShoot && p.shootCool <= 0) {
       const coolBase = p.cool || baseCool;
       p.shootCool = rapidT > 0 ? coolBase * 0.45 : coolBase;
       p.recoil = 1.0;
@@ -3082,6 +3420,16 @@ function update(dt) {
         }
       }
       sfx('shot');
+
+      // If client, forward shot to Host
+      if (netMode === 'client' && clientConn && clientConn.open) {
+        clientConn.send({
+          type: 'client_shoot',
+          index: myPlayerIndex,
+          muzzleX, muzzleY, aimAngle: baseAim,
+          spreadAngles, shipModel, cannonLevel
+        });
+      }
     }
   }
 
@@ -3769,6 +4117,11 @@ function update(dt) {
     } else {
       p.x += (p.vx || 0) * dt; p.y += (p.vy || 0) * dt;
     }
+  }
+
+  // Synchronize world state across all connected devices
+  if (netMode === 'host') {
+    broadcastWorldSync();
   }
 }
 
@@ -5852,6 +6205,20 @@ function draw() {
       cx.fillText(`🪙 FLEET: ${score}`, W - 208, 38);
       cx.fillStyle = '#3fd5ff'; cx.font = 'bold 12px "Orbitron", sans-serif';
       cx.fillText(`🌌 SECTOR: ${level}`, W - 208, 62);
+      cx.restore();
+    }
+
+    // Online Multiplayer Room Indicator
+    if (isOnline || netMode === 'host' || netMode === 'client') {
+      cx.save();
+      cx.fillStyle = 'rgba(6, 14, 30, 0.85)';
+      cx.strokeStyle = '#00ffee';
+      cx.lineWidth = 1.5;
+      cx.beginPath();
+      cx.roundRect(W / 2 - 160, H - 44, 320, 32, 8);
+      cx.fill(); cx.stroke();
+      cx.fillStyle = '#00ffee'; cx.font = 'bold 11px "Orbitron", sans-serif'; cx.textAlign = 'center';
+      cx.fillText(`🟢 ONLINE ROOM: ${onlineRoomCode} (YOU: P${myPlayerIndex + 1})`, W / 2, H - 24);
       cx.restore();
     }
     
