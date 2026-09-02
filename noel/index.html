@@ -5695,8 +5695,8 @@ function draw() {
   // 13. CINEMATIC STAR WARS STORYLINE PROLOGUE OVERLAY
   if (state === 'intro') {
     // Cinematic Black Letterbox Bars
-    // Cinematic Black Letterbox Bars with Sci-Fi HUD Trim
-    const barH = Math.min(106, H * 0.16);
+    // Cinematic Black Letterbox Bars with Sci-Fi Holographic Trim
+    const barH = Math.min(110, H * 0.17);
     cx.fillStyle = '#010206';
     cx.fillRect(0, 0, W, barH);
     cx.fillRect(0, H - barH, W, barH);
@@ -5716,69 +5716,69 @@ function draw() {
     cx.fillRect(20, H - barH, 30, 4);
     cx.fillRect(W - 50, H - barH, 30, 4);
 
-    // Top Header: Dramatic Star Cluster Header
+    // Top Header: High-Tech Mission Dispatch
     cx.textAlign = 'center';
     cx.font = 'bold 12px "Orbitron", sans-serif';
     cx.fillStyle = '#4bd5ee';
-    cx.fillText('✨ A LONG TIME AGO IN A STAR CLUSTER FAR, FAR AWAY....', W / 2, barH - 22);
+    cx.fillText('⚡ OPERATION: THE OMEGA PLASMA CORE HEIST • DEEP ORION SECTOR', W / 2, barH - 22);
 
-    // Narrative Acts Content
+    // Narrative Acts Content (Ultra-Cool Space Pirate Saga)
     if (introT < 2.5) {
-      // ACT I: The Lone Solar Corsair
+      // ACT I: The Great Cosmic Heist
       cx.font = 'bold 16px "Orbitron", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('🌌 ACT I: THE LAST SOLAR GALLEON IN THE VOID', W / 2, H - barH + 32);
+      cx.fillText('🏴‍☠️ ACT I: THE GALAXY\'S GREATEST HEIST', W / 2, H - barH + 32);
 
-      cx.font = '15px "Outfit", sans-serif';
-      cx.fillStyle = '#ffffff';
-      cx.fillText('"Deep in the Orion Abyss... Captain Noël stands at the helm of the legendary Solar Galleon."', W / 2, H - barH + 58);
+      cx.font = '14px "Outfit", sans-serif';
+      cx.fillStyle = '#ff385c';
+      cx.fillText('🤖 [EMPEROR\'S COMM]: "Pirate Outlaw Noël! Surrender the stolen Omega Plasma Core or be vaporized!"', W / 2, H - barH + 58);
 
-      cx.font = '13px "Outfit", sans-serif';
-      cx.fillStyle = '#ff4d6d';
-      cx.fillText('📡 "RADAR KLAXONS SHRIEKS: Two Imperial Starfighter Interceptors detected on collision vector!"', W / 2, H - barH + 80);
+      cx.font = 'bold 14px "Outfit", sans-serif';
+      cx.fillStyle = '#ffd23c';
+      cx.fillText('👑 [CAPTAIN NOËL]: "You want the Core back? Tell your Emperor to come and take it himself!"', W / 2, H - barH + 82);
 
     } else if (introT < 4.8) {
-      // ACT II: Tactical Lock & Acrobatic Broadside Salvo
+      // ACT II: Supercharged Broadside Salvo
       cx.font = 'bold 16px "Orbitron", sans-serif';
       cx.fillStyle = '#38bdf8';
-      cx.fillText('⚔️ ACT II: ACROBATIC BROADSIDE SALVO LOCKED!', W / 2, H - barH + 32);
+      cx.fillText('⚔️ ACT II: SUPERCHARGED CORKSCREW BROADSIDES', W / 2, H - barH + 32);
 
-      cx.font = '15px "Outfit", sans-serif';
+      cx.font = '14px "Outfit", sans-serif';
+      cx.fillStyle = '#38bdf8';
+      cx.fillText('🚨 [TACTICAL AI]: "WARNING: Twin Imperial Shadow-Interceptors locking plasma torpedoes on our hull!"', W / 2, H - barH + 58);
+
+      cx.font = 'bold 14px "Outfit", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('🎯 Captain Noël: "Hold fast crew! Target their ion thrusters and FIRE 32-POUNDERS!"', W / 2, H - barH + 58);
-
-      cx.font = '13px "Outfit", sans-serif';
-      cx.fillStyle = '#ffffff';
-      cx.fillText('💥 "Twin fiery cannonballs loop in lethal 360° corkscrew trajectories through the cosmic void!"', W / 2, H - barH + 80);
+      cx.fillText('💥 [CAPTAIN NOËL]: "Channel the Omega Core into the 32-pounders... FIRE FULL BROADSIDE!"', W / 2, H - barH + 82);
 
     } else if (introT < 6.8) {
-      // ACT III: Simultaneous Vaporization
+      // ACT III: Supernova Obliteration
       cx.font = 'bold 16px "Orbitron", sans-serif';
       cx.fillStyle = '#00dfa2';
-      cx.fillText('💥 ACT III: VANGUARD STARFIGHTERS VAPORIZED!', W / 2, H - barH + 32);
+      cx.fillText('💥 ACT III: SUPERNOVA DETONATION — SHADOW FIGHTERS OBLITERATED!', W / 2, H - barH + 32);
 
-      cx.font = '15px "Outfit", sans-serif';
+      cx.font = '14px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('⚡ "Direct impacts trigger catastrophic ion reactor overloads! Salvaging gold dubloons..."', W / 2, H - barH + 58);
+      cx.fillText('⚡ "Twin corkscrew cannonballs vaporize the Imperial Interceptors in a blinding plasma shockwave!"', W / 2, H - barH + 58);
 
-      cx.font = '13px "Outfit", sans-serif';
-      cx.fillStyle = '#38bdf8';
-      cx.fillText('🌌 "Sensors detect massive gravitational shockwaves tearing through subspace..."', W / 2, H - barH + 80);
+      cx.font = '14px "Outfit", sans-serif';
+      cx.fillStyle = '#ffd23c';
+      cx.fillText('🪙 "Looting +2,500 Gold Dubloons! But subspace gravitational sensors are screaming..."', W / 2, H - barH + 82);
 
     } else {
-      // ACT IV: The Imperial Armada Drops Out of Hyperspace!
+      // ACT IV: The Entire Imperial Mother-Armada Warps In!
       const flash = Math.sin(introT * 18) > 0;
       cx.font = 'bold 16px "Orbitron", sans-serif';
       cx.fillStyle = flash ? '#ff0055' : '#ffd23c';
-      cx.fillText('🚨 ACT IV: THE IMPERIAL MOTHER-ARMADA DROPS OUT OF HYPERSPACE!', W / 2, H - barH + 32);
+      cx.fillText('🚨 ACT IV: THE ENTIRE IMPERIAL MOTHER-FLEET DROPS OUT OF WARP!', W / 2, H - barH + 32);
 
-      cx.font = '15px "Outfit", sans-serif';
+      cx.font = '14px "Outfit", sans-serif';
       cx.fillStyle = '#ffffff';
-      cx.fillText('🚨 First Mate: "CAPTAIN! Imperial Battleships & Cruisers have completely surrounded our sector!"', W / 2, H - barH + 58);
+      cx.fillText('🚨 [FIRST MATE]: "CAPTAIN! The Imperial Mother-Fleet just blocked our escape route! We\'re outnumbered 1,000 to 1!"', W / 2, H - barH + 58);
 
-      cx.font = 'bold 14px "Orbitron", sans-serif';
+      cx.font = 'bold 15px "Orbitron", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('⚔️ Captain Noël: "SOUND THE BATTLE HORN! ALL HANDS TO BROADSIDE CANNONS! SET SOLAR SAILS FOR WAR!"', W / 2, H - barH + 80);
+      cx.fillText('👑 [CAPTAIN NOËL]: "Good. That just means we can fire in any direction! SET SOLAR SAILS FOR WAR!"', W / 2, H - barH + 82);
     }
 
     // Interactive Skip Button on bottom right
