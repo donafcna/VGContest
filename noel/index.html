@@ -1444,12 +1444,12 @@ function spawnMine() {
 }
 
 const BTYPES = [
-  { id: 'dread', name: 'Omega-Star Dreadnought',     col: '#00ffaa', w: 260, h: 150, hp: 55, spd: 42, atk: 'tachyon' },
-  { id: 'hive',  name: 'Chronos Tesla Citadel',      col: '#00e5ff', w: 250, h: 150, hp: 60, spd: 38, atk: 'emp_cascade' },
-  { id: 'ram',   name: 'Solar Apocalypse Leviathan', col: '#ff3300', w: 270, h: 145, hp: 65, spd: 46, atk: 'magma_barrage' },
-  { id: 'void',  name: 'Phantom Void Harbinger',     col: '#c084fc', w: 265, h: 140, hp: 70, spd: 48, atk: 'void_singularity' },
-  { id: 'cryo',  name: 'Glacial Cryo-Colossus',      col: '#38bdf8', w: 255, h: 155, hp: 75, spd: 40, atk: 'cryo_nova' },
-  { id: 'titan', name: 'Imperial Golden Titan-Lord', col: '#ffd23c', w: 280, h: 160, hp: 85, spd: 50, atk: 'gilded_barrage' },
+  { id: 'dread', name: 'Omega-Star Dreadnought',     col: '#00ffaa', w: 290, h: 165, hp: 60, spd: 44, atk: 'tachyon' },
+  { id: 'hive',  name: 'Chronos Tesla Citadel',      col: '#00e5ff', w: 280, h: 165, hp: 65, spd: 40, atk: 'emp_cascade' },
+  { id: 'ram',   name: 'Solar Apocalypse Leviathan', col: '#ff3300', w: 295, h: 160, hp: 70, spd: 48, atk: 'magma_barrage' },
+  { id: 'void',  name: 'Phantom Void Harbinger',     col: '#c084fc', w: 290, h: 155, hp: 75, spd: 50, atk: 'void_singularity' },
+  { id: 'cryo',  name: 'Glacial Cryo-Colossus',      col: '#38bdf8', w: 280, h: 170, hp: 80, spd: 42, atk: 'cryo_nova' },
+  { id: 'titan', name: 'Imperial Golden Titan-Lord', col: '#ffd23c', w: 310, h: 175, hp: 95, spd: 52, atk: 'gilded_barrage' },
 ];
 
 function spawnBoss() {
@@ -1458,7 +1458,7 @@ function spawnBoss() {
   const b = BTYPES[(Math.random() * poolMax) | 0];
   
   // Dynamic Boss Scaling: The further you venture, the stronger they become!
-  const hp = b.hp + (level - 1) * 24;
+  const hp = b.hp + (level - 1) * 26;
   const bossSpd = b.spd + level * 6;
 
   boss = {
@@ -1466,11 +1466,12 @@ function spawnBoss() {
     hp, maxhp: hp,
     sectorLevel: level,
     spd: bossSpd,
-    x: W + 160, targetX: W - 250,
+    x: W + 180, targetX: W - 260,
     y: H * 0.5,
     atk: b.atk, atkT: 2.0, phase: 0,
     spinRing: 0,
-    altAtk: false
+    atkCycle: 0,
+    enraged: false
   };
 
   // VAPORIZE ALL ENEMY MINIONS & CLEAR BATTLEFIELD FOR 1v1 DUEL!
@@ -2201,57 +2202,94 @@ function update(dt) {
   }
 
   // Boss updates
+  // Boss updates
   if (!boss) { bossT -= dt; if (bossT <= 0) spawnBoss(); }
   if (boss) {
     if (boss.x > boss.targetX) boss.x -= 130 * dt;
     boss.phase += dt;
-    boss.spinRing += dt * 4;
-    boss.y = H * 0.5 + Math.sin(boss.phase * 0.9) * (H * 0.3);
+    boss.spinRing += dt * (boss.enraged ? 7 : 4);
+    boss.y = H * 0.5 + Math.sin(boss.phase * (boss.enraged ? 1.4 : 0.9)) * (H * 0.32);
+
+    // Enrage phase transition when boss HP drops below 50%
+    if (boss.hp <= boss.maxhp * 0.5 && !boss.enraged) {
+      boss.enraged = true;
+      popup(boss.x, boss.y - 45, '🔥 BOSS ENRAGED: HYPER-DRIVE OVERLOAD!', '#ff0033');
+      addShake(24);
+      sfx('incoming');
+      addAlert(`🚨 ${boss.name.toUpperCase()} HAS ENTERED OVERLOAD PHASE!`, 'incoming');
+    }
     
     boss.atkT -= dt;
     if (boss.atkT <= 0) {
-      // Attacks fire faster in higher sectors!
-      boss.atkT = Math.max(1.0, 2.4 - level * 0.15);
-      boss.altAtk = !boss.altAtk;
+      // Attacks fire faster in higher sectors and during Enrage!
+      const baseCd = boss.enraged ? (1.6 - level * 0.12) : (2.4 - level * 0.15);
+      boss.atkT = Math.max(0.75, baseCd);
+      boss.atkCycle = ((boss.atkCycle || 0) + 1) % 3;
       
       const dx = ship.x - boss.x, dy = ship.y - boss.y;
       const dist = Math.hypot(dx, dy) || 1;
-      const spdBonus = 1 + Math.min(1.0, (level - 1) * 0.08);
+      const spdBonus = (1 + Math.min(1.0, (level - 1) * 0.08)) * (boss.enraged ? 1.2 : 1.0);
 
       if (boss.type === 'dread') {
-        // Boss 1: OMEGA-STAR DREADNOUGHT (5-to-7 Way Tachyon Fan & Dual Heavy Railguns)
-        if (boss.altAtk) {
+        // Boss 1: OMEGA-STAR DREADNOUGHT
+        if (boss.atkCycle === 2) {
+          // ULTIMATE: Mega Tachyon Orbital Death Ray + 7-Way Beam Fan!
+          for (const cy of [-30, 30]) {
+            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: (dx / dist) * 720 * spdBonus, vy: (dy / dist) * 720 * spdBonus, r: 24 });
+          }
+          for (const ang of [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36]) {
+            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.45, y: boss.y, vx: -640 * spdBonus * Math.cos(ang), vy: 640 * spdBonus * Math.sin(ang), r: 14 });
+          }
+          addShake(20);
+          popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: TACHYON DEATH RAY!', '#00ffaa');
+          sfx('laser');
+        } else if (boss.atkCycle === 1) {
+          for (const cy of [-36, 36]) {
+            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 680 * spdBonus, vy: (dy / dist) * 680 * spdBonus, r: 18 });
+          }
+          sfx('laser');
+        } else {
           const angles = level >= 3 ? [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36] : [-0.32, -0.16, 0, 0.16, 0.32];
           for (const ang of angles) {
             eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.45, y: boss.y, vx: -620 * spdBonus * Math.cos(ang), vy: 620 * spdBonus * Math.sin(ang), r: 15 });
           }
           sfx('laser');
           popup(boss.x - 40, boss.y - 45, 'TACHYON BEAM BARRAGE!', '#00ffaa');
-        } else {
-          for (const cy of [-36, 36]) {
-            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 680 * spdBonus, vy: (dy / dist) * 680 * spdBonus, r: 18 });
-          }
-          sfx('laser');
         }
 
       } else if (boss.type === 'hive') {
-        // Boss 2: CHRONOS TESLA CITADEL (EMP Cascade & Dual Thunder Lightning Arcs)
-        if (boss.altAtk) {
+        // Boss 2: CHRONOS TESLA CITADEL
+        if (boss.atkCycle === 2) {
+          // ULTIMATE: 360° Tesla Tempest Overload (8 radial EMP shockwave rings)!
+          for (let k = 0; k < 8; k++) {
+            const ang = (k / 8) * Math.PI * 2;
+            eballs.push({ type: 'emp', col: '#00e5ff', x: boss.x - boss.w * 0.2, y: boss.y, vx: Math.cos(ang) * 440 * spdBonus, vy: Math.sin(ang) * 440 * spdBonus, r: 20 });
+          }
+          addShake(22);
+          popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: 360° TESLA TEMPEST!', '#00e5ff');
+          sfx('incoming');
+        } else if (boss.atkCycle === 1) {
+          for (const cy of [-40, 40]) {
+            eballs.push({ type: 'emp', col: '#00e5ff', x: boss.x - boss.w * 0.40, y: boss.y + cy, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 16 });
+          }
+          sfx('incoming');
+        } else {
           for (const ang of [-0.20, 0, 0.20]) {
             eballs.push({ type: 'emp', col: '#00e5ff', x: boss.x - boss.w * 0.42, y: boss.y, vx: -480 * spdBonus * Math.cos(ang), vy: 480 * spdBonus * Math.sin(ang), r: 20 });
           }
           popup(boss.x - 40, boss.y - 45, '⚡ EMP OVERLOAD CASCADE!', '#00e5ff');
           sfx('incoming');
-        } else {
-          for (const cy of [-40, 40]) {
-            eballs.push({ type: 'emp', col: '#00e5ff', x: boss.x - boss.w * 0.40, y: boss.y + cy, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 16 });
-          }
-          sfx('incoming');
         }
 
       } else if (boss.type === 'ram') {
-        // Boss 3: SOLAR APOCALYPSE LEVIATHAN (Dual Magma Mega-Torpedoes & Heat Wave Spray)
-        if (boss.altAtk) {
+        // Boss 3: SOLAR APOCALYPSE LEVIATHAN
+        if (boss.atkCycle === 2) {
+          // ULTIMATE: Supernova Meteor Strike (Colossal Molten Sun Meteor)!
+          eballs.push({ type: 'magma', col: '#ff3300', x: boss.x - boss.w * 0.45, y: boss.y, vx: (dx / dist) * 560 * spdBonus, vy: (dy / dist) * 560 * spdBonus, r: 30, spin: 0 });
+          addShake(22);
+          popup(boss.x - 40, boss.y - 45, '🔥 ULTIMATE: SUPERNOVA METEOR STRIKE!', '#ff3300');
+          sfx('incoming');
+        } else if (boss.atkCycle === 1) {
           for (const cy of [-32, 32]) {
             eballs.push({ type: 'magma', col: '#ff4400', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: (dx / dist) * 530 * spdBonus, vy: (dy / dist) * 530 * spdBonus, r: 22, spin: 0 });
           }
@@ -2266,53 +2304,74 @@ function update(dt) {
         }
 
       } else if (boss.type === 'void') {
-        // Boss 4: PHANTOM VOID HARBINGER (Quantum Singularity Vortex & Triple Warp Lasers)
-        if (boss.altAtk) {
-          eballs.push({
-            type: 'vortex',
-            col: '#c084fc',
-            x: boss.x - boss.w * 0.45, y: boss.y,
-            vx: -340 * spdBonus, vy: (dy / dist) * 110,
-            r: 28,
-            spin: 0
-          });
-          popup(boss.x - 40, boss.y - 45, '🌀 QUANTUM VOID SINGULARITY!', '#c084fc');
+        // Boss 4: PHANTOM VOID HARBINGER
+        if (boss.atkCycle === 2) {
+          // ULTIMATE: Dual Event Horizon Singularity Rifts!
+          for (const cy of [-35, 35]) {
+            eballs.push({ type: 'vortex', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: -360 * spdBonus, vy: (dy / dist) * 120, r: 26, spin: 0 });
+          }
+          addShake(20);
+          popup(boss.x - 40, boss.y - 45, '🌀 ULTIMATE: DUAL EVENT HORIZON!', '#c084fc');
           sfx('incoming');
-        } else {
+        } else if (boss.atkCycle === 1) {
           for (const cy of [-38, 0, 38]) {
             eballs.push({ type: 'laser', col: '#c084fc', x: boss.x - boss.w * 0.40, y: boss.y + cy, vx: (dx / dist) * 660 * spdBonus, vy: (dy / dist) * 660 * spdBonus, r: 16 });
           }
           sfx('laser');
+        } else {
+          eballs.push({ type: 'vortex', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y, vx: -340 * spdBonus, vy: (dy / dist) * 110, r: 28, spin: 0 });
+          popup(boss.x - 40, boss.y - 45, '🌀 QUANTUM VOID SINGULARITY!', '#c084fc');
+          sfx('incoming');
         }
 
       } else if (boss.type === 'cryo') {
-        // Boss 5: GLACIAL CRYO-COLOSSUS (Absolute Zero Cryo-Nova & Dual Glacial Beams)
-        if (boss.altAtk) {
+        // Boss 5: GLACIAL CRYO-COLOSSUS
+        if (boss.atkCycle === 2) {
+          // ULTIMATE: 6-Shard Blizzard Cryo-Lance Volley!
+          for (let k = 0; k < 6; k++) {
+            const spr = ((k - 2.5) / 5) * 0.35;
+            eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.45, y: boss.y, vx: -540 * spdBonus * Math.cos(spr), vy: 540 * spdBonus * Math.sin(spr), r: 16 });
+          }
+          addShake(20);
+          popup(boss.x - 40, boss.y - 45, '❄️ ULTIMATE: BLIZZARD CRYO-VOLLEY!', '#38bdf8');
+          sfx('incoming');
+        } else if (boss.atkCycle === 1) {
+          for (const cy of [-34, 34]) {
+            eballs.push({ type: 'laser', col: '#38bdf8', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 650 * spdBonus, vy: (dy / dist) * 650 * spdBonus, r: 17 });
+          }
+          sfx('laser');
+        } else {
           for (const ang of [-0.28, -0.10, 0.10, 0.28]) {
             eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.45, y: boss.y, vx: -500 * spdBonus * Math.cos(ang), vy: 500 * spdBonus * Math.sin(ang), r: 18 });
           }
           popup(boss.x - 40, boss.y - 45, '❄️ ABSOLUTE ZERO CRYO-NOVA!', '#38bdf8');
           sfx('incoming');
-        } else {
-          for (const cy of [-34, 34]) {
-            eballs.push({ type: 'laser', col: '#38bdf8', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 650 * spdBonus, vy: (dy / dist) * 650 * spdBonus, r: 17 });
-          }
-          sfx('laser');
         }
 
       } else {
-        // Boss 6: IMPERIAL GOLDEN TITAN-LORD (7-Way Gilded Royal Barrage & Imperial Siege Shells)
-        if (boss.altAtk) {
+        // Boss 6: IMPERIAL GOLDEN TITAN-LORD
+        if (boss.atkCycle === 2) {
+          // ULTIMATE: Royal Sovereign Judgement (9-Way Golden Laser Fan + Dual Siege Shells)!
+          for (const ang of [-0.40, -0.30, -0.20, -0.10, 0, 0.10, 0.20, 0.30, 0.40]) {
+            eballs.push({ type: 'laser', col: '#ffd23c', x: boss.x - boss.w * 0.45, y: boss.y, vx: -660 * spdBonus * Math.cos(ang), vy: 660 * spdBonus * Math.sin(ang), r: 16 });
+          }
+          for (const cy of [-44, 44]) {
+            eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 24, spin: 0 });
+          }
+          addShake(24);
+          popup(boss.x - 40, boss.y - 45, '👑 ULTIMATE: ROYAL SOVEREIGN JUDGEMENT!', '#ffd23c');
+          sfx('incoming');
+        } else if (boss.atkCycle === 1) {
+          for (const cy of [-44, 44]) {
+            eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 550 * spdBonus, vy: (dy / dist) * 550 * spdBonus, r: 24, spin: 0 });
+          }
+          sfx('incoming');
+        } else {
           for (const ang of [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36]) {
             eballs.push({ type: 'laser', col: '#ffd23c', x: boss.x - boss.w * 0.45, y: boss.y, vx: -640 * spdBonus * Math.cos(ang), vy: 640 * spdBonus * Math.sin(ang), r: 16 });
           }
           popup(boss.x - 40, boss.y - 45, '👑 GILDED ROYAL BARRAGE!', '#ffd23c');
           sfx('laser');
-        } else {
-          for (const cy of [-44, 44]) {
-            eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 550 * spdBonus, vy: (dy / dist) * 550 * spdBonus, r: 24, spin: 0 });
-          }
-          sfx('incoming');
         }
       }
     }
@@ -3648,9 +3707,30 @@ function draw() {
     cx.restore();
   }
 
-  // 7. Render 3 Distinct Colossal Flagship Bosses
+  // 7. Render 6 Distinct Colossal Flagship Bosses
   if (boss) {
     cx.save(); cx.translate(boss.x, boss.y);
+
+    // Enrage Overload Lightning & Fiery Aura
+    if (boss.enraged) {
+      const eg = cx.createRadialGradient(0, 0, 40, 0, 0, boss.w * 0.58);
+      eg.addColorStop(0, 'rgba(255, 0, 50, 0.45)');
+      eg.addColorStop(0.5, 'rgba(255, 100, 0, 0.25)');
+      eg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = eg;
+      cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.56, boss.h * 0.52, 0, 0, Math.PI * 2); cx.fill();
+
+      // Overload Electric Lightning Sparks
+      cx.strokeStyle = '#ff3300'; cx.lineWidth = 2.5;
+      for (let k = 0; k < 4; k++) {
+        const a = (k / 4) * Math.PI * 2 + t * 12;
+        const px = Math.cos(a) * (boss.w * 0.48), py = Math.sin(a) * (boss.h * 0.44);
+        cx.beginPath();
+        cx.moveTo(px, py);
+        cx.lineTo(px + (Math.random() - 0.5) * 25, py + (Math.random() - 0.5) * 25);
+        cx.stroke();
+      }
+    }
     
     if (boss.type === 'dread') {
       // BOSS 1: OMEGA-STAR DREADNOUGHT (Colossal Cyber Galactic Flagship)
@@ -3874,10 +3954,28 @@ function draw() {
       cx.beginPath(); cx.arc(0, 0, 42, t * 6, t * 6 + Math.PI * 1.5); cx.stroke();
     }
 
-    // Boss Giant Health Bar
-    cx.fillStyle = 'rgba(0,0,0,0.85)'; cx.fillRect(-boss.w * 0.40, -boss.h * 0.5 - 20, boss.w * 0.80, 10);
-    cx.fillStyle = boss.col || '#00ffaa'; cx.fillRect(-boss.w * 0.39, -boss.h * 0.5 - 19, (boss.w * 0.78) * Math.max(0, boss.hp / boss.maxhp), 8);
-    cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.5; cx.strokeRect(-boss.w * 0.40, -boss.h * 0.5 - 20, boss.w * 0.80, 10);
+    // Boss Giant Health Bar & Glowing Title Badge
+    const barW = boss.w * 0.85;
+    const barY = -boss.h * 0.5 - 28;
+    
+    // Boss Title
+    cx.font = 'bold 12px "Cinzel", "Space Grotesk", sans-serif';
+    cx.textAlign = 'center';
+    cx.fillStyle = boss.enraged ? '#ff3344' : (boss.col || '#00ffaa');
+    cx.shadowColor = boss.col || '#00ffaa';
+    cx.shadowBlur = 8;
+    cx.fillText(`${boss.name.toUpperCase()} ${boss.enraged ? '⚡ [OVERLOAD ENRAGED]' : ''} [${Math.ceil(boss.hp)}/${boss.maxhp} HP]`, 0, barY - 8);
+    cx.shadowBlur = 0;
+
+    // Health Bar Frame
+    cx.fillStyle = 'rgba(2, 6, 23, 0.9)'; cx.fillRect(-barW * 0.5, barY, barW, 12);
+    const hpGrad = cx.createLinearGradient(-barW * 0.5, 0, barW * 0.5, 0);
+    hpGrad.addColorStop(0, boss.enraged ? '#ff0033' : '#00e5ff');
+    hpGrad.addColorStop(1, boss.enraged ? '#ff7700' : (boss.col || '#00ffaa'));
+    cx.fillStyle = hpGrad;
+    cx.fillRect(-barW * 0.5 + 2, barY + 2, (barW - 4) * Math.max(0, boss.hp / boss.maxhp), 8);
+    cx.strokeStyle = boss.enraged ? '#ff3344' : '#ffffff'; cx.lineWidth = 1.8;
+    cx.strokeRect(-barW * 0.5, barY, barW, 12);
 
     cx.restore();
   }
