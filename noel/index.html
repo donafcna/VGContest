@@ -2821,60 +2821,8 @@ function update(dt) {
       if (p.life <= 0) parts.splice(i, 1);
     }
 
-    // Act IV: Massive Imperial Armada & Pirate Galleon Charge Head-On Into Battle!
-    if (introT >= 6.4) {
-      if (introArmada.length === 0) {
-        sfx('incoming');
-        addShake(22);
-        // Spawn full battle fleet advancing aggressively towards player!
-        introArmada = [
-          // Heavy Imperial War Cruiser in the center
-          { type: 'cruiser', x: W + 80, y: H * 0.48, vx: -380, vy: 0, w: 140, h: 72, col: '#00ffaa', name: 'IMPERIAL WAR-CRUISER' },
-          // 2 Heavy Gunship Escorts flanking
-          { type: 'gunship', x: W + 180, y: H * 0.22, vx: -440, vy: 16, w: 112, h: 58, col: '#00e5ff', name: 'CYBER-EMP GUNSHIP' },
-          { type: 'gunship', x: W + 180, y: H * 0.74, vx: -440, vy: -16, w: 112, h: 58, col: '#ff4400', name: 'INFERNO GUNSHIP' },
-          // 4 Imperial Starfighters in V-formation charging forward
-          { type: 'fighter', x: W + 280, y: H * 0.12, vx: -500, vy: 30, w: 64, h: 46, col: '#ff0033' },
-          { type: 'fighter', x: W + 310, y: H * 0.36, vx: -520, vy: 10, w: 64, h: 46, col: '#38bdf8' },
-          { type: 'fighter', x: W + 310, y: H * 0.60, vx: -520, vy: -10, w: 64, h: 46, col: '#38bdf8' },
-          { type: 'fighter', x: W + 280, y: H * 0.86, vx: -500, vy: -30, w: 64, h: 46, col: '#ff0033' }
-        ];
-      }
-
-      // Galleon Warp Thruster Plasma Stream charging into the fight!
-      for (let p = 0; p < 3; p++) {
-        parts.push({
-          x: ship.x - 50,
-          y: ship.y + 14 + (Math.random() - 0.5) * 16,
-          vx: -350 - Math.random() * 150,
-          vy: (Math.random() - 0.5) * 20,
-          life: 0.4, maxLife: 0.4,
-          col: '#ffd23c',
-          size: 6 + Math.random() * 6
-        });
-      }
-
-      // Advance all armada warships towards the player
-      for (const a of introArmada) {
-        a.x += a.vx * dt;
-        a.y += a.vy * dt;
-        // Jet afterburner plasma plumes
-        if (Math.random() < 0.7) {
-          parts.push({
-            x: a.x + a.w * 0.4,
-            y: a.y + (Math.random() - 0.5) * 16,
-            vx: 220 + Math.random() * 100,
-            vy: (Math.random() - 0.5) * 25,
-            life: 0.35, maxLife: 0.35,
-            col: a.col,
-            size: 4 + Math.random() * 4
-          });
-        }
-      }
-    }
-
-    // End of storyline -> charge seamlessly into combat!
-    if (introT >= 8.2) {
+    // As soon as the twin fighters are blasted & dubloons burst out, go DIRECTLY into the action!
+    if (introT >= 4.6) {
       startCombat();
     }
     return;
@@ -4573,84 +4521,6 @@ function draw() {
       cx.restore();
     }
 
-    // Render Advancing Imperial Armada Charging Towards Player (Act IV)
-    for (const a of introArmada) {
-      cx.save();
-      cx.translate(a.x, a.y);
-
-      if (a.type === 'cruiser') {
-        // Imperial War Cruiser (Massive heavy wedge warship)
-        const wg = cx.createLinearGradient(-a.w * 0.5, 0, a.w * 0.5, 0);
-        wg.addColorStop(0, '#38bdf8');
-        wg.addColorStop(0.4, '#0f172a');
-        wg.addColorStop(1, '#020617');
-        cx.fillStyle = wg;
-        cx.beginPath();
-        cx.moveTo(-a.w * 0.5, 0);
-        cx.lineTo(a.w * 0.4, -a.h * 0.5);
-        cx.lineTo(a.w * 0.5, -a.h * 0.3);
-        cx.lineTo(a.w * 0.45, 0);
-        cx.lineTo(a.w * 0.5, a.h * 0.3);
-        cx.lineTo(a.w * 0.4, a.h * 0.5);
-        cx.closePath();
-        cx.fill();
-        cx.strokeStyle = a.col; cx.lineWidth = 2.5; cx.stroke();
-
-        // Glowing Command Bridge & Heavy Red Laser Batteries
-        cx.fillStyle = '#ff0033';
-        cx.fillRect(-a.w * 0.15, -6, 24, 12);
-        cx.shadowColor = '#ff0033'; cx.shadowBlur = 16;
-        cx.fillStyle = '#ffffff';
-        cx.fillRect(-a.w * 0.1, -3, 14, 6);
-
-        // Heavy Plasma Thruster Flares
-        cx.shadowBlur = 0;
-        cx.fillStyle = a.col;
-        cx.fillRect(a.w * 0.45, -12, 18, 8);
-        cx.fillRect(a.w * 0.45, 4, 18, 8);
-
-      } else if (a.type === 'gunship') {
-        // Heavy Gunship Escort
-        const gg = cx.createLinearGradient(-a.w * 0.45, 0, a.w * 0.45, 0);
-        gg.addColorStop(0, a.col);
-        gg.addColorStop(0.5, '#1e293b');
-        gg.addColorStop(1, '#020617');
-        cx.fillStyle = gg;
-        cx.beginPath();
-        cx.moveTo(-a.w * 0.45, 0);
-        cx.lineTo(a.w * 0.3, -a.h * 0.45);
-        cx.lineTo(a.w * 0.45, 0);
-        cx.lineTo(a.w * 0.3, a.h * 0.45);
-        cx.closePath();
-        cx.fill();
-        cx.strokeStyle = a.col; cx.lineWidth = 2; cx.stroke();
-
-        // Cockpit Visor
-        cx.fillStyle = '#ff0055';
-        cx.beginPath(); cx.arc(-a.w * 0.1, 0, 7, 0, Math.PI * 2); cx.fill();
-
-      } else {
-        // Fast Starfighter in Formation
-        const fg = cx.createLinearGradient(-24, 0, 24, 0);
-        fg.addColorStop(0, a.col);
-        fg.addColorStop(1, '#0f172a');
-        cx.fillStyle = fg;
-        cx.beginPath();
-        cx.moveTo(-24, 0);
-        cx.lineTo(16, -18);
-        cx.lineTo(12, 0);
-        cx.lineTo(16, 18);
-        cx.closePath();
-        cx.fill();
-        cx.strokeStyle = a.col; cx.lineWidth = 1.8; cx.stroke();
-
-        // Wing Laser Diode
-        cx.fillStyle = '#ff0033';
-        cx.fillRect(-6, -2, 8, 4);
-      }
-
-      cx.restore();
-    }
   }
 
   // 6. Render Quantum & Incendiary Cluster Mines (2 Distinct Archetypes)
@@ -6002,8 +5872,8 @@ function draw() {
       cx.fillStyle = '#00ffee';
       cx.fillText('🛡️ [TACTICAL DEFLECTOR SHIELD]: ENERGIZED — DEFLECTING ENEMY LASER BARRAGE!', W / 2, H - barH + 102);
 
-    } else if (introT < 4.8) {
-      // ACT II: Supercharged 360° Corkscrew Broadside
+    } else {
+      // ACT II: Supercharged 360° Corkscrew Broadside & Instant Action Launch!
       cx.font = 'bold 17px "Orbitron", sans-serif';
       cx.fillStyle = '#38bdf8';
       cx.fillText('⚔️ ACT II: 360° COMBAT ROLL & QUAD PLASMA BROADSIDES', W / 2, H - barH + 32);
@@ -6016,46 +5886,9 @@ function draw() {
       cx.fillStyle = '#ffd23c';
       cx.fillText(`💥 [CAPTAIN ${captainUpper}]: "OVERDRIVE THE OMEGA CORE INTO THE 32-POUNDERS... UNLEASH THE SALVO!"`, W / 2, H - barH + 82);
 
-      cx.font = '12px "Orbitron", sans-serif';
-      cx.fillStyle = '#ff9900';
-      cx.fillText('⚡ [BROADSIDE SYSTEM]: 4 CORKSCREW CANNONBALLS TRACKING TARGET POWER CORES!', W / 2, H - barH + 102);
-
-    } else if (introT < 6.8) {
-      // ACT III: Supernova Obliteration & Magnetic Quantum Loot
-      cx.font = 'bold 17px "Orbitron", sans-serif';
-      cx.fillStyle = '#00dfa2';
-      cx.fillText('💥 ACT III: SUPERNOVA OBLITERATION — SHADOW FIGHTERS SHATTERED!', W / 2, H - barH + 32);
-
-      cx.font = '14px "Outfit", sans-serif';
-      cx.fillStyle = '#ffffff';
-      cx.fillText('⚡ "Direct impacts trigger twin catastrophic plasma overloads! Blinding shockwaves tear through space!"', W / 2, H - barH + 58);
-
-      cx.font = 'bold 14px "Outfit", sans-serif';
-      cx.fillStyle = '#ffd23c';
-      cx.fillText('🪙 [CARGO TELEMETRY]: "+2,500 Gold Dubloons & Plasma Relics Magnetically Salvaged!"', W / 2, H - barH + 82);
-
-      cx.font = '12px "Orbitron", sans-serif';
-      cx.fillStyle = '#c084fc';
-      cx.fillText('🌌 [SUBSPACE RADAR]: CRITICAL GRAVITATIONAL ANOMALY DETECTED IN LOCAL CLUSTER!', W / 2, H - barH + 102);
-
-    } else {
-      // ACT IV: The Entire Imperial Mother-Armada Drops Out of Hyperspace!
-      const flash = Math.sin(introT * 18) > 0;
-      cx.font = 'bold 17px "Orbitron", sans-serif';
-      cx.fillStyle = flash ? '#ff0055' : '#ffd23c';
-      cx.fillText('🚨 ACT IV: THE IMPERIAL TITAN MOTHER-ARMADA DROPS OUT OF WARP!', W / 2, H - barH + 32);
-
-      cx.font = '14px "Outfit", sans-serif';
-      cx.fillStyle = '#ffffff';
-      cx.fillText('🚨 [FIRST MATE]: "CAPTAIN! 1,000 Imperial Dreadnoughts just surrounded our sector! We\'re outnumbered!"', W / 2, H - barH + 58);
-
-      cx.font = 'bold 15px "Outfit", sans-serif';
-      cx.fillStyle = '#ffd23c';
-      cx.fillText(`👑 [CAPTAIN ${captainUpper}]: "THEY HAVE US SURROUNDED? PERFECT! ALL CANNONS TO FULL BATTERY — SET SOLAR SAILS FOR WAR!"`, W / 2, H - barH + 82);
-
       cx.font = 'bold 13px "Orbitron", sans-serif';
-      cx.fillStyle = flash ? '#ffd23c' : '#ff0055';
-      cx.fillText('⚔️ ENGAGING FLEET BATTLE STATIONS IN 3... 2... 1... ⚔️', W / 2, H - barH + 104);
+      cx.fillStyle = '#00dfa2';
+      cx.fillText('💥 DIRECT HITS! LAUNCHING DIRECTLY INTO THE DOGFIGHT! ⚔️', W / 2, H - barH + 104);
     }
 
     // Interactive Skip Button on bottom right with glowing pulse
