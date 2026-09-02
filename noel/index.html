@@ -787,7 +787,7 @@ function explode(x, y, col, n) {
 
 // ---------- PROGRESSION / SAVE / UPGRADES ----------
 const SAVE = {
-  data: { coins: 0, tokens: 0, kills: 0, spins: 0, skin: 'default', upg: { hull: 0, cannon: 0, engine: 0, magnet: 0 }, ships: ['cutter'], sel: 'cutter' },
+  data: { uid: '', coins: 0, tokens: 0, kills: 0, spins: 0, skin: 'default', upg: { hull: 0, cannon: 0, engine: 0, magnet: 0 }, ships: ['cutter'], sel: 'cutter' },
   load() {
     try {
       const d = JSON.parse(localStorage.getItem('sp_save') || 'null');
@@ -798,6 +798,11 @@ const SAVE = {
         if (!this.data.skin) this.data.skin = 'default';
         if (typeof this.data.kills !== 'number') this.data.kills = 0;
         if (typeof this.data.spins !== 'number') this.data.spins = 0;
+      }
+      if (!this.data.uid) {
+        this.data.uid = localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36));
+        localStorage.setItem('sp_uid', this.data.uid);
+        this.save();
       }
     } catch (e) {}
   },
@@ -872,11 +877,11 @@ function bankRun() {
 
 // ---------- LEADERBOARD (Reliable Persistent & Cloud Sync) ----------
 const DEFAULT_LEGENDS = [
-  { name: 'Captain Noel', score: 296, level: 12, created_at: Date.now() - 3600000 },
-  { name: 'Solar Dreadnought', score: 240, level: 10, created_at: Date.now() - 7200000 },
-  { name: 'Astral Corsair', score: 180, level: 8, created_at: Date.now() - 10800000 },
-  { name: 'Black Pearl', score: 120, level: 5, created_at: Date.now() - 14400000 },
-  { name: 'Stardust Sloop', score: 75, level: 3, created_at: Date.now() - 18000000 }
+  { uid: 'leg_dread', name: 'Solar Dreadnought', score: 240, level: 10, created_at: Date.now() - 7200000 },
+  { uid: 'leg_corsair', name: 'Astral Corsair', score: 180, level: 8, created_at: Date.now() - 10800000 },
+  { uid: 'leg_pearl', name: 'Black Pearl', score: 120, level: 5, created_at: Date.now() - 14400000 },
+  { uid: 'leg_sloop', name: 'Stardust Sloop', score: 75, level: 3, created_at: Date.now() - 18000000 },
+  { uid: 'leg_raider', name: 'Void Raider', score: 50, level: 2, created_at: Date.now() - 21600000 }
 ];
 
 const LB = {
@@ -888,13 +893,22 @@ const LB = {
     return Object.assign({ apikey: this.KEY, Authorization: 'Bearer ' + this.KEY }, extra || {});
   },
   async submit(entry) {
+    entry.uid = entry.uid || SAVE.data.uid;
     // 1. ALWAYS persist immediately to local storage
     try {
-      let arr = JSON.parse(localStorage.getItem('sp_lb') || 'null');
-      if (!arr || !Array.isArray(arr) || arr.length === 0) {
-        arr = [...DEFAULT_LEGENDS];
+      let arr = await this._all();
+      // If an existing entry for this UID exists, update its name and keep max score
+      const idx = arr.findIndex(r => r.uid && r.uid === entry.uid);
+      if (idx >= 0) {
+        arr[idx].name = entry.name;
+        if (entry.score >= (arr[idx].score || 0)) {
+          arr[idx].score = entry.score;
+          arr[idx].level = entry.level || arr[idx].level;
+          arr[idx].created_at = Date.now();
+        }
+      } else {
+        arr.push(Object.assign({ created_at: Date.now() }, entry));
       }
-      arr.push(Object.assign({ created_at: Date.now() }, entry));
       localStorage.setItem('sp_lb', JSON.stringify(arr));
     } catch (e) {}
 
@@ -908,6 +922,23 @@ const LB = {
         });
       } catch (e) {}
     }
+  },
+  async updateName(newName) {
+    if (!newName) return;
+    try {
+      let arr = await this._all();
+      const myUid = SAVE.data.uid;
+      let changed = false;
+      for (const r of arr) {
+        if (r.uid === myUid) {
+          r.name = newName;
+          changed = true;
+        }
+      }
+      if (changed) {
+        localStorage.setItem('sp_lb', JSON.stringify(arr));
+      }
+    } catch (e) {}
   },
   async _all() {
     let rows = [];
@@ -928,11 +959,12 @@ const LB = {
   _dedupe(rows) {
     const best = new Map();
     for (const r of rows) {
-      const k = (r.name || '').trim().toLowerCase();
-      if (!k) continue;
-      const p = best.get(k);
+      // Deduplicate strictly by UID if available, otherwise by name
+      const key = r.uid ? ('uid:' + r.uid) : ('name:' + (r.name || '').trim().toLowerCase());
+      if (!key) continue;
+      const p = best.get(key);
       if (!p || r.score > p.score || (r.score === p.score && (r.created_at || 0) < (p.created_at || 0))) {
-        best.set(k, r);
+        best.set(key, r);
       }
     }
     return [...best.values()].sort((a, b) => b.score - a.score || (a.created_at || 0) - (b.created_at || 0));
@@ -940,11 +972,9 @@ const LB = {
   async top(n) { return this._dedupe(await this._all()).slice(0, n); },
   async rank(sc, myName) {
     const board = this._dedupe(await this._all());
-    if (myName) {
-      const k = myName.trim().toLowerCase();
-      const idx = board.findIndex(r => (r.name || '').trim().toLowerCase() === k);
-      if (idx >= 0) return idx + 1;
-    }
+    const myUid = SAVE.data.uid;
+    const idx = board.findIndex(r => (r.uid && r.uid === myUid) || (myName && (r.name || '').trim().toLowerCase() === myName.trim().toLowerCase()));
+    if (idx >= 0) return idx + 1;
     return board.filter(r => r.score > sc).length + 1;
   }
 };
@@ -960,14 +990,17 @@ async function renderLeaderboard(cid, myScore, myName) {
   
   let rows = [], myRank = null;
   try {
-    // If player has a record > 0 and a name, ensure it's in the leaderboard
     const bestRec = +localStorage.getItem('sp_best') || 0;
-    const curName = (myName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || 'Captain Noel').slice(0, 14);
+    const curName = (myName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || localStorage.getItem('sp_name') || 'Captain Noel').slice(0, 14);
+    
+    // Always update name on existing account record
+    await LB.updateName(curName);
+
     if (bestRec > 0) {
       const allRows = await LB._all();
-      const existing = allRows.find(r => (r.name || '').trim().toLowerCase() === curName.trim().toLowerCase());
+      const existing = allRows.find(r => (r.uid && r.uid === SAVE.data.uid) || (r.name || '').trim().toLowerCase() === curName.trim().toLowerCase());
       if (!existing || existing.score < bestRec) {
-        await LB.submit({ name: curName, score: bestRec, level: Math.max(1, Math.floor(bestRec / 25)), coins: bestRec });
+        await LB.submit({ uid: SAVE.data.uid, name: curName, score: bestRec, level: Math.max(1, Math.floor(bestRec / 25)), coins: bestRec });
       }
     }
 
@@ -982,7 +1015,7 @@ async function renderLeaderboard(cid, myScore, myName) {
   } else {
     html += '<ol>';
     rows.forEach((r, i) => {
-      const isMe = (myName && (r.name || '').trim().toLowerCase() === myName.trim().toLowerCase());
+      const isMe = (r.uid && r.uid === SAVE.data.uid) || (myName && (r.name || '').trim().toLowerCase() === myName.trim().toLowerCase());
       const rk = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
       html += '<li class="' + (isMe ? 'me' : '') + '">' +
               '<span class="rk">' + rk + '</span>' +
@@ -1152,7 +1185,7 @@ document.getElementById('resumebtn').addEventListener('click', togglePause);
 async function endGame(cid) {
   if (!scoreSubmitted) {
     scoreSubmitted = true;
-    await LB.submit({ name: playerName, score: score, level: level, coins: coinsN });
+    await LB.submit({ uid: SAVE.data.uid, name: playerName, score: score, level: level, coins: coinsN });
   }
   renderLeaderboard(cid, score, playerName);
 }
