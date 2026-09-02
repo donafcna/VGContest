@@ -78,22 +78,173 @@
   #pname::placeholder { color: #8fa6cb; font-weight: normal; }
   #pname:focus { outline: none; border-color: #ffd23c; box-shadow: 0 0 20px rgba(255, 210, 60, 0.6); }
   
-  .lb { width: 100%; max-width: 460px; margin: 1rem auto 0; font-family: 'Orbitron', sans-serif; }
-  .lb h2 { color: #ffd23c; font-size: 1.15rem; margin-bottom: 0.6rem; letter-spacing: 1px; }
-  .lb ol { list-style: none; max-height: 38vh; overflow-y: auto; padding: 2px; }
+  .lb { width: 100%; max-width: 500px; margin: 1rem auto 0; font-family: 'Orbitron', sans-serif; }
+  .lb h2 { color: #ffd23c; font-size: 1.18rem; margin-bottom: 0.3rem; letter-spacing: 1px; }
+  .lb .lb-hint { font-size: 0.76rem; color: #8fa6cb; margin-bottom: 0.6rem; font-family: 'Outfit', sans-serif; }
+  .lb ol { list-style: none; max-height: 40vh; overflow-y: auto; padding: 3px; }
   .lb li {
-    display: flex; align-items: center; gap: 0.6rem; padding: 0.45rem 0.75rem;
-    border-radius: 8px; font-size: 0.95rem; background: rgba(255,255,255,0.06); margin-bottom: 4px;
-    border: 1px solid rgba(255, 210, 60, 0.15);
+    display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.8rem;
+    border-radius: 10px; font-size: 0.95rem; background: rgba(255,255,255,0.06); margin-bottom: 5px;
+    border: 1px solid rgba(255, 210, 60, 0.18); cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  }
+  .lb li:hover {
+    transform: scale(1.02);
+    border-color: #ffd23c;
+    background: rgba(255, 210, 60, 0.22);
+    box-shadow: 0 0 16px rgba(255, 210, 60, 0.4);
   }
   .lb li .rk { width: 2.2rem; text-align: right; color: #8fb6e6; font-weight: bold; }
   .lb li .nm { flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .lb li .sc { color: #ffd23c; font-weight: bold; }
-  .lb li .lv { color: #3fd5ff; font-size: 0.82rem; width: 4.2rem; text-align: right; }
+  .lb li .lv { color: #3fd5ff; font-size: 0.82rem; width: 4.6rem; text-align: right; }
+  .lb li .inspect { font-size: 0.8rem; opacity: 0.6; margin-left: 4px; }
+  .lb li:hover .inspect { opacity: 1; color: #ffd23c; }
   .lb li.me { background: rgba(255, 210, 60, 0.2); border-color: rgba(255, 210, 60, 0.7); }
   .lb .myrank { margin-top: 0.6rem; color: #ffd23c; font-weight: bold; font-size: 1.05rem; }
   .lb .empty { opacity: 0.6; font-size: 0.92rem; padding: 0.5rem; }
-  .lb.small { max-width: 420px; margin-top: 1.2rem; }
+  .lb.small { max-width: 480px; margin-top: 1.2rem; }
+
+  /* Captain Dossier Card Modal */
+  .dossier-card {
+    background: radial-gradient(circle at 50% 10%, #151b38 0%, #080c1c 100%);
+    border: 2px solid rgba(255, 210, 60, 0.6);
+    border-radius: 22px;
+    padding: 24px;
+    width: min(92vw, 540px);
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.85), 0 0 35px rgba(255, 210, 60, 0.3);
+    color: #fff;
+    text-align: left;
+    font-family: 'Outfit', system-ui, sans-serif;
+  }
+  .dossier-header {
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+  }
+  .dos-badge {
+    display: inline-block;
+    background: rgba(255, 210, 60, 0.2);
+    border: 1px solid #ffd23c;
+    color: #ffd23c;
+    padding: 3px 14px;
+    border-radius: 99px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+  .dossier-header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    color: #ffd23c;
+    margin: 6px 0 2px;
+  }
+  .dos-sub {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    color: #7fdcff;
+    opacity: 0.85;
+  }
+  .dos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .dos-panel {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+  .dos-panel.full-width {
+    margin-top: 4px;
+  }
+  .dos-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.82rem;
+    color: #ffd23c;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255,210,60,0.2);
+    padding-bottom: 4px;
+  }
+  .dos-ship-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0,0,0,0.35);
+    border-radius: 10px;
+    padding: 8px 10px;
+  }
+  .dos-fleet-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    color: #7fdcff;
+    margin: 8px 0 4px;
+  }
+  .dos-fleet-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .dos-fleet-tag {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 3px 8px;
+    border-radius: 6px;
+    color: #cfe4ff;
+  }
+  .dos-stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
+    padding: 4px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.06);
+  }
+  .dos-stat-row:last-child { border-bottom: none; }
+  .dos-stat-row strong.gold { color: #ffd23c; font-family: 'Orbitron', sans-serif; }
+  .dos-stat-row strong.cyan { color: #3fd5ff; font-family: 'Orbitron', sans-serif; }
+  .dos-stat-row strong.purple { color: #c084fc; font-family: 'Orbitron', sans-serif; }
+  .dos-upg-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .dos-upg-item {
+    background: rgba(0,0,0,0.25);
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .dos-close-btn {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    padding: 12px;
+    background: linear-gradient(135deg, #ffd23c, #f59e0b);
+    color: #1a0c00;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+  .dos-close-btn:hover {
+    box-shadow: 0 6px 20px rgba(255, 210, 60, 0.6);
+    transform: scale(1.02);
+  }
   
   #shop.overlay {
     justify-content: flex-start;
@@ -186,6 +337,41 @@
   <p style="font-size:0.92rem;color:#9fb4d4;margin-bottom:0.6rem;max-width:560px">Loot 🪙 gold dubloons from destroyed UFOs and 🎟️ alien plasma cores from UFO motherships.</p>
   <div id="shopBody"></div>
   <button id="shopclose" style="margin-top:1.3rem">⬅ RETURN TO QUARTERDECK</button>
+</div>
+
+<!-- Captain's Tactical Fleet Dossier Modal -->
+<div id="dossierModal" class="overlay hidden" style="z-index: 100;">
+  <div class="dossier-card">
+    <div class="dossier-header">
+      <span id="dosRank" class="dos-badge">🥇 RANK #1</span>
+      <h1 id="dosName">Captain Noel</h1>
+      <div id="dosCallsign" class="dos-sub">PILOT ID: pilot_xxxx</div>
+    </div>
+
+    <div class="dos-grid">
+      <div class="dos-panel">
+        <div class="dos-title">⛵ ACTIVE FLAGSHIP</div>
+        <div id="dosShipDisplay" class="dos-ship-box"></div>
+        <div class="dos-fleet-title">⚓ FLEET DOCKYARD:</div>
+        <div id="dosFleetList" class="dos-fleet-list"></div>
+      </div>
+
+      <div class="dos-panel">
+        <div class="dos-title">⚔️ COMBAT SERVICE RECORD</div>
+        <div class="dos-stat-row"><span>🚀 Max Sector Reached</span><strong id="dosSector" class="gold">Sector 1</strong></div>
+        <div class="dos-stat-row"><span>🪙 All-Time Score</span><strong id="dosScore" class="gold">🪙 0</strong></div>
+        <div class="dos-stat-row"><span>☠️ Confirmed UFO Kills</span><strong id="dosKills" class="cyan">0</strong></div>
+        <div class="dos-stat-row"><span>🎟️ Plasma Cores</span><strong id="dosTokens" class="purple">0</strong></div>
+      </div>
+    </div>
+
+    <div class="dos-panel full-width">
+      <div class="dos-title">⚙️ GALLEON UPGRADES &amp; SYSTEMS</div>
+      <div id="dosUpgList" class="dos-upg-grid"></div>
+    </div>
+
+    <button id="dosCloseBtn" class="dos-close-btn">✖ CLOSE DOSSIER</button>
+  </div>
 </div>
 
 <script>
@@ -899,13 +1085,26 @@ const LB = {
   },
   async submit(entry) {
     entry.uid = entry.uid || SAVE.data.uid;
+    entry.ship = entry.ship || SAVE.data.sel;
+    entry.skin = entry.skin || SAVE.data.skin;
+    entry.ships = entry.ships || [...SAVE.data.ships];
+    entry.upg = entry.upg || { ...SAVE.data.upg };
+    entry.kills = typeof entry.kills === 'number' ? entry.kills : SAVE.data.kills;
+    entry.tokens = typeof entry.tokens === 'number' ? entry.tokens : SAVE.data.tokens;
+    entry.spins = typeof entry.spins === 'number' ? entry.spins : SAVE.data.spins;
+
     // 1. ALWAYS persist immediately to local storage
     try {
       let arr = await this._all();
-      // If an existing entry for this UID exists, update its name and keep max score
       const idx = arr.findIndex(r => r.uid && r.uid === entry.uid);
       if (idx >= 0) {
         arr[idx].name = entry.name;
+        arr[idx].ship = entry.ship;
+        arr[idx].skin = entry.skin;
+        arr[idx].ships = entry.ships;
+        arr[idx].upg = entry.upg;
+        arr[idx].kills = Math.max(arr[idx].kills || 0, entry.kills || 0);
+        arr[idx].tokens = Math.max(arr[idx].tokens || 0, entry.tokens || 0);
         if (entry.score >= (arr[idx].score || 0)) {
           arr[idx].score = entry.score;
           arr[idx].level = entry.level || arr[idx].level;
@@ -937,6 +1136,12 @@ const LB = {
       for (const r of arr) {
         if (r.uid === myUid) {
           r.name = newName;
+          r.ship = SAVE.data.sel;
+          r.skin = SAVE.data.skin;
+          r.ships = [...SAVE.data.ships];
+          r.upg = { ...SAVE.data.upg };
+          r.kills = SAVE.data.kills;
+          r.tokens = SAVE.data.tokens;
           changed = true;
         }
       }
@@ -973,7 +1178,10 @@ const LB = {
     }
     return [...best.values()].sort((a, b) => b.score - a.score || (a.created_at || 0) - (b.created_at || 0));
   },
-  async top(n) { return this._dedupe(await this._all()).slice(0, n); },
+  async top(n) {
+    const all = this._dedupe(await this._all());
+    return (n && n > 0) ? all.slice(0, n) : all;
+  },
   async rank(sc, myName) {
     const board = this._dedupe(await this._all());
     const myUid = SAVE.data.uid;
@@ -987,10 +1195,103 @@ function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 }
 
+let cachedLeaderboardRows = [];
+
+function openDossier(pilotIndex) {
+  const p = cachedLeaderboardRows[pilotIndex];
+  if (!p) return;
+
+  const rankNum = pilotIndex + 1;
+  const modal = document.getElementById('dossierModal');
+  if (!modal) return;
+
+  // Header & Rank
+  const rankBadge = document.getElementById('dosRank');
+  if (rankBadge) {
+    rankBadge.textContent = rankNum === 1 ? '🥇 RANK #1' : rankNum === 2 ? '🥈 RANK #2' : rankNum === 3 ? '🥉 RANK #3' : `⭐ RANK #${rankNum}`;
+  }
+  const nameEl = document.getElementById('dosName');
+  if (nameEl) nameEl.textContent = p.name || 'Unknown Corsair';
+
+  const callsignEl = document.getElementById('dosCallsign');
+  if (callsignEl) {
+    callsignEl.textContent = `PILOT UID: ${p.uid ? p.uid.slice(0, 18) : 'PIRATE'}`;
+  }
+
+  // Active Flagship Details
+  const s = shipById(p.ship || 'cutter');
+  const sk = skinById(p.skin || 'default');
+  const shipBox = document.getElementById('dosShipDisplay');
+  if (shipBox) {
+    const swatch = (sk && sk.cols) ? sk.cols[0] : (s.cols ? s.cols[0] : '#c88a55');
+    shipBox.innerHTML = `
+      <div style="font-size: 2.2rem; filter: drop-shadow(0 0 8px ${swatch})">⛵</div>
+      <div style="flex: 1; min-width: 0;">
+        <div style="font-weight: bold; color: #ffd23c; font-size: 1.05rem; font-family: 'Orbitron', sans-serif;">${s.name}</div>
+        <div style="color: #cfe4ff; font-size: 0.82rem; margin: 2px 0;">🎨 Skin: <b>${sk ? sk.name : 'Classic Oak'}</b></div>
+        <div style="color: #3fd5ff; font-size: 0.78rem;">${s.power}</div>
+      </div>
+    `;
+  }
+
+  // Owned Fleet Dockyard
+  const fleetList = document.getElementById('dosFleetList');
+  if (fleetList) {
+    const ownedShips = Array.isArray(p.ships) && p.ships.length ? p.ships : ['cutter'];
+    fleetList.innerHTML = ownedShips.map(shId => {
+      const sh = shipById(shId);
+      const isCurrent = (p.ship || 'cutter') === shId;
+      return `<span class="dos-fleet-tag" style="${isCurrent ? 'border-color:#ffd23c;color:#ffd23c;background:rgba(255,210,60,0.18)' : ''}">⛵ ${sh.name}${isCurrent ? ' (Active)' : ''}</span>`;
+    }).join('');
+  }
+
+  // Combat Stats
+  const secEl = document.getElementById('dosSector');
+  if (secEl) secEl.textContent = `Sector ${p.level || 1}`;
+  const scEl = document.getElementById('dosScore');
+  if (scEl) scEl.textContent = `🪙 ${p.score || 0}`;
+  const klEl = document.getElementById('dosKills');
+  if (klEl) klEl.textContent = `☠️ ${p.kills || 0} UFOs`;
+  const tkEl = document.getElementById('dosTokens');
+  if (tkEl) tkEl.textContent = `🎟️ ${p.tokens || 0}`;
+
+  // Galleon Upgrades Grid
+  const upgGrid = document.getElementById('dosUpgList');
+  if (upgGrid) {
+    const u = p.upg || {};
+    upgGrid.innerHTML = `
+      <div class="dos-upg-item"><span>🛡️ Hull Strength</span><strong style="color:#3eed87">Lv ${u.hull || 0}/3</strong></div>
+      <div class="dos-upg-item"><span>💥 32-Pounders</span><strong style="color:#ff5277">Lv ${u.cannon || 0}/3</strong></div>
+      <div class="dos-upg-item"><span>⚙️ Solar Engines</span><strong style="color:#3fd5ff">Lv ${u.engine || 0}/3</strong></div>
+      <div class="dos-upg-item"><span>🧲 Salvage Hook</span><strong style="color:#ffd23c">Lv ${u.magnet || 0}/3</strong></div>
+    `;
+  }
+
+  modal.classList.remove('hidden');
+}
+
+// Close Dossier listeners
+document.addEventListener('DOMContentLoaded', () => {
+  const closeBtn = document.getElementById('dosCloseBtn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      const modal = document.getElementById('dossierModal');
+      if (modal) modal.classList.add('hidden');
+    });
+  }
+});
+const dBtn = document.getElementById('dosCloseBtn');
+if (dBtn) {
+  dBtn.addEventListener('click', () => {
+    const modal = document.getElementById('dossierModal');
+    if (modal) modal.classList.add('hidden');
+  });
+}
+
 async function renderLeaderboard(cid, myScore, myName) {
   const el = document.getElementById(cid);
   if (!el) return;
-  const title = (cid === 'lbMenu') ? '🏆 GALAXY TOP 10 PIRATES' : '🏆 TACTICAL RADAR LOG';
+  const title = (cid === 'lbMenu') ? '🏆 GALAXY PIRATE HALL OF FAME' : '🏆 TACTICAL RADAR ROSTER';
   
   let rows = [], myRank = null;
   try {
@@ -999,12 +1300,16 @@ async function renderLeaderboard(cid, myScore, myName) {
     // Always update name on existing account record
     await LB.updateName(curName);
 
-    rows = await LB.top(10);
+    // Show ALL pirates who played (not capped at 10)
+    rows = await LB.top();
+    cachedLeaderboardRows = rows;
   } catch (e) {}
 
   if (myScore >= 0) { try { myRank = await LB.rank(myScore, myName); } catch (e) {} }
   
   let html = '<h2>' + title + '</h2>';
+  html += '<div class="lb-hint">👆 Click any captain to inspect their flagship, fleet &amp; stats!</div>';
+  
   if (!rows || !rows.length) {
     html += '<div class="empty">No pirate flight logs registered yet. Be the first space captain! 🏴‍☠️</div>';
   } else {
@@ -1012,11 +1317,13 @@ async function renderLeaderboard(cid, myScore, myName) {
     rows.forEach((r, i) => {
       const isMe = (r.uid && r.uid === SAVE.data.uid) || (myName && (r.name || '').trim().toLowerCase() === myName.trim().toLowerCase());
       const rk = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
-      html += '<li class="' + (isMe ? 'me' : '') + '">' +
-              '<span class="rk">' + rk + '</span>' +
-              '<span class="nm">' + esc(r.name) + '</span>' +
-              '<span class="sc">🪙 ' + r.score + '</span>' +
-              '<span class="lv">Sector ' + (r.level || 1) + '</span></li>';
+      const sh = shipById(r.ship || 'cutter');
+      html += `<li class="${isMe ? 'me' : ''}" onclick="openDossier(${i})" title="Click to view Captain ${esc(r.name)}'s stats and fleet!">` +
+              `<span class="rk">${rk}</span>` +
+              `<span class="nm">${esc(r.name)} <span style="font-size:0.75rem; opacity:0.75; color:#7fdcff">(${sh.name})</span></span>` +
+              `<span class="sc">🪙 ${r.score}</span>` +
+              `<span class="lv">Sector ${r.level || 1}</span>` +
+              `<span class="inspect">🔍</span></li>`;
     });
     html += '</ol>';
   }
@@ -1180,7 +1487,20 @@ document.getElementById('resumebtn').addEventListener('click', togglePause);
 async function endGame(cid) {
   if (!scoreSubmitted) {
     scoreSubmitted = true;
-    await LB.submit({ uid: SAVE.data.uid, name: playerName, score: score, level: level, coins: coinsN });
+    await LB.submit({
+      uid: SAVE.data.uid,
+      name: playerName,
+      score: score,
+      level: level,
+      coins: coinsN,
+      kills: SAVE.data.kills,
+      ship: SAVE.data.sel,
+      skin: SAVE.data.skin,
+      ships: [...SAVE.data.ships],
+      upg: { ...SAVE.data.upg },
+      tokens: SAVE.data.tokens,
+      spins: SAVE.data.spins
+    });
   }
   renderLeaderboard(cid, score, playerName);
 }
