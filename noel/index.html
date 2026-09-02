@@ -1342,7 +1342,7 @@ function spawnFort() {
   } else if (roll < 0.70) {
     variant = 'tesla'; col = '#00e5ff'; name = 'CYBER-EMP FORTRESS'; hp = 6 + Math.floor(level * 0.8); w = 115; h = 70;
   } else {
-    variant = 'brood'; col = '#d946ef'; name = 'BIO-SPORE HIVE CARRIER'; hp = 5 + Math.floor(level * 0.6); w = 125; h = 68;
+    variant = 'brood'; col = '#ff4400'; name = 'SOLAR INFERNO JUGGERNAUT'; hp = 6 + Math.floor(level * 0.7); w = 126; h = 68;
   }
 
   forts.push({
@@ -2214,11 +2214,21 @@ function update(dt) {
             addScore(10, f.x, f.y); addShake(8);
             coins.push({ x: f.x, y: f.y, vx: -120, vy: -30 });
 
-            // Bio-Hive Special Death Power: Hatches 2 Mini-Swarmer Drones!
+            // Solar Juggernaut Special Death Power: Supernova Thermal Core Explosion!
             if (f.variant === 'brood') {
-              popup(f.x, f.y - 30, 'BIO-SWARM HATCHED!', '#d946ef');
-              spawnGlider(f.x, f.y - 25, 'tie');
-              spawnGlider(f.x, f.y + 25, 'tie');
+              popup(f.x, f.y - 30, '💥 SUPERNOVA CORE DETONATION!', '#ff4400');
+              explode(f.x, f.y, '#ff4400', 65);
+              addShake(18);
+              // Radial molten shrapnel bursts
+              for (let k = 0; k < 6; k++) {
+                const ang = (k / 6) * Math.PI * 2;
+                parts.push({
+                  type: 'fireball',
+                  x: f.x, y: f.y,
+                  vx: Math.cos(ang) * 180, vy: Math.sin(ang) * 180,
+                  life: 0.35, maxLife: 0.35, r: 8, maxR: 24, col: '#ff5500'
+                });
+              }
             }
             
             const roll = Math.random();
@@ -2314,17 +2324,33 @@ function update(dt) {
         });
         sfx('incoming');
       } else if (f.variant === 'brood') {
-        // Bio-Spore Hive: 3-Way Spreading Toxic Acid Spore Barrage!
-        for (const spr of [-0.22, 0, 0.22]) {
+        // SOLAR INFERNO JUGGERNAUT Signature Power: Molten Solar Flare Torpedo or Magma Shrapnel Burst!
+        f.altShot = !f.altShot;
+        if (f.altShot) {
+          // Heavy Molten Solar Magma Torpedo
           eballs.push({
-            type: 'spore',
-            col: '#d946ef',
+            type: 'magma',
+            col: '#ff4400',
             x: f.x - f.w * 0.45, y: f.y,
-            vx: -480 * Math.cos(spr), vy: 480 * Math.sin(spr),
-            r: 13
+            vx: -420, vy: (dy / dist) * 140,
+            r: 16,
+            spin: 0
           });
+          popup(f.x, f.y - 28, '🔥 SOLAR MAGMA TORPEDO!', '#ff5500');
+          sfx('incoming');
+        } else {
+          // 3-Way Incendiary Solar Flare Barrage
+          for (const spr of [-0.22, 0, 0.22]) {
+            eballs.push({
+              type: 'laser',
+              col: '#ff5500',
+              x: f.x - f.w * 0.45, y: f.y,
+              vx: -520 * Math.cos(spr), vy: 520 * Math.sin(spr),
+              r: 11
+            });
+          }
+          sfx('laser');
         }
-        sfx('laser');
       } else {
         // VOID ECLIPSE DESTROYER Signature Power: Dark Matter Vortex or Dual Turbo-Lasers!
         f.altShot = !f.altShot;
@@ -2462,6 +2488,10 @@ function update(dt) {
       if (b.type === 'emp') {
         slowT = 2.8;
         popup(ship.x, ship.y - 30, '⚡ EMP SHOCK — ENGINES DISRUPTED!', '#00e5ff');
+      } else if (b.type === 'magma') {
+        popup(ship.x, ship.y - 30, '🔥 SOLAR INFERNO BURN!', '#ff5500');
+        explode(b.x, b.y, '#ff4400', 32);
+        addShake(16);
       } else if (b.type === 'spore') {
         popup(ship.x, ship.y - 30, '☣ ACID SPORE HIT!', '#d946ef');
       } else if (b.type === 'vortex') {
@@ -2866,31 +2896,91 @@ function draw() {
       cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.5; cx.stroke();
       
     } else if (f.variant === 'brood') {
-      // ARCHETYPE 3: Bio-Xenomorph Hive Spore Carrier (Organic Chitin Carapace with Venom Sacs)
-      const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.50);
-      sg.addColorStop(0, 'rgba(217, 70, 239, 0.45)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
-      cx.fillStyle = sg; cx.beginPath(); cx.ellipse(0, 0, f.w * 0.50, f.h * 0.46, 0, 0, Math.PI * 2); cx.fill();
+      // ARCHETYPE 3: SOLAR INFERNO JUGGERNAUT (Heavy Phoenix Star-Cruiser with Molten Fusion Core)
+      // Incandescent Solar Thermal Plasma Glow Aura
+      const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.55);
+      sg.addColorStop(0, 'rgba(255, 68, 0, 0.55)');
+      sg.addColorStop(0.5, 'rgba(255, 170, 0, 0.25)');
+      sg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = sg; cx.beginPath(); cx.ellipse(0, 0, f.w * 0.52, f.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
 
-      // Bio-Chitin Carapace
-      const bg = cx.createLinearGradient(0, -f.h * 0.45, 0, f.h * 0.45);
-      bg.addColorStop(0, '#f472b6'); bg.addColorStop(0.4, '#86198f'); bg.addColorStop(1, '#3b0764');
+      // Heavy Forward-Swept Phoenix Heavy Warship Wings (Obsidian & Molten Gold Armor)
+      const bg = cx.createLinearGradient(f.w * 0.5, 0, -f.w * 0.5, 0);
+      bg.addColorStop(0, '#1c0509');
+      bg.addColorStop(0.4, '#4c0519');
+      bg.addColorStop(0.7, '#9f1239');
+      bg.addColorStop(1, '#e11d48');
       cx.fillStyle = bg;
       cx.beginPath();
-      cx.ellipse(0, 0, f.w * 0.46, f.h * 0.35, 0, 0, Math.PI * 2);
+      cx.moveTo(-f.w * 0.46, 0);                 // Forward ramming beak
+      cx.lineTo(-f.w * 0.30, -f.h * 0.46);       // Port forward swept wingtip
+      cx.lineTo(f.w * 0.15, -f.h * 0.42);        // Port mid wing
+      cx.lineTo(f.w * 0.45, -f.h * 0.26);        // Port aft engine nacelle
+      cx.lineTo(f.w * 0.38, 0);                  // Aft spine center
+      cx.lineTo(f.w * 0.45, f.h * 0.26);         // Starboard aft engine nacelle
+      cx.lineTo(f.w * 0.15, f.h * 0.42);         // Starboard mid wing
+      cx.lineTo(-f.w * 0.30, f.h * 0.46);        // Starboard forward swept wingtip
+      cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#d946ef'; cx.lineWidth = 3; cx.stroke();
+      cx.strokeStyle = '#ff5500'; cx.lineWidth = 2.5; cx.stroke();
 
-      // Twitching Bio-Mandibles on Bow
-      cx.strokeStyle = '#f472b6'; cx.lineWidth = 3;
+      // Molten Armor Inset Plating with Glowing Lava Seams
+      const pg = cx.createLinearGradient(0, -f.h * 0.25, 0, f.h * 0.25);
+      pg.addColorStop(0, '#450a0a'); pg.addColorStop(0.5, '#7f1d1d'); pg.addColorStop(1, '#450a0a');
+      cx.fillStyle = pg;
       cx.beginPath();
-      cx.moveTo(-f.w * 0.4, -12); cx.quadraticCurveTo(-f.w * 0.52, -20 + Math.sin(t * 12) * 6, -f.w * 0.42, -28);
-      cx.moveTo(-f.w * 0.4, 12); cx.quadraticCurveTo(-f.w * 0.52, 20 - Math.sin(t * 12) * 6, -f.w * 0.42, 28);
-      cx.stroke();
+      cx.moveTo(-f.w * 0.30, 0);
+      cx.lineTo(-f.w * 0.10, -f.h * 0.24);
+      cx.lineTo(f.w * 0.25, -f.h * 0.24);
+      cx.lineTo(f.w * 0.30, 0);
+      cx.lineTo(f.w * 0.25, f.h * 0.24);
+      cx.lineTo(-f.w * 0.10, f.h * 0.24);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.2; cx.stroke();
 
-      // Pulsing Acid Venom Sacs
-      cx.fillStyle = '#22c55e';
-      cx.beginPath(); cx.arc(-f.w * 0.15, -8, 8 + Math.sin(t * 8) * 2, 0, Math.PI * 2); cx.fill();
-      cx.beginPath(); cx.arc(f.w * 0.15, -8, 8 + Math.cos(t * 8) * 2, 0, Math.PI * 2); cx.fill();
+      // Superheated Molten Solar Fusion Core (Pulsing Mini-Sun)
+      const cg = cx.createRadialGradient(0, 0, 1, 0, 0, 14);
+      cg.addColorStop(0, '#ffffff');
+      cg.addColorStop(0.35, '#ffdd33');
+      cg.addColorStop(0.7, '#ff3300');
+      cg.addColorStop(1, '#660000');
+      cx.fillStyle = cg;
+      cx.beginPath(); cx.arc(0, 0, 10 + Math.sin(t * 16) * 2, 0, Math.PI * 2); cx.fill();
+      
+      // Solar Flare Radiation Orbiting Rings
+      cx.strokeStyle = '#ff9900'; cx.lineWidth = 2;
+      cx.beginPath(); cx.arc(0, 0, 15, t * 10, t * 10 + Math.PI * 1.2); cx.stroke();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.arc(0, 0, 18, -t * 12, -t * 12 + Math.PI); cx.stroke();
+
+      // Twin Heavy Magma Torpedo Launchers on Wingtips
+      const aimToPlayer = Math.atan2(ship.y - f.y, ship.x - f.x);
+      for (const wy of [-f.h * 0.38, f.h * 0.38]) {
+        cx.save();
+        cx.translate(-f.w * 0.18, wy);
+        cx.rotate(aimToPlayer);
+        cx.fillStyle = '#0f172a'; cx.fillRect(0, -3.5, 18, 7);
+        cx.fillStyle = '#ff4400'; cx.fillRect(14, -2.5, 4, 5);
+        cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1; cx.strokeRect(0, -3.5, 18, 7);
+        cx.restore();
+      }
+
+      // Dual Solar Fusion Thrusters (Blazing fire exhaust plumes)
+      for (const ty of [-f.h * 0.18, f.h * 0.18]) {
+        const jg = cx.createLinearGradient(f.w * 0.45, ty, f.w * 0.68, ty);
+        jg.addColorStop(0, '#ffffff');
+        jg.addColorStop(0.25, '#ffdd00');
+        jg.addColorStop(0.6, '#ff3300');
+        jg.addColorStop(1, 'rgba(255, 50, 0, 0)');
+        cx.fillStyle = jg;
+        cx.beginPath();
+        cx.moveTo(f.w * 0.45, ty - 5);
+        cx.lineTo(f.w * 0.65 + Math.random() * 12, ty);
+        cx.lineTo(f.w * 0.45, ty + 5);
+        cx.closePath();
+        cx.fill();
+      }
 
     } else {
       // ARCHETYPE 1: VOID ECLIPSE DESTROYER (Angular Stealth Star-Destroyer Battlecruiser)
@@ -3454,6 +3544,29 @@ function draw() {
       cx.fillStyle = '#020617';
       cx.beginPath(); cx.arc(0, 0, eb.r * 0.45, 0, Math.PI * 2); cx.fill();
       cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1.5; cx.stroke();
+
+    } else if (eb.type === 'magma') {
+      // Superheated Molten Solar Magma Torpedo with Radiant Sun Corona
+      const mg = cx.createRadialGradient(0, 0, 2, 0, 0, eb.r + 8);
+      mg.addColorStop(0, '#ffffff');
+      mg.addColorStop(0.35, '#ffdd33');
+      mg.addColorStop(0.7, '#ff3300');
+      mg.addColorStop(1, 'rgba(255, 50, 0, 0)');
+      cx.fillStyle = mg;
+      cx.beginPath(); cx.arc(0, 0, eb.r + 8, 0, Math.PI * 2); cx.fill();
+
+      // Rotating Solar Flare Corona Rays
+      for (let k = 0; k < 6; k++) {
+        const a = (k / 6) * Math.PI * 2 + (eb.spin || 0);
+        cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2;
+        cx.beginPath();
+        cx.moveTo(Math.cos(a) * (eb.r * 0.6), Math.sin(a) * (eb.r * 0.6));
+        cx.lineTo(Math.cos(a) * (eb.r + 5), Math.sin(a) * (eb.r + 5));
+        cx.stroke();
+      }
+
+      cx.fillStyle = '#ffffff';
+      cx.beginPath(); cx.arc(0, 0, eb.r * 0.5, 0, Math.PI * 2); cx.fill();
 
     } else if (eb.type === 'spore') {
       // Bubbling Biohazard Acid Spore Glob
