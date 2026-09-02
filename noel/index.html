@@ -1416,7 +1416,20 @@ function spawnBoss() {
     atk: b.atk, atkT: 2.3, phase: 0,
     spinRing: 0
   };
+
+  // VAPORIZE ALL ENEMY MINIONS & CLEAR BATTLEFIELD FOR 1v1 DUEL!
+  for (const f of forts) { explode(f.x, f.y, f.col, 35); }
+  for (const g of gliders) { explode(g.x, g.y, g.col, 18); }
+  for (const m of mines) { explode(m.x, m.y, m.col, 22); }
+  forts.length = 0;
+  gliders.length = 0;
+  mines.length = 0;
+  eballs.length = 0;
+
+  addShake(22);
+  sfx('boom');
   addAlert('☠️ COLOSSAL UFO BOSS: ' + b.name.toUpperCase() + '!', 'incoming');
+  popup(W * 0.5, H * 0.35, '🚨 BOSS ARENA: ALL ENEMY SHIPS RETREATED!', '#ffd23c');
 }
 
 // ---------- GAME FLOW ----------
@@ -2121,13 +2134,15 @@ function update(dt) {
     else addAlert(`🛰️ SECTOR ${level}: UNCHARTED SPACE — UFO Fleet Inbound!`, 'incoming');
   }
 
-  // Spawns
-  fortT -= dt;
-  if (fortT <= 0) { spawnFort(); fortT = Math.max(1.3, 3.5 - level * 0.35) + Math.random(); }
-  gliderT -= dt;
-  if (gliderT <= 0) { spawnGlider(); gliderT = Math.max(1.8, 5.0 - level * 0.7) + Math.random() * 2; }
-  mineT -= dt;
-  if (mineT <= 0) { spawnMine(); mineT = Math.max(3.2, 9.2 - level * 1.0) + Math.random() * 3; }
+  // Spawns: ONLY spawn regular enemies when NOT fighting a boss!
+  if (!boss) {
+    fortT -= dt;
+    if (fortT <= 0) { spawnFort(); fortT = Math.max(1.3, 3.5 - level * 0.35) + Math.random(); }
+    gliderT -= dt;
+    if (gliderT <= 0) { spawnGlider(); gliderT = Math.max(1.8, 5.0 - level * 0.7) + Math.random() * 2; }
+    mineT -= dt;
+    if (mineT <= 0) { spawnMine(); mineT = Math.max(3.2, 9.2 - level * 1.0) + Math.random() * 3; }
+  }
 
   // Boss updates
   if (!boss) { bossT -= dt; if (bossT <= 0) spawnBoss(); }
@@ -2142,15 +2157,19 @@ function update(dt) {
       boss.atkT = Math.max(1.4, 2.8 - level * 0.12);
       if (boss.atk === 'spread') {
         for (const ang of [-0.32, -0.16, 0, 0.16, 0.32]) {
-          eballs.push({ x: boss.x - boss.w * 0.45, y: boss.y, vx: -580 * Math.cos(ang), vy: 580 * Math.sin(ang), r: 15 });
+          eballs.push({ type: 'laser', col: boss.col, x: boss.x - boss.w * 0.45, y: boss.y, vx: -580 * Math.cos(ang), vy: 580 * Math.sin(ang), r: 15 });
         }
         sfx('laser');
       } else if (boss.atk === 'swarm') {
-        spawnGlider(); spawnGlider();
+        // High-voltage EMP shockwave burst instead of spawning minions
+        for (const ang of [-0.22, 0, 0.22]) {
+          eballs.push({ type: 'emp', col: '#00e5ff', x: boss.x - boss.w * 0.45, y: boss.y, vx: -520 * Math.cos(ang), vy: 520 * Math.sin(ang), r: 16 });
+        }
+        sfx('laser');
       } else {
         const dx = ship.x - boss.x, dy = ship.y - boss.y;
         const dist = Math.hypot(dx, dy) || 1;
-        eballs.push({ x: boss.x - boss.w * 0.45, y: boss.y, vx: (dx/dist)*680, vy: (dy/dist)*680, r: 18 });
+        eballs.push({ type: 'laser', col: boss.col, x: boss.x - boss.w * 0.45, y: boss.y, vx: (dx/dist)*680, vy: (dy/dist)*680, r: 18 });
         sfx('laser');
       }
     }
@@ -2179,6 +2198,7 @@ function update(dt) {
         for (let k = 0; k < 15; k++) coins.push({ x: boss.x + (Math.random()-0.5)*130, y: boss.y + (Math.random()-0.5)*90, vx: -130 + (Math.random()-0.5)*60, vy: (Math.random()-0.5)*60 });
         if (Math.random() < 0.8) powerups.push({ x: boss.x, y: boss.y, type: 'heart', vx: -85, vy: 0 });
         boss = null; bossT = 28 + Math.random() * 8;
+        fortT = 3.5; gliderT = 2.4; mineT = 4.5;
       }
     }
     
