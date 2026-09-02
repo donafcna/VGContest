@@ -246,24 +246,24 @@
     transform: scale(1.02);
   }
 
-  /* Pirate Slot Machine Spinner Modal */
+  /* Roblox Grow a Garden Style Lucky Spin Wheel Modal */
   .spin-card {
-    background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
-    border: 2px solid rgba(255, 210, 60, 0.6);
-    box-shadow: 0 0 50px rgba(255, 210, 60, 0.35), 0 20px 40px rgba(0,0,0,0.8);
-    border-radius: 24px;
-    max-width: 520px;
-    width: 92%;
-    padding: 24px;
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.99));
+    border: 3px solid #ffd23c;
+    box-shadow: 0 0 60px rgba(255, 210, 60, 0.4), 0 24px 50px rgba(0,0,0,0.85);
+    border-radius: 28px;
+    max-width: 480px;
+    width: 94%;
+    padding: 20px 20px 24px;
     box-sizing: border-box;
     text-align: center;
     position: relative;
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(18px);
     animation: dossierPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .spin-header h1 {
-    font-size: 1.8rem;
-    margin: 6px 0 4px;
+    font-size: 1.7rem;
+    margin: 6px 0 2px;
     font-family: 'Cinzel', 'Orbitron', serif;
     background: linear-gradient(135deg, #ffd23c, #ff9900);
     -webkit-background-clip: text;
@@ -282,66 +282,53 @@
   }
   .spin-header p {
     color: #94a3b8;
-    font-size: 0.9rem;
-    margin: 0 0 16px;
+    font-size: 0.88rem;
+    margin: 0 0 10px;
   }
-  .slot-machine-frame {
-    background: linear-gradient(180deg, #1e1b4b, #0f172a);
-    border: 3px solid #ffd23c;
-    box-shadow: inset 0 0 25px rgba(0,0,0,0.8), 0 0 20px rgba(255, 210, 60, 0.4);
-    border-radius: 18px;
-    padding: 16px;
-    margin: 12px 0 16px;
+  
+  /* Lucky Wheel Container */
+  .wheel-wrapper {
     position: relative;
-    overflow: hidden;
-  }
-  .slot-reels-container {
-    display: flex;
-    justify-content: center;
-    gap: 14px;
-  }
-  .slot-reel {
-    flex: 1;
-    height: 100px;
-    background: linear-gradient(180deg, #020617, #1e293b, #020617);
-    border: 2px solid rgba(255, 210, 60, 0.4);
-    border-radius: 12px;
+    width: 320px;
+    height: 320px;
+    margin: 6px auto 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: inset 0 6px 14px rgba(0,0,0,0.9);
-    position: relative;
-    overflow: hidden;
   }
-  .reel-symbol {
-    font-size: 3.2rem;
-    filter: drop-shadow(0 0 8px rgba(255,210,60,0.5));
+  #wheelCanvas {
+    width: 310px;
+    height: 310px;
+    border-radius: 50%;
+    box-shadow: 0 0 30px rgba(255, 210, 60, 0.35), 0 8px 24px rgba(0,0,0,0.8);
+    transition: transform 0.05s linear;
+  }
+  /* Top Indicator Needle / Ticker */
+  .wheel-pointer {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 34px;
+    height: 44px;
+    z-index: 10;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.8));
+    transform-origin: 50% 20%;
     transition: transform 0.08s ease;
   }
-  .reel-spinning {
-    animation: reelBlur 0.12s infinite linear;
+  .wheel-pointer svg {
+    width: 100%;
+    height: 100%;
   }
-  @keyframes reelBlur {
-    0% { transform: translateY(-40px); opacity: 0.4; }
-    50% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(40px); opacity: 0.4; }
-  }
-  .slot-win-line {
-    position: absolute;
-    top: 50%;
-    left: 8px; right: 8px;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, rgba(255, 210, 60, 0.7), transparent);
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
+
   .spin-loot-banner {
-    background: rgba(255, 210, 60, 0.12);
-    border: 1px solid rgba(255, 210, 60, 0.6);
-    border-radius: 12px;
+    background: rgba(255, 210, 60, 0.15);
+    border: 1.5px solid #ffd23c;
+    box-shadow: 0 0 20px rgba(255, 210, 60, 0.3);
+    border-radius: 14px;
     padding: 10px 14px;
-    margin-bottom: 16px;
-    animation: lootPulse 0.4s ease;
+    margin-bottom: 14px;
+    animation: lootPulse 0.35s ease;
   }
   @keyframes lootPulse {
     0% { transform: scale(0.85); opacity: 0; }
@@ -354,7 +341,7 @@
     font-family: 'Cinzel', 'Orbitron', serif;
   }
   .spin-loot-desc {
-    font-size: 1rem;
+    font-size: 0.96rem;
     color: #ffffff;
     font-weight: 600;
     margin-top: 2px;
@@ -362,22 +349,22 @@
   .spin-actions {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
   .spin-pull-btn {
     background: linear-gradient(135deg, #ffd23c, #f59e0b) !important;
     color: #020617 !important;
-    font-size: 1.1rem !important;
+    font-size: 1.15rem !important;
     padding: 12px 24px !important;
-    border-radius: 12px !important;
+    border-radius: 14px !important;
     font-weight: 800 !important;
     letter-spacing: 1px !important;
     cursor: pointer !important;
-    box-shadow: 0 4px 20px rgba(255, 210, 60, 0.5) !important;
+    box-shadow: 0 4px 22px rgba(255, 210, 60, 0.55) !important;
     transition: all 0.15s ease !important;
   }
   .spin-pull-btn:hover:not(:disabled) {
-    box-shadow: 0 6px 28px rgba(255, 210, 60, 0.8) !important;
+    box-shadow: 0 6px 30px rgba(255, 210, 60, 0.85) !important;
     transform: scale(1.02) !important;
   }
   .spin-pull-btn:disabled {
@@ -526,23 +513,31 @@
   </div>
 </div>
 
-<!-- Interactive Animated Pirate Treasure Chest Slot Machine Modal -->
+<!-- Roblox Grow a Garden Style Lucky Prize Wheel Modal -->
 <div id="spinModal" class="overlay hidden" style="z-index: 120;">
   <div class="spin-card">
     <div class="spin-header">
-      <span class="spin-badge">🎰 PIRATE TREASURE VAULT 🎟️</span>
-      <h1 id="spinTitle">SPACE TREASURE CHEST</h1>
-      <p id="spinSubtitle">Spin the 3 Cosmic Reels to claim legendary pirate loot!</p>
+      <span class="spin-badge">🎡 LUCKY PRIZE WHEEL 🎟️</span>
+      <h1 id="spinTitle">PIRATE LUCKY WHEEL</h1>
+      <p id="spinSubtitle">Spin the wheel to win massive gold dubloons &amp; plasma cores!</p>
     </div>
 
-    <!-- 3 Animated Slot Machine Reels -->
-    <div class="slot-machine-frame">
-      <div class="slot-reels-container">
-        <div class="slot-reel" id="reel0"><div class="reel-symbol" id="sym0">🎰</div></div>
-        <div class="slot-reel" id="reel1"><div class="reel-symbol" id="sym1">🎰</div></div>
-        <div class="slot-reel" id="reel2"><div class="reel-symbol" id="sym2">🎰</div></div>
+    <!-- Roblox Style Circular Lucky Wheel -->
+    <div class="wheel-wrapper">
+      <div id="wheelPointer" class="wheel-pointer">
+        <svg viewBox="0 0 34 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17 42L4 12C2 7.5 5.5 2 10.5 2H23.5C28.5 2 32 7.5 30 12L17 42Z" fill="url(#ptrGold)" stroke="#ffffff" stroke-width="2.5"/>
+          <circle cx="17" cy="11" r="5" fill="#ffffff"/>
+          <defs>
+            <linearGradient id="ptrGold" x1="17" y1="2" x2="17" y2="42" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#fff2b0"/>
+              <stop offset="0.5" stop-color="#ffd23c"/>
+              <stop offset="1" stop-color="#f59e0b"/>
+            </linearGradient>
+          </defs>
+        </svg>
       </div>
-      <div class="slot-win-line"></div>
+      <canvas id="wheelCanvas" width="600" height="600"></canvas>
     </div>
 
     <!-- Spin Result Banner & Rewards -->
@@ -552,8 +547,8 @@
     </div>
 
     <div class="spin-actions">
-      <button id="spinPullBtn" class="spin-pull-btn">🎰 PULL LEVER / SPIN (<span id="spinCountLeft">0</span> left)</button>
-      <button id="spinCloseBtn" class="spin-close-btn">✖ CLOSE VAULT</button>
+      <button id="spinPullBtn" class="spin-pull-btn">🎡 SPIN WHEEL (<span id="spinCountLeft">0</span> left)</button>
+      <button id="spinCloseBtn" class="spin-close-btn">✖ CLOSE WHEEL</button>
     </div>
   </div>
 </div>
@@ -1776,7 +1771,7 @@ function lose() {
   document.getElementById('losetext').textContent =
     `Pirate galleon destroyed in Sector ${level}… Final Score: ${score}` +
     (pb ? '  🏅 NEW GALAXY RECORD!' : `  · Personal Best: ${best} 🏅`) +
-    `\nSalvage banked: +${bank.coins} 🪙  +${bank.tokens} 🎟️  +${bank.spins} 🎰  +${bank.kills} ☠️` +
+    `\nSalvage banked: +${bank.coins} 🪙  +${bank.tokens} 🎟️  +${bank.spins} 🎡  +${bank.kills} ☠️` +
     (bank.unlocked.length ? `\n🎨 New galleon paint unlocked: ${bank.unlocked.join(', ')}!` : '');
   document.getElementById('loseoverlay').classList.remove('hidden');
   endGame('lbLose');
@@ -1784,13 +1779,137 @@ function lose() {
 
 // ---------- HANGAR UI ----------
 function renderWallet() {
-  const w = `🪙 ${SAVE.data.coins}  🎟️ ${SAVE.data.tokens}  🎰 ${SAVE.data.spins}  ☠️ ${SAVE.data.kills}`;
+  const w = `🪙 ${SAVE.data.coins}  🎟️ ${SAVE.data.tokens}  🎡 ${SAVE.data.spins}  ☠️ ${SAVE.data.kills}`;
   const ml = document.getElementById('walletline'); if (ml) ml.textContent = w;
   const sw = document.getElementById('shopwallet'); if (sw) sw.textContent = w;
 }
 
-const SLOT_SYMBOLS = ['🪙', '💰', '🎟️', '⭐', '🎰', '💎', '👑'];
-let isSlotSpinning = false;
+// ---------- ROBLOX GROW A GARDEN STYLE LUCKY PRIZE WHEEL ENGINE ----------
+const WHEEL_SLICES = [
+  { id: 0, label: '50 🪙',    icon: '🪙', color: '#f59e0b', stroke: '#ffd23c', type: 'coin',  amt: 50,  weight: 35 },
+  { id: 1, label: '+1 🎟️',   icon: '🎟️', color: '#8b5cf6', stroke: '#c084fc', type: 'token', amt: 1,   weight: 22 },
+  { id: 2, label: '150 🪙',   icon: '🪙', color: '#10b981', stroke: '#34d399', type: 'coin',  amt: 150, weight: 18 },
+  { id: 3, label: '+2 🎟️',   icon: '🎟️', color: '#06b6d4', stroke: '#38bdf8', type: 'token', amt: 2,   weight: 12 },
+  { id: 4, label: '300 💰',   icon: '💰', color: '#ea580c', stroke: '#fb923c', type: 'coin',  amt: 300, weight: 7 },
+  { id: 5, label: '⭐ +3 🎟️', icon: '⭐', color: '#3b82f6', stroke: '#60a5fa', type: 'token', amt: 3,   weight: 4 },
+  { id: 6, label: '600 💎',   icon: '💎', color: '#eab308', stroke: '#fef08a', type: 'coin',  amt: 600, weight: 1.5 },
+  { id: 7, label: '👑 +8 🎟️', icon: '👑', color: '#ec4899', stroke: '#f472b6', type: 'token', amt: 8,   weight: 0.5 },
+];
+
+let wheelAngle = 0;
+let isWheelSpinning = false;
+let wheelAnimFrame = null;
+
+function drawLuckyWheel() {
+  const wcv = document.getElementById('wheelCanvas');
+  if (!wcv) return;
+  const wcx = wcv.getContext('2d');
+  const size = wcv.width;
+  const cx0 = size / 2, cy0 = size / 2, r0 = size / 2 - 18;
+  const numSlices = WHEEL_SLICES.length;
+  const sliceAngle = (Math.PI * 2) / numSlices;
+
+  wcx.clearRect(0, 0, size, size);
+
+  wcx.save();
+  wcx.translate(cx0, cy0);
+  wcx.rotate(wheelAngle);
+
+  // Outer Golden Rim with Bulbs
+  wcx.beginPath();
+  wcx.arc(0, 0, r0 + 14, 0, Math.PI * 2);
+  wcx.fillStyle = '#b45309';
+  wcx.fill();
+  wcx.strokeStyle = '#ffd23c';
+  wcx.lineWidth = 6;
+  wcx.stroke();
+
+  // Draw 8 Colorful Segments
+  for (let i = 0; i < numSlices; i++) {
+    const s = WHEEL_SLICES[i];
+    const a0 = i * sliceAngle;
+    const a1 = a0 + sliceAngle;
+
+    wcx.beginPath();
+    wcx.moveTo(0, 0);
+    wcx.arc(0, 0, r0, a0, a1);
+    wcx.closePath();
+
+    // Radial gradient per slice
+    const grad = wcx.createRadialGradient(0, 0, 20, 0, 0, r0);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.2, s.color);
+    grad.addColorStop(1, s.stroke);
+    wcx.fillStyle = grad;
+    wcx.fill();
+
+    wcx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    wcx.lineWidth = 3;
+    wcx.stroke();
+
+    // Draw Slice Label & Icon
+    wcx.save();
+    wcx.rotate(a0 + sliceAngle / 2);
+    wcx.textAlign = 'right';
+    wcx.textBaseline = 'middle';
+
+    // Text Label
+    wcx.font = 'bold 22px "Orbitron", sans-serif';
+    wcx.fillStyle = '#ffffff';
+    wcx.shadowColor = 'rgba(0,0,0,0.8)';
+    wcx.shadowBlur = 6;
+    wcx.fillText(s.label, r0 - 24, 0);
+    wcx.shadowBlur = 0;
+
+    wcx.restore();
+  }
+
+  // Pegs / Divider Studs around perimeter
+  for (let i = 0; i < numSlices; i++) {
+    const a = i * sliceAngle;
+    const px = Math.cos(a) * (r0 + 6);
+    const py = Math.sin(a) * (r0 + 6);
+    wcx.beginPath();
+    wcx.arc(px, py, 6, 0, Math.PI * 2);
+    wcx.fillStyle = '#ffffff';
+    wcx.fill();
+    wcx.strokeStyle = '#f59e0b';
+    wcx.lineWidth = 2;
+    wcx.stroke();
+  }
+
+  // Glowing Outer Rim Bulbs
+  for (let k = 0; k < 16; k++) {
+    const a = (k / 16) * Math.PI * 2;
+    const bx = Math.cos(a) * (r0 + 8);
+    const by = Math.sin(a) * (r0 + 8);
+    wcx.beginPath();
+    wcx.arc(bx, by, 3.5, 0, Math.PI * 2);
+    wcx.fillStyle = (k % 2 === 0) ? '#ffd23c' : '#ffffff';
+    wcx.fill();
+  }
+
+  // Golden Center Hub Cap
+  const hubGrad = wcx.createRadialGradient(0, 0, 5, 0, 0, 42);
+  hubGrad.addColorStop(0, '#ffffff');
+  hubGrad.addColorStop(0.4, '#ffd23c');
+  hubGrad.addColorStop(1, '#b45309');
+  wcx.beginPath();
+  wcx.arc(0, 0, 38, 0, Math.PI * 2);
+  wcx.fillStyle = hubGrad;
+  wcx.fill();
+  wcx.strokeStyle = '#ffffff';
+  wcx.lineWidth = 3;
+  wcx.stroke();
+
+  // Center Icon
+  wcx.font = '32px sans-serif';
+  wcx.textAlign = 'center';
+  wcx.textBaseline = 'middle';
+  wcx.fillText('⚓', 0, 2);
+
+  wcx.restore();
+}
 
 function openSpinModal() {
   const modal = document.getElementById('spinModal');
@@ -1801,13 +1920,11 @@ function openSpinModal() {
   const banner = document.getElementById('spinLootBanner');
   if (banner) banner.classList.add('hidden');
   
-  if (SAVE.data.spins > 0 && !isSlotSpinning) {
-    triggerSlotSpin();
-  }
+  drawLuckyWheel();
 }
 
 function closeSpinModal() {
-  if (isSlotSpinning) return;
+  if (isWheelSpinning) return;
   const modal = document.getElementById('spinModal');
   if (modal) modal.classList.add('hidden');
   buildShop();
@@ -1819,13 +1936,13 @@ function updateSpinModalUI() {
   if (cnt) cnt.textContent = SAVE.data.spins;
   const pullBtn = document.getElementById('spinPullBtn');
   if (pullBtn) {
-    pullBtn.disabled = SAVE.data.spins < 1 || isSlotSpinning;
+    pullBtn.disabled = SAVE.data.spins < 1 || isWheelSpinning;
   }
 }
 
 function triggerSlotSpin() {
-  if (SAVE.data.spins < 1 || isSlotSpinning) return;
-  isSlotSpinning = true;
+  if (SAVE.data.spins < 1 || isWheelSpinning) return;
+  isWheelSpinning = true;
   SAVE.data.spins--;
   SAVE.save();
   updateSpinModalUI();
@@ -1833,91 +1950,86 @@ function triggerSlotSpin() {
   const banner = document.getElementById('spinLootBanner');
   if (banner) banner.classList.add('hidden');
 
-  // Determine Prize & Final Reel Icons
-  const r = Math.random();
-  let prizeTitle = '', prizeDesc = '', finalSymbols = ['🪙', '🪙', '🪙'];
-  
-  if (r < 0.40) {
-    const amt = 50 + (Math.random() * 6 | 0) * 10;
-    SAVE.data.coins += amt;
-    prizeTitle = '🪙 GOLD DUBLOONS!';
-    prizeDesc = `+${amt} Gold Dubloons awarded!`;
-    finalSymbols = ['🪙', '🪙', '🪙'];
-  } else if (r < 0.65) {
-    const amt = 200 + (Math.random() * 10 | 0) * 20;
-    SAVE.data.coins += amt;
-    prizeTitle = '💰 PIRATE CHEST JACKPOT!';
-    prizeDesc = `+${amt} Gold Dubloons awarded!`;
-    finalSymbols = ['💰', '💰', '💰'];
-  } else if (r < 0.88) {
-    SAVE.data.tokens += 1;
-    prizeTitle = '🎟️ ALIEN PLASMA CORE!';
-    prizeDesc = '+1 Plasma Core awarded!';
-    finalSymbols = ['🎟️', '🎟️', '🎟️'];
-  } else if (r < 0.98) {
-    SAVE.data.tokens += 3;
-    prizeTitle = '⭐ TRI-PLASMA JACKPOT!';
-    prizeDesc = '+3 Plasma Cores awarded!';
-    finalSymbols = ['⭐', '⭐', '⭐'];
-  } else {
-    SAVE.data.tokens += 8;
-    prizeTitle = '👑 MEGA PIRATE PASS JACKPOT!';
-    prizeDesc = '🎉 +8 Plasma Cores awarded!';
-    finalSymbols = ['👑', '👑', '👑'];
+  // Pick Winning Slice by Weighted Probability
+  const totalWeight = WHEEL_SLICES.reduce((acc, s) => acc + s.weight, 0);
+  let rand = Math.random() * totalWeight;
+  let winIndex = 0;
+  for (let i = 0; i < WHEEL_SLICES.length; i++) {
+    rand -= WHEEL_SLICES[i].weight;
+    if (rand <= 0) { winIndex = i; break; }
   }
-  SAVE.save();
+  const winningSlice = WHEEL_SLICES[winIndex];
 
-  // Animate Reels
-  const reels = [document.getElementById('sym0'), document.getElementById('sym1'), document.getElementById('sym2')];
-  reels.forEach(r => { if (r) r.classList.add('reel-spinning'); });
-  sfx('laser');
+  // Calculate target stop angle so the winning slice lands at the top pointer (at -PI/2)
+  const numSlices = WHEEL_SLICES.length;
+  const sliceAngle = (Math.PI * 2) / numSlices;
+  const targetWedgeAngle = -Math.PI / 2 - (winIndex + 0.5) * sliceAngle;
+  
+  // Add 6 full rotations for epic spin drama!
+  const extraRotations = 6 * Math.PI * 2;
+  const currentNormalized = wheelAngle % (Math.PI * 2);
+  let finalAngle = wheelAngle + extraRotations + ((targetWedgeAngle - currentNormalized) % (Math.PI * 2));
+  if (finalAngle <= wheelAngle + 4 * Math.PI * 2) {
+    finalAngle += Math.PI * 2;
+  }
 
-  // Rapidly scramble symbols
-  const interval = setInterval(() => {
-    reels.forEach(r => {
-      if (r && r.classList.contains('reel-spinning')) {
-        r.textContent = SLOT_SYMBOLS[(Math.random() * SLOT_SYMBOLS.length) | 0];
+  const startAngle = wheelAngle;
+  const totalAngleDelta = finalAngle - startAngle;
+  const duration = 3800; // 3.8s smooth physics spin
+  const startTime = performance.now();
+  let lastPegIndex = -1;
+
+  const ptr = document.getElementById('wheelPointer');
+
+  function animateWheel(now) {
+    const elapsed = now - startTime;
+    const p = Math.min(1, elapsed / duration);
+    
+    // Roblox cubic ease-out curve: fast spin then dramatic smooth brake!
+    const ease = 1 - Math.pow(1 - p, 3.8);
+    wheelAngle = startAngle + totalAngleDelta * ease;
+    drawLuckyWheel();
+
+    // Check peg passing top pointer to trigger audio tick and needle bounce!
+    const currentPeg = Math.floor((wheelAngle + Math.PI / 2) / sliceAngle);
+    if (currentPeg !== lastPegIndex) {
+      lastPegIndex = currentPeg;
+      sfx('coin');
+      if (ptr) {
+        ptr.style.transform = 'translateX(-50%) rotate(-18deg)';
+        setTimeout(() => { if (ptr) ptr.style.transform = 'translateX(-50%) rotate(0deg)'; }, 45);
       }
-    });
-  }, 70);
-
-  // Stop Reel 0 after 900ms
-  setTimeout(() => {
-    if (reels[0]) {
-      reels[0].classList.remove('reel-spinning');
-      reels[0].textContent = finalSymbols[0];
-      sfx('coin');
     }
-  }, 900);
 
-  // Stop Reel 1 after 1500ms
-  setTimeout(() => {
-    if (reels[1]) {
-      reels[1].classList.remove('reel-spinning');
-      reels[1].textContent = finalSymbols[1];
-      sfx('coin');
-    }
-  }, 1500);
+    if (p < 1) {
+      wheelAnimFrame = requestAnimationFrame(animateWheel);
+    } else {
+      isWheelSpinning = false;
+      sfx('map');
 
-  // Stop Reel 2 after 2100ms and reveal victory!
-  setTimeout(() => {
-    clearInterval(interval);
-    if (reels[2]) {
-      reels[2].classList.remove('reel-spinning');
-      reels[2].textContent = finalSymbols[2];
-    }
-    isSlotSpinning = false;
-    sfx('map');
+      // Award Prize
+      if (winningSlice.type === 'coin') {
+        SAVE.data.coins += winningSlice.amt;
+      } else {
+        SAVE.data.tokens += winningSlice.amt;
+      }
+      SAVE.save();
 
-    if (banner) {
-      document.getElementById('spinLootTitle').textContent = prizeTitle;
-      document.getElementById('spinLootDesc').textContent = prizeDesc;
-      banner.classList.remove('hidden');
+      if (banner) {
+        document.getElementById('spinLootTitle').textContent = `🎉 YOU WON ${winningSlice.label}!`;
+        document.getElementById('spinLootDesc').textContent = winningSlice.type === 'coin' ?
+          `+${winningSlice.amt} Gold Dubloons added to your stash!` :
+          `+${winningSlice.amt} Alien Plasma Core${winningSlice.amt > 1 ? 's' : ''} added to your fleet vault!`;
+        banner.classList.remove('hidden');
+      }
+
+      updateSpinModalUI();
+      renderWallet();
+      buildShop();
     }
-    updateSpinModalUI();
-    renderWallet();
-    buildShop();
-  }, 2100);
+  }
+
+  wheelAnimFrame = requestAnimationFrame(animateWheel);
 }
 
 function doSpin() {
@@ -1942,13 +2054,13 @@ function buildShop() {
       `</div>`;
   }
 
-  // 2. PIRATE TREASURE CHEST
-  h += '<h2>🎰 PIRATE TREASURE CHEST — UFO Boss Loot 🎟️</h2>';
-  h += `<div class="shopitem"><div class="ic">🎰</div>` +
-    `<div class="info"><div class="t">Unlock Space Treasure Chest</div>` +
+  // 2. PIRATE LUCKY PRIZE WHEEL
+  h += '<h2>🎡 PIRATE LUCKY WHEEL — UFO Boss Loot 🎟️</h2>';
+  h += `<div class="shopitem"><div class="ic">🎡</div>` +
+    `<div class="info"><div class="t">Spin Pirate Lucky Wheel</div>` +
     `<div class="d">Win gold dubloons, alien plasma cores… or Mega Jackpot!</div>` +
-    `<div class="lv" id="spinResult">You possess ${SAVE.data.spins} 🎰 chests</div></div>` +
-    `<button data-buy="spin" data-key="1"${SAVE.data.spins > 0 ? '' : ' disabled'}>🎰 UNLOCK</button></div>`;
+    `<div class="lv" id="spinResult">You possess ${SAVE.data.spins} 🎡 spins</div></div>` +
+    `<button data-buy="spin" data-key="1"${SAVE.data.spins > 0 ? '' : ' disabled'}>🎡 SPIN</button></div>`;
   
   h += '<h2>🚢 PIRATE FLEET SHIPS — Spend Plasma Cores 🎟️</h2>';
   for (const s of SHIPS) {
@@ -2707,7 +2819,7 @@ function update(dt) {
         const bScore = 50 + bLevel * 25;
         addScore(bScore, boss.x, boss.y);
         tokensRun += bTokens; spinsRun += 1;
-        popup(W / 2, H * 0.35, `${boss.name.toUpperCase()} DESTROYED! +${bTokens} 🎟️ +1 🎰`, '#ffd23c');
+        popup(W / 2, H * 0.35, `${boss.name.toUpperCase()} DESTROYED! +${bTokens} 🎟️ +1 🎡`, '#ffd23c');
         for (let k = 0; k < 18; k++) coins.push({ x: boss.x + (Math.random()-0.5)*140, y: boss.y + (Math.random()-0.5)*100, vx: -130 + (Math.random()-0.5)*60, vy: (Math.random()-0.5)*60 });
         if (Math.random() < 0.85) powerups.push({ x: boss.x, y: boss.y, type: 'heart', vx: -85, vy: 0 });
         boss = null; bossT = 28 + Math.random() * 8;
