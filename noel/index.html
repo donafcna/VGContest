@@ -5879,6 +5879,10 @@ function draw() {
     cx.fillRect(20, H - barH, 34, 4);
     cx.fillRect(W - 54, H - barH, 34, 4);
 
+    // Dynamic Captain Callsign from Active Player Username
+    const captainCallsign = (playerName || 'Captain').trim();
+    const captainUpper = captainCallsign.toUpperCase();
+
     // Audio Waveform Visualizer in Top Letterbox
     cx.strokeStyle = 'rgba(75, 213, 238, 0.45)';
     cx.lineWidth = 1.5;
@@ -5906,12 +5910,12 @@ function draw() {
       // Character Dialogue Card 1
       cx.font = '14px "Outfit", sans-serif';
       cx.fillStyle = '#ff385c';
-      cx.fillText('🤖 [IMPERIAL COMMAND AI]: "Pirate Outlaw Noël! Surrender the stolen Omega Plasma Core or face immediate obliteration!"', W / 2, H - barH + 58);
+      cx.fillText(`🤖 [IMPERIAL COMMAND AI]: "Pirate Outlaw ${captainCallsign}! Surrender the stolen Omega Plasma Core or face immediate obliteration!"`, W / 2, H - barH + 58);
 
       // Character Dialogue Card 2
       cx.font = 'bold 15px "Outfit", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('👑 [CAPTAIN NOËL]: "You want the Core back? Tell your Emperor to come and take it himself!"', W / 2, H - barH + 82);
+      cx.fillText(`👑 [CAPTAIN ${captainUpper}]: "You want the Core back? Tell your Emperor to come and take it himself!"`, W / 2, H - barH + 82);
 
       cx.font = '12px "Orbitron", sans-serif';
       cx.fillStyle = '#00ffee';
@@ -5929,7 +5933,7 @@ function draw() {
 
       cx.font = 'bold 15px "Outfit", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('💥 [CAPTAIN NOËL]: "OVERDRIVE THE OMEGA CORE INTO THE 32-POUNDERS... UNLEASH THE SALVO!"', W / 2, H - barH + 82);
+      cx.fillText(`💥 [CAPTAIN ${captainUpper}]: "OVERDRIVE THE OMEGA CORE INTO THE 32-POUNDERS... UNLEASH THE SALVO!"`, W / 2, H - barH + 82);
 
       cx.font = '12px "Orbitron", sans-serif';
       cx.fillStyle = '#ff9900';
@@ -5964,9 +5968,9 @@ function draw() {
       cx.fillStyle = '#ffffff';
       cx.fillText('🚨 [FIRST MATE]: "CAPTAIN! 1,000 Imperial Dreadnoughts just surrounded our sector! We\'re outnumbered!"', W / 2, H - barH + 58);
 
-      cx.font = 'bold 15px "Orbitron", sans-serif';
+      cx.font = 'bold 15px "Outfit", sans-serif';
       cx.fillStyle = '#ffd23c';
-      cx.fillText('👑 [CAPTAIN NOËL]: "THEY HAVE US SURROUNDED? PERFECT! ALL CANNONS TO FULL BATTERY — SET SOLAR SAILS FOR WAR!"', W / 2, H - barH + 82);
+      cx.fillText(`👑 [CAPTAIN ${captainUpper}]: "THEY HAVE US SURROUNDED? PERFECT! ALL CANNONS TO FULL BATTERY — SET SOLAR SAILS FOR WAR!"`, W / 2, H - barH + 82);
 
       cx.font = 'bold 13px "Orbitron", sans-serif';
       cx.fillStyle = flash ? '#ffd23c' : '#ff0055';
