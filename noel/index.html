@@ -1364,7 +1364,8 @@ function update(dt) {
           isIntro: 1,
           flightT: 0,
           flightDur: 0.95,
-          loopDir: 1
+          loopDir: 1,
+          shipModel: SAVE.data.sel || 'cutter'
         });
 
         // Cannonball 2 (Lower Broadside Port -> UFO 2 Inverted Corkscrew Loop)
@@ -1377,7 +1378,8 @@ function update(dt) {
           isIntro: 2,
           flightT: 0,
           flightDur: 0.95,
-          loopDir: -1
+          loopDir: -1,
+          shipModel: SAVE.data.sel || 'cutter'
         });
       }
     }
@@ -1598,17 +1600,28 @@ function update(dt) {
     const muzzleX = cannonOriginX + Math.cos(baseAim) * 22;
     const muzzleY = cannonOriginY + Math.sin(baseAim) * 22;
 
+    const shipModel = SAVE.data.sel || 'cutter';
+    const cannonLevel = (SAVE.data.upg && SAVE.data.upg.cannon) || 0;
+    let bRadius = 10 + cannonLevel * 1.5;
+    if (shipModel === 'galleon') bRadius = 13 + cannonLevel * 2;
+    else if (shipModel === 'runner') bRadius = 8 + cannonLevel * 1.2;
+    else if (shipModel === 'hind') bRadius = 11 + cannonLevel * 1.5;
+    else if (shipModel === 'storm') bRadius = 12 + cannonLevel * 1.8;
+
     for (const spr of spreadAngles) {
       const ang = baseAim + spr;
-      const spd = 1350;
+      const spd = shipModel === 'runner' ? 1600 : 1350;
       balls.push({
         x: muzzleX,
         y: muzzleY,
         vx: Math.cos(ang) * spd,
         vy: Math.sin(ang) * spd,
-        r: 10
+        r: bRadius,
+        shipModel: shipModel,
+        cannonLevel: cannonLevel
       });
       
+      const mCol = shipModel === 'runner' ? '#00ffee' : shipModel === 'storm' ? '#c084fc' : shipModel === 'hind' ? '#ffd700' : '#ffd23c';
       for (let k = 0; k < 6; k++) {
         parts.push({
           x: muzzleX,
@@ -1616,8 +1629,8 @@ function update(dt) {
           vx: Math.cos(ang) * (120 + Math.random() * 180) + (Math.random() - 0.5) * 60,
           vy: Math.sin(ang) * (120 + Math.random() * 180) + (Math.random() - 0.5) * 60,
           life: 0.22,
-          col: '#ffd23c',
-          size: 8
+          col: mCol,
+          size: 8 + cannonLevel * 2
         });
       }
     }
@@ -2363,13 +2376,69 @@ function draw() {
     cx.restore();
   }
 
-  // 8. Render Projectiles
-  // Player Fiery Cannonballs
+  // 8. Render Projectiles (Custom unique models for each ship type!)
   for (const b of balls) {
-    cx.save(); cx.translate(b.x, b.y);
-    const bg = cx.createRadialGradient(-2, -2, 1, 0, 0, b.r);
-    bg.addColorStop(0, '#ffffff'); bg.addColorStop(0.35, '#ffe552'); bg.addColorStop(0.75, '#ff6a00'); bg.addColorStop(1, '#4a1100');
-    cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, b.r, 0, Math.PI * 2); cx.fill();
+    cx.save();
+    cx.translate(b.x, b.y);
+    const sm = b.shipModel || 'cutter';
+
+    if (sm === 'runner') {
+      // Astral Sloop: Hyper-Velocity Plasma Pulse (Glowing Cyan/Neon Energy with trailing laser ellipse)
+      const pg = cx.createRadialGradient(0, 0, 1, 0, 0, b.r + 7);
+      pg.addColorStop(0, '#ffffff');
+      pg.addColorStop(0.35, '#00ffee');
+      pg.addColorStop(0.75, '#0088cc');
+      pg.addColorStop(1, 'rgba(0,255,234,0)');
+      cx.fillStyle = pg;
+      cx.beginPath(); cx.arc(0, 0, b.r + 6, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffffff';
+      cx.beginPath(); cx.ellipse(0, 0, b.r * 1.6, b.r * 0.75, Math.atan2(b.vy, b.vx), 0, Math.PI * 2); cx.fill();
+    } else if (sm === 'hind') {
+      // Golden Hind: Molten Gold Meteor (Glittering 24K Gold Orb with radiating stardust aura)
+      const gg = cx.createRadialGradient(-2, -2, 1, 0, 0, b.r + 4);
+      gg.addColorStop(0, '#ffffff');
+      gg.addColorStop(0.3, '#fff280');
+      gg.addColorStop(0.65, '#f5b800');
+      gg.addColorStop(1, '#664400');
+      cx.fillStyle = gg;
+      cx.beginPath(); cx.arc(0, 0, b.r + 3, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffffff';
+      cx.beginPath(); cx.arc(Math.cos(t * 14) * (b.r + 3), Math.sin(t * 14) * (b.r + 3), 2.5, 0, Math.PI * 2); cx.fill();
+    } else if (sm === 'storm') {
+      // Solar Dreadnought: Dark-Matter Void Blast (Swirling Purple Energy with electric arcs)
+      const dg = cx.createRadialGradient(0, 0, 2, 0, 0, b.r + 8);
+      dg.addColorStop(0, '#ffffff');
+      dg.addColorStop(0.35, '#e066ff');
+      dg.addColorStop(0.7, '#660099');
+      dg.addColorStop(1, 'rgba(100,0,150,0)');
+      cx.fillStyle = dg;
+      cx.beginPath(); cx.arc(0, 0, b.r + 7, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#f0aaff'; cx.lineWidth = 2;
+      cx.beginPath(); cx.arc(0, 0, b.r + 2, t * 8, t * 8 + Math.PI); cx.stroke();
+    } else if (sm === 'galleon') {
+      // Armoured Galleon: Heavy Spiked Siege Mortar (Spiked dark iron ball with burning glowing core)
+      const ig = cx.createRadialGradient(-3, -3, 1, 0, 0, b.r);
+      ig.addColorStop(0, '#e2e8f0');
+      ig.addColorStop(0.4, '#475569');
+      ig.addColorStop(1, '#0f172a');
+      cx.fillStyle = ig;
+      cx.beginPath(); cx.arc(0, 0, b.r, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#334155';
+      for (let k = 0; k < 4; k++) {
+        const a = (k / 4) * Math.PI * 2 + (b.x * 0.05);
+        cx.beginPath();
+        cx.moveTo(Math.cos(a) * b.r, Math.sin(a) * b.r);
+        cx.lineTo(Math.cos(a + 0.25) * (b.r + 6), Math.sin(a + 0.25) * (b.r + 6));
+        cx.lineTo(Math.cos(a - 0.25) * (b.r + 6), Math.sin(a - 0.25) * (b.r + 6));
+        cx.fill();
+      }
+      cx.fillStyle = '#ff6a00'; cx.beginPath(); cx.arc(0, 0, 4, 0, Math.PI * 2); cx.fill();
+    } else {
+      // Solar Corsair: Classic Fiery Naval Cannonball
+      const bg = cx.createRadialGradient(-2, -2, 1, 0, 0, b.r);
+      bg.addColorStop(0, '#ffffff'); bg.addColorStop(0.35, '#ffe552'); bg.addColorStop(0.75, '#ff6a00'); bg.addColorStop(1, '#4a1100');
+      cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, b.r, 0, Math.PI * 2); cx.fill();
+    }
     cx.restore();
   }
   // Enemy Star Wars Green Laser Blasts
@@ -2432,7 +2501,7 @@ function draw() {
     }
   }
 
-  // 10. REALISTIC PIRATE SHIP (SPACE SOLAR GALLEON SIDE PROFILE)
+  // 10. REALISTIC PIRATE SHIP (CUSTOM ARCHITECTURE FOR EACH SHIP & UPGRADE)
   if (state === 'intro' || state === 'play' || state === 'pause') {
     cx.save();
     cx.translate(ship.x, ship.y);
@@ -2440,36 +2509,289 @@ function draw() {
 
     if (ship.inv > 0 && Math.floor(t * 14) % 2 === 0) cx.globalAlpha = 0.4;
 
-    // Dynamic colors from equipped ship and skin
+    const curShip = SAVE.data.sel || 'cutter';
+    const cLv = (SAVE.data.upg && SAVE.data.upg.cannon) || 0;
+    const hLv = (SAVE.data.upg && SAVE.data.upg.hull) || 0;
+
     const col0 = (shipCols && shipCols[0]) || '#c88a55';
     const col1 = (shipCols && shipCols[1]) || '#8c5528';
     const col2 = (shipCols && shipCols[2]) || '#3b1c06';
 
-    // --- A. Tall Masts & Glowing Solar Sails ---
-    for (const [mx, mh, myOff] of [[-18, 52, -28], [12, 60, -34], [34, 44, -22]]) {
-      // Wooden Mast
-      cx.strokeStyle = '#26160c'; cx.lineWidth = 3;
-      cx.beginPath(); cx.moveTo(mx, 12); cx.lineTo(mx, -mh); cx.stroke();
+    // -------------------------------------------------------------
+    // SHAPE 1: ASTRAL SLOOP (runner) — Sleek Futuristic Aerodynamic Trimaran
+    // -------------------------------------------------------------
+    if (curShip === 'runner') {
+      // Dual Ether Jet Thrusters (Streaming cyan engine plasma!)
+      for (const ey of [-8, 8]) {
+        const jg = cx.createLinearGradient(-42, ey, -68, ey);
+        jg.addColorStop(0, '#00ffee');
+        jg.addColorStop(0.4, '#0099ff');
+        jg.addColorStop(1, 'rgba(0,100,255,0)');
+        cx.fillStyle = jg;
+        cx.beginPath();
+        cx.moveTo(-42, ey - 5);
+        cx.lineTo(-65 - Math.random() * 14, ey);
+        cx.lineTo(-42, ey + 5);
+        cx.closePath();
+        cx.fill();
+        cx.fillStyle = '#1e2836'; cx.fillRect(-44, ey - 6, 6, 12);
+        cx.strokeStyle = '#00ffee'; cx.lineWidth = 1; cx.strokeRect(-44, ey - 6, 6, 12);
+      }
 
-      // Yardarm Spar
-      cx.beginPath(); cx.moveTo(mx - 14, myOff); cx.lineTo(mx + 14, myOff); cx.stroke();
+      // Aerodynamic Forward-Swept Wing Sails
+      for (const [mx, mh, myOff, ang] of [[-8, 56, -32, 0.22], [20, 46, -26, 0.32]]) {
+        cx.save(); cx.translate(mx, 10); cx.rotate(ang);
+        cx.strokeStyle = '#0e1622'; cx.lineWidth = 2.5;
+        cx.beginPath(); cx.moveTo(0, 0); cx.lineTo(0, -mh); cx.stroke();
+        const sg = cx.createLinearGradient(0, myOff, 26, myOff + 22);
+        sg.addColorStop(0, '#ffffff');
+        sg.addColorStop(0.45, col0);
+        sg.addColorStop(1, col1);
+        cx.fillStyle = sg;
+        cx.beginPath();
+        cx.moveTo(0, myOff);
+        cx.lineTo(26, myOff + 10);
+        cx.lineTo(6, myOff + 24);
+        cx.lineTo(0, myOff + 22);
+        cx.closePath();
+        cx.fill();
+        cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.5; cx.stroke();
+        cx.restore();
+      }
 
-      // Billowing Solar Sail (Dynamically styled to equipped skin / ship colors!)
-      const sg = cx.createLinearGradient(mx, myOff, mx + 16, myOff + 28);
-      sg.addColorStop(0, '#ffffff');
-      sg.addColorStop(0.45, col0);
-      sg.addColorStop(1, col1);
-      cx.fillStyle = sg;
+      // Ultra-Sleek Trimaran Hull (Knife Prow & Outriggers)
+      const hGrad = cx.createLinearGradient(0, 8, 0, 32);
+      hGrad.addColorStop(0, col0);
+      hGrad.addColorStop(0.5, col1);
+      hGrad.addColorStop(1, col2);
+      cx.fillStyle = hGrad;
       cx.beginPath();
-      cx.moveTo(mx - 12, myOff);
-      cx.quadraticCurveTo(mx + 8, myOff + 14, mx + 14, myOff + 26);
-      cx.lineTo(mx - 12, myOff + 26);
+      cx.moveTo(-42, 10);
+      cx.lineTo(38, 10);
+      cx.lineTo(62, 19); // Long Sharp Needle Prow
+      cx.lineTo(38, 28);
+      cx.lineTo(-38, 26);
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = col0; cx.lineWidth = 1.5; cx.stroke();
+      cx.strokeStyle = '#00ffee'; cx.lineWidth = 2; cx.stroke();
+
+      // Glowing Crystal Energy Prow Core
+      cx.fillStyle = '#00ffee';
+      cx.beginPath(); cx.arc(56, 19, 4, 0, Math.PI * 2); cx.fill();
+
+    // -------------------------------------------------------------
+    // SHAPE 2: ARMOURED GALLEON (galleon) — Heavy Riveted Ironclad Fortress
+    // -------------------------------------------------------------
+    } else if (curShip === 'galleon') {
+      // 4 Heavy Reinforced Masts
+      for (const [mx, mh, myOff] of [[-26, 46, -24], [-6, 56, -30], [14, 52, -28], [34, 40, -20]]) {
+        cx.strokeStyle = '#1a1f26'; cx.lineWidth = 4;
+        cx.beginPath(); cx.moveTo(mx, 10); cx.lineTo(mx, -mh); cx.stroke();
+        const sg = cx.createLinearGradient(mx, myOff, mx + 16, myOff + 24);
+        sg.addColorStop(0, '#f1f5f9');
+        sg.addColorStop(0.5, col0);
+        sg.addColorStop(1, col2);
+        cx.fillStyle = sg;
+        cx.beginPath();
+        cx.moveTo(mx - 14, myOff);
+        cx.lineTo(mx + 16, myOff + 8);
+        cx.lineTo(mx + 12, myOff + 22);
+        cx.lineTo(mx - 14, myOff + 22);
+        cx.closePath();
+        cx.fill();
+        cx.strokeStyle = '#334155'; cx.lineWidth = 1.5; cx.stroke();
+      }
+
+      // Massive Heavy Ironclad Fortress Hull (Riveted Steel Plates)
+      const hGrad = cx.createLinearGradient(0, 6, 0, 36);
+      hGrad.addColorStop(0, col0);
+      hGrad.addColorStop(0.5, col1);
+      hGrad.addColorStop(1, col2);
+      cx.fillStyle = hGrad;
+      cx.beginPath();
+      cx.moveTo(-48, 6); // High Castle Stern
+      cx.lineTo(-24, 6);
+      cx.lineTo(-24, 12);
+      cx.lineTo(38, 12);
+      cx.lineTo(54, 20); // Iron Ram Bow
+      cx.lineTo(44, 34);
+      cx.lineTo(-44, 34);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#0f172a'; cx.lineWidth = 3; cx.stroke();
+
+      // Armor Plating Panels & Rivets
+      cx.fillStyle = '#64748b';
+      cx.fillRect(-38, 16, 74, 3);
+      cx.fillRect(-38, 24, 74, 3);
+      for (let rx = -34; rx <= 34; rx += 12) {
+        cx.fillStyle = '#cbd5e1';
+        cx.beginPath(); cx.arc(rx, 17.5, 1.5, 0, Math.PI * 2); cx.fill();
+        cx.beginPath(); cx.arc(rx, 25.5, 1.5, 0, Math.PI * 2); cx.fill();
+      }
+
+      // Massive Iron Ram Prow Spike
+      cx.fillStyle = '#475569';
+      cx.beginPath();
+      cx.moveTo(48, 16); cx.lineTo(64, 24); cx.lineTo(44, 28); cx.closePath();
+      cx.fill(); cx.stroke();
+
+    // -------------------------------------------------------------
+    // SHAPE 3: GOLDEN HIND (hind) — Ornate Royal Flagship with Dragon Prow & Attractor Spire
+    // -------------------------------------------------------------
+    } else if (curShip === 'hind') {
+      // 3 Golden Masts with Royal Crown Finials
+      for (const [mx, mh, myOff] of [[-18, 54, -30], [12, 62, -36], [34, 46, -24]]) {
+        cx.strokeStyle = '#b48312'; cx.lineWidth = 3.5;
+        cx.beginPath(); cx.moveTo(mx, 12); cx.lineTo(mx, -mh); cx.stroke();
+        cx.fillStyle = '#ffd700'; cx.fillRect(mx - 3, -mh - 4, 6, 4);
+
+        const sg = cx.createLinearGradient(mx, myOff, mx + 18, myOff + 28);
+        sg.addColorStop(0, '#ffffff');
+        sg.addColorStop(0.4, '#ffe866');
+        sg.addColorStop(0.8, '#d49b00');
+        sg.addColorStop(1, '#805500');
+        cx.fillStyle = sg;
+        cx.beginPath();
+        cx.moveTo(mx - 14, myOff);
+        cx.quadraticCurveTo(mx + 8, myOff + 14, mx + 16, myOff + 26);
+        cx.lineTo(mx - 14, myOff + 26);
+        cx.closePath();
+        cx.fill();
+        cx.strokeStyle = '#ffd700'; cx.lineWidth = 2; cx.stroke();
+      }
+
+      // Gold Attractor Beacon (Spire radiating magnetic waves)
+      cx.save(); cx.translate(12, -42);
+      cx.fillStyle = '#ffe033';
+      cx.beginPath(); cx.arc(0, 0, 4 + Math.sin(t * 8) * 1.5, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = 'rgba(255, 215, 0, 0.4)'; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.arc(0, 0, 10 + Math.sin(t * 8) * 4, 0, Math.PI * 2); cx.stroke();
+      cx.restore();
+
+      // Opulent Royal Golden Hull
+      const hGrad = cx.createLinearGradient(0, 10, 0, 36);
+      hGrad.addColorStop(0, '#fff5b8');
+      hGrad.addColorStop(0.4, '#e6b800');
+      hGrad.addColorStop(0.8, '#997300');
+      hGrad.addColorStop(1, '#4d3900');
+      cx.fillStyle = hGrad;
+      cx.beginPath();
+      cx.moveTo(-46, 10);
+      cx.lineTo(36, 10);
+      cx.quadraticCurveTo(58, 16, 52, 28);
+      cx.lineTo(-38, 30);
+      cx.quadraticCurveTo(-50, 24, -46, 10);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#ffd700'; cx.lineWidth = 2.5; cx.stroke();
+
+      // Golden Dragon Figurehead
+      cx.fillStyle = '#ffd700';
+      cx.beginPath();
+      cx.moveTo(48, 12); cx.lineTo(60, 8); cx.lineTo(56, 20); cx.closePath();
+      cx.fill();
+
+    // -------------------------------------------------------------
+    // SHAPE 4: SOLAR DREADNOUGHT (storm) — Colossal Double-Deck Titan Warship
+    // -------------------------------------------------------------
+    } else if (curShip === 'storm') {
+      // 3 Thunder Masts with Dark Ribbed Void Sails
+      for (const [mx, mh, myOff] of [[-22, 58, -32], [8, 66, -38], [34, 50, -26]]) {
+        cx.strokeStyle = '#2d1537'; cx.lineWidth = 4;
+        cx.beginPath(); cx.moveTo(mx, 10); cx.lineTo(mx, -mh); cx.stroke();
+        const sg = cx.createLinearGradient(mx, myOff, mx + 18, myOff + 28);
+        sg.addColorStop(0, '#e9d5ff');
+        sg.addColorStop(0.4, '#a855f7');
+        sg.addColorStop(0.8, '#581c87');
+        sg.addColorStop(1, '#1e0836');
+        cx.fillStyle = sg;
+        cx.beginPath();
+        cx.moveTo(mx - 16, myOff);
+        cx.lineTo(mx + 18, myOff + 10);
+        cx.lineTo(mx + 14, myOff + 26);
+        cx.lineTo(mx - 16, myOff + 26);
+        cx.closePath();
+        cx.fill();
+        cx.strokeStyle = '#c084fc'; cx.lineWidth = 2; cx.stroke();
+      }
+
+      // Purple Lightning Arc between masts
+      if (Math.random() < 0.35) {
+        cx.strokeStyle = '#d8b4fe'; cx.lineWidth = 1.8;
+        cx.beginPath();
+        cx.moveTo(-22, -40);
+        cx.lineTo(-6, -46 + (Math.random() - 0.5) * 6);
+        cx.lineTo(8, -48);
+        cx.stroke();
+      }
+
+      // Giant Double-Deck Dreadnought Hull (High Forecastle & Stern Fortress)
+      const hGrad = cx.createLinearGradient(0, 6, 0, 38);
+      hGrad.addColorStop(0, '#7e22ce');
+      hGrad.addColorStop(0.5, '#3b0764');
+      hGrad.addColorStop(1, '#130324');
+      cx.fillStyle = hGrad;
+      cx.beginPath();
+      cx.moveTo(-52, 6);
+      cx.lineTo(-20, 6);
+      cx.lineTo(-20, 10);
+      cx.lineTo(40, 10);
+      cx.lineTo(60, 20); // Spiked Obsidian Ram
+      cx.lineTo(46, 36);
+      cx.lineTo(-48, 36);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#a855f7'; cx.lineWidth = 2.5; cx.stroke();
+
+      // Lower Broadside Gun Ports
+      cx.fillStyle = '#0f051d';
+      cx.fillRect(-32, 22, 10, 6);
+      cx.fillRect(-12, 22, 10, 6);
+      cx.fillRect(8, 22, 10, 6);
+      cx.fillRect(28, 22, 10, 6);
+
+    // -------------------------------------------------------------
+    // SHAPE 5: SOLAR CORSAIR (cutter) — Classic Agile Pirate Galleon
+    // -------------------------------------------------------------
+    } else {
+      // 3 Classic Masts & Billowing Solar Canvas
+      for (const [mx, mh, myOff] of [[-18, 52, -28], [12, 60, -34], [34, 44, -22]]) {
+        cx.strokeStyle = '#26160c'; cx.lineWidth = 3;
+        cx.beginPath(); cx.moveTo(mx, 12); cx.lineTo(mx, -mh); cx.stroke();
+        cx.beginPath(); cx.moveTo(mx - 14, myOff); cx.lineTo(mx + 14, myOff); cx.stroke();
+        const sg = cx.createLinearGradient(mx, myOff, mx + 16, myOff + 28);
+        sg.addColorStop(0, '#ffffff');
+        sg.addColorStop(0.45, col0);
+        sg.addColorStop(1, col1);
+        cx.fillStyle = sg;
+        cx.beginPath();
+        cx.moveTo(mx - 12, myOff);
+        cx.quadraticCurveTo(mx + 8, myOff + 14, mx + 14, myOff + 26);
+        cx.lineTo(mx - 12, myOff + 26);
+        cx.closePath();
+        cx.fill();
+        cx.strokeStyle = col0; cx.lineWidth = 1.5; cx.stroke();
+      }
+
+      // Classic Wooden Galleon Hull
+      const hGrad = cx.createLinearGradient(0, 10, 0, 36);
+      hGrad.addColorStop(0, col0);
+      hGrad.addColorStop(0.45, col1);
+      hGrad.addColorStop(1, col2);
+      cx.fillStyle = hGrad;
+      cx.beginPath();
+      cx.moveTo(-44, 12);
+      cx.lineTo(36, 12);
+      cx.quadraticCurveTo(56, 18, 48, 30);
+      cx.lineTo(-38, 30);
+      cx.quadraticCurveTo(-48, 26, -44, 12);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#1e0c02'; cx.lineWidth = 2.5; cx.stroke();
     }
 
-    // --- B. Pirate Jolly Roger Skull Flag on Main Mast ---
+    // Pirate Jolly Roger Skull Flag
     cx.fillStyle = '#111';
     cx.beginPath();
     cx.moveTo(-18, -52);
@@ -2480,26 +2802,6 @@ function draw() {
     cx.fillStyle = '#fff'; cx.font = 'bold 11px serif'; cx.textAlign = 'center';
     cx.fillText('☠', -30, -42);
 
-    // --- C. Real Wooden Galleon Hull (Mahogany & Oak Planks styled by equipped ship/skin) ---
-    const hGrad = cx.createLinearGradient(0, 10, 0, 36);
-    hGrad.addColorStop(0, col0);
-    hGrad.addColorStop(0.45, col1);
-    hGrad.addColorStop(1, col2);
-    cx.fillStyle = hGrad;
-    cx.beginPath();
-    cx.moveTo(-44, 12);               // Stern gallery
-    cx.lineTo(36, 12);                // Foredeck
-    cx.quadraticCurveTo(56, 18, 48, 30); // Prow with figurehead
-    cx.lineTo(-38, 30);               // Keel bottom
-    cx.quadraticCurveTo(-48, 26, -44, 12); // Stern counter
-    cx.closePath();
-    cx.fill();
-    cx.strokeStyle = '#1e0c02'; cx.lineWidth = 2.5; cx.stroke();
-
-    // Brass Keel Trim & Fastener Rivets
-    cx.fillStyle = '#f2c14e';
-    cx.fillRect(-38, 14, 76, 2.5);
-
     // Captain's Stained Glass Stern Windows (Lit Warmly)
     cx.fillStyle = '#ffd23c';
     cx.beginPath(); cx.roundRect(-38, 16, 12, 10, 2); cx.fill();
@@ -2507,39 +2809,76 @@ function draw() {
     cx.beginPath(); cx.arc(-32, 21, 9, 0, Math.PI * 2); cx.fill();
 
     // Port & Starboard Navigation Lanterns
-    cx.fillStyle = '#33ee66'; cx.beginPath(); cx.arc(46, 16, 3.5, 0, Math.PI * 2); cx.fill(); // Bow Green
-    cx.fillStyle = '#ff3344'; cx.beginPath(); cx.arc(-42, 16, 3.5, 0, Math.PI * 2); cx.fill(); // Stern Red
+    cx.fillStyle = '#33ee66'; cx.beginPath(); cx.arc(46, 16, 3.5, 0, Math.PI * 2); cx.fill();
+    cx.fillStyle = '#ff3344'; cx.beginPath(); cx.arc(-42, 16, 3.5, 0, Math.PI * 2); cx.fill();
 
-    // Heavy Cast-Iron Swivel Deck Cannon (Physically rotates and aims at mouse)
+    // -------------------------------------------------------------
+    // DYNAMIC SWIVEL DECK CANNON (Visually Evolves with Cannon Upgrades 0-3!)
+    // -------------------------------------------------------------
     const localAim = (ship.aimAngle || 0) - ship.pitch;
-    const recoilDist = ship.recoil * 6;
+    const recoilDist = ship.recoil * (6 + cLv);
 
-    // Swivel Turret Pivot
     cx.save();
-    cx.translate(36, 18);
+    cx.translate(36, 16);
     cx.rotate(localAim);
 
-    // Cast-Iron Cannon Barrel
-    const cgrad = cx.createLinearGradient(0, -5, 0, 5);
-    cgrad.addColorStop(0, '#4a5568');
-    cgrad.addColorStop(0.5, '#1e2430');
-    cgrad.addColorStop(1, '#0a0d13');
-    cx.fillStyle = cgrad;
-    cx.beginPath();
-    cx.roundRect(-8 - recoilDist, -4, 26, 8, 2);
-    cx.fill();
-    cx.strokeStyle = '#f2c14e'; cx.lineWidth = 1.2; cx.stroke();
-
-    // Reinforced Muzzle Band & Brass Rings
-    cx.fillStyle = '#f2c14e';
-    cx.fillRect(16 - recoilDist, -5, 3, 10);
-    cx.fillRect(4 - recoilDist, -4.5, 2, 9);
+    if (cLv === 0) {
+      // Level 0: Standard Cast-Iron 18-Pdr
+      const cgrad = cx.createLinearGradient(0, -4, 0, 4);
+      cgrad.addColorStop(0, '#64748b'); cgrad.addColorStop(0.5, '#1e293b'); cgrad.addColorStop(1, '#0f172a');
+      cx.fillStyle = cgrad;
+      cx.beginPath(); cx.roundRect(-6 - recoilDist, -3.5, 24, 7, 2); cx.fill();
+      cx.strokeStyle = '#f59e0b'; cx.lineWidth = 1; cx.stroke();
+      cx.fillStyle = '#f59e0b'; cx.fillRect(15 - recoilDist, -4, 3, 8);
+    } else if (cLv === 1) {
+      // Level 1: Lengthened Rifled 24-Pdr with Reinforced Brass Bands
+      const cgrad = cx.createLinearGradient(0, -5, 0, 5);
+      cgrad.addColorStop(0, '#94a3b8'); cgrad.addColorStop(0.5, '#334155'); cgrad.addColorStop(1, '#0f172a');
+      cx.fillStyle = cgrad;
+      cx.beginPath(); cx.roundRect(-8 - recoilDist, -4.5, 30, 9, 2); cx.fill();
+      cx.strokeStyle = '#fbbf24'; cx.lineWidth = 1.2; cx.stroke();
+      cx.fillStyle = '#fbbf24';
+      cx.fillRect(19 - recoilDist, -5, 3.5, 10);
+      cx.fillRect(5 - recoilDist, -5, 2.5, 10);
+    } else if (cLv === 2) {
+      // Level 2: Heavy 32-Pdr Siege Cannon with Glowing Heat Vents
+      const cgrad = cx.createLinearGradient(0, -6, 0, 6);
+      cgrad.addColorStop(0, '#cbd5e1'); cgrad.addColorStop(0.5, '#475569'); cgrad.addColorStop(1, '#020617');
+      cx.fillStyle = cgrad;
+      cx.beginPath(); cx.roundRect(-10 - recoilDist, -5.5, 34, 11, 3); cx.fill();
+      cx.strokeStyle = '#f59e0b'; cx.lineWidth = 1.5; cx.stroke();
+      cx.fillStyle = '#ff3b30';
+      cx.fillRect(2 - recoilDist, -3, 14, 2);
+      cx.fillRect(2 - recoilDist, 1, 14, 2);
+      cx.fillStyle = '#fbbf24'; cx.fillRect(21 - recoilDist, -6.5, 4, 13);
+    } else {
+      // Level 3: Mastercrafted Triple Rotary Gatling Cannon
+      cx.fillStyle = '#1e293b';
+      cx.beginPath(); cx.roundRect(-10 - recoilDist, -6, 16, 12, 2); cx.fill();
+      for (const by of [-4, 0, 4]) {
+        const bg = cx.createLinearGradient(0, by - 2, 0, by + 2);
+        bg.addColorStop(0, '#e2e8f0'); bg.addColorStop(0.5, '#64748b'); bg.addColorStop(1, '#0f172a');
+        cx.fillStyle = bg;
+        cx.fillRect(4 - recoilDist, by - 1.8, 28, 3.6);
+        cx.fillStyle = '#f59e0b'; cx.fillRect(29 - recoilDist, by - 2.2, 3, 4.4);
+      }
+      cx.fillStyle = '#00ffee'; cx.beginPath(); cx.arc(8 - recoilDist, -6, 2, 0, Math.PI * 2); cx.fill();
+    }
     cx.restore();
 
-    // Secondary Midship & Stern Broadside Ports
-    cx.fillStyle = '#14141a';
-    cx.fillRect(8, 19, 14, 5);
-    cx.fillRect(-18, 19, 14, 5);
+    // Additional Lower Deck Swivel Battery for Solar Dreadnought!
+    if (curShip === 'storm') {
+      cx.save();
+      cx.translate(18, 24);
+      cx.rotate(localAim);
+      const cgrad = cx.createLinearGradient(0, -4, 0, 4);
+      cgrad.addColorStop(0, '#c084fc'); cgrad.addColorStop(0.5, '#581c87'); cgrad.addColorStop(1, '#0f051d');
+      cx.fillStyle = cgrad;
+      cx.beginPath(); cx.roundRect(-6 - recoilDist, -3.5, 24, 7, 2); cx.fill();
+      cx.strokeStyle = '#e879f9'; cx.lineWidth = 1.2; cx.stroke();
+      cx.fillStyle = '#e879f9'; cx.fillRect(15 - recoilDist, -4, 3, 8);
+      cx.restore();
+    }
 
     // Active Energy Shield Bubble
     if (shieldT > 0) {
