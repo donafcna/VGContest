@@ -1363,7 +1363,7 @@ function spawnFort() {
 
 function spawnGlider(xPos, yPos, forceType) {
   const roll = forceType || (Math.random() < 0.45 ? 'tie' : Math.random() < 0.75 ? 'stalker' : 'rammer');
-  let col = '#00ff66', name = 'TIE INTERCEPTOR', spd = 290 + level * 40, w = 52, h = 32;
+  let col = '#ff2255', name = 'THE FIGHTER', spd = 270 + level * 35, w = 76, h = 48;
   if (roll === 'stalker') {
     col = '#a855f7'; name = 'QUANTUM PHASE STALKER'; spd = 260 + level * 35; w = 48; h = 30;
   } else if (roll === 'rammer') {
@@ -1372,7 +1372,7 @@ function spawnGlider(xPos, yPos, forceType) {
 
   gliders.push({
     variant: roll,
-    x: xPos !== undefined ? xPos : W + 80,
+    x: xPos !== undefined ? xPos : W + 90,
     y: yPos !== undefined ? yPos : 60 + Math.random() * (H - 200),
     vx: -spd,
     wob: Math.random() * Math.PI * 2,
@@ -1380,7 +1380,8 @@ function spawnGlider(xPos, yPos, forceType) {
     col, name,
     saucerSpin: 0,
     blinkT: 1.8 + Math.random() * 1.5,
-    isBlinking: 0
+    isBlinking: 0,
+    shootT: 1.0 + Math.random() * 1.2
   });
   if (xPos === undefined) addAlert(`⚠️ ${name} IN ATTACK VECTOR!`, 'incoming');
 }
@@ -2365,14 +2366,36 @@ function update(dt) {
         });
       }
     } else {
-      // TIE Void Interceptor: Sinusoidal Evasive Dive
+      // THE FIGHTER: Sinusoidal Evasive Dive + RED LASER CANNON SALVOS!
       g.y += (ship.y - g.y) * 0.9 * dt + Math.sin(t * 6 + g.wob) * 48 * dt;
+      g.shootT = (g.shootT || 1.2) - dt;
+      if (g.shootT <= 0 && g.x < W - 60 && g.x > 120) {
+        g.shootT = Math.max(1.1, 2.2 - level * 0.15) + Math.random() * 0.8;
+        const dx = ship.x - g.x, dy = ship.y - g.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        // Fire twin red laser bolts from wing cannons!
+        eballs.push({
+          type: 'laser',
+          col: '#ff0033',
+          x: g.x - 24, y: g.y - 12,
+          vx: (dx / dist) * 560, vy: (dy / dist) * 560,
+          r: 10
+        });
+        eballs.push({
+          type: 'laser',
+          col: '#ff0033',
+          x: g.x - 24, y: g.y + 12,
+          vx: (dx / dist) * 560, vy: (dy / dist) * 560,
+          r: 10
+        });
+        sfx('laser');
+      }
     }
     
-    if (g.x < -60) gliders.splice(i, 1);
-    else if (ship.inv <= 0 && Math.hypot(g.x - ship.x, g.y - ship.y) < ship.r + 25) {
+    if (g.x < -80) gliders.splice(i, 1);
+    else if (ship.inv <= 0 && Math.hypot(g.x - ship.x, g.y - ship.y) < ship.r + 32) {
       damageShip();
-      explode(g.x, g.y, g.col || '#00ff66', 20);
+      explode(g.x, g.y, g.col || '#ff2255', 24);
       gliders.splice(i, 1);
     }
   }
@@ -2917,44 +2940,54 @@ function draw() {
       cx.beginPath(); cx.moveTo(-26, 0); cx.lineTo(-34, 0); cx.lineTo(-24, -4); cx.fill();
 
     } else {
-      // ARCHETYPE 1: TIE Void Interceptor (Star Wars Hex-Wing Fighter)
+      // ARCHETYPE 1: THE FIGHTER (Star Wars Heavy TIE Fighter — Scaled Up & Armed with Red Lasers!)
       const bank = Math.sin(t * 8 + g.x * 0.05) * 0.2;
       cx.rotate(bank);
 
-      // Central Spherical Cockpit Ball
-      const cg = cx.createRadialGradient(-4, -4, 2, 0, 0, 15);
-      cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.4, '#475569'); cg.addColorStop(1, '#0f172a');
+      // Central Spherical Armored Cockpit Ball (Bigger radius 20)
+      const cg = cx.createRadialGradient(-6, -6, 3, 0, 0, 22);
+      cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.35, '#475569'); cg.addColorStop(1, '#0f172a');
       cx.fillStyle = cg;
-      cx.beginPath(); cx.arc(0, 0, 14, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#020617'; cx.lineWidth = 2; cx.stroke();
+      cx.beginPath(); cx.arc(0, 0, 20, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#020617'; cx.lineWidth = 3; cx.stroke();
 
-      // Octagonal TIE Viewport with Red Aiming Sensor
+      // Octagonal Cockpit Viewport with Pulsing Ruby Aiming Core
       cx.fillStyle = '#0f172a';
-      cx.beginPath(); cx.arc(-5, 0, 6, 0, Math.PI * 2); cx.fill();
-      cx.fillStyle = '#ff2255';
-      cx.beginPath(); cx.arc(-5, 0, 2.5, 0, Math.PI * 2); cx.fill();
+      cx.beginPath(); cx.arc(-7, 0, 8, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ff0033';
+      cx.beginPath(); cx.arc(-7, 0, 4 + Math.sin(t * 14) * 0.8, 0, Math.PI * 2); cx.fill();
 
-      // Vertical Hexagonal Solar Radiator Panels
-      for (const wx of [-16, 16]) {
+      // Heavy Twin Chin Red Laser Blaster Barrels
+      for (const cy of [-6, 6]) {
+        cx.fillStyle = '#0f172a';
+        cx.fillRect(-24, cy - 2, 12, 4);
+        cx.fillStyle = '#ff0033';
+        cx.fillRect(-26, cy - 1.5, 3, 3);
+      }
+
+      // Massive Vertical Hexagonal Solar Radiator Panels (Bigger: height 68, width 32)
+      for (const wx of [-22, 22]) {
         cx.fillStyle = '#1e293b';
-        cx.strokeStyle = '#64748b'; cx.lineWidth = 2;
+        cx.strokeStyle = '#64748b'; cx.lineWidth = 2.5;
         cx.beginPath();
-        cx.moveTo(wx, -18);
-        cx.lineTo(wx - 5, -24);
-        cx.lineTo(wx - 5, 24);
-        cx.lineTo(wx, 18);
+        cx.moveTo(wx, -26);
+        cx.lineTo(wx - 8, -34);
+        cx.lineTo(wx - 8, 34);
+        cx.lineTo(wx, 26);
         cx.closePath();
         cx.fill(); cx.stroke();
 
-        cx.strokeStyle = '#00ff66'; cx.lineWidth = 0.8;
+        // Photovoltaic Crimson Power Grid Rails
+        cx.strokeStyle = '#ff0033'; cx.lineWidth = 1.2;
         cx.beginPath();
-        cx.moveTo(wx - 3, -16); cx.lineTo(wx - 3, 16);
+        cx.moveTo(wx - 4, -24); cx.lineTo(wx - 4, 24);
         cx.stroke();
       }
 
-      // Ion Thruster Flame Flare
+      // Twin Rear Ion Thruster Plasma Flares
       cx.fillStyle = '#00ffee';
-      cx.beginPath(); cx.arc(14, 0, 3.5 + Math.sin(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
+      cx.beginPath(); cx.arc(20, -5, 4.5 + Math.sin(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
+      cx.beginPath(); cx.arc(20, 5, 4.5 + Math.cos(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
     }
     cx.restore();
   }
@@ -3331,11 +3364,20 @@ function draw() {
       cx.beginPath(); cx.arc(0, 0, eb.r + 5, 0, Math.PI * 2); cx.fill();
 
     } else {
-      // Star Wars Alien Turbo-Laser Bolt
-      const mg = cx.createRadialGradient(0, 0, 1, 0, 0, eb.r + 6);
-      mg.addColorStop(0, '#ffffff'); mg.addColorStop(0.4, eb.col || '#00ff66'); mg.addColorStop(1, 'rgba(0,255,100,0)');
-      cx.fillStyle = mg; cx.beginPath(); cx.arc(0, 0, eb.r + 6, 0, Math.PI * 2); cx.fill();
-      cx.fillStyle = '#ffffff'; cx.fillRect(-10, -3, 20, 6);
+      // Star Wars Turbo-Laser Bolt (Red or Green with vibrant core and plasma aura)
+      const laserCol = eb.col || '#00ff66';
+      const mg = cx.createRadialGradient(0, 0, 1, 0, 0, eb.r + 7);
+      mg.addColorStop(0, '#ffffff');
+      mg.addColorStop(0.35, laserCol);
+      mg.addColorStop(0.75, laserCol === '#ff0033' ? 'rgba(255,0,50,0.4)' : 'rgba(0,255,100,0.4)');
+      mg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = mg; cx.beginPath(); cx.arc(0, 0, eb.r + 7, 0, Math.PI * 2); cx.fill();
+      
+      cx.fillStyle = '#ffffff';
+      cx.fillRect(-12, -3.5, 24, 7);
+      cx.strokeStyle = laserCol;
+      cx.lineWidth = 2;
+      cx.strokeRect(-12, -3.5, 24, 7);
     }
     cx.restore();
   }
