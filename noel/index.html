@@ -503,13 +503,14 @@ function initAudio() {
 
     // Adaptive music scheduler loop
     setInterval(() => {
-      if (!musicOn || !(state === 'play' || state === 'menu')) return;
+      if (!musicOn || !(state === 'play' || state === 'intro' || state === 'menu')) return;
       const now = ac.currentTime;
 
       // Dynamic Filter & Volume Adaptation based on gameplay
       if (musicFilter) {
-        let targetFreq = 3500;
-        if (boss) targetFreq = 8000;
+        let targetFreq = 3800;
+        if (state === 'intro') targetFreq = 4500;
+        else if (boss) targetFreq = 8000;
         else if (combo >= 3) targetFreq = 6500;
         else if (combo >= 1) targetFreq = 4800;
         musicFilter.frequency.setTargetAtTime(targetFreq, now, 0.15);
@@ -1035,7 +1036,6 @@ document.getElementById('startbtn').addEventListener('click', () => {
   document.getElementById('menu').classList.add('hidden');
   document.getElementById('pausebtn').style.display = 'block';
   initAudio();
-  playStarWarsIntroFanfare();
   state = 'intro';
 });
 
