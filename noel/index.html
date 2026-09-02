@@ -627,60 +627,81 @@ function sfx(type) {
   const t0 = ac.currentTime;
   try {
     if (type === 'boom') {
-      const dur = 0.6, buf = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate);
+      // 1. Heavy Low-End Sub-Bass Thump
+      const osc = ac.createOscillator(), og = ac.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(110, t0);
+      osc.frequency.exponentialRampToValueAtTime(28, t0 + 0.65);
+      og.gain.setValueAtTime(0.75, t0);
+      og.gain.exponentialRampToValueAtTime(0.001, t0 + 0.65);
+      osc.connect(og); og.connect(masterG);
+      osc.start(t0); osc.stop(t0 + 0.66);
+
+      // 2. High-Frequency Shatter & Fireball Rumble Noise
+      const dur = 0.75, buf = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate);
       const d = buf.getChannelData(0);
-      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 1.5);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 1.4);
       const s = ac.createBufferSource(); s.buffer = buf;
-      const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 600;
-      const g = ac.createGain(); g.gain.value = 0.8;
+      const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 850;
+      const g = ac.createGain(); g.gain.value = 0.85;
       s.connect(f); f.connect(g); g.connect(masterG); s.start(t0);
     } else if (type === 'shot') {
-      // Cast-iron naval cannon blast in space
-      const dur = 0.2, buf = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate);
+      // Heavy Cast-Iron Naval Cannon Gunpowder Punch
+      const osc = ac.createOscillator(), og = ac.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(160, t0);
+      osc.frequency.exponentialRampToValueAtTime(38, t0 + 0.18);
+      og.gain.setValueAtTime(0.45, t0);
+      og.gain.exponentialRampToValueAtTime(0.001, t0 + 0.18);
+      osc.connect(og); og.connect(masterG);
+      osc.start(t0); osc.stop(t0 + 0.19);
+
+      // Muzzle Blast Air Crack
+      const dur = 0.18, buf = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate);
       const d = buf.getChannelData(0);
-      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.0);
       const s = ac.createBufferSource(); s.buffer = buf;
-      const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1600;
-      const g = ac.createGain(); g.gain.value = 0.35;
+      const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 2200;
+      const g = ac.createGain(); g.gain.value = 0.38;
       s.connect(f); f.connect(g); g.connect(masterG); s.start(t0);
     } else if (type === 'laser') {
-      // Star Wars style UFO blaster laser
-      const o = ac.createOscillator(), g = ac.createGain();
-      o.type = 'sawtooth'; o.frequency.setValueAtTime(1400, t0);
-      o.frequency.exponentialRampToValueAtTime(120, t0 + 0.15);
-      g.gain.setValueAtTime(0.25, t0);
-      g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.15);
-      o.connect(g); g.connect(masterG); o.start(t0); o.stop(t0 + 0.16);
+      // Star Wars Alien TIE Turbo-Laser Dual-Frequency Pulse
+      const o1 = ac.createOscillator(), g1 = ac.createGain();
+      o1.type = 'sawtooth'; o1.frequency.setValueAtTime(1600, t0);
+      o1.frequency.exponentialRampToValueAtTime(140, t0 + 0.14);
+      g1.gain.setValueAtTime(0.22, t0);
+      g1.gain.exponentialRampToValueAtTime(0.001, t0 + 0.14);
+      o1.connect(g1); g1.connect(masterG); o1.start(t0); o1.stop(t0 + 0.15);
     } else if (type === 'coin') {
-      for (const [fq, dl] of [[1200, 0], [1800, 0.05]]) {
+      for (const [fq, dl] of [[1320, 0], [1760, 0.045], [2640, 0.09]]) {
         const o = ac.createOscillator(), g = ac.createGain();
-        o.frequency.value = fq;
-        g.gain.setValueAtTime(0.15, t0 + dl);
-        g.gain.exponentialRampToValueAtTime(0.001, t0 + dl + 0.14);
-        o.connect(g); g.connect(masterG); o.start(t0 + dl); o.stop(t0 + dl + 0.15);
+        o.type = 'sine'; o.frequency.value = fq;
+        g.gain.setValueAtTime(0.18, t0 + dl);
+        g.gain.exponentialRampToValueAtTime(0.001, t0 + dl + 0.16);
+        o.connect(g); g.connect(masterG); o.start(t0 + dl); o.stop(t0 + dl + 0.17);
       }
     } else if (type === 'map') {
-      for (const [fq, dl] of [[600, 0], [800, 0.08], [1000, 0.16], [1400, 0.24]]) {
+      for (const [fq, dl] of [[523, 0], [659, 0.07], [784, 0.14], [1046, 0.21]]) {
         const o = ac.createOscillator(), g = ac.createGain();
-        o.frequency.value = fq;
-        g.gain.setValueAtTime(0.16, t0 + dl);
-        g.gain.exponentialRampToValueAtTime(0.001, t0 + dl + 0.2);
-        o.connect(g); g.connect(masterG); o.start(t0 + dl); o.stop(t0 + dl + 0.22);
+        o.type = 'triangle'; o.frequency.value = fq;
+        g.gain.setValueAtTime(0.20, t0 + dl);
+        g.gain.exponentialRampToValueAtTime(0.001, t0 + dl + 0.24);
+        o.connect(g); g.connect(masterG); o.start(t0 + dl); o.stop(t0 + dl + 0.25);
       }
     } else if (type === 'hit') {
       const o = ac.createOscillator(), g = ac.createGain();
-      o.type = 'sawtooth'; o.frequency.setValueAtTime(320, t0);
-      o.frequency.exponentialRampToValueAtTime(50, t0 + 0.3);
-      g.gain.setValueAtTime(0.36, t0);
-      g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.3);
-      o.connect(g); g.connect(masterG); o.start(t0); o.stop(t0 + 0.32);
+      o.type = 'sawtooth'; o.frequency.setValueAtTime(380, t0);
+      o.frequency.exponentialRampToValueAtTime(45, t0 + 0.35);
+      g.gain.setValueAtTime(0.42, t0);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.35);
+      o.connect(g); g.connect(masterG); o.start(t0); o.stop(t0 + 0.36);
     } else if (type === 'incoming') {
       const o = ac.createOscillator(), g = ac.createGain();
-      o.type = 'sine'; o.frequency.setValueAtTime(950, t0);
-      o.frequency.exponentialRampToValueAtTime(220, t0 + 0.25);
-      g.gain.setValueAtTime(0.18, t0);
-      g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.27);
-      o.connect(g); g.connect(masterG); o.start(t0); o.stop(t0 + 0.29);
+      o.type = 'sine'; o.frequency.setValueAtTime(1100, t0);
+      o.frequency.exponentialRampToValueAtTime(240, t0 + 0.28);
+      g.gain.setValueAtTime(0.22, t0);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.30);
+      o.connect(g); g.connect(masterG); o.start(t0); o.stop(t0 + 0.32);
     }
   } catch (e) {}
 }
@@ -2022,7 +2043,7 @@ function drawGalleonForward(cx, x, y, scale=1.0) {
 // -------------------------------------------------------------
 function draw() {
   // 1. Deep Space Cosmic Canvas
-  cx.fillStyle = '#020308';
+  cx.fillStyle = '#010206';
   cx.fillRect(0, 0, W, H);
 
   // Apply Dynamic Cinematic Camera Zoom & Action Framing
@@ -2035,87 +2056,145 @@ function draw() {
   cx.scale(zoom, zoom);
   cx.translate(-camX, -camY);
 
-  // Distant Glowing Nebulae
+  // Volumetric Deep Cosmic Nebulae & Stellar Dust Clouds
   for (const n of nebulae) {
-    const ng = cx.createRadialGradient(n.x, n.y, 10, n.x, n.y, n.r);
-    ng.addColorStop(0, n.col + '30');
-    ng.addColorStop(0.5, n.col + '12');
+    const ng = cx.createRadialGradient(n.x, n.y, 20, n.x, n.y, n.r);
+    ng.addColorStop(0, n.col + '35');
+    ng.addColorStop(0.45, n.col + '18');
+    ng.addColorStop(0.8, n.col + '08');
     ng.addColorStop(1, 'rgba(0,0,0,0)');
     cx.fillStyle = ng;
     cx.beginPath(); cx.arc(n.x, n.y, n.r, 0, Math.PI * 2); cx.fill();
+
+    // Cosmic Dust Filament Strands
+    cx.strokeStyle = n.col + '15'; cx.lineWidth = 12;
+    cx.beginPath();
+    cx.moveTo(n.x - n.r * 0.6, n.y + Math.sin(t * 0.2) * 30);
+    cx.quadraticCurveTo(n.x, n.y - n.r * 0.3, n.x + n.r * 0.6, n.y + Math.cos(t * 0.2) * 30);
+    cx.stroke();
   }
 
-  // Photorealistic Giant Planet in Background (Side View)
+  // Photorealistic Ringed Gas Giant with Atmospheric Scattering & Shadowed Ring System
   const planetX = W * 0.82;
-  const planetY = H * 0.32;
-  const planetR = 125;
-  const pg = cx.createRadialGradient(planetX - 35, planetY - 35, 15, planetX, planetY, planetR);
-  pg.addColorStop(0, '#8eb4e3');
-  pg.addColorStop(0.35, '#35547c');
-  pg.addColorStop(0.7, '#15243b');
-  pg.addColorStop(1, '#050a12');
-  cx.fillStyle = pg;
-  cx.beginPath(); cx.arc(planetX, planetY, planetR, 0, Math.PI * 2); cx.fill();
+  const planetY = H * 0.30;
+  const planetR = 135;
 
-  // Planet Rings
-  cx.save(); cx.translate(planetX, planetY); cx.rotate(-0.4);
-  cx.strokeStyle = 'rgba(160, 200, 240, 0.25)'; cx.lineWidth = 14;
-  cx.beginPath(); cx.ellipse(0, 0, planetR * 1.85, planetR * 0.38, 0, 0, Math.PI * 2); cx.stroke();
-  cx.strokeStyle = 'rgba(210, 235, 255, 0.4)'; cx.lineWidth = 4;
-  cx.beginPath(); cx.ellipse(0, 0, planetR * 1.7, planetR * 0.35, 0, 0, Math.PI * 2); cx.stroke();
+  // Atmospheric Rayleigh Scattering Outer Glow
+  const atmoGlow = cx.createRadialGradient(planetX, planetY, planetR * 0.95, planetX, planetY, planetR * 1.25);
+  atmoGlow.addColorStop(0, 'rgba(100, 180, 255, 0.45)');
+  atmoGlow.addColorStop(0.5, 'rgba(140, 100, 255, 0.20)');
+  atmoGlow.addColorStop(1, 'rgba(0,0,0,0)');
+  cx.fillStyle = atmoGlow;
+  cx.beginPath(); cx.arc(planetX, planetY, planetR * 1.25, 0, Math.PI * 2); cx.fill();
+
+  // Gas Giant Planet Sphere & Storm Belts
+  cx.save();
+  cx.beginPath(); cx.arc(planetX, planetY, planetR, 0, Math.PI * 2); cx.clip();
+  const pg = cx.createRadialGradient(planetX - 45, planetY - 45, 15, planetX, planetY, planetR);
+  pg.addColorStop(0, '#dbeafe');
+  pg.addColorStop(0.3, '#60a5fa');
+  pg.addColorStop(0.65, '#1e3a8a');
+  pg.addColorStop(1, '#020617');
+  cx.fillStyle = pg; cx.fillRect(planetX - planetR, planetY - planetR, planetR * 2, planetR * 2);
+
+  // Atmospheric Storm Bands (Jupiter-style horizontal cloud bands)
+  for (let b = -4; b <= 4; b++) {
+    const by = planetY + b * 26;
+    const bw = cx.createLinearGradient(planetX - planetR, by, planetX + planetR, by);
+    const bAlpha = (b % 2 === 0) ? '0.18' : '0.08';
+    bw.addColorStop(0, `rgba(255,255,255,${bAlpha})`);
+    bw.addColorStop(0.5, `rgba(180,220,255,${bAlpha})`);
+    bw.addColorStop(1, 'rgba(0,0,0,0.4)');
+    cx.fillStyle = bw;
+    cx.fillRect(planetX - planetR, by - 8, planetR * 2, 16);
+  }
   cx.restore();
 
-  // Multi-layered Starfield
+  // 3D Shadowed Planetary Ring System with Cassini Division
+  cx.save();
+  cx.translate(planetX, planetY);
+  cx.rotate(-0.38);
+
+  // Outer Ring B
+  cx.strokeStyle = 'rgba(180, 215, 255, 0.35)'; cx.lineWidth = 12;
+  cx.beginPath(); cx.ellipse(0, 0, planetR * 1.95, planetR * 0.40, 0, 0, Math.PI * 2); cx.stroke();
+  // Cassini Division Gap (Dark fine line)
+  cx.strokeStyle = 'rgba(2, 6, 23, 0.9)'; cx.lineWidth = 2.5;
+  cx.beginPath(); cx.ellipse(0, 0, planetR * 1.84, planetR * 0.38, 0, 0, Math.PI * 2); cx.stroke();
+  // Inner Ring A (Bright dense dust)
+  cx.strokeStyle = 'rgba(230, 242, 255, 0.55)'; cx.lineWidth = 8;
+  cx.beginPath(); cx.ellipse(0, 0, planetR * 1.74, planetR * 0.36, 0, 0, Math.PI * 2); cx.stroke();
+  cx.restore();
+
+  // Multi-layered Spectral Starfield with Diffraction Flares for Major Stars
   for (const s of stars) {
-    const alpha = s.brightness * (0.7 + Math.sin(s.twinkle) * 0.3);
-    cx.fillStyle = `rgba(220, 240, 255, ${alpha})`;
+    const alpha = s.brightness * (0.65 + Math.sin(s.twinkle + t * 3) * 0.35);
+    const starCol = (s.size > 2.2) ? '#9ec7ff' : (s.size > 1.6) ? '#ffffff' : (s.size > 1.2) ? '#fff2a8' : '#ff9977';
+
+    cx.fillStyle = starCol;
+    cx.globalAlpha = Math.min(1, alpha);
     cx.beginPath(); cx.arc(s.x, s.y, s.size, 0, Math.PI * 2); cx.fill();
+
+    // James Webb-style 4-Point Diffraction Cross on Bright Giant Stars
+    if (s.size > 2.0 && alpha > 0.6) {
+      cx.strokeStyle = starCol; cx.lineWidth = 0.9;
+      cx.beginPath();
+      cx.moveTo(s.x - s.size * 3.5, s.y); cx.lineTo(s.x + s.size * 3.5, s.y);
+      cx.moveTo(s.x, s.y - s.size * 3.5); cx.lineTo(s.x, s.y + s.size * 3.5);
+      cx.stroke();
+    }
   }
+  cx.globalAlpha = 1;
 
   // Incoming Alien UFO Fleet Advancing from Deep Space (Stage 4 Red Alert)
   if (state === 'intro' && introT >= 5.2) {
     const fleetProgress = Math.min(1, (introT - 5.2) / 2.4);
     const fleetBaseX = W * 1.15 - fleetProgress * (W * 0.38);
     
-    // Draw 3 distant heavy battle-cruiser silhouettes advancing in formation
     for (const [offX, offY, size, col] of [[0, -70, 0.75, '#ff3366'], [40, 20, 0.9, '#00ff66'], [15, 90, 0.7, '#00e5ff']]) {
       cx.save();
       cx.translate(fleetBaseX + offX, H * 0.5 + offY);
       
-      // Distant saucer forcefield aura
       const sg = cx.createRadialGradient(0, 0, 5, 0, 0, 45 * size);
-      sg.addColorStop(0, col + '99'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      sg.addColorStop(0, col + 'aa'); sg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = sg;
       cx.beginPath(); cx.ellipse(0, 0, 45 * size, 26 * size, 0, 0, Math.PI * 2); cx.fill();
 
-      // Advancing Saucer Hull
-      cx.fillStyle = '#222834';
+      cx.fillStyle = '#1e2530';
       cx.beginPath(); cx.ellipse(0, 0, 42 * size, 18 * size, 0, 0, Math.PI * 2); cx.fill();
       cx.strokeStyle = col; cx.lineWidth = 2; cx.stroke();
 
-      // Cockpit Glow
       cx.fillStyle = col;
       cx.beginPath(); cx.arc(0, -4 * size, 6 * size, 0, Math.PI * 2); cx.fill();
-
       cx.restore();
     }
   }
 
-  // Floating Asteroids (Side View)
+  // Realistic 3D Craggy Asteroids with Crater Shading & Specular Rim Light
   for (const a of asteroids) {
     cx.save(); cx.translate(a.x, a.y); cx.rotate(a.rot);
-    const ag = cx.createRadialGradient(-a.r * 0.3, -a.r * 0.3, 2, 0, 0, a.r);
-    ag.addColorStop(0, '#667080'); ag.addColorStop(0.5, '#333842'); ag.addColorStop(1, '#111317');
+    
+    // Base Asteroid Rock Body
+    const ag = cx.createRadialGradient(-a.r * 0.35, -a.r * 0.35, 2, 0, 0, a.r);
+    ag.addColorStop(0, '#94a3b8');
+    ag.addColorStop(0.45, '#475569');
+    ag.addColorStop(0.85, '#1e293b');
+    ag.addColorStop(1, '#020617');
     cx.fillStyle = ag;
     cx.beginPath();
-    for (let k = 0; k < 8; k++) {
-      const ang = (k / 8) * Math.PI * 2;
-      const rad = a.r * (0.8 + ((k % 3) * 0.12));
-      if (k === 0) cx.moveTo(Math.cos(ang)*rad, Math.sin(ang)*rad);
-      else cx.lineTo(Math.cos(ang)*rad, Math.sin(ang)*rad);
+    for (let k = 0; k < 10; k++) {
+      const ang = (k / 10) * Math.PI * 2;
+      const rad = a.r * (0.82 + ((k % 3) * 0.14));
+      if (k === 0) cx.moveTo(Math.cos(ang) * rad, Math.sin(ang) * rad);
+      else cx.lineTo(Math.cos(ang) * rad, Math.sin(ang) * rad);
     }
     cx.closePath(); cx.fill();
-    cx.strokeStyle = '#22252c'; cx.lineWidth = 2; cx.stroke();
+    cx.strokeStyle = '#0f172a'; cx.lineWidth = 2; cx.stroke();
+
+    // Crater Details
+    cx.fillStyle = '#0f172a';
+    cx.beginPath(); cx.arc(-a.r * 0.2, a.r * 0.1, a.r * 0.22, 0, Math.PI * 2); cx.fill();
+    cx.strokeStyle = '#475569'; cx.lineWidth = 1; cx.stroke();
     cx.restore();
   }
 
@@ -2157,71 +2236,106 @@ function draw() {
     cx.restore();
   }
 
-  // 4. Render Heavy Alien UFO Battle-Cruisers (Star Wars Style)
+  // 4. Render Heavy Alien UFO Battle-Cruisers (Sci-Fi Armored Warships)
   for (const f of forts) {
     cx.save(); cx.translate(f.x, f.y);
     
-    // Glowing Saucer Force Field
+    // Hexagonal Force Field Shimmer
     const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.48);
-    sg.addColorStop(0, f.col + '99'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+    sg.addColorStop(0, f.col + 'aa'); sg.addColorStop(1, 'rgba(0,0,0,0)');
     cx.fillStyle = sg;
     cx.beginPath(); cx.ellipse(0, 0, f.w * 0.48, f.h * 0.45, 0, 0, Math.PI * 2); cx.fill();
 
-    // Metallic Flying Saucer Hull (Upper Dome & Lower Disc)
+    // Armored Titanium Alloy Saucer Hull
     const dg = cx.createLinearGradient(0, -f.h * 0.45, 0, f.h * 0.45);
-    dg.addColorStop(0, '#d0dbe5'); dg.addColorStop(0.35, '#6a798a'); dg.addColorStop(1, '#1b222c');
+    dg.addColorStop(0, '#e2e8f0'); dg.addColorStop(0.35, '#64748b'); dg.addColorStop(1, '#0f172a');
     cx.fillStyle = dg;
     cx.beginPath(); cx.ellipse(0, 0, f.w * 0.46, f.h * 0.32, 0, 0, Math.PI * 2); cx.fill();
-    cx.strokeStyle = '#11161d'; cx.lineWidth = 3; cx.stroke();
+    cx.strokeStyle = '#020617'; cx.lineWidth = 3; cx.stroke();
 
-    // Upper Glass Cockpit Dome with Alien Glow
+    // Titanium Hull Armor Plating Grooves
+    cx.strokeStyle = '#1e293b'; cx.lineWidth = 1.5;
+    cx.beginPath();
+    cx.moveTo(-f.w * 0.35, 0); cx.lineTo(f.w * 0.35, 0);
+    cx.moveTo(-f.w * 0.25, -f.h * 0.15); cx.lineTo(f.w * 0.25, -f.h * 0.15);
+    cx.stroke();
+
+    // Central Command Dome with Pulsing Core
     const ckg = cx.createRadialGradient(-8, -12, 2, 0, -8, 20);
-    ckg.addColorStop(0, '#ffffff'); ckg.addColorStop(0.5, f.col); ckg.addColorStop(1, '#052b14');
+    ckg.addColorStop(0, '#ffffff'); ckg.addColorStop(0.45, f.col); ckg.addColorStop(1, '#02240e');
     cx.fillStyle = ckg;
     cx.beginPath(); cx.ellipse(0, -10, 22, 14, 0, 0, Math.PI * 2); cx.fill();
     cx.strokeStyle = '#fff'; cx.lineWidth = 1.5; cx.stroke();
 
-    // Rotating Saucer Navigation Lights
+    // Rotating Magnetic Drive Ring Lights
     for (let k = 0; k < 6; k++) {
       const a = (k / 6) * Math.PI * 2 + f.saucerSpin;
       const lx = Math.cos(a) * (f.w * 0.38);
       const ly = Math.sin(a) * (f.h * 0.22);
-      cx.fillStyle = f.col;
+      cx.fillStyle = (k % 2 === 0) ? '#ffffff' : f.col;
       cx.beginPath(); cx.arc(lx, ly, 3.5, 0, Math.PI * 2); cx.fill();
     }
+
+    // Ventral Heavy Turbo-Laser Battery (Aims towards player ship!)
+    const aimToPlayer = Math.atan2(ship.y - f.y, ship.x - f.x);
+    cx.save();
+    cx.translate(-f.w * 0.25, f.h * 0.18);
+    cx.rotate(aimToPlayer);
+    cx.fillStyle = '#0f172a'; cx.fillRect(0, -2.5, 14, 5);
+    cx.fillStyle = '#00ff66'; cx.fillRect(12, -1.5, 3, 3);
+    cx.restore();
     
     // Health bar
-    cx.fillStyle = 'rgba(0,0,0,0.7)'; cx.fillRect(-35, -f.h * 0.5 - 12, 70, 6);
-    cx.fillStyle = '#00ff66'; cx.fillRect(-33, -f.h * 0.5 - 11, 66 * (f.hp / f.maxHp), 4);
+    cx.fillStyle = 'rgba(0,0,0,0.8)'; cx.fillRect(-35, -f.h * 0.5 - 14, 70, 7);
+    cx.fillStyle = '#00ff66'; cx.fillRect(-33, -f.h * 0.5 - 13, 66 * Math.max(0, f.hp / f.maxHp), 5);
+    cx.strokeStyle = '#020617'; cx.lineWidth = 1; cx.strokeRect(-35, -f.h * 0.5 - 14, 70, 7);
     
     cx.restore();
   }
 
-  // 5. Render TIE-Style UFO Fighters
+  // 5. Render TIE-Inspired Hex-Wing Interceptors (Star Wars TIE Fighter Physics)
   for (const g of gliders) {
     cx.save(); cx.translate(g.x, g.y);
     
-    // Central Spherical UFO Pod
-    const cg = cx.createRadialGradient(-4, -4, 2, 0, 0, 14);
-    cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.4, '#5d6878'); cg.addColorStop(1, '#1b222c');
+    // Dynamic bank roll angle
+    const bank = Math.sin(t * 8 + g.x * 0.05) * 0.2;
+    cx.rotate(bank);
+
+    // Central Spherical Cockpit Ball
+    const cg = cx.createRadialGradient(-4, -4, 2, 0, 0, 15);
+    cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.4, '#475569'); cg.addColorStop(1, '#0f172a');
     cx.fillStyle = cg;
     cx.beginPath(); cx.arc(0, 0, 14, 0, Math.PI * 2); cx.fill();
-    cx.strokeStyle = '#00ff66'; cx.lineWidth = 2; cx.stroke();
+    cx.strokeStyle = '#020617'; cx.lineWidth = 2; cx.stroke();
 
-    // Glowing Green Cockpit Window (TIE Viewport)
-    cx.fillStyle = '#00ff66';
-    cx.beginPath(); cx.arc(-4, 0, 5, 0, Math.PI * 2); cx.fill();
+    // Octagonal TIE Viewport with Red Aiming Sensor
+    cx.fillStyle = '#0f172a';
+    cx.beginPath(); cx.arc(-5, 0, 6, 0, Math.PI * 2); cx.fill();
+    cx.fillStyle = '#ff2255';
+    cx.beginPath(); cx.arc(-5, 0, 2.5, 0, Math.PI * 2); cx.fill();
 
-    // Twin Vertical Solar Radiator Wings (Star Wars TIE Style)
-    cx.fillStyle = '#222834';
-    cx.strokeStyle = '#6a798a'; cx.lineWidth = 2;
+    // Vertical Hexagonal Solar Radiator Panels
     for (const wx of [-16, 16]) {
+      cx.fillStyle = '#1e293b';
+      cx.strokeStyle = '#64748b'; cx.lineWidth = 2;
       cx.beginPath();
-      cx.moveTo(wx, -16); cx.lineTo(wx - 4, -20); cx.lineTo(wx - 4, 20); cx.lineTo(wx, 16);
+      cx.moveTo(wx, -18);
+      cx.lineTo(wx - 5, -24);
+      cx.lineTo(wx - 5, 24);
+      cx.lineTo(wx, 18);
       cx.closePath();
       cx.fill(); cx.stroke();
+
+      // Photovoltaic Hexagon Grid Details
+      cx.strokeStyle = '#00ff66'; cx.lineWidth = 0.8;
+      cx.beginPath();
+      cx.moveTo(wx - 3, -16); cx.lineTo(wx - 3, 16);
+      cx.stroke();
     }
-    
+
+    // Ion Thruster Flame Flare
+    cx.fillStyle = '#00ffee';
+    cx.beginPath(); cx.arc(14, 0, 3.5 + Math.sin(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
     cx.restore();
   }
 
@@ -2233,7 +2347,6 @@ function draw() {
         cx.translate(u.x, u.y);
         cx.rotate(u.pitch || 0);
         
-        // Dynamic Forcefield Shield Aura
         const sg = cx.createRadialGradient(0, 0, 10, 0, 0, u.w * 0.55);
         sg.addColorStop(0, u.col + 'aa');
         sg.addColorStop(0.6, u.col + '33');
@@ -2241,7 +2354,6 @@ function draw() {
         cx.fillStyle = sg;
         cx.beginPath(); cx.ellipse(0, 0, u.w * 0.55, u.h * 0.52, 0, 0, Math.PI * 2); cx.fill();
 
-        // Pulsing Ion Thruster Wake (Leftward stream)
         const tg = cx.createLinearGradient(u.w * 0.35, 0, u.w * 0.75, 0);
         tg.addColorStop(0, u.col);
         tg.addColorStop(1, 'rgba(0,0,0,0)');
@@ -2253,7 +2365,6 @@ function draw() {
         cx.closePath();
         cx.fill();
 
-        // Armored Saucer Disc (Titanium Alloy)
         const dg = cx.createLinearGradient(0, -u.h * 0.5, 0, u.h * 0.5);
         dg.addColorStop(0, '#e8f1fa');
         dg.addColorStop(0.3, '#738499');
@@ -2263,7 +2374,6 @@ function draw() {
         cx.beginPath(); cx.ellipse(0, 0, u.w * 0.48, u.h * 0.34, 0, 0, Math.PI * 2); cx.fill();
         cx.strokeStyle = '#0a0e13'; cx.lineWidth = 2.5; cx.stroke();
 
-        // Glowing Core / Central Armored Dome
         const ckg = cx.createRadialGradient(-6, -8, 2, 0, -4, 16);
         ckg.addColorStop(0, '#ffffff');
         ckg.addColorStop(0.4, u.col);
@@ -2272,7 +2382,6 @@ function draw() {
         cx.beginPath(); cx.ellipse(0, -6, 16, 11, 0, 0, Math.PI * 2); cx.fill();
         cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.5; cx.stroke();
 
-        // Rotating Magnetic Drive Ring Lights
         for (let k = 0; k < 6; k++) {
           const a = (k / 6) * Math.PI * 2 + u.saucerSpin;
           const lx = Math.cos(a) * (u.w * 0.38);
@@ -2281,16 +2390,14 @@ function draw() {
           cx.beginPath(); cx.arc(lx, ly, 3.5, 0, Math.PI * 2); cx.fill();
         }
 
-        // TIE-Style Laser Cannons
         cx.fillStyle = '#1b222c';
         cx.fillRect(-18, u.h * 0.22, 10, 4);
         cx.fillRect(8, u.h * 0.22, 10, 4);
-
         cx.restore();
       }
     }
 
-    // Render Cleaved Alien Saucer Wreckage Halves
+    // Cleaved Alien Wreckage
     for (const w of wreckage) {
       cx.save();
       cx.translate(w.x, w.y);
@@ -2317,7 +2424,6 @@ function draw() {
       cx.fill();
       cx.strokeStyle = '#05070a'; cx.lineWidth = 2; cx.stroke();
 
-      // Exposed Sparking Plasma Fracture Line
       cx.strokeStyle = w.col;
       cx.lineWidth = 3;
       cx.beginPath();
@@ -2326,11 +2432,10 @@ function draw() {
       cx.lineTo(w.w * 0.15, (Math.random() - 0.5) * 6);
       cx.lineTo(w.w * 0.38, 0);
       cx.stroke();
-
       cx.restore();
     }
 
-    // Render Hexagonal Energy Shield Shards
+    // Shield Shards
     for (const s of shieldShards) {
       cx.save();
       cx.translate(s.x, s.y);
@@ -2356,6 +2461,13 @@ function draw() {
   for (const m of mines) {
     cx.save(); cx.translate(m.x, m.y); cx.rotate(m.spin);
     
+    // Sweeping Red/Cyan Tripwire Laser Scanners
+    cx.strokeStyle = 'rgba(255, 30, 80, 0.45)'; cx.lineWidth = 1.5;
+    cx.beginPath();
+    cx.moveTo(0, 0); cx.lineTo(Math.cos(t * 3) * 60, Math.sin(t * 3) * 60);
+    cx.moveTo(0, 0); cx.lineTo(Math.cos(t * 3 + Math.PI) * 60, Math.sin(t * 3 + Math.PI) * 60);
+    cx.stroke();
+
     cx.strokeStyle = '#00e5ff'; cx.lineWidth = 3;
     for (let k = 0; k < 6; k++) {
       const a = (k / 6) * Math.PI * 2;
@@ -2367,12 +2479,12 @@ function draw() {
     mgr.addColorStop(0, '#c7f9ff'); mgr.addColorStop(0.5, '#0077ff'); mgr.addColorStop(1, '#001a4d');
     cx.fillStyle = mgr; cx.beginPath(); cx.arc(0, 0, m.r, 0, Math.PI * 2); cx.fill();
     
-    cx.fillStyle = `rgba(255,255,255,${0.8 + Math.sin(t * 14) * 0.2})`;
+    cx.fillStyle = `rgba(255,50,80,${0.8 + Math.sin(t * 14) * 0.2})`;
     cx.beginPath(); cx.arc(0, 0, 6, 0, Math.PI * 2); cx.fill();
     cx.restore();
   }
 
-  // 7. Render Boss Colossal UFO Mothership (Death Saucer)
+  // 7. Render Boss Colossal UFO Mothership (Death Saucer Flagship)
   if (boss) {
     cx.save(); cx.translate(boss.x, boss.y);
     
@@ -2403,7 +2515,6 @@ function draw() {
       cx.fillStyle = '#00ff66';
       cx.beginPath(); cx.arc(lx, ly, 6, 0, Math.PI * 2); cx.fill();
     }
-
     cx.restore();
   }
 
@@ -3067,34 +3178,51 @@ function draw() {
     cx.fillRect(0, 0, W, H);
   }
 
-  // 11. Flight HUD
+  // 11. Flight HUD (Sci-Fi Holographic Cockpit Telemetry)
   if (state === 'play' || state === 'pause') {
-    cx.font = '26px sans-serif';
-    for (let i = 0; i < maxHp; i++) cx.fillText(i < ship.hp ? '❤️' : '🖤', 22 + i * 32, 42);
+    // Holographic Top Left Status Panel
+    cx.save();
+    cx.fillStyle = 'rgba(6, 14, 30, 0.65)';
+    cx.strokeStyle = 'rgba(255, 210, 60, 0.35)';
+    cx.lineWidth = 1.5;
+    cx.beginPath();
+    cx.roundRect(14, 14, 280, 140, 10);
+    cx.fill(); cx.stroke();
+
+    // Hull Health Hearts
+    cx.font = '24px sans-serif';
+    for (let i = 0; i < maxHp; i++) {
+      cx.fillText(i < ship.hp ? '❤️' : '🖤', 26 + (i % 6) * 30, 44 + Math.floor(i / 6) * 26);
+    }
     
-    cx.fillStyle = '#fff'; cx.font = 'bold 22px "Orbitron", sans-serif'; cx.textAlign = 'left';
-    cx.fillText(`🪙 GOLD: ${score}`, 22, 80);
-    cx.fillText(`🌌 SECTOR WAVE: ${level}`, 22, 110);
+    cx.fillStyle = '#ffd23c'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.textAlign = 'left';
+    cx.fillText(`🪙 GOLD: ${score}`, 26, 96);
+    cx.fillStyle = '#3fd5ff';
+    cx.fillText(`🌌 SECTOR: ${level}`, 26, 122);
+    cx.fillStyle = '#8fa6cb'; cx.font = '12px "Orbitron", sans-serif';
+    const speedKnots = Math.round(Math.hypot(ship.vx, ship.vy) * 0.4);
+    cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, 26, 144);
+    cx.restore();
     
     if (combo >= 2 && comboT > 0) {
       cx.fillStyle = '#00d2ff'; cx.font = 'bold 24px "Orbitron", sans-serif';
-      cx.fillText(`🔥 STREAK x${Math.min(5, combo)}`, 22, 142);
+      cx.fillText(`🔥 STREAK x${Math.min(5, combo)}`, 22, 185);
     }
     
-    let puy = 176;
-    if (rapidT > 0) { cx.fillStyle = '#3fd5ff'; cx.font = 'bold 18px "Orbitron", sans-serif'; cx.fillText(`⚡ RAPID CANNONS: ${rapidT.toFixed(1)}s`, 22, puy); puy += 28; }
-    if (shieldT > 0) { cx.fillStyle = '#00dfa2'; cx.font = 'bold 18px "Orbitron", sans-serif'; cx.fillText(`🛡️ DEFLECTOR: ${shieldT.toFixed(1)}s`, 22, puy); puy += 28; }
-    if (tripleT > 0) { cx.fillStyle = '#ffd23c'; cx.font = 'bold 18px "Orbitron", sans-serif'; cx.fillText(`🔱 TRIPLE BROADSIDE: ${tripleT.toFixed(1)}s`, 22, puy); puy += 28; }
+    let puy = combo >= 2 ? 218 : 185;
+    if (rapidT > 0) { cx.fillStyle = '#3fd5ff'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.fillText(`⚡ RAPID CANNONS: ${rapidT.toFixed(1)}s`, 22, puy); puy += 26; }
+    if (shieldT > 0) { cx.fillStyle = '#00dfa2'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.fillText(`🛡️ DEFLECTOR: ${shieldT.toFixed(1)}s`, 22, puy); puy += 26; }
+    if (tripleT > 0) { cx.fillStyle = '#ffd23c'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.fillText(`🔱 TRIPLE BROADSIDE: ${tripleT.toFixed(1)}s`, 22, puy); puy += 26; }
 
-    // Boss Giant Health Bar
+    // Boss Colossal Super-Saucer Health Bar
     if (boss) {
       const bw = Math.min(480, W - 60), bx = (W - bw) / 2, by = 24;
-      cx.fillStyle = 'rgba(0,0,0,0.8)'; cx.fillRect(bx - 4, by - 4, bw + 8, 28);
-      cx.fillStyle = '#200518'; cx.fillRect(bx, by, bw, 20);
-      cx.fillStyle = boss.col; cx.fillRect(bx, by, bw * Math.max(0, boss.hp / boss.maxhp), 20);
-      cx.strokeStyle = '#00ff66'; cx.lineWidth = 2; cx.strokeRect(bx, by, bw, 20);
-      cx.fillStyle = '#fff'; cx.font = 'bold 18px "Orbitron", sans-serif'; cx.textAlign = 'center';
-      cx.fillText('☠️ ' + boss.name.toUpperCase(), W / 2, by + 44);
+      cx.fillStyle = 'rgba(0,0,0,0.85)'; cx.fillRect(bx - 4, by - 4, bw + 8, 30);
+      cx.fillStyle = '#1e0818'; cx.fillRect(bx, by, bw, 22);
+      cx.fillStyle = boss.col; cx.fillRect(bx, by, bw * Math.max(0, boss.hp / boss.maxhp), 22);
+      cx.strokeStyle = '#00ff66'; cx.lineWidth = 2; cx.strokeRect(bx, by, bw, 22);
+      cx.fillStyle = '#fff'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.textAlign = 'center';
+      cx.fillText('☠️ ' + boss.name.toUpperCase(), W / 2, by + 46);
     }
 
     // Threat Alerts
@@ -3119,22 +3247,22 @@ function draw() {
     const startScreenY = (startY - curCamY) * curZoom + H * 0.5;
     
     const wm = getWorldMouse();
-    let locked = false;
-    if (boss && Math.hypot(wm.x - boss.x, wm.y - boss.y) < boss.w * 0.55) locked = true;
+    let locked = false, targetName = '';
+    if (boss && Math.hypot(wm.x - boss.x, wm.y - boss.y) < boss.w * 0.55) { locked = true; targetName = 'FLAGSHIP'; }
     if (!locked) {
       for (const f of forts) {
-        if (Math.hypot(wm.x - f.x, wm.y - f.y) < f.w * 0.5) { locked = true; break; }
+        if (Math.hypot(wm.x - f.x, wm.y - f.y) < f.w * 0.5) { locked = true; targetName = 'CRUISER'; break; }
       }
     }
     if (!locked) {
       for (const g of gliders) {
-        if (Math.hypot(wm.x - g.x, wm.y - g.y) < 32) { locked = true; break; }
+        if (Math.hypot(wm.x - g.x, wm.y - g.y) < 32) { locked = true; targetName = 'INTERCEPTOR'; break; }
       }
     }
 
     // Laser Trajectory Guide Line
     cx.save();
-    cx.strokeStyle = locked ? 'rgba(255, 60, 80, 0.55)' : 'rgba(255, 210, 60, 0.4)';
+    cx.strokeStyle = locked ? 'rgba(255, 60, 80, 0.65)' : 'rgba(255, 210, 60, 0.45)';
     cx.lineWidth = 2;
     cx.setLineDash([6, 6]);
     cx.beginPath();
@@ -3148,6 +3276,14 @@ function draw() {
     cx.save();
     cx.translate(mouse.x, mouse.y);
     const retCol = locked ? '#ff3366' : '#ffd23c';
+
+    // Target Lock-On Text
+    if (locked) {
+      cx.fillStyle = '#ff3366';
+      cx.font = 'bold 12px "Orbitron", sans-serif';
+      cx.textAlign = 'center';
+      cx.fillText(`[ LOCK: ${targetName} ]`, 0, -26);
+    }
 
     // Spinning Outer Reticle Ring
     cx.rotate(t * 2);
