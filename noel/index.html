@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { overflow: hidden; height: 100%; background: #020308; touch-action: none;
+  html, body { overflow: hidden; height: 100%; background: #020308; touch-action: manipulation;
     font-family: 'Outfit', system-ui, -apple-system, sans-serif; }
   canvas { display: block; width: 100vw; height: 100vh; }
   
@@ -437,17 +437,17 @@
 <button id="pausebtn">⏸</button>
 <div id="touchHint" style="display:none;">🎯 DRAG FINGER TO SAIL YOUR SPACE GALLEON</div>
 
-<div id="pauseoverlay" class="overlay hidden">
+<div id="pauseoverlay" class="overlay hidden" style="display:none;">
   <h1>⏸ WARP STASIS</h1>
   <p>Solar sails reefed, Captain Noel…</p>
   <div class="btnrow">
-    <button id="resumebtn">▶ RESUME BATTLE</button>
-    <button onclick="location.reload()">↻ RESTART</button>
+    <button id="resumebtn" type="button" onclick="togglePause(event)" ontouchend="togglePause(event)">▶ RESUME BATTLE</button>
+    <button type="button" onclick="location.reload()" ontouchend="location.reload()">↻ RESTART</button>
   </div>
   <a class="exitlink" href="../">🚪 MAIN MENU — VG Contest</a>
 </div>
 
-<div id="menu" class="overlay">
+<div id="menu" class="overlay" style="display:flex;">
   <h1>🏴‍☠️ SPACE PIRATES</h1>
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
   Sail through deep cosmic space and blast <b>Star Wars-style alien UFO squadrons &amp; Motherships</b> with heavy naval broadsides!</p>
@@ -456,8 +456,8 @@
   </div>
   <input id="pname" placeholder="Captain Noel" maxlength="14" value="Noël" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="btnrow">
-    <button id="startbtn" onclick="startSolarSail()">⚓ SET SOLAR SAIL!</button>
-    <button id="hangarbtn" onclick="openHangar()" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ PIRATE HANGAR &amp; UPGRADES</button>
+    <button id="startbtn" type="button" onclick="startSolarSail(event)" ontouchend="startSolarSail(event)" onpointerdown="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
+    <button id="hangarbtn" type="button" onclick="openHangar(event)" ontouchend="openHangar(event)" onpointerdown="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ PIRATE HANGAR &amp; UPGRADES</button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.1rem; color:#ffd23c; font-weight:bold"></p>
   <p id="bestline" style="margin-top:0.2rem; font-size:1rem; color:#ffd23c; font-weight:bold; min-height:1.2em"></p>
@@ -465,32 +465,32 @@
   <div class="lb small" id="lbMenu"><h2>🏆 GALAXY TOP 10 PIRATES</h2><div class="empty">Scanning subspace radar…</div></div>
 </div>
 
-<div id="loseoverlay" class="overlay hidden">
+<div id="loseoverlay" class="overlay hidden" style="display:none;">
   <h1>💥 GALLEON SHIPWRECKED!</h1>
   <p id="losetext">Your space pirate galleon was blasted into cosmic stardust…</p>
   <div class="lb" id="lbLose"></div>
-  <button onclick="location.reload()">↻ RE-ENGAGE</button>
+  <button type="button" onclick="location.reload()" ontouchend="location.reload()">↻ RE-ENGAGE</button>
   <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">← Back to Contest</a></p>
 </div>
 
-<div id="winoverlay" class="overlay hidden">
+<div id="winoverlay" class="overlay hidden" style="display:none;">
   <h1>🌌 GALAXY PIRATE KING!</h1>
   <p id="wintext">All alien UFO fleets vanquished across the stars!</p>
   <div class="lb" id="lbWin"></div>
-  <button onclick="location.reload()">↻ PLAY AGAIN</button>
+  <button type="button" onclick="location.reload()" ontouchend="location.reload()">↻ PLAY AGAIN</button>
   <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">← Back to Contest</a></p>
 </div>
 
-<div id="shop" class="overlay hidden">
+<div id="shop" class="overlay hidden" style="display:none;">
   <h1>🛠️ PIRATE DOCKYARD &amp; HANGAR</h1>
   <p id="shopwallet"></p>
   <p style="font-size:0.92rem;color:#9fb4d4;margin-bottom:0.6rem;max-width:560px">Loot 🪙 gold dubloons from destroyed UFOs and 🎟️ alien plasma cores from UFO motherships.</p>
   <div id="shopBody"></div>
-  <button id="shopclose" style="margin-top:1.3rem">⬅ RETURN TO QUARTERDECK</button>
+  <button id="shopclose" type="button" onclick="closeShop(event)" ontouchend="closeShop(event)" onpointerdown="closeShop(event)" style="margin-top:1.3rem">⬅ RETURN TO QUARTERDECK</button>
 </div>
 
 <!-- Captain's Tactical Fleet Dossier Modal -->
-<div id="dossierModal" class="overlay hidden" style="z-index: 100;">
+<div id="dossierModal" class="overlay hidden" style="display:none; z-index: 100;">
   <div class="dossier-card">
     <div class="dossier-header">
       <span id="dosRank" class="dos-badge">🥇 RANK #1</span>
@@ -520,12 +520,12 @@
       <div id="dosUpgList" class="dos-upg-grid"></div>
     </div>
 
-    <button id="dosCloseBtn" class="dos-close-btn">✖ CLOSE DOSSIER</button>
+    <button id="dosCloseBtn" type="button" class="dos-close-btn" onclick="closeDossier(event)" ontouchend="closeDossier(event)">✖ CLOSE DOSSIER</button>
   </div>
 </div>
 
 <!-- Roblox Grow a Garden Style Lucky Prize Wheel Modal -->
-<div id="spinModal" class="overlay hidden" style="z-index: 120;">
+<div id="spinModal" class="overlay hidden" style="display:none; z-index: 120;">
   <div class="spin-card">
     <div class="spin-header">
       <span class="spin-badge">🎡 LUCKY PRIZE WHEEL 🎟️</span>
@@ -558,8 +558,8 @@
     </div>
 
     <div class="spin-actions">
-      <button id="spinPullBtn" class="spin-pull-btn">🎡 SPIN WHEEL (<span id="spinCountLeft">0</span> left)</button>
-      <button id="spinCloseBtn" class="spin-close-btn">✖ CLOSE WHEEL</button>
+      <button id="spinPullBtn" type="button" class="spin-pull-btn" onclick="triggerSlotSpin(event)" ontouchend="triggerSlotSpin(event)">🎡 SPIN WHEEL (<span id="spinCountLeft">0</span> left)</button>
+      <button id="spinCloseBtn" type="button" class="spin-close-btn" onclick="closeSpinModal(event)" ontouchend="closeSpinModal(event)">✖ CLOSE WHEEL</button>
     </div>
   </div>
 </div>
@@ -1987,20 +1987,25 @@ function spawnBoss() {
 
 // ---------- GAME FLOW ----------
 function startCombat() {
-  if (state === 'intro') {
-    state = 'play';
-    sfx('incoming');
-    addShake(18);
-    addAlert('🚨 RED ALERT: ALIEN UFO BATTLEGROUP ATTACKING!', 'incoming');
-    spawnGlider();
-    spawnGlider();
-    spawnFort();
-    fortT = 2.4;
-  }
+  state = 'play';
+  sfx('incoming');
+  addShake(18);
+  addAlert('🚨 RED ALERT: ALIEN UFO BATTLEGROUP ATTACKING!', 'incoming');
+  spawnGlider();
+  spawnGlider();
+  spawnFort();
+  fortT = 2.4;
 }
 
 // Start Game Handler
-window.startSolarSail = function() {
+function startSolarSail(e) {
+  if (e) {
+    try { e.stopPropagation(); } catch(err) {}
+  }
+  if (window._launching) return;
+  window._launching = true;
+  setTimeout(() => { window._launching = false; }, 300);
+
   scoreSubmitted = false;
   applyLoadout();
 
@@ -2011,39 +2016,24 @@ window.startSolarSail = function() {
   ship = createFleetShip(0, playerName, SAVE.data.sel || 'cutter', H * 0.5);
   fleet = [ship];
 
-  introT = 0;
-  introShot1 = false;
-  introShot2 = false;
-  wreckage = [];
-  shieldShards = [];
-  introUfos = [
-    {
-      x: W * 0.82, y: H * 0.35, targetX: W * 0.58, targetY: H * 0.38,
-      vx: -180, vy: 20, pitch: 0.12, roll: 0.15,
-      col: '#00ff66', w: 70, h: 44, saucerSpin: 0,
-      shield: 1.0, dead: false, engineGlow: 1.0
-    },
-    {
-      x: W * 0.88, y: H * 0.65, targetX: W * 0.64, targetY: H * 0.62,
-      vx: -190, vy: -20, pitch: -0.12, roll: -0.15,
-      col: '#00e5ff', w: 70, h: 44, saucerSpin: 0,
-      shield: 1.0, dead: false, engineGlow: 1.0
-    }
-  ];
-  storySectorAnnounced = 1;
   tokensRun = 0; killsRun = 0; spinsRun = 0;
   balls = []; eballs = []; forts = []; gliders = []; mines = []; coins = []; powerups = []; parts = [];
   boss = null; bossT = 26; score = 0; coinsN = 0; level = 1; t = 0;
   
   const m = document.getElementById('menu');
-  if (m) m.classList.add('hidden');
+  if (m) {
+    m.classList.add('hidden');
+    m.style.display = 'none';
+  }
   const pb = document.getElementById('pausebtn');
   if (pb) pb.style.display = 'block';
   initAudio();
-  state = 'intro';
-};
+  startCombat();
+}
+window.startSolarSail = startSolarSail;
+
 const startBtnEl = document.getElementById('startbtn');
-if (startBtnEl) startBtnEl.addEventListener('click', window.startSolarSail);
+if (startBtnEl) startBtnEl.addEventListener('click', startSolarSail);
 
 function togglePause() {
   if (state === 'play') {
@@ -2480,26 +2470,47 @@ document.getElementById('spinCloseBtn').addEventListener('click', () => {
   closeSpinModal();
 });
 
-window.openHangar = function() {
+function openHangar(e) {
+  if (e) {
+    try { e.stopPropagation(); } catch(err) {}
+  }
   initAudio();
   const m = document.getElementById('menu');
-  if (m) m.classList.add('hidden');
+  if (m) {
+    m.classList.add('hidden');
+    m.style.display = 'none';
+  }
   const s = document.getElementById('shop');
-  if (s) s.classList.remove('hidden');
+  if (s) {
+    s.classList.remove('hidden');
+    s.style.display = 'flex';
+  }
   buildShop();
-};
-window.closeShop = function() {
+}
+window.openHangar = openHangar;
+
+function closeShop(e) {
+  if (e) {
+    try { e.stopPropagation(); } catch(err) {}
+  }
   const s = document.getElementById('shop');
-  if (s) s.classList.add('hidden');
+  if (s) {
+    s.classList.add('hidden');
+    s.style.display = 'none';
+  }
   const m = document.getElementById('menu');
-  if (m) m.classList.remove('hidden');
+  if (m) {
+    m.classList.remove('hidden');
+    m.style.display = 'flex';
+  }
   renderWallet();
-};
+}
+window.closeShop = closeShop;
 
 const hBtn = document.getElementById('hangarbtn');
-if (hBtn) hBtn.addEventListener('click', window.openHangar);
+if (hBtn) hBtn.addEventListener('click', openHangar);
 const sCloseBtn = document.getElementById('shopclose');
-if (sCloseBtn) sCloseBtn.addEventListener('click', window.closeShop);
+if (sCloseBtn) sCloseBtn.addEventListener('click', closeShop);
 
 (function () {
   try {
