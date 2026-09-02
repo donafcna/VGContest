@@ -724,22 +724,133 @@ function switchNetTab(mode) {
 </div>
 
 <script>
-'use strict';
 const cv = document.getElementById('cv');
 const cx = cv.getContext('2d');
 let W = innerWidth, H = innerHeight;
 cv.width = W; cv.height = H;
 addEventListener('resize', () => { W = innerWidth; H = innerHeight; cv.width = W; cv.height = H; });
 
-// ---------- STATE ----------
+// ---------- PROGRESSION / SAVE / UPGRADES (INITIALIZED FIRST) ----------
+const ALL_SHIP_IDS = ['cutter', 'galleon', 'runner', 'hind', 'storm'];
+
+const SAVE = {
+  data: {
+    uid: '',
+    coins: 99999,
+    tokens: 999,
+    kills: 2500,
+    spins: 99,
+    skin: 'default',
+    upg: { hull: 3, cannon: 3, engine: 3, magnet: 3 },
+    ships: ['cutter', 'galleon', 'runner', 'hind', 'storm'],
+    sel: 'cutter'
+  },
+  load() {
+    try {
+      const d = JSON.parse(localStorage.getItem('sp_save') || 'null');
+      if (d) {
+        this.data = Object.assign(this.data, d);
+        this.data.upg = Object.assign({ hull: 3, cannon: 3, engine: 3, magnet: 3 }, d.upg || {});
+        for (const sid of ALL_SHIP_IDS) {
+          if (!this.data.ships.includes(sid)) this.data.ships.push(sid);
+        }
+        if (this.data.coins < 99999) this.data.coins = 99999;
+        if (this.data.tokens < 999) this.data.tokens = 999;
+        if (this.data.spins < 99) this.data.spins = 99;
+        if (this.data.kills < 2500) this.data.kills = 2500;
+        this.data.upg.hull = Math.max(3, this.data.upg.hull || 0);
+        this.data.upg.cannon = Math.max(3, this.data.upg.cannon || 0);
+        this.data.upg.engine = Math.max(3, this.data.upg.engine || 0);
+        this.data.upg.magnet = Math.max(3, this.data.upg.magnet || 0);
+      }
+      if (!this.data.uid) {
+        this.data.uid = localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36));
+        localStorage.setItem('sp_uid', this.data.uid);
+      }
+      this.save();
+    } catch (e) {}
+  },
+  save() { try { localStorage.setItem('sp_save', JSON.stringify(this.data)); } catch (e) {} }
+};
+SAVE.load();
+
+const SHIPS = [
+  { id: 'cutter',  name: 'Solar Corsair',    cost: 0,  cols: ['#c88a55', '#8c5528', '#3b1c06'], hp: 5, cool: 0.25, spd: 1,    gold: 1,   magnet: 0,  spread: [0],           power: 'Agile & balanced solar galleon' },
+  { id: 'galleon', name: 'Armoured Galleon', cost: 5,  cols: ['#dde5ed', '#8a97a4', '#3d464f'], hp: 7, cool: 0.30, spd: 0.9,  gold: 1,   magnet: 0,  spread: [0],           power: '+2 Reinforced Oak & Iron Hearts' },
+  { id: 'runner',  name: 'Astral Sloop',     cost: 6,  cols: ['#9effea', '#26c2a4', '#0d6b5c'], hp: 4, cool: 0.16, spd: 1.35, gold: 1,   magnet: 45, spread: [0],           power: 'High-speed solar sails & rapid fire' },
+  { id: 'hind',    name: 'Golden Hind',      cost: 8,  cols: ['#fff0b3', '#f2c14e', '#996f08'], hp: 5, cool: 0.25, spd: 1,    gold: 1.6, magnet: 110, spread: [0],          power: '+60% Gold dubloons & salvage field' },
+  { id: 'storm',   name: 'Solar Dreadnought',cost: 10, cols: ['#e4c4ff', '#9b59d0', '#4a1b6d'], hp: 5, cool: 0.30, spd: 1.05, gold: 1,   magnet: 0,  spread: [-0.14, 0.14], power: 'Twin heavy naval broadside battery' },
+];
+
+const UPG = {
+  hull:   { name: 'Reinforced Mahogany', icon: '🛡️', max: 3, cost: l => 40 + l * 50, desc: '+1 Max Hull Integrity Heart' },
+  cannon: { name: 'Heavy 32-Pounders',   icon: '💥', max: 3, cost: l => 50 + l * 60, desc: 'Faster reload & cannon cycling' },
+  engine: { name: 'Solar Sails & Ether', icon: '⚙️', max: 3, cost: l => 40 + l * 45, desc: 'Enhanced cosmic wind maneuvering' },
+  magnet: { name: 'Pirate Salvage Hook', icon: '🧲', max: 3, cost: l => 30 + l * 40, desc: 'Expanded gold attraction radius' },
+};
+
+const SKINS = [
+  { id: 'default', name: 'Classic Oak & Sails', kills: 0,    cols: null },
+  { id: 'sunset',  name: 'Solar Flare 🌅',     kills: 25,   cols: ['#ffd7a8', '#ff8a3c', '#b3410e'] },
+  { id: 'toxic',   name: 'Alien Plasma 🧪',    kills: 75,   cols: ['#e0ffb0', '#7ed957', '#2e6b22'] },
+  { id: 'ocean',   name: 'Deep Nebula 🌌',     kills: 150,  cols: ['#a9e0ff', '#2f9be6', '#0f3c63'] },
+  { id: 'shadow',  name: 'Black Pearl 🌑',     kills: 300,  cols: ['#9aa0aa', '#3a3f47', '#111316'] },
+  { id: 'royal',   name: 'Royal Navy 👑',      kills: 600,  cols: ['#e6c2ff', '#b06bff', '#53218c'] },
+  { id: 'legend',  name: 'Golden Legend ✨',   kills: 1200, cols: ['#fff2b0', '#ffcf3c', '#946d0a'] },
+];
+
+function skinById(id) { return SKINS.find(k => k.id === id) || SKINS[0]; }
+function shipById(id) { return SHIPS.find(s => s.id === id) || SHIPS[0]; }
+
+function computeLoadout() {
+  const s = shipById(SAVE.data.sel), u = SAVE.data.upg || {};
+  let cols = s.cols ? [...s.cols] : ['#c88a55', '#8c5528', '#3b1c06'];
+  const sk = skinById(SAVE.data.skin);
+  if (sk && sk.cols && SAVE.data.kills >= sk.kills) cols = [...sk.cols];
+  return {
+    maxHp: (s.hp || 5) + (u.hull || 0),
+    baseCool: (s.cool || 0.25) * Math.pow(0.85, u.cannon || 0),
+    spdMul: (s.spd || 1) + (u.engine || 0) * 0.18,
+    magnetBonus: (s.magnet || 0) + (u.magnet || 0) * 60,
+    goldMult: s.gold || 1,
+    baseSpread: s.spread ? [...s.spread] : [0],
+    cols: cols,
+  };
+}
+
+let maxHp = 5, baseCool = 0.25, spdMul = 1, magnetBonus = 0, goldMult = 1;
+let baseSpread = [0], shipCols = ['#c88a55', '#8c5528', '#3b1c06'];
+
+function applyLoadout() {
+  const lo = computeLoadout();
+  maxHp = lo.maxHp;
+  baseCool = lo.baseCool;
+  spdMul = lo.spdMul;
+  magnetBonus = lo.magnetBonus;
+  goldMult = lo.goldMult;
+  baseSpread = lo.baseSpread;
+  shipCols = lo.cols;
+  if (typeof ship !== 'undefined' && ship) ship.hp = maxHp;
+}
+applyLoadout();
+
+function bankRun() {
+  const before = SAVE.data.kills;
+  const c = Math.round(coinsN * goldMult);
+  SAVE.data.coins += c; SAVE.data.tokens += tokensRun; SAVE.data.kills += killsRun; SAVE.data.spins += spinsRun;
+  SAVE.save();
+  const unlocked = SKINS.filter(k => k.cols && k.kills > before && k.kills <= SAVE.data.kills).map(k => k.name);
+  return { coins: c, tokens: tokensRun, kills: killsRun, spins: spinsRun, unlocked };
+}
+
+// ---------- GAME STATE ----------
 let state = 'menu';
 let level = 1, coinsN = 0, score = 0, best = 0;
 let playerName = 'Captain', scoreSubmitted = false;
 let shake = 0, hurtFlash = 0, muzzleFlash = 0;
 let combo = 0, comboT = 0;
 let rapidT = 0, shieldT = 0, tripleT = 0, slowT = 0;
-let maxHp = 5, baseCool = 0.25, spdMul = 1, magnetBonus = 0, goldMult = 1;
-let baseSpread = [0], shipCols = ['#c88a55', '#8c5528', '#3b1c06'], tokensRun = 0, killsRun = 0, spinsRun = 0;
+let tokensRun = 0, killsRun = 0, spinsRun = 0;
 let introT = 0, storySectorAnnounced = 0;
 let introUfos = [], introShot1 = false, introShot2 = false;
 let wreckage = [], shieldShards = [];
@@ -1374,116 +1485,7 @@ function explode(x, y, col, n) {
   }
 }
 
-// ---------- PROGRESSION / SAVE / UPGRADES ----------
-const ALL_SHIP_IDS = ['cutter', 'galleon', 'runner', 'hind', 'storm'];
-
-const SAVE = {
-  data: {
-    uid: '',
-    coins: 99999,
-    tokens: 999,
-    kills: 2500,
-    spins: 99,
-    skin: 'default',
-    upg: { hull: 3, cannon: 3, engine: 3, magnet: 3 },
-    ships: ['cutter', 'galleon', 'runner', 'hind', 'storm'],
-    sel: 'cutter'
-  },
-  load() {
-    try {
-      const d = JSON.parse(localStorage.getItem('sp_save') || 'null');
-      if (d) {
-        this.data = Object.assign(this.data, d);
-        this.data.upg = Object.assign({ hull: 3, cannon: 3, engine: 3, magnet: 3 }, d.upg || {});
-        // Ensure Creator Vault has all ships, skins & max currency
-        for (const sid of ALL_SHIP_IDS) {
-          if (!this.data.ships.includes(sid)) this.data.ships.push(sid);
-        }
-        if (this.data.coins < 99999) this.data.coins = 99999;
-        if (this.data.tokens < 999) this.data.tokens = 999;
-        if (this.data.spins < 99) this.data.spins = 99;
-        if (this.data.kills < 2500) this.data.kills = 2500;
-        this.data.upg.hull = Math.max(3, this.data.upg.hull || 0);
-        this.data.upg.cannon = Math.max(3, this.data.upg.cannon || 0);
-        this.data.upg.engine = Math.max(3, this.data.upg.engine || 0);
-        this.data.upg.magnet = Math.max(3, this.data.upg.magnet || 0);
-      }
-      if (!this.data.uid) {
-        this.data.uid = localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36));
-        localStorage.setItem('sp_uid', this.data.uid);
-      }
-      this.save();
-    } catch (e) {}
-  },
-  save() { try { localStorage.setItem('sp_save', JSON.stringify(this.data)); } catch (e) {} }
-};
-SAVE.load();
-
-const SHIPS = [
-  { id: 'cutter',  name: 'Solar Corsair',    cost: 0,  cols: ['#c88a55', '#8c5528', '#3b1c06'], hp: 5, cool: 0.25, spd: 1,    gold: 1,   magnet: 0,  spread: [0],           power: 'Agile & balanced solar galleon' },
-  { id: 'galleon', name: 'Armoured Galleon', cost: 5,  cols: ['#dde5ed', '#8a97a4', '#3d464f'], hp: 7, cool: 0.30, spd: 0.9,  gold: 1,   magnet: 0,  spread: [0],           power: '+2 Reinforced Oak & Iron Hearts' },
-  { id: 'runner',  name: 'Astral Sloop',     cost: 6,  cols: ['#9effea', '#26c2a4', '#0d6b5c'], hp: 4, cool: 0.16, spd: 1.35, gold: 1,   magnet: 45, spread: [0],           power: 'High-speed solar sails & rapid fire' },
-  { id: 'hind',    name: 'Golden Hind',      cost: 8,  cols: ['#fff0b3', '#f2c14e', '#996f08'], hp: 5, cool: 0.25, spd: 1,    gold: 1.6, magnet: 110, spread: [0],          power: '+60% Gold dubloons & salvage field' },
-  { id: 'storm',   name: 'Solar Dreadnought',cost: 10, cols: ['#e4c4ff', '#9b59d0', '#4a1b6d'], hp: 5, cool: 0.30, spd: 1.05, gold: 1,   magnet: 0,  spread: [-0.14, 0.14], power: 'Twin heavy naval broadside battery' },
-];
-
-const UPG = {
-  hull:   { name: 'Reinforced Mahogany', icon: '🛡️', max: 3, cost: l => 40 + l * 50, desc: '+1 Max Hull Integrity Heart' },
-  cannon: { name: 'Heavy 32-Pounders',   icon: '💥', max: 3, cost: l => 50 + l * 60, desc: 'Faster reload & cannon cycling' },
-  engine: { name: 'Solar Sails & Ether', icon: '⚙️', max: 3, cost: l => 40 + l * 45, desc: 'Enhanced cosmic wind maneuvering' },
-  magnet: { name: 'Pirate Salvage Hook', icon: '🧲', max: 3, cost: l => 30 + l * 40, desc: 'Expanded gold attraction radius' },
-};
-
-const SKINS = [
-  { id: 'default', name: 'Classic Oak & Sails', kills: 0,    cols: null },
-  { id: 'sunset',  name: 'Solar Flare 🌅',     kills: 25,   cols: ['#ffd7a8', '#ff8a3c', '#b3410e'] },
-  { id: 'toxic',   name: 'Alien Plasma 🧪',    kills: 75,   cols: ['#e0ffb0', '#7ed957', '#2e6b22'] },
-  { id: 'ocean',   name: 'Deep Nebula 🌌',     kills: 150,  cols: ['#a9e0ff', '#2f9be6', '#0f3c63'] },
-  { id: 'shadow',  name: 'Black Pearl 🌑',     kills: 300,  cols: ['#9aa0aa', '#3a3f47', '#111316'] },
-  { id: 'royal',   name: 'Royal Navy 👑',      kills: 600,  cols: ['#e6c2ff', '#b06bff', '#53218c'] },
-  { id: 'legend',  name: 'Golden Legend ✨',   kills: 1200, cols: ['#fff2b0', '#ffcf3c', '#946d0a'] },
-];
-
-function skinById(id) { return SKINS.find(k => k.id === id) || SKINS[0]; }
-function shipById(id) { return SHIPS.find(s => s.id === id) || SHIPS[0]; }
-
-function computeLoadout() {
-  const s = shipById(SAVE.data.sel), u = SAVE.data.upg || {};
-  let cols = s.cols ? [...s.cols] : ['#c88a55', '#8c5528', '#3b1c06'];
-  const sk = skinById(SAVE.data.skin);
-  if (sk && sk.cols && SAVE.data.kills >= sk.kills) cols = [...sk.cols];
-  return {
-    maxHp: (s.hp || 5) + (u.hull || 0),
-    baseCool: (s.cool || 0.25) * Math.pow(0.85, u.cannon || 0),
-    spdMul: (s.spd || 1) + (u.engine || 0) * 0.18,
-    magnetBonus: (s.magnet || 0) + (u.magnet || 0) * 60,
-    goldMult: s.gold || 1,
-    baseSpread: s.spread ? [...s.spread] : [0],
-    cols: cols,
-  };
-}
-
-function applyLoadout() {
-  const lo = computeLoadout();
-  maxHp = lo.maxHp;
-  baseCool = lo.baseCool;
-  spdMul = lo.spdMul;
-  magnetBonus = lo.magnetBonus;
-  goldMult = lo.goldMult;
-  baseSpread = lo.baseSpread;
-  shipCols = lo.cols;
-  ship.hp = maxHp;
-}
-applyLoadout();
-
-function bankRun() {
-  const before = SAVE.data.kills;
-  const c = Math.round(coinsN * goldMult);
-  SAVE.data.coins += c; SAVE.data.tokens += tokensRun; SAVE.data.kills += killsRun; SAVE.data.spins += spinsRun;
-  SAVE.save();
-  const unlocked = SKINS.filter(k => k.cols && k.kills > before && k.kills <= SAVE.data.kills).map(k => k.name);
-  return { coins: c, tokens: tokensRun, kills: killsRun, spins: spinsRun, unlocked };
-}
+// ---------- LEADERBOARD (Reliable Persistent & Cloud Sync) ----------
 
 // ---------- LEADERBOARD (Reliable Persistent & Cloud Sync) ----------
 // Clean Leaderboard Reset
