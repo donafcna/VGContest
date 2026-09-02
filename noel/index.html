@@ -876,13 +876,13 @@ function bankRun() {
 }
 
 // ---------- LEADERBOARD (Reliable Persistent & Cloud Sync) ----------
-const DEFAULT_LEGENDS = [
-  { uid: 'leg_dread', name: 'Solar Dreadnought', score: 240, level: 10, created_at: Date.now() - 7200000 },
-  { uid: 'leg_corsair', name: 'Astral Corsair', score: 180, level: 8, created_at: Date.now() - 10800000 },
-  { uid: 'leg_pearl', name: 'Black Pearl', score: 120, level: 5, created_at: Date.now() - 14400000 },
-  { uid: 'leg_sloop', name: 'Stardust Sloop', score: 75, level: 3, created_at: Date.now() - 18000000 },
-  { uid: 'leg_raider', name: 'Void Raider', score: 50, level: 2, created_at: Date.now() - 21600000 }
-];
+// Clean Leaderboard Reset
+try {
+  if (!localStorage.getItem('sp_lb_reset_v4')) {
+    localStorage.removeItem('sp_lb');
+    localStorage.setItem('sp_lb_reset_v4', '1');
+  }
+} catch (e) {}
 
 const LB = {
   URL: 'https://mxcdlljbbwsqhkpxfhbm.supabase.co',
@@ -891,6 +891,11 @@ const LB = {
   online() { return false; }, // Default to reliable instant local storage
   _headers(extra) {
     return Object.assign({ apikey: this.KEY, Authorization: 'Bearer ' + this.KEY }, extra || {});
+  },
+  async clear() {
+    try {
+      localStorage.removeItem('sp_lb');
+    } catch (e) {}
   },
   async submit(entry) {
     entry.uid = entry.uid || SAVE.data.uid;
@@ -947,12 +952,11 @@ const LB = {
       if (stored) {
         rows = JSON.parse(stored);
       }
-      if (!rows || rows.length === 0) {
-        rows = [...DEFAULT_LEGENDS];
-        localStorage.setItem('sp_lb', JSON.stringify(rows));
+      if (!rows || !Array.isArray(rows)) {
+        rows = [];
       }
     } catch (e) {
-      rows = [...DEFAULT_LEGENDS];
+      rows = [];
     }
     return rows;
   },
@@ -990,19 +994,10 @@ async function renderLeaderboard(cid, myScore, myName) {
   
   let rows = [], myRank = null;
   try {
-    const bestRec = +localStorage.getItem('sp_best') || 0;
     const curName = (myName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || localStorage.getItem('sp_name') || 'Captain Noel').slice(0, 14);
     
     // Always update name on existing account record
     await LB.updateName(curName);
-
-    if (bestRec > 0) {
-      const allRows = await LB._all();
-      const existing = allRows.find(r => (r.uid && r.uid === SAVE.data.uid) || (r.name || '').trim().toLowerCase() === curName.trim().toLowerCase());
-      if (!existing || existing.score < bestRec) {
-        await LB.submit({ uid: SAVE.data.uid, name: curName, score: bestRec, level: Math.max(1, Math.floor(bestRec / 25)), coins: bestRec });
-      }
-    }
 
     rows = await LB.top(10);
   } catch (e) {}
@@ -1011,7 +1006,7 @@ async function renderLeaderboard(cid, myScore, myName) {
   
   let html = '<h2>' + title + '</h2>';
   if (!rows || !rows.length) {
-    html += '<div class="empty">Scanning cosmic radar…</div>';
+    html += '<div class="empty">No pirate flight logs registered yet. Be the first space captain! 🏴‍☠️</div>';
   } else {
     html += '<ol>';
     rows.forEach((r, i) => {
