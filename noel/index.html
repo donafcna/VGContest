@@ -1152,24 +1152,44 @@ function explode(x, y, col, n) {
 }
 
 // ---------- PROGRESSION / SAVE / UPGRADES ----------
+const ALL_SHIP_IDS = ['cutter', 'galleon', 'runner', 'hind', 'storm'];
+
 const SAVE = {
-  data: { uid: '', coins: 0, tokens: 0, kills: 0, spins: 0, skin: 'default', upg: { hull: 0, cannon: 0, engine: 0, magnet: 0 }, ships: ['cutter'], sel: 'cutter' },
+  data: {
+    uid: '',
+    coins: 99999,
+    tokens: 999,
+    kills: 2500,
+    spins: 99,
+    skin: 'default',
+    upg: { hull: 3, cannon: 3, engine: 3, magnet: 3 },
+    ships: ['cutter', 'galleon', 'runner', 'hind', 'storm'],
+    sel: 'cutter'
+  },
   load() {
     try {
       const d = JSON.parse(localStorage.getItem('sp_save') || 'null');
       if (d) {
         this.data = Object.assign(this.data, d);
-        this.data.upg = Object.assign({ hull: 0, cannon: 0, engine: 0, magnet: 0 }, d.upg || {});
-        if (!this.data.ships.includes('cutter')) this.data.ships.unshift('cutter');
-        if (!this.data.skin) this.data.skin = 'default';
-        if (typeof this.data.kills !== 'number') this.data.kills = 0;
-        if (typeof this.data.spins !== 'number') this.data.spins = 0;
+        this.data.upg = Object.assign({ hull: 3, cannon: 3, engine: 3, magnet: 3 }, d.upg || {});
+        // Ensure Creator Vault has all ships, skins & max currency
+        for (const sid of ALL_SHIP_IDS) {
+          if (!this.data.ships.includes(sid)) this.data.ships.push(sid);
+        }
+        if (this.data.coins < 99999) this.data.coins = 99999;
+        if (this.data.tokens < 999) this.data.tokens = 999;
+        if (this.data.spins < 99) this.data.spins = 99;
+        if (this.data.kills < 2500) this.data.kills = 2500;
+        this.data.upg.hull = Math.max(3, this.data.upg.hull || 0);
+        this.data.upg.cannon = Math.max(3, this.data.upg.cannon || 0);
+        this.data.upg.engine = Math.max(3, this.data.upg.engine || 0);
+        this.data.upg.magnet = Math.max(3, this.data.upg.magnet || 0);
       }
       if (!this.data.uid) {
         this.data.uid = localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36));
         localStorage.setItem('sp_uid', this.data.uid);
-        this.save();
       }
+      this.save();
     } catch (e) {}
   },
   save() { try { localStorage.setItem('sp_save', JSON.stringify(this.data)); } catch (e) {} }
@@ -2269,6 +2289,11 @@ function buildShop() {
   renderWallet();
   let h = '';
   
+  // VIP Creator Banner
+  h += `<div style="background:linear-gradient(135deg,rgba(255,210,60,0.22),rgba(168,85,247,0.18));border:2px solid #ffd23c;border-radius:14px;padding:12px 16px;margin-bottom:16px;text-align:center;box-shadow:0 0 20px rgba(255,210,60,0.3)">` +
+    `<div style="color:#ffd23c;font-weight:900;font-size:1.1rem;font-family:'Orbitron',sans-serif;letter-spacing:1px">👑 GAME CREATOR VIP PASS ACTIVE 👑</div>` +
+    `<div style="color:#cfe4ff;font-size:0.86rem;margin-top:4px">Welcome Captain Noel! All 5 Fleet Ships, 7 Skins &amp; Max Galleon Upgrades Unlocked!</div></div>`;
+
   // 1. COIN UPGRADES AT THE TOP
   h += '<h2>⚙️ SOLAR GALLEON UPGRADES — Buy with Coins 🪙</h2>';
   for (const key in UPG) {
