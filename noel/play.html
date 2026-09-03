@@ -2425,146 +2425,246 @@ const BOSS_INTEL = [
 
 function getEnemySvg(id) {
   const uid = 'e' + Math.random().toString(36).substr(2, 6);
+  const glowFilter = `
+    <defs>
+      <filter id="glow_${uid}" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="2.5" result="blur" />
+        <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+      <linearGradient id="metal_${uid}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#475569"/>
+        <stop offset="35%" stop-color="#1e293b"/>
+        <stop offset="70%" stop-color="#0f172a"/>
+        <stop offset="100%" stop-color="#020617"/>
+      </linearGradient>
+      <linearGradient id="armor_${uid}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#64748b"/>
+        <stop offset="50%" stop-color="#334155"/>
+        <stop offset="100%" stop-color="#0f172a"/>
+      </linearGradient>
+    </defs>
+  `;
+
   if (id === 'tie') {
-    // 1. Imperial TIE/ln Starfighter
-    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="tie_ball_${uid}" cx="70" cy="35" r="16" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#ffffff"/>
-          <stop offset="40%" stop-color="#475569"/>
-          <stop offset="100%" stop-color="#0f172a"/>
-        </radialGradient>
-      </defs>
-      <!-- Port Hexagonal Solar Panel -->
-      <polygon points="18,10 32,5 32,65 18,60 10,35" fill="#1e293b" stroke="#64748b" stroke-width="1.8"/>
-      <line x1="22" y1="8" x2="22" y2="62" stroke="#ff0033" stroke-width="1.2"/>
-      <!-- Starboard Hexagonal Solar Panel -->
-      <polygon points="122,10 108,5 108,65 122,60 130,35" fill="#1e293b" stroke="#64748b" stroke-width="1.8"/>
-      <line x1="118" y1="8" x2="118" y2="62" stroke="#ff0033" stroke-width="1.2"/>
-      <!-- Pylon Connecting Struts -->
-      <rect x="28" y="32" width="84" height="6" fill="#090d16" stroke="#475569" stroke-width="1.2"/>
-      <!-- Central Spherical Cockpit Pod -->
-      <circle cx="70" cy="35" r="16" fill="url(#tie_ball_${uid})" stroke="#020617" stroke-width="2"/>
-      <!-- Pilot Viewport Frame with Glowing Red Center -->
-      <circle cx="70" cy="35" r="7" fill="#0f172a" stroke="#ff0033" stroke-width="1.4"/>
-      <circle cx="70" cy="35" r="3" fill="#ff0033"/>
-      <!-- Twin Chin Red Laser Barrels -->
-      <rect x="65" y="47" width="3" height="6" fill="#ff0033"/>
-      <rect x="72" y="47" width="3" height="6" fill="#ff0033"/>
+    // 1. IMPERIAL TIE/LN STARFIGHTER
+    return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      ${glowFilter}
+      <!-- Left Hexagonal Solar Wing -->
+      <polygon points="20,10 38,4 38,76 20,70 8,40" fill="#090d16" stroke="#475569" stroke-width="2"/>
+      <line x1="23" y1="7" x2="23" y2="73" stroke="#ff0033" stroke-width="1.2" opacity="0.8"/>
+      <polygon points="12,38 34,22 34,58" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+
+      <!-- Right Hexagonal Solar Wing -->
+      <polygon points="140,10 122,4 122,76 140,70 152,40" fill="#090d16" stroke="#475569" stroke-width="2"/>
+      <line x1="137" y1="7" x2="137" y2="73" stroke="#ff0033" stroke-width="1.2" opacity="0.8"/>
+      <polygon points="148,38 126,22 126,58" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+
+      <!-- Reinforced Structural Pylons -->
+      <rect x="34" y="36" width="92" height="8" fill="#0f172a" stroke="#64748b" stroke-width="1.2"/>
+      <rect x="52" y="34" width="56" height="12" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+
+      <!-- Central Spherical Armored Cockpit Ball -->
+      <circle cx="80" cy="40" r="20" fill="url(#metal_${uid})" stroke="#64748b" stroke-width="2.2"/>
+      <circle cx="80" cy="40" r="15" fill="#0f172a" stroke="#334155" stroke-width="1.2"/>
+
+      <!-- Octagonal Cockpit Viewport with Star Struts -->
+      <polygon points="80,29 88,33 91,40 88,47 80,51 72,47 69,40 72,33" fill="#020617" stroke="#38bdf8" stroke-width="1.4"/>
+      <circle cx="80" cy="40" r="4.5" fill="#ff0033" filter="url(#glow_${uid})"/>
+
+      <!-- Twin Chin Laser Blaster Cannons -->
+      <rect x="74" y="55" width="3.5" height="8" fill="#ff0033" filter="url(#glow_${uid})"/>
+      <rect x="82.5" y="55" width="3.5" height="8" fill="#ff0033" filter="url(#glow_${uid})"/>
     </svg>`;
+
   } else if (id === 'vulture') {
-    // 2. Separatist Vulture Droid Fighter
-    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
+    // 2. SEPARATIST VULTURE DROID FIGHTER
+    return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      ${glowFilter}
       <defs>
-        <linearGradient id="vul_hull_${uid}" x1="0" y1="35" x2="140" y2="35" gradientUnits="userSpaceOnUse">
+        <linearGradient id="sep_v_${uid}" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="#581c87"/>
           <stop offset="50%" stop-color="#7e22ce"/>
           <stop offset="100%" stop-color="#1e1b4b"/>
         </linearGradient>
       </defs>
-      <!-- Dual Forward Mandible Claws (Port & Starboard) -->
-      <polygon points="10,12 55,24 50,30 25,26" fill="#0f051d" stroke="#c084fc" stroke-width="1.5"/>
-      <polygon points="10,58 55,46 50,40 25,44" fill="#0f051d" stroke="#c084fc" stroke-width="1.5"/>
-      <polygon points="130,12 85,24 90,30 115,26" fill="#0f051d" stroke="#c084fc" stroke-width="1.5"/>
-      <polygon points="130,58 85,46 90,40 115,44" fill="#0f051d" stroke="#c084fc" stroke-width="1.5"/>
-      <!-- Central Droid Head Pod -->
-      <polygon points="70,18 90,35 70,52 50,35" fill="url(#vul_hull_${uid})" stroke="#c084fc" stroke-width="1.8"/>
-      <!-- Red Droid Photoreceptor Eye -->
-      <circle cx="70" cy="35" r="4.5" fill="#ff0033" stroke="#ffffff" stroke-width="1"/>
-      <circle cx="70" cy="35" r="1.8" fill="#ffffff"/>
+      <!-- Dual Upper Razor Mandibles -->
+      <polygon points="12,14 65,26 58,34 30,30" fill="#0f051d" stroke="#c084fc" stroke-width="1.8"/>
+      <polygon points="148,14 95,26 102,34 130,30" fill="#0f051d" stroke="#c084fc" stroke-width="1.8"/>
+
+      <!-- Dual Lower Razor Mandibles -->
+      <polygon points="12,66 65,54 58,46 30,50" fill="#0f051d" stroke="#c084fc" stroke-width="1.8"/>
+      <polygon points="148,66 95,54 102,46 130,50" fill="#0f051d" stroke="#c084fc" stroke-width="1.8"/>
+
+      <!-- Main Droid Fuselage Core -->
+      <polygon points="80,18 106,40 80,62 54,40" fill="url(#sep_v_${uid})" stroke="#c084fc" stroke-width="2.2"/>
+      <polygon points="80,26 96,40 80,54 64,40" fill="#0f051d" stroke="#a855f7" stroke-width="1.2"/>
+
+      <!-- Red Droid Photoreceptor Sensor Eye -->
+      <ellipse cx="80" cy="40" rx="7" ry="4" fill="#ff0033" filter="url(#glow_${uid})"/>
+      <ellipse cx="80" cy="40" rx="3" ry="1.8" fill="#ffffff"/>
+      
+      <!-- Quad Laser Emitter Nodes on Mandible Tips -->
+      <circle cx="16" cy="16" r="2.5" fill="#ff0033"/>
+      <circle cx="144" cy="16" r="2.5" fill="#ff0033"/>
+      <circle cx="16" cy="64" r="2.5" fill="#ff0033"/>
+      <circle cx="144" cy="64" r="2.5" fill="#ff0033"/>
     </svg>`;
+
   } else if (id === 'tie_bomber') {
-    // 3. Imperial TIE Bomber
-    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Port Cockpit Pod -->
-      <circle cx="56" cy="35" r="13" fill="#1e293b" stroke="#64748b" stroke-width="1.8"/>
-      <circle cx="53" cy="35" r="4" fill="#ff0033"/>
-      <!-- Starboard Bombing Pod -->
-      <circle cx="84" cy="35" r="13" fill="#0f172a" stroke="#00e5ff" stroke-width="1.8"/>
-      <circle cx="87" cy="35" r="4" fill="#00e5ff"/>
-      <!-- Connecting Strut -->
-      <rect x="64" y="32" width="12" height="6" fill="#020617"/>
-      <!-- Outer Bent Solar Wings -->
-      <polygon points="14,14 26,10 32,35 26,60 14,56" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
-      <polygon points="126,14 114,10 108,35 114,60 126,56" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+    // 3. IMPERIAL TIE BOMBER
+    return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      ${glowFilter}
+      <!-- Port Pilot Cockpit Pod -->
+      <circle cx="62" cy="40" r="17" fill="url(#metal_${uid})" stroke="#64748b" stroke-width="2"/>
+      <circle cx="62" cy="40" r="12" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <circle cx="58" cy="40" r="4.5" fill="#ff0033" filter="url(#glow_${uid})"/>
+
+      <!-- Starboard Heavy Ordnance Bombing Pod -->
+      <circle cx="98" cy="40" r="17" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+      <circle cx="98" cy="40" r="11" fill="#020617" stroke="#00e5ff" stroke-width="1.2"/>
+      <circle cx="102" cy="40" r="5" fill="#00e5ff" filter="url(#glow_${uid})"/>
+
+      <!-- Central Armored Catwalk Brace -->
+      <rect x="74" y="34" width="12" height="12" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+
+      <!-- Outer Bent Solar Array Wings -->
+      <polygon points="14,16 28,12 36,40 28,68 14,64" fill="#090d16" stroke="#64748b" stroke-width="2"/>
+      <line x1="25" y1="14" x2="25" y2="66" stroke="#ff0033" stroke-width="1.2"/>
+
+      <polygon points="146,16 132,12 124,40 132,68 146,64" fill="#090d16" stroke="#64748b" stroke-width="2"/>
+      <line x1="135" y1="14" x2="135" y2="66" stroke="#ff0033" stroke-width="1.2"/>
     </svg>`;
+
   } else if (id === 'tie_defender') {
-    // 4. Imperial TIE Defender (Triple Wing)
-    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Central Cockpit -->
-      <circle cx="70" cy="35" r="12" fill="#1e293b" stroke="#00ffee" stroke-width="1.8"/>
-      <circle cx="70" cy="35" r="4" fill="#00ffee"/>
-      <!-- 3 Radial Solar Array Wings -->
-      <line x1="70" y1="35" x2="70" y2="8" stroke="#64748b" stroke-width="2.5"/>
-      <polygon points="56,8 84,8 70,2" fill="#1e293b" stroke="#00ffee" stroke-width="1.2"/>
-      <line x1="70" y1="35" x2="42" y2="55" stroke="#64748b" stroke-width="2.5"/>
-      <polygon points="34,44 48,64 30,58" fill="#1e293b" stroke="#00ffee" stroke-width="1.2"/>
-      <line x1="70" y1="35" x2="98" y2="55" stroke="#64748b" stroke-width="2.5"/>
-      <polygon points="106,44 92,64 110,58" fill="#1e293b" stroke="#00ffee" stroke-width="1.2"/>
+    // 4. IMPERIAL TIE DEFENDER
+    return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      ${glowFilter}
+      <!-- Central Cockpit Sphere -->
+      <circle cx="80" cy="40" r="16" fill="url(#metal_${uid})" stroke="#00ffee" stroke-width="2"/>
+      <circle cx="80" cy="40" r="6" fill="#00ffee" filter="url(#glow_${uid})"/>
+
+      <!-- 3 Radial High-Tech Solar Array Wings (120 deg apart) -->
+      <!-- Top Wing -->
+      <line x1="80" y1="40" x2="80" y2="8" stroke="#475569" stroke-width="3"/>
+      <polygon points="64,8 96,8 80,2" fill="#090d16" stroke="#00ffee" stroke-width="1.5"/>
+      <circle cx="80" cy="3" r="2.5" fill="#ff0033"/>
+
+      <!-- Bottom-Left Wing -->
+      <line x1="80" y1="40" x2="48" y2="64" stroke="#475569" stroke-width="3"/>
+      <polygon points="38,52 56,74 36,68" fill="#090d16" stroke="#00ffee" stroke-width="1.5"/>
+      <circle cx="36" cy="68" r="2.5" fill="#ff0033"/>
+
+      <!-- Bottom-Right Wing -->
+      <line x1="80" y1="40" x2="112" y2="64" stroke="#475569" stroke-width="3"/>
+      <polygon points="122,52 104,74 124,68" fill="#090d16" stroke="#00ffee" stroke-width="1.5"/>
+      <circle cx="124" cy="68" r="2.5" fill="#ff0033"/>
     </svg>`;
+
   } else if (id === 'tri_fighter') {
-    // 5. Separatist Tri-Fighter
-    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Central Droid Brain -->
-      <circle cx="70" cy="35" r="10" fill="#450a0a" stroke="#c084fc" stroke-width="1.8"/>
-      <circle cx="70" cy="35" r="4" fill="#ff0033"/>
-      <!-- 3 Curved Pincer Claws -->
-      <path d="M70 25 Q70 8 50 10" stroke="#c084fc" stroke-width="2.5" fill="none"/>
-      <path d="M62 42 Q40 55 45 65" stroke="#c084fc" stroke-width="2.5" fill="none"/>
-      <path d="M78 42 Q100 55 95 65" stroke="#c084fc" stroke-width="2.5" fill="none"/>
+    // 5. SEPARATIST TRI-FIGHTER
+    return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      ${glowFilter}
+      <!-- Central Spherical Droid Brain -->
+      <circle cx="80" cy="40" r="14" fill="#450a0a" stroke="#c084fc" stroke-width="2"/>
+      <circle cx="80" cy="40" r="6" fill="#ff0033" filter="url(#glow_${uid})"/>
+
+      <!-- 3 Predatory Curved Pincer Claws -->
+      <path d="M80 26 Q80 6 56 8" stroke="#c084fc" stroke-width="3" fill="none"/>
+      <circle cx="56" cy="8" r="3" fill="#ff0033"/>
+
+      <path d="M70 48 Q42 66 48 76" stroke="#c084fc" stroke-width="3" fill="none"/>
+      <circle cx="48" cy="76" r="3" fill="#ff0033"/>
+
+      <path d="M90 48 Q118 66 112 76" stroke="#c084fc" stroke-width="3" fill="none"/>
+      <circle cx="112" cy="76" r="3" fill="#ff0033"/>
     </svg>`;
+
   } else if (id === 'cruiser') {
-    // 6. Imperial Arquitens Light Cruiser
-    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Dagger Wedge Hull -->
-      <polygon points="10,35 110,12 125,24 125,46 110,58" fill="#1e293b" stroke="#00ffaa" stroke-width="1.8"/>
-      <!-- Twin Side Bridge Pods -->
-      <circle cx="95" cy="18" r="6" fill="#0f172a" stroke="#00ffaa" stroke-width="1.2"/>
-      <circle cx="95" cy="52" r="6" fill="#0f172a" stroke="#00ffaa" stroke-width="1.2"/>
-      <!-- Central Emerald Core -->
-      <circle cx="65" cy="35" r="7" fill="#00ffaa" opacity="0.85"/>
-      <!-- 3 Rear Engines -->
-      <circle cx="123" cy="28" r="3.5" fill="#00ffaa"/>
-      <circle cx="125" cy="35" r="4" fill="#ffffff"/>
-      <circle cx="123" cy="42" r="3.5" fill="#00ffaa"/>
+    // 6. IMPERIAL ARQUITENS LIGHT CRUISER
+    return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      ${glowFilter}
+      <!-- Main Dagger Wedge Hull with Stepped Armor Decks -->
+      <polygon points="10,40 120,12 142,22 142,58 120,68" fill="url(#armor_${uid})" stroke="#38bdf8" stroke-width="2.2"/>
+      <polygon points="35,40 115,22 132,30 132,50 115,58" fill="#1e293b" stroke="#64748b" stroke-width="1.2"/>
+
+      <!-- Signature Twin Side-Mounted Round Bridge Pods -->
+      <circle cx="106" cy="18" r="8" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8"/>
+      <circle cx="106" cy="18" r="3" fill="#38bdf8"/>
+
+      <circle cx="106" cy="62" r="8" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8"/>
+      <circle cx="106" cy="62" r="3" fill="#38bdf8"/>
+
+      <!-- Central Command Reactor with Blue Deflector Glow -->
+      <circle cx="75" cy="40" r="9" fill="#38bdf8" opacity="0.85" filter="url(#glow_${uid})"/>
+      <circle cx="75" cy="40" r="4" fill="#ffffff"/>
+
+      <!-- 3 Heavy Sub-Light Ion Thrusters -->
+      <circle cx="140" cy="30" r="4" fill="#38bdf8"/>
+      <circle cx="144" cy="40" r="5" fill="#ffffff" filter="url(#glow_${uid})"/>
+      <circle cx="140" cy="50" r="4" fill="#38bdf8"/>
     </svg>`;
+
   } else if (id === 'tesla') {
-    // 7. Separatist Munificent Star Frigate
-    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Slender Needle Bow -->
-      <polygon points="8,35 60,18 122,22 122,48 60,52" fill="#1e293b" stroke="#00e5ff" stroke-width="1.8"/>
-      <!-- Dorsal Tower -->
-      <rect x="68" y="8" width="12" height="54" fill="#0f172a" stroke="#38bdf8" stroke-width="1.2"/>
-      <!-- Ion Prow Core -->
-      <circle cx="35" cy="35" r="7" fill="#00e5ff"/>
+    // 7. SEPARATIST MUNIFICENT STAR FRIGATE
+    return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      ${glowFilter}
+      <!-- Slender Hammerhead Needle Bow -->
+      <polygon points="8,40 70,20 144,24 144,56 70,60" fill="url(#metal_${uid})" stroke="#00e5ff" stroke-width="2.2"/>
+      <polygon points="30,40 85,26 130,28 130,52 85,54" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+
+      <!-- Dorsal Communications Spine Tower -->
+      <rect x="76" y="8" width="14" height="64" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+      <circle cx="83" cy="12" r="3" fill="#00e5ff" filter="url(#glow_${uid})"/>
+
+      <!-- Prow Heavy Turbo-Ion Emitters -->
+      <circle cx="36" cy="40" r="8" fill="#00e5ff" filter="url(#glow_${uid})"/>
+      <circle cx="36" cy="40" r="3.5" fill="#ffffff"/>
     </svg>`;
+
   } else if (id === 'brood') {
-    // 8. Imperial Gozanti Armed Gunship
-    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Heavy Cargo Hull -->
-      <polygon points="12,35 45,15 115,20 125,35 115,50 45,55" fill="#450a0a" stroke="#ff5500" stroke-width="2"/>
-      <!-- Dorsal Turret -->
-      <rect x="58" y="22" width="24" height="26" fill="#180408" stroke="#ffd23c" stroke-width="1.2"/>
-      <circle cx="70" cy="35" r="7" fill="#ffdd33"/>
+    // 8. IMPERIAL GOZANTI ARMED GUNSHIP
+    return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      ${glowFilter}
+      <!-- Heavy Armored Cargo Fuselage -->
+      <polygon points="12,40 50,16 135,22 145,40 135,58 50,64" fill="#450a0a" stroke="#ff5500" stroke-width="2.4"/>
+      <polygon points="36,40 68,26 120,30 120,50 68,54" fill="#180408" stroke="#ffd23c" stroke-width="1.4"/>
+
+      <!-- Dorsal Command Turret -->
+      <rect x="68" y="24" width="28" height="32" fill="#180408" stroke="#ffd23c" stroke-width="1.5"/>
+      <circle cx="82" cy="40" r="8" fill="#ff5500" filter="url(#glow_${uid})"/>
+
+      <!-- Twin Heavy Torpedo Emitters -->
+      <circle cx="28" cy="30" r="4" fill="#ffd23c"/>
+      <circle cx="28" cy="50" r="4" fill="#ffd23c"/>
     </svg>`;
+
   } else if (id === 'cryo_gunship') {
-    // 9. Chiss Ascendancy Clawcraft Cruiser
-    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- 4 Curved Claw Wings -->
-      <path d="M70 25 Q30 10 15 15" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
-      <path d="M70 45 Q30 60 15 55" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
-      <path d="M70 25 Q110 10 125 15" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
-      <path d="M70 45 Q110 60 125 55" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
-      <!-- Cockpit Pod -->
-      <circle cx="70" cy="35" r="14" fill="#082f49" stroke="#e0f2fe" stroke-width="2"/>
-      <circle cx="70" cy="35" r="5" fill="#38bdf8"/>
+    // 9. CHISS ASCENDANCY CLAWCRAFT CRUISER
+    return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      ${glowFilter}
+      <!-- 4 Forward-Curving Claw Wings -->
+      <path d="M80 30 Q36 12 16 18" stroke="#38bdf8" stroke-width="3" fill="none"/>
+      <path d="M80 50 Q36 68 16 62" stroke="#38bdf8" stroke-width="3" fill="none"/>
+      <path d="M80 30 Q124 12 144 18" stroke="#38bdf8" stroke-width="3" fill="none"/>
+      <path d="M80 50 Q124 68 144 62" stroke="#38bdf8" stroke-width="3" fill="none"/>
+
+      <!-- Central Spherical Cockpit Pod -->
+      <circle cx="80" cy="40" r="16" fill="#082f49" stroke="#e0f2fe" stroke-width="2.2"/>
+      <circle cx="80" cy="40" r="6" fill="#38bdf8" filter="url(#glow_${uid})"/>
+      <circle cx="80" cy="40" r="2.5" fill="#ffffff"/>
     </svg>`;
+
   } else {
-    // 10. Imperial Raider Heavy Corvette
-    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="10,35 50,15 118,20 122,35 118,50 50,55" fill="#331802" stroke="#ffd23c" stroke-width="2.2"/>
-      <polygon points="45,35 75,22 105,24 105,46 75,48" fill="#78350f" stroke="#fde047" stroke-width="1.2"/>
-      <circle cx="65" cy="35" r="7" fill="#ffd23c"/>
+    // 10. IMPERIAL RAIDER HEAVY CORVETTE
+    return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      ${glowFilter}
+      <polygon points="10,40 58,16 138,22 144,40 138,58 58,64" fill="#180a02" stroke="#ffd23c" stroke-width="2.5"/>
+      <polygon points="50,40 85,24 120,26 120,54 85,56" fill="#78350f" stroke="#fde047" stroke-width="1.4"/>
+      <circle cx="75" cy="40" r="8" fill="#ffd23c" filter="url(#glow_${uid})"/>
+      <circle cx="75" cy="40" r="3.5" fill="#ffffff"/>
     </svg>`;
   }
 }
@@ -5387,19 +5487,20 @@ function draw() {
     cx.restore();
   }
 
-  // 4. Render Heavy Alien Warships (3 Distinct Archetypes)
+  // 4. Render Heavy Star Wars Warships (5 Distinct Classes with Multi-Layer Armor & Realistic Shaders)
   for (const f of forts) {
     cx.save(); cx.translate(f.x, f.y);
     
     if (f.variant === 'tesla') {
-      // 2. SEPARATIST MUNIFICENT STAR FRIGATE (Slender Needle Prow, Dorsal Comms Tower, Dual Prow Ion Cannons)
-      const sg = cx.createRadialGradient(0, 0, 15, 0, 0, f.w * 0.52);
-      sg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
-      cx.fillStyle = sg; cx.beginPath(); cx.arc(0, 0, f.w * 0.5, 0, Math.PI * 2); cx.fill();
+      // 2. SEPARATIST MUNIFICENT STAR FRIGATE (Slender Needle Bow, Dorsal Sensor Spine, Prow Ion Cannons)
+      // Subspace Ion EMP Aura
+      const sg = cx.createRadialGradient(0, 0, 15, 0, 0, f.w * 0.54);
+      sg.addColorStop(0, 'rgba(0, 229, 255, 0.40)'); sg.addColorStop(0.6, 'rgba(0, 150, 255, 0.15)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = sg; cx.beginPath(); cx.arc(0, 0, f.w * 0.52, 0, Math.PI * 2); cx.fill();
 
-      // Slender Separatist Frigate Hull (Dark Slate Navy & Bronze Greeble)
+      // Slender Separatist Frigate Fuselage (Titanium Slate & Separatist Navy Bronze)
       const tg = cx.createLinearGradient(-f.w * 0.48, 0, f.w * 0.45, 0);
-      tg.addColorStop(0, '#020617'); tg.addColorStop(0.3, '#1e293b'); tg.addColorStop(0.7, '#334155'); tg.addColorStop(1, '#475569');
+      tg.addColorStop(0, '#020617'); tg.addColorStop(0.25, '#0f172a'); tg.addColorStop(0.6, '#1e293b'); tg.addColorStop(1, '#334155');
       cx.fillStyle = tg;
       cx.beginPath();
       cx.moveTo(-f.w * 0.48, 0);                 // Long needle bow
@@ -5413,32 +5514,58 @@ function draw() {
       cx.closePath(); cx.fill();
       cx.strokeStyle = '#00e5ff'; cx.lineWidth = 2.4; cx.stroke();
 
-      // Dorsal Communications Tower / Bridge Spine
-      cx.fillStyle = '#0f172a';
-      cx.fillRect(-f.w * 0.05, -f.h * 0.48, f.w * 0.15, f.h * 0.96);
-      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.4;
-      cx.strokeRect(-f.w * 0.05, -f.h * 0.48, f.w * 0.15, f.h * 0.96);
+      // Armor Inset Trench Plating
+      cx.fillStyle = '#090d16';
+      cx.beginPath();
+      cx.moveTo(-f.w * 0.32, 0);
+      cx.lineTo(-f.w * 0.10, -f.h * 0.22);
+      cx.lineTo(f.w * 0.28, -f.h * 0.22);
+      cx.lineTo(f.w * 0.32, 0);
+      cx.lineTo(f.w * 0.28, f.h * 0.22);
+      cx.lineTo(-f.w * 0.10, f.h * 0.22);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.2; cx.stroke();
 
-      // Central Heavy Ion Cannon Core (Pulsing blue EMP lightning arcs)
-      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, 13, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#00e5ff'; cx.lineWidth = 2.5; cx.stroke();
-      cx.beginPath(); cx.arc(0, 0, 17, t * 10, t * 10 + Math.PI * 1.3); cx.stroke();
+      // Tall Dorsal Communications Tower / Sensor Array Spine
+      cx.fillStyle = '#020617';
+      cx.fillRect(-f.w * 0.05, -f.h * 0.48, f.w * 0.14, f.h * 0.96);
+      cx.strokeStyle = '#00e5ff'; cx.lineWidth = 1.6;
+      cx.strokeRect(-f.w * 0.05, -f.h * 0.48, f.w * 0.14, f.h * 0.96);
+      cx.fillStyle = '#00e5ff'; cx.beginPath(); cx.arc(f.w * 0.02, -f.h * 0.46, 3.5, 0, Math.PI * 2); cx.fill();
+
+      // Central Heavy Turbo-Ion Reactor Core
+      const rcg = cx.createRadialGradient(0, 0, 1, 0, 0, 14);
+      rcg.addColorStop(0, '#ffffff'); rcg.addColorStop(0.4, '#00e5ff'); rcg.addColorStop(1, '#082f49');
+      cx.fillStyle = rcg;
+      cx.beginPath(); cx.arc(0, 0, 12, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#00e5ff'; cx.lineWidth = 2; cx.stroke();
+      cx.beginPath(); cx.arc(0, 0, 16, t * 8, t * 8 + Math.PI * 1.3); cx.stroke();
       
       // Dual Prow Heavy Ion Emitters
       for (const cy of [-f.h * 0.24, f.h * 0.24]) {
         cx.fillStyle = '#020617'; cx.fillRect(-f.w * 0.38, cy - 3.5, 20, 7);
         cx.fillStyle = '#00e5ff'; cx.fillRect(-f.w * 0.42, cy - 2, 6, 4);
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1; cx.strokeRect(-f.w * 0.38, cy - 3.5, 20, 7);
+      }
+
+      // Outboard Twin Ion Engines
+      for (const ty of [-f.h * 0.22, f.h * 0.22]) {
+        const jg = cx.createLinearGradient(f.w * 0.45, ty, f.w * 0.68, ty);
+        jg.addColorStop(0, '#ffffff'); jg.addColorStop(0.3, '#00e5ff'); jg.addColorStop(0.7, '#0284c7'); jg.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.fillStyle = jg; cx.beginPath();
+        cx.moveTo(f.w * 0.45, ty - 4); cx.lineTo(f.w * 0.64 + Math.random() * 8, ty); cx.lineTo(f.w * 0.45, ty + 4);
+        cx.closePath(); cx.fill();
       }
       
     } else if (f.variant === 'brood') {
       // 3. IMPERIAL GOZANTI ARMED GUNSHIP (Heavy Armored Cargo Hull, Dorsal Turret, Orange Thrusters)
       const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.55);
-      sg.addColorStop(0, 'rgba(255, 85, 0, 0.50)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      sg.addColorStop(0, 'rgba(255, 85, 0, 0.45)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = sg; cx.beginPath(); cx.ellipse(0, 0, f.w * 0.52, f.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
 
-      // Gozanti Armored Hull
+      // Gozanti Armored Heavy Transport Hull (Multi-Tone Crimson & Gunmetal Plates)
       const bg = cx.createLinearGradient(f.w * 0.45, 0, -f.w * 0.45, 0);
-      bg.addColorStop(0, '#1c0509'); bg.addColorStop(0.4, '#450a0a'); bg.addColorStop(0.8, '#7f1d1d'); bg.addColorStop(1, '#b91c1c');
+      bg.addColorStop(0, '#1c0509'); bg.addColorStop(0.35, '#450a0a'); bg.addColorStop(0.75, '#7f1d1d'); bg.addColorStop(1, '#b91c1c');
       cx.fillStyle = bg;
       cx.beginPath();
       cx.moveTo(-f.w * 0.46, 0);                 // Armored nose
@@ -5451,16 +5578,23 @@ function draw() {
       cx.closePath(); cx.fill();
       cx.strokeStyle = '#ff5500'; cx.lineWidth = 2.5; cx.stroke();
 
-      // Dorsal Command Bridge Pod
-      cx.fillStyle = '#180408'; cx.fillRect(-f.w * 0.12, -f.h * 0.22, f.w * 0.28, f.h * 0.44);
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.2; cx.strokeRect(-f.w * 0.12, -f.h * 0.22, f.w * 0.28, f.h * 0.44);
+      // Hazard Warning Chevrons & Inset Plating
+      cx.fillStyle = '#180408';
+      cx.fillRect(-f.w * 0.15, -f.h * 0.25, f.w * 0.32, f.h * 0.50);
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.2;
+      cx.strokeRect(-f.w * 0.15, -f.h * 0.25, f.w * 0.32, f.h * 0.50);
 
-      // Superheated Magma Core
+      // Elevated Command Bridge Pod
+      cx.fillStyle = '#450a0a'; cx.fillRect(-f.w * 0.08, -f.h * 0.14, f.w * 0.18, f.h * 0.28);
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1; cx.strokeRect(-f.w * 0.08, -f.h * 0.14, f.w * 0.18, f.h * 0.28);
+      cx.fillStyle = '#ffcc00'; cx.fillRect(-f.w * 0.06, -f.h * 0.06, 4, f.h * 0.12);
+
+      // Superheated Magma Fusion Core
       const cg = cx.createRadialGradient(0, 0, 1, 0, 0, 14);
       cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.35, '#ffdd33'); cg.addColorStop(0.7, '#ff3300'); cg.addColorStop(1, '#660000');
       cx.fillStyle = cg; cx.beginPath(); cx.arc(0, 0, 11 + Math.sin(t * 16) * 1.8, 0, Math.PI * 2); cx.fill();
 
-      // Aimed Torpedo Launchers
+      // Aimed Torpedo Launchers on Wing Flanks
       const aimToPlayer = Math.atan2(ship.y - f.y, ship.x - f.x);
       for (const wy of [-f.h * 0.36, f.h * 0.36]) {
         cx.save(); cx.translate(-f.w * 0.15, wy); cx.rotate(aimToPlayer);
@@ -5470,7 +5604,7 @@ function draw() {
         cx.restore();
       }
 
-      // Dual Fire Exhausts
+      // Dual Heavy Fire Exhausts
       for (const ty of [-f.h * 0.16, f.h * 0.16]) {
         const jg = cx.createLinearGradient(f.w * 0.45, ty, f.w * 0.68, ty);
         jg.addColorStop(0, '#ffffff'); jg.addColorStop(0.3, '#ffdd00'); jg.addColorStop(0.7, '#ff3300'); jg.addColorStop(1, 'rgba(255, 50, 0, 0)');
@@ -5485,12 +5619,11 @@ function draw() {
       sg.addColorStop(0, 'rgba(56, 189, 248, 0.45)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = sg; cx.beginPath(); cx.ellipse(0, 0, f.w * 0.52, f.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
 
-      // 4 Forward Curved Claw Wings
+      // 4 Heavy Forward-Curved Claw Wings in Glacial Ice Metal
       const cg = cx.createLinearGradient(0, -f.h * 0.45, 0, f.h * 0.45);
       cg.addColorStop(0, '#e0f2fe'); cg.addColorStop(0.35, '#38bdf8'); cg.addColorStop(0.75, '#0284c7'); cg.addColorStop(1, '#082f49');
       cx.fillStyle = cg;
       
-      // Upper & Lower Forward Claw Wings
       for (const sign of [-1, 1]) {
         cx.beginPath();
         cx.moveTo(0, sign * f.h * 0.18);
@@ -5498,11 +5631,11 @@ function draw() {
         cx.lineTo(-f.w * 0.25, sign * f.h * 0.46);
         cx.lineTo(f.w * 0.25, sign * f.h * 0.28);
         cx.closePath(); cx.fill();
-        cx.strokeStyle = '#e0f2fe'; cx.lineWidth = 1.8; cx.stroke();
+        cx.strokeStyle = '#e0f2fe'; cx.lineWidth = 2; cx.stroke();
       }
 
       // Central Spherical Armored Cockpit Pod
-      const pg = cx.createRadialGradient(0, 0, 3, 0, 0, 22);
+      const pg = cx.createRadialGradient(-4, -4, 3, 0, 0, 22);
       pg.addColorStop(0, '#ffffff'); pg.addColorStop(0.4, '#0284c7'); pg.addColorStop(1, '#082f49');
       cx.fillStyle = pg; cx.beginPath(); cx.arc(0, 0, 18, 0, Math.PI * 2); cx.fill();
       cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.5; cx.stroke();
@@ -5519,6 +5652,15 @@ function draw() {
         cx.fillStyle = '#38bdf8'; cx.fillRect(14, -2, 4, 4);
         cx.strokeStyle = '#e0f2fe'; cx.lineWidth = 1; cx.strokeRect(0, -3, 16, 6);
         cx.restore();
+      }
+
+      // Quad Glacial Ion Thrusters
+      for (const ty of [-f.h * 0.20, f.h * 0.20]) {
+        const jg = cx.createLinearGradient(f.w * 0.25, ty, f.w * 0.48, ty);
+        jg.addColorStop(0, '#ffffff'); jg.addColorStop(0.4, '#38bdf8'); jg.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.fillStyle = jg; cx.beginPath();
+        cx.moveTo(f.w * 0.25, ty - 3); cx.lineTo(f.w * 0.44 + Math.random() * 6, ty); cx.lineTo(f.w * 0.25, ty + 3);
+        cx.closePath(); cx.fill();
       }
 
     } else if (f.variant === 'imperial') {
@@ -5563,9 +5705,9 @@ function draw() {
       sg.addColorStop(0, 'rgba(56, 189, 248, 0.40)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = sg; cx.beginPath(); cx.ellipse(0, 0, f.w * 0.52, f.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
 
-      // Main Triangular Arquitens Dagger Hull
+      // Main Triangular Arquitens Dagger Hull in Authentic Imperial Titanium
       const hg = cx.createLinearGradient(f.w * 0.5, 0, -f.w * 0.5, 0);
-      hg.addColorStop(0, '#0f172a'); hg.addColorStop(0.4, '#1e293b'); hg.addColorStop(0.75, '#334155'); hg.addColorStop(1, '#64748b');
+      hg.addColorStop(0, '#0f172a'); hg.addColorStop(0.35, '#1e293b'); hg.addColorStop(0.7, '#334155'); hg.addColorStop(1, '#64748b');
       cx.fillStyle = hg;
       cx.beginPath();
       cx.moveTo(-f.w * 0.48, 0);                 // Forward sharp prow
@@ -5578,10 +5720,22 @@ function draw() {
       cx.closePath(); cx.fill();
       cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.2; cx.stroke();
 
+      // Stepped Central Spine Deck
+      cx.fillStyle = '#0f172a';
+      cx.beginPath();
+      cx.moveTo(-f.w * 0.30, 0);
+      cx.lineTo(-f.w * 0.10, -f.h * 0.20);
+      cx.lineTo(f.w * 0.28, -f.h * 0.20);
+      cx.lineTo(f.w * 0.34, 0);
+      cx.lineTo(f.w * 0.28, f.h * 0.20);
+      cx.lineTo(-f.w * 0.10, f.h * 0.20);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#475569'; cx.lineWidth = 1.2; cx.stroke();
+
       // Iconic Twin Side-Mounted Round Bridge Pods (Signature Arquitens Class!)
       for (const cy of [-f.h * 0.34, f.h * 0.34]) {
         cx.fillStyle = '#0f172a'; cx.beginPath(); cx.arc(f.w * 0.12, cy, 9, 0, Math.PI * 2); cx.fill();
-        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.4; cx.stroke();
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.6; cx.stroke();
         cx.fillStyle = '#38bdf8'; cx.fillRect(f.w * 0.08, cy - 2, 3, 4);
       }
 
@@ -5603,10 +5757,10 @@ function draw() {
         cx.restore();
       }
 
-      // 3 Rear Ion Plasma Thrusters
+      // 3 Rear Sub-Light Ion Thrusters
       for (const ty of [-f.h * 0.14, 0, f.h * 0.14]) {
         const jg = cx.createLinearGradient(f.w * 0.44, ty, f.w * 0.65, ty);
-        jg.addColorStop(0, '#38bdf8'); jg.addColorStop(0.5, '#0284c7'); jg.addColorStop(1, 'rgba(0,0,0,0)');
+        jg.addColorStop(0, '#ffffff'); jg.addColorStop(0.3, '#38bdf8'); jg.addColorStop(0.7, '#0284c7'); jg.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = jg; cx.beginPath();
         cx.moveTo(f.w * 0.44, ty - 4); cx.lineTo(f.w * 0.62 + Math.random() * 8, ty); cx.lineTo(f.w * 0.44, ty + 4);
         cx.closePath(); cx.fill();
@@ -5629,12 +5783,12 @@ function draw() {
     cx.restore();
   }
 
-  // 5. Render Star Wars Starfighters (5 Distinct Star Wars Fighter Archetypes)
+  // 5. Render Star Wars Starfighters (5 Distinct Classes with Photovoltaic Solar Arrays & Lasers)
   for (const g of gliders) {
     cx.save(); cx.translate(g.x, g.y);
 
     if (g.variant === 'stalker') {
-      // 2. SEPARATIST VULTURE DROID FIGHTER (Quad Razor Mandibles & Red Droid Photoreceptor Eye)
+      // 2. SEPARATIST VULTURE DROID FIGHTER (Quad Razor Mandibles & Red Photoreceptor Eye)
       const bank = Math.sin(t * 8 + g.x * 0.05) * 0.15;
       cx.rotate(bank);
 
@@ -5647,7 +5801,7 @@ function draw() {
       cx.beginPath();
       cx.moveTo(-16, 0); cx.lineTo(14, -8); cx.lineTo(18, 0); cx.lineTo(14, 8);
       cx.closePath(); cx.fill();
-      cx.strokeStyle = '#c084fc'; cx.lineWidth = 1.6; cx.stroke();
+      cx.strokeStyle = '#c084fc'; cx.lineWidth = 1.8; cx.stroke();
 
       // Distinctive Dual Mandible Claw Wings (Top & Bottom forward blades)
       for (const sign of [-1, 1]) {
@@ -5658,12 +5812,19 @@ function draw() {
         cx.lineTo(-14, sign * 20);
         cx.lineTo(16, sign * 12);
         cx.closePath(); cx.fill();
-        cx.strokeStyle = '#a855f7'; cx.lineWidth = 1.5; cx.stroke();
+        cx.strokeStyle = '#a855f7'; cx.lineWidth = 1.6; cx.stroke();
       }
 
       // Red Droid Photoreceptor Eye
       cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(-10, 0, 3.5, 0, Math.PI * 2); cx.fill();
       cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-10, 0, 1.5, 0, Math.PI * 2); cx.fill();
+
+      // Purple Thruster Flame
+      const pg = cx.createLinearGradient(18, 0, 32, 0);
+      pg.addColorStop(0, '#ffffff'); pg.addColorStop(0.4, '#c084fc'); pg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = pg; cx.beginPath();
+      cx.moveTo(18, -3); cx.lineTo(28 + Math.random() * 6, 0); cx.lineTo(18, 3);
+      cx.closePath(); cx.fill();
 
     } else if (g.variant === 'rammer') {
       // 3. IMPERIAL TIE BOMBER (Dual Cylindrical Pods + Angled Solar Panels + Proton Torpedo Bay)
@@ -5671,18 +5832,18 @@ function draw() {
       cx.rotate(bank);
 
       // Port Pilot Cockpit Pod
-      const cg = cx.createRadialGradient(-4, -8, 2, 0, -8, 14);
+      const cg = cx.createRadialGradient(-4, -9, 2, 0, -9, 14);
       cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.4, '#475569'); cg.addColorStop(1, '#0f172a');
-      cx.fillStyle = cg; cx.beginPath(); cx.arc(0, -9, 11, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = cg; cx.beginPath(); cx.arc(0, -9, 12, 0, Math.PI * 2); cx.fill();
       cx.strokeStyle = '#020617'; cx.lineWidth = 2; cx.stroke();
 
       // Pilot Viewport (Red Dot)
       cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(-6, -9, 3, 0, Math.PI * 2); cx.fill();
 
       // Starboard Ordnance Bombing Pod
-      const bg = cx.createRadialGradient(-4, 8, 2, 0, 8, 14);
+      const bg = cx.createRadialGradient(-4, 9, 2, 0, 9, 14);
       bg.addColorStop(0, '#94a3b8'); bg.addColorStop(0.4, '#334155'); bg.addColorStop(1, '#020617');
-      cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 9, 11, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 9, 12, 0, Math.PI * 2); cx.fill();
       cx.strokeStyle = '#020617'; cx.lineWidth = 2; cx.stroke();
 
       // Ordnance Launch Chute with Pulsing Blue Energy
@@ -5694,6 +5855,12 @@ function draw() {
         cx.beginPath();
         cx.moveTo(-20, wy); cx.lineTo(-10, wy - 4 * Math.sign(wy)); cx.lineTo(16, wy - 4 * Math.sign(wy)); cx.lineTo(20, wy);
         cx.closePath(); cx.fill(); cx.stroke();
+      }
+
+      // Twin Ion Engines
+      for (const ey of [-9, 9]) {
+        cx.fillStyle = '#00ffee';
+        cx.beginPath(); cx.arc(12, ey, 3.5 + Math.random() * 1.5, 0, Math.PI * 2); cx.fill();
       }
 
     } else if (g.variant === 'drone') {
@@ -5722,7 +5889,14 @@ function draw() {
         // Curved Solar Array Fin at Wingtip
         cx.fillStyle = '#1e293b'; cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.4;
         cx.beginPath(); cx.arc(wx, wy, 8, ang - Math.PI / 3, ang + Math.PI / 3); cx.stroke();
+
+        // Wingtip Laser Emitter
+        cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(wx - 2, wy, 2, 0, Math.PI * 2); cx.fill();
       }
+
+      // Triple Ion Engines
+      cx.fillStyle = '#00ffee';
+      cx.beginPath(); cx.arc(14, 0, 4.5 + Math.random() * 1.5, 0, Math.PI * 2); cx.fill();
 
     } else if (g.variant === 'phantom') {
       // 5. SEPARATIST TRI-FIGHTER (3 Curved Pincer Wings Surrounding Spinning Droid Brain)
@@ -5747,10 +5921,18 @@ function draw() {
         cx.fillStyle = '#ff0033'; cx.fillRect(tipX - 8, tipY - 1.5, 4, 3);
       }
 
+      // Omnidirectional Ion Flare
+      cx.fillStyle = '#c084fc';
+      cx.beginPath(); cx.arc(11, 0, 3.5 + Math.random() * 1.5, 0, Math.PI * 2); cx.fill();
+
     } else {
       // 1. IMPERIAL TIE/LN STARFIGHTER (Hexagonal Solar Radiators, Spherical Pod, Red Chin Lasers)
       const bank = Math.sin(t * 8 + g.x * 0.05) * 0.2;
       cx.rotate(bank);
+
+      // Horizontal Reinforced Connecting Pylon Struts
+      cx.fillStyle = '#0f172a'; cx.fillRect(-12, -3, 24, 6);
+      cx.strokeStyle = '#475569'; cx.lineWidth = 1.2; cx.strokeRect(-12, -3, 24, 6);
 
       // Central Spherical Armored Cockpit Ball
       const cg = cx.createRadialGradient(-6, -6, 3, 0, 0, 22);
@@ -5759,9 +5941,10 @@ function draw() {
       cx.beginPath(); cx.arc(0, 0, 20, 0, Math.PI * 2); cx.fill();
       cx.strokeStyle = '#020617'; cx.lineWidth = 3; cx.stroke();
 
-      // Octagonal Cockpit Viewport with Pulsing Ruby Aiming Core
+      // Octagonal Cockpit Viewport with Star Struts & Pulsing Ruby Aiming Core
       cx.fillStyle = '#0f172a';
       cx.beginPath(); cx.arc(-7, 0, 8, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.2; cx.stroke();
       cx.fillStyle = '#ff0033';
       cx.beginPath(); cx.arc(-7, 0, 4 + Math.sin(t * 14) * 0.8, 0, Math.PI * 2); cx.fill();
 
@@ -5773,10 +5956,10 @@ function draw() {
         cx.fillRect(-26, cy - 1.5, 3, 3);
       }
 
-      // Massive Vertical Hexagonal Solar Radiator Panels
+      // Massive Vertical Hexagonal Solar Radiator Panels with Carbon Lattice Grid
       for (const wx of [-22, 22]) {
-        cx.fillStyle = '#1e293b';
-        cx.strokeStyle = '#64748b'; cx.lineWidth = 2.5;
+        cx.fillStyle = '#090d16';
+        cx.strokeStyle = '#475569'; cx.lineWidth = 2.5;
         cx.beginPath();
         cx.moveTo(wx, -26);
         cx.lineTo(wx - 8, -34);
@@ -5792,7 +5975,7 @@ function draw() {
         cx.stroke();
       }
 
-      // Twin Rear Ion Thruster Plasma Flares
+      // Twin Rear Sub-Light Ion Thruster Plasma Flares
       cx.fillStyle = '#00ffee';
       cx.beginPath(); cx.arc(20, -5, 4.5 + Math.sin(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
       cx.beginPath(); cx.arc(20, 5, 4.5 + Math.cos(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
