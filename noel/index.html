@@ -2939,15 +2939,15 @@ function update(dt) {
       if (w.life <= 0) wreckage.splice(i, 1);
     }
 
-    // Stage 2 (Finale): Spawn & Advance Enemy Fleet Coming Towards Us From Far Away
+    // Stage 2 (Finale): Spawn & Advance Exact In-Game Battleship & Glider Armada from Deep Space
     if (storyStage >= 2) {
       if (introArmada.length === 0) {
         introArmada = [
-          { type: 'tie', dist: 2.4, targetX: W * 0.68, baseOffY: -110, col: '#ff0033', spd: 0.42, bank: 0.12 },
-          { type: 'interceptor', dist: 2.7, targetX: W * 0.78, baseOffY: -55, col: '#00ffee', spd: 0.46, bank: -0.16 },
-          { type: 'cruiser', dist: 3.2, targetX: W * 0.88, baseOffY: 0, col: '#c084fc', spd: 0.35, bank: 0 },
-          { type: 'interceptor', dist: 2.8, targetX: W * 0.76, baseOffY: 55, col: '#00ffee', spd: 0.44, bank: 0.16 },
-          { type: 'tie', dist: 2.5, targetX: W * 0.66, baseOffY: 110, col: '#ff0033', spd: 0.40, bank: -0.12 }
+          { type: 'glider', variant: 'drone', dist: 2.3, targetX: W * 0.66, baseOffY: -115, col: '#00ffee', spd: 0.44, bank: 0.14 },
+          { type: 'fort', variant: 'imperial', dist: 2.8, targetX: W * 0.82, baseOffY: -60, col: '#ffd23c', spd: 0.36, bank: -0.08 },
+          { type: 'fort', variant: 'void', dist: 3.2, targetX: W * 0.90, baseOffY: 0, col: '#c084fc', spd: 0.32, bank: 0 },
+          { type: 'fort', variant: 'tesla', dist: 2.9, targetX: W * 0.80, baseOffY: 60, col: '#00e5ff', spd: 0.35, bank: 0.08 },
+          { type: 'glider', variant: 'rammer', dist: 2.4, targetX: W * 0.68, baseOffY: 115, col: '#ff3366', spd: 0.42, bank: -0.14 }
         ];
       }
 
@@ -2955,21 +2955,21 @@ function update(dt) {
         // Advance smoothly from far distance towards the front
         f.dist = Math.max(0, f.dist - dt * f.spd);
         const progress = 1 - Math.min(1, f.dist / 3.0);
-        f.scale = 0.20 + Math.pow(progress, 1.2) * 0.85;
+        f.scale = 0.22 + Math.pow(progress, 1.2) * 0.88;
         f.x = (W * 1.45) - progress * (W * 1.45 - f.targetX);
         f.y = (H * 0.5 + f.baseOffY * (0.3 + progress * 0.7)) + Math.sin(t * 3 + f.dist * 3) * 12;
         f.rot = Math.sin(t * 3.5 + f.dist * 2) * f.bank;
 
         // Ion Engine Particle Trails
-        if (Math.random() < 0.6) {
+        if (Math.random() < 0.65) {
           parts.push({
             type: 'spark',
-            x: f.x + 20 * f.scale,
-            y: f.y + (Math.random() - 0.5) * 6 * f.scale,
-            vx: 130 * f.scale + Math.random() * 30,
+            x: f.x + 22 * f.scale,
+            y: f.y + (Math.random() - 0.5) * 8 * f.scale,
+            vx: 140 * f.scale + Math.random() * 30,
             vy: (Math.random() - 0.5) * 15,
-            life: 0.3, maxLife: 0.3,
-            col: f.col, size: 2.5 * f.scale
+            life: 0.32, maxLife: 0.32,
+            col: f.col, size: 3 * f.scale
           });
         }
       }
@@ -4665,7 +4665,7 @@ function draw() {
       cx.restore();
     }
 
-    // Render Advancing Hostile Armada Coming from Far Away in Deep Space (Stage 2 Finale)
+    // Render Advancing In-Game Battle Fleet Coming from Far Away in Deep Space (Stage 2 Finale)
     if (storyStage >= 2 && introArmada) {
       for (const f of introArmada) {
         cx.save();
@@ -4673,59 +4673,95 @@ function draw() {
         cx.scale(f.scale, f.scale);
         cx.rotate(f.rot);
 
-        if (f.type === 'tie') {
-          // IMPERIAL TIE HEAVY FIGHTER
-          const cg = cx.createRadialGradient(-6, -6, 3, 0, 0, 20);
-          cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.35, '#475569'); cg.addColorStop(1, '#0f172a');
-          cx.fillStyle = cg;
-          cx.beginPath(); cx.arc(0, 0, 18, 0, Math.PI * 2); cx.fill();
-          cx.strokeStyle = '#020617'; cx.lineWidth = 2.5; cx.stroke();
-
-          // Ruby Targeting Cockpit
-          cx.fillStyle = '#ff0033';
-          cx.beginPath(); cx.arc(-6, 0, 5, 0, Math.PI * 2); cx.fill();
-
-          // Vertical Hexagonal Radiator Panels
-          for (const wx of [-20, 20]) {
-            cx.fillStyle = '#1e293b'; cx.strokeStyle = '#ff0033'; cx.lineWidth = 1.8;
-            cx.beginPath();
-            cx.moveTo(wx, -24); cx.lineTo(wx - 7, -30); cx.lineTo(wx - 7, 30); cx.lineTo(wx, 24);
-            cx.closePath(); cx.fill(); cx.stroke();
+        if (f.type === 'glider') {
+          // AUTHENTIC IN-GAME ARROW SCOUT GLIDER UFO
+          const isCyan = f.variant === 'drone';
+          const gg = cx.createLinearGradient(-26, 0, 22, 0);
+          if (isCyan) {
+            gg.addColorStop(0, '#00ffee'); gg.addColorStop(0.4, '#0284c7'); gg.addColorStop(1, '#082f49');
+          } else {
+            gg.addColorStop(0, '#f43f5e'); gg.addColorStop(0.5, '#9f1239'); gg.addColorStop(1, '#4c0519');
           }
-
-          // Rear Ion Plumes
-          cx.fillStyle = '#00ffee';
-          cx.beginPath(); cx.arc(18, -4, 4, 0, Math.PI * 2); cx.fill();
-          cx.beginPath(); cx.arc(18, 4, 4, 0, Math.PI * 2); cx.fill();
-
-        } else if (f.type === 'interceptor') {
-          // IMPERIAL DAGGER INTERCEPTOR
-          const ig = cx.createLinearGradient(-30, 0, 22, 0);
-          ig.addColorStop(0, '#38bdf8'); ig.addColorStop(0.4, '#0284c7'); ig.addColorStop(1, '#082f49');
-          cx.fillStyle = ig;
+          cx.fillStyle = gg;
           cx.beginPath();
-          cx.moveTo(-30, 0); cx.lineTo(-10, -20); cx.lineTo(20, -12); cx.lineTo(12, 0);
-          cx.lineTo(20, 12); cx.lineTo(-10, 20); cx.closePath();
-          cx.fill(); cx.strokeStyle = '#00ffee'; cx.lineWidth = 2; cx.stroke();
+          cx.moveTo(-26, 0);                 // Forward arrow prow
+          cx.lineTo(18, -16);                // Port wing tip
+          cx.lineTo(10, 0);                  // Notched engine bay
+          cx.lineTo(18, 16);                 // Starboard wing tip
+          cx.closePath();
+          cx.fill();
+          cx.strokeStyle = f.col || '#00ffee'; cx.lineWidth = 2.5; cx.stroke();
 
-          // Glowing Viewport
-          cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-7, 0, 4.5, 0, Math.PI * 2); cx.fill();
-          cx.fillStyle = '#38bdf8'; cx.beginPath(); cx.arc(20, 0, 4.5, 0, Math.PI * 2); cx.fill();
+          // Glowing Central Viewport Core Eye
+          cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-4, 0, 5, 0, Math.PI * 2); cx.fill();
+          cx.strokeStyle = f.col || '#00ffee'; cx.lineWidth = 1.5;
+          cx.beginPath(); cx.arc(-4, 0, 8 + Math.sin(t * 16) * 1.5, 0, Math.PI * 2); cx.stroke();
+
+          // Rear Ion Engine Plasma Plume
+          cx.fillStyle = isCyan ? '#00ffee' : '#ff3366';
+          cx.beginPath(); cx.arc(18, 0, 4.5 + Math.sin(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
 
         } else {
-          // HEAVY ALIEN CRUISER BATTLESHIP
-          const bg = cx.createLinearGradient(-50, 0, 50, 0);
-          bg.addColorStop(0, '#c084fc'); bg.addColorStop(0.5, '#7c3aed'); bg.addColorStop(1, '#3b0764');
-          cx.fillStyle = bg;
-          cx.beginPath();
-          cx.moveTo(-50, 0); cx.lineTo(-20, -26); cx.lineTo(45, -18); cx.lineTo(35, 0);
-          cx.lineTo(45, 18); cx.lineTo(-20, 26); cx.closePath();
-          cx.fill(); cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.5; cx.stroke();
+          // AUTHENTIC IN-GAME HEAVY WARSHIP FORTRESS / DESTROYER
+          const fw = 110, fh = 68;
+          const isImperial = f.variant === 'imperial';
+          const isTesla = f.variant === 'tesla';
 
-          // Pulsing Command Core
-          cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-15, 0, 7, 0, Math.PI * 2); cx.fill();
-          cx.fillStyle = '#ff0080'; cx.beginPath(); cx.arc(40, -7, 4.5, 0, Math.PI * 2); cx.fill();
-          cx.beginPath(); cx.arc(40, 7, 4.5, 0, Math.PI * 2); cx.fill();
+          // Outer Subspace Aura Glow
+          const sg = cx.createRadialGradient(0, 0, 10, 0, 0, fw * 0.52);
+          sg.addColorStop(0, f.col + '66'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+          cx.fillStyle = sg; cx.beginPath(); cx.ellipse(0, 0, fw * 0.52, fh * 0.48, 0, 0, Math.PI * 2); cx.fill();
+
+          // Main Heavy Chevron Armor Hull
+          const tg = cx.createLinearGradient(fw * 0.5, 0, -fw * 0.5, 0);
+          if (isImperial) {
+            tg.addColorStop(0, '#78350f'); tg.addColorStop(0.3, '#d97706'); tg.addColorStop(0.7, '#fbbf24'); tg.addColorStop(1, '#fffbeb');
+          } else if (isTesla) {
+            tg.addColorStop(0, '#0f172a'); tg.addColorStop(0.4, '#0369a1'); tg.addColorStop(1, '#38bdf8');
+          } else {
+            tg.addColorStop(0, '#0f051d'); tg.addColorStop(0.5, '#581c87'); tg.addColorStop(1, '#c084fc');
+          }
+          cx.fillStyle = tg;
+          cx.beginPath();
+          cx.moveTo(-fw * 0.48, 0);                 // Heavy prow needle
+          cx.lineTo(-fw * 0.25, -fh * 0.44);       // Port bow wing
+          cx.lineTo(fw * 0.35, -fh * 0.38);        // Port aft
+          cx.lineTo(fw * 0.45, 0);                  // Aft royal notch
+          cx.lineTo(fw * 0.35, fh * 0.38);         // Starboard aft
+          cx.lineTo(-fw * 0.25, fh * 0.44);        // Starboard bow wing
+          cx.closePath();
+          cx.fill();
+          cx.strokeStyle = f.col || '#ffd23c'; cx.lineWidth = 2.8; cx.stroke();
+
+          // Armored Spine Deck Plating
+          cx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+          cx.beginPath();
+          cx.moveTo(-fw * 0.30, 0);
+          cx.lineTo(-fw * 0.12, -fh * 0.24);
+          cx.lineTo(fw * 0.30, -fh * 0.24);
+          cx.lineTo(fw * 0.36, 0);
+          cx.lineTo(fw * 0.30, fh * 0.24);
+          cx.lineTo(-fw * 0.12, fh * 0.24);
+          cx.closePath();
+          cx.fill();
+          cx.strokeStyle = f.col || '#ffd23c'; cx.lineWidth = 1.4; cx.stroke();
+
+          // Central Pulsing Power Core Eye
+          cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, 11, 0, Math.PI * 2); cx.fill();
+          cx.fillStyle = f.col || '#ffd23c'; cx.beginPath(); cx.arc(0, 0, 6.5, 0, Math.PI * 2); cx.fill();
+          cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.5; cx.stroke();
+
+          // Dual Wing Sponson Railgun Cannons
+          for (const cy of [-fh * 0.30, fh * 0.30]) {
+            cx.fillStyle = '#0f172a'; cx.fillRect(-fw * 0.10, cy - 3, 14, 6);
+            cx.fillStyle = f.col || '#ffd23c'; cx.fillRect(fw * 0.02, cy - 2, 4, 4);
+          }
+
+          // Triple Rear Ion Plasma Thrusters
+          for (const ty of [-fh * 0.18, 0, fh * 0.18]) {
+            cx.fillStyle = f.col || '#ffd23c';
+            cx.beginPath(); cx.arc(fw * 0.40, ty, 4.5 + Math.sin(t * 20 + ty) * 1.5, 0, Math.PI * 2); cx.fill();
+          }
         }
 
         cx.restore();
