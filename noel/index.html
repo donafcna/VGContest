@@ -699,7 +699,7 @@ function advanceStory() {
   storyCooldown = 0.35;
   sfx('pew');
   storyStage++;
-  if (storyStage > 3) {
+  if (storyStage >= 3) {
     startCombat();
   }
 }
@@ -5877,29 +5877,11 @@ function draw() {
       cx.fillStyle = '#ff385c';
       cx.fillText('🚨 [RADAR]: "DANGER! DANGER! TWO ENEMY SHIPS ARE COMING!"', W / 2, H - barH + 98);
 
-    } else if (storyStage === 2) {
-      // Stage 2: (Broadside Cannons)
-      cx.font = titleFont;
-      cx.fillStyle = '#38bdf8';
-      cx.fillText('⚔️ ACROBATIC BROADSIDE CANNONS LOCKED!', W / 2, H - barH + 28);
-
-      cx.font = textFont;
-      cx.fillStyle = '#ffd23c';
-      cx.fillText(`👑 [CAPTAIN ${captainUpper}]: "Target their thrusters... FIRE BROADSIDE CANNONS!"`, W / 2, H - barH + 54);
-
-      cx.font = textFont;
-      cx.fillStyle = '#ffffff';
-      cx.fillText('💥 "Twin fiery corkscrew cannonballs launched through space!"', W / 2, H - barH + 78);
-
-      cx.font = warnFont;
-      cx.fillStyle = '#ff9900';
-      cx.fillText('⚡ 4 SUPERCHARGED CANNONBALLS TRACKING TARGET POWER CORES!', W / 2, H - barH + 102);
-
     } else {
-      // Stage 3: (Destruction & More Ships Advancing)
+      // Stage 2 (Merged): Broadside Cannons Shoot, Hit, Explode & More Ships Advancing!
       cx.font = titleFont;
       cx.fillStyle = '#00dfa2';
-      cx.fillText('💥 DIRECT HIT! BOTH ENEMY SHIPS DESTROYED!', W / 2, H - barH + 28);
+      cx.fillText('💥 DIRECT HIT! BROADSIDE CANNONS DESTROYED BOTH ENEMY SHIPS!', W / 2, H - barH + 28);
 
       cx.font = warnFont;
       cx.fillStyle = '#ff385c';
@@ -5911,19 +5893,19 @@ function draw() {
 
       cx.font = warnFont;
       cx.fillStyle = '#00dfa2';
-      cx.fillText('⚔️ LAUNCHES DIRECTLY INTO THE LIVE BATTLE! ⚔️', W / 2, H - barH + 102);
+      cx.fillText('⚔️ CLICK START BATTLE TO ENGAGE THE FLEET! ⚔️', W / 2, H - barH + 102);
     }
 
-    // Interactive Glowing Continue Button (For Every Stage)
-    const btnLabel = (storyStage === 3) ? '⚔️ START BATTLE ❯' : 'CONTINUE ❯';
+    // Interactive Glowing Continue / Start Battle Button
+    const btnLabel = (storyStage >= 2) ? '⚔️ START BATTLE ❯' : 'CONTINUE ❯';
     const btnW = Math.min(180, Math.max(130, W * 0.32));
     const btnH = 34;
     const btnX = W - btnW - 16;
     const btnY = H - barH + 48;
 
     cx.save();
-    cx.fillStyle = (storyStage === 3) ? 'rgba(255, 56, 92, 0.95)' : 'rgba(255, 210, 60, 0.95)';
-    cx.shadowColor = (storyStage === 3) ? '#ff385c' : '#ffd23c';
+    cx.fillStyle = (storyStage >= 2) ? 'rgba(255, 56, 92, 0.95)' : 'rgba(255, 210, 60, 0.95)';
+    cx.shadowColor = (storyStage >= 2) ? '#ff385c' : '#ffd23c';
     cx.shadowBlur = 12;
     cx.beginPath();
     cx.roundRect(btnX, btnY, btnW, btnH, 8);
@@ -5935,7 +5917,7 @@ function draw() {
 
     cx.shadowBlur = 0;
     cx.font = 'bold 12px "Orbitron", sans-serif';
-    cx.fillStyle = (storyStage === 3) ? '#ffffff' : '#020308';
+    cx.fillStyle = (storyStage >= 2) ? '#ffffff' : '#020308';
     cx.textAlign = 'center';
     cx.fillText(btnLabel, btnX + btnW / 2, btnY + 22);
     cx.restore();
