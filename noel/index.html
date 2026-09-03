@@ -5385,67 +5385,128 @@ function draw() {
 
 
 
-  // Realistic 3D Craggy Asteroids with Crater Shading & Specular Rim Light
+  // Realistic 3D Craggy Asteroids with Faceted Shading, Mineral Veins & Impact Craters
   for (const a of asteroids) {
     cx.save(); cx.translate(a.x, a.y); cx.rotate(a.rot);
     
-    // Base Asteroid Rock Body
-    const ag = cx.createRadialGradient(-a.r * 0.35, -a.r * 0.35, 2, 0, 0, a.r);
-    ag.addColorStop(0, '#94a3b8');
-    ag.addColorStop(0.45, '#475569');
-    ag.addColorStop(0.85, '#1e293b');
+    // Base Asteroid Rock Body with Sunward Specular Highlights
+    const ag = cx.createRadialGradient(-a.r * 0.4, -a.r * 0.4, 2, 0, 0, a.r);
+    ag.addColorStop(0, '#cbd5e1');
+    ag.addColorStop(0.35, '#64748b');
+    ag.addColorStop(0.70, '#334155');
+    ag.addColorStop(0.90, '#1e293b');
     ag.addColorStop(1, '#020617');
     cx.fillStyle = ag;
     cx.beginPath();
-    for (let k = 0; k < 10; k++) {
-      const ang = (k / 10) * Math.PI * 2;
-      const rad = a.r * (0.82 + ((k % 3) * 0.14));
+    for (let k = 0; k < 12; k++) {
+      const ang = (k / 12) * Math.PI * 2;
+      const rad = a.r * (0.80 + ((k % 4) * 0.12));
       if (k === 0) cx.moveTo(Math.cos(ang) * rad, Math.sin(ang) * rad);
       else cx.lineTo(Math.cos(ang) * rad, Math.sin(ang) * rad);
     }
     cx.closePath(); cx.fill();
-    cx.strokeStyle = '#0f172a'; cx.lineWidth = 2; cx.stroke();
+    cx.strokeStyle = '#0f172a'; cx.lineWidth = 2.2; cx.stroke();
 
-    // Crater Details
-    cx.fillStyle = '#0f172a';
-    cx.beginPath(); cx.arc(-a.r * 0.2, a.r * 0.1, a.r * 0.22, 0, Math.PI * 2); cx.fill();
-    cx.strokeStyle = '#475569'; cx.lineWidth = 1; cx.stroke();
+    // Embedded Glowing Kyber / Gold Mineral Veins
+    cx.strokeStyle = (a.r > 28) ? '#00ffee' : '#ffd23c';
+    cx.lineWidth = 1.4;
+    cx.beginPath();
+    cx.moveTo(-a.r * 0.35, -a.r * 0.2);
+    cx.lineTo(-a.r * 0.1, -a.r * 0.35);
+    cx.lineTo(a.r * 0.2, -a.r * 0.15);
+    cx.stroke();
+
+    // Multiple 3D Impact Craters with Light & Shadow
+    for (const [cxOff, cyOff, cRad] of [[-a.r * 0.25, a.r * 0.15, a.r * 0.24], [a.r * 0.2, a.r * 0.25, a.r * 0.18], [-a.r * 0.1, -a.r * 0.25, a.r * 0.16]]) {
+      // Crater Shadow
+      cx.fillStyle = '#090d16';
+      cx.beginPath(); cx.arc(cxOff, cyOff, cRad, 0, Math.PI * 2); cx.fill();
+      // Sunlit Rim Edge
+      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 1.2;
+      cx.beginPath(); cx.arc(cxOff, cyOff, cRad, Math.PI * 0.75, Math.PI * 1.75); cx.stroke();
+    }
     cx.restore();
   }
 
   // Warp Speed Stardust Streaks
   if (state === 'play' || state === 'intro') {
-    cx.strokeStyle = 'rgba(255, 210, 60, 0.35)';
+    cx.strokeStyle = 'rgba(255, 210, 60, 0.40)';
     cx.lineWidth = 1.5;
     for (const sl of speedLines) {
       cx.beginPath(); cx.moveTo(sl.x, sl.y); cx.lineTo(sl.x + sl.len, sl.y); cx.stroke();
     }
   }
 
-  // 2. Render Gold Dubloons
+  // 2. Render 3D Engraved Gold Dubloons with Milled Edge & Pirate Skull Emblem
   for (const c of coins) {
     cx.save(); cx.translate(c.x, c.y);
-    cx.scale(Math.abs(Math.cos(c.spin || 0)) * 0.85 + 0.15, 1);
-    const cg = cx.createRadialGradient(-2, -2, 1, 0, 0, 16);
-    cg.addColorStop(0, '#fff6b8'); cg.addColorStop(0.4, '#ffd23c'); cg.addColorStop(1, '#9e6d05');
+    const spinScale = Math.abs(Math.cos(c.spin || 0)) * 0.85 + 0.15;
+    cx.scale(spinScale, 1);
+
+    // Gold Aura Starlight Glow
+    const glow = cx.createRadialGradient(0, 0, 4, 0, 0, 22);
+    glow.addColorStop(0, 'rgba(255, 210, 60, 0.55)');
+    glow.addColorStop(1, 'rgba(255, 210, 60, 0)');
+    cx.fillStyle = glow; cx.beginPath(); cx.arc(0, 0, 22, 0, Math.PI * 2); cx.fill();
+
+    // 3D Beveled Milled Gold Coin Rim
+    const cg = cx.createRadialGradient(-3, -3, 1, 0, 0, 16);
+    cg.addColorStop(0, '#fffbeb');
+    cg.addColorStop(0.25, '#fef08a');
+    cg.addColorStop(0.65, '#f59e0b');
+    cg.addColorStop(1, '#78350f');
     cx.fillStyle = cg;
     cx.beginPath(); cx.arc(0, 0, 16, 0, Math.PI * 2); cx.fill();
-    cx.strokeStyle = '#b8860b'; cx.lineWidth = 2; cx.stroke();
+    cx.strokeStyle = '#d97706'; cx.lineWidth = 2.2; cx.stroke();
+
+    // Inner Embossed Ring
+    cx.strokeStyle = '#fef08a'; cx.lineWidth = 1;
+    cx.beginPath(); cx.arc(0, 0, 11, 0, Math.PI * 2); cx.stroke();
+
+    // Embossed Pirate Skull Emblem
+    if (spinScale > 0.4) {
+      cx.fillStyle = '#78350f'; cx.font = 'bold 11px sans-serif'; cx.textAlign = 'center';
+      cx.fillText('☠', 0, 4);
+    }
     cx.restore();
   }
 
-  // 3. Render Pirate Powerup Supply Chests
+  // 3. Render Sci-Fi Pirate Powerup Supply Cargo Pods
   for (const pu of powerups) {
     const col = pu.type === 'heart' ? '#ff3366' : pu.type === 'rapid' ? '#00e5ff' : pu.type === 'shield' ? '#00dfa2' : pu.type === 'triple' ? '#ffd23c' : '#ff0055';
     const ic  = pu.type === 'heart' ? '❤️' : pu.type === 'rapid' ? '⚡' : pu.type === 'shield' ? '🛡️' : pu.type === 'triple' ? '🔱' : '💣';
     
     cx.save(); cx.translate(pu.x, pu.y);
-    const glow = cx.createRadialGradient(0, 0, 5, 0, 0, 32);
-    glow.addColorStop(0, col + 'ee'); glow.addColorStop(1, 'rgba(0,0,0,0)');
-    cx.fillStyle = glow; cx.beginPath(); cx.arc(0, 0, 32, 0, Math.PI * 2); cx.fill();
+
+    // Dynamic Energy Field Containment Shield
+    const glow = cx.createRadialGradient(0, 0, 6, 0, 0, 36);
+    glow.addColorStop(0, col + '88');
+    glow.addColorStop(0.6, col + '22');
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    cx.fillStyle = glow; cx.beginPath(); cx.arc(0, 0, 36, 0, Math.PI * 2); cx.fill();
+
+    // Rotating Energy Shield Ring
+    cx.strokeStyle = col; cx.lineWidth = 1.5;
+    cx.beginPath(); cx.arc(0, 0, 24, t * 4, t * 4 + Math.PI * 1.4); cx.stroke();
+    cx.beginPath(); cx.arc(0, 0, 24, t * 4 + Math.PI, t * 4 + Math.PI * 2.4); cx.stroke();
+
+    // Heavy Armored Cargo Canister Fuselage
+    const cg = cx.createLinearGradient(-18, -18, 18, 18);
+    cg.addColorStop(0, '#334155');
+    cg.addColorStop(0.5, '#1e293b');
+    cg.addColorStop(1, '#0f172a');
+    cx.fillStyle = cg;
+    cx.beginPath(); cx.roundRect(-16, -16, 32, 32, 6); cx.fill();
+    cx.strokeStyle = col; cx.lineWidth = 2; cx.stroke();
+
+    // Corner Magnetic Locking Nodes
+    for (const [nx, ny] of [[-13, -13], [13, -13], [-13, 13], [13, 13]]) {
+      cx.fillStyle = col; cx.beginPath(); cx.arc(nx, ny, 2.2, 0, Math.PI * 2); cx.fill();
+    }
     
-    cx.fillStyle = '#2c1504'; cx.beginPath(); cx.roundRect(-16, -16, 32, 32, 6); cx.fill();
-    cx.fillText(ic, 0, 1);
+    // Floating Holographic Powerup Rune
+    cx.font = '16px sans-serif'; cx.textAlign = 'center';
+    cx.fillText(ic, 0, 5.5 + Math.sin(t * 8) * 2);
     cx.restore();
   }
 
@@ -6256,49 +6317,74 @@ function draw() {
 
   }
 
-  // 6. Render Quantum & Incendiary Cluster Mines (2 Distinct Archetypes)
+  // 6. Render 3D Heavy Space Mines with Laser Proximity Tripwires & Active Cores
   for (const m of mines) {
     cx.save(); cx.translate(m.x, m.y); cx.rotate(m.spin);
     
     if (m.variant === 'cluster') {
       // ARCHETYPE 2: Incendiary Magma Cluster Mine (8 Spikes with Molten Core)
-      cx.strokeStyle = '#ff4400'; cx.lineWidth = 3;
+      // Detonation Contact Spikes with Glowing Heat Tips
       for (let k = 0; k < 8; k++) {
         const a = (k / 8) * Math.PI * 2;
-        cx.beginPath(); cx.moveTo(Math.cos(a) * m.r, Math.sin(a) * m.r);
-        cx.lineTo(Math.cos(a) * (m.r + 14), Math.sin(a) * (m.r + 14)); cx.stroke();
+        const cosA = Math.cos(a), sinA = Math.sin(a);
+        cx.strokeStyle = '#0f172a'; cx.lineWidth = 4.5;
+        cx.beginPath(); cx.moveTo(cosA * (m.r * 0.5), sinA * (m.r * 0.5));
+        cx.lineTo(cosA * (m.r + 14), sinA * (m.r + 14)); cx.stroke();
+
+        cx.strokeStyle = '#ff5500'; cx.lineWidth = 2.2;
+        cx.beginPath(); cx.moveTo(cosA * (m.r * 0.7), sinA * (m.r * 0.7));
+        cx.lineTo(cosA * (m.r + 14), sinA * (m.r + 14)); cx.stroke();
+
+        cx.fillStyle = '#ffdd33'; cx.beginPath();
+        cx.arc(cosA * (m.r + 14), sinA * (m.r + 14), 2.5, 0, Math.PI * 2); cx.fill();
       }
 
-      // Burning Molten Magma Core
+      // Burning Molten Magma Core with Dark Cast-Iron Armor
       const mgr = cx.createRadialGradient(-3, -3, 2, 0, 0, m.r);
-      mgr.addColorStop(0, '#ffffff'); mgr.addColorStop(0.35, '#ffaa00'); mgr.addColorStop(0.75, '#ff3300'); mgr.addColorStop(1, '#450a0a');
+      mgr.addColorStop(0, '#ffffff'); mgr.addColorStop(0.3, '#ffaa00'); mgr.addColorStop(0.7, '#ff3300'); mgr.addColorStop(1, '#2c0505');
       cx.fillStyle = mgr; cx.beginPath(); cx.arc(0, 0, m.r, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ff3300'; cx.lineWidth = 2; cx.stroke();
 
-      // Pulsing Incendiary Fuse Warning
-      cx.fillStyle = `rgba(255, 255, 255, ${0.8 + Math.sin(t * 16) * 0.2})`;
+      // Pulsing Incendiary Fuse Warning Beacon
+      cx.fillStyle = `rgba(255, 255, 255, ${0.85 + Math.sin(t * 16) * 0.15})`;
       cx.beginPath(); cx.arc(0, 0, 7, 0, Math.PI * 2); cx.fill();
 
     } else {
-      // ARCHETYPE 1: Quantum Proximity Mine (6 Spikes with 360° Laser Tripwire)
-      cx.strokeStyle = 'rgba(255, 30, 80, 0.45)'; cx.lineWidth = 1.5;
+      // ARCHETYPE 1: Quantum Proximity Mine (6 Spikes with 360° Rotating Laser Tripwire)
+      cx.save();
+      cx.strokeStyle = 'rgba(255, 30, 80, 0.55)'; cx.lineWidth = 1.8;
       cx.beginPath();
-      cx.moveTo(0, 0); cx.lineTo(Math.cos(t * 3) * 60, Math.sin(t * 3) * 60);
-      cx.moveTo(0, 0); cx.lineTo(Math.cos(t * 3 + Math.PI) * 60, Math.sin(t * 3 + Math.PI) * 60);
+      cx.moveTo(0, 0); cx.lineTo(Math.cos(t * 3.5) * 75, Math.sin(t * 3.5) * 75);
+      cx.moveTo(0, 0); cx.lineTo(Math.cos(t * 3.5 + Math.PI) * 75, Math.sin(t * 3.5 + Math.PI) * 75);
       cx.stroke();
+      cx.restore();
 
-      cx.strokeStyle = '#00e5ff'; cx.lineWidth = 3;
+      // 6 Heavy Titanium Contact Spikes with Cyan Power Nodes
       for (let k = 0; k < 6; k++) {
         const a = (k / 6) * Math.PI * 2;
-        cx.beginPath(); cx.moveTo(Math.cos(a) * m.r, Math.sin(a) * m.r);
-        cx.lineTo(Math.cos(a) * (m.r + 12), Math.sin(a) * (m.r + 12)); cx.stroke();
+        const cosA = Math.cos(a), sinA = Math.sin(a);
+        cx.strokeStyle = '#0f172a'; cx.lineWidth = 4.5;
+        cx.beginPath(); cx.moveTo(cosA * (m.r * 0.5), sinA * (m.r * 0.5));
+        cx.lineTo(cosA * (m.r + 12), sinA * (m.r + 12)); cx.stroke();
+
+        cx.strokeStyle = '#00e5ff'; cx.lineWidth = 2.2;
+        cx.beginPath(); cx.moveTo(cosA * (m.r * 0.7), sinA * (m.r * 0.7));
+        cx.lineTo(cosA * (m.r + 12), sinA * (m.r + 12)); cx.stroke();
+
+        cx.fillStyle = '#00ffee'; cx.beginPath();
+        cx.arc(cosA * (m.r + 12), sinA * (m.r + 12), 2.5, 0, Math.PI * 2); cx.fill();
       }
       
+      // Central High-Tech Cobalt Quantum Core
       const mgr = cx.createRadialGradient(-3, -3, 2, 0, 0, m.r);
-      mgr.addColorStop(0, '#c7f9ff'); mgr.addColorStop(0.5, '#0077ff'); mgr.addColorStop(1, '#001a4d');
+      mgr.addColorStop(0, '#ffffff'); mgr.addColorStop(0.35, '#00e5ff'); mgr.addColorStop(0.75, '#0284c7'); mgr.addColorStop(1, '#020617');
       cx.fillStyle = mgr; cx.beginPath(); cx.arc(0, 0, m.r, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#00e5ff'; cx.lineWidth = 2; cx.stroke();
       
-      cx.fillStyle = `rgba(255,50,80,${0.8 + Math.sin(t * 14) * 0.2})`;
-      cx.beginPath(); cx.arc(0, 0, 6, 0, Math.PI * 2); cx.fill();
+      // Red Proximity Alarm Flasher
+      cx.fillStyle = `rgba(255, 0, 60, ${0.85 + Math.sin(t * 14) * 0.15})`;
+      cx.beginPath(); cx.arc(0, 0, 6.5, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, 2.5, 0, Math.PI * 2); cx.fill();
     }
     cx.restore();
   }
