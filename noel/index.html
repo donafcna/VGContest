@@ -2902,6 +2902,16 @@ function buildShop() {
     `<div style="color:#ffd23c;font-weight:900;font-size:1.1rem;font-family:'Orbitron',sans-serif;letter-spacing:1px">👑 GAME CREATOR VIP PASS ACTIVE 👑</div>` +
     `<div style="color:#cfe4ff;font-size:0.86rem;margin-top:4px">Welcome Captain Noel! All 5 Fleet Ships, 7 Skins &amp; Max Galleon Upgrades Unlocked!</div></div>`;
 
+  // 0. DAILY REWARDS VOYAGE SHORTCUT
+  const dailyStatus = getDailyRewardStatus();
+  h += '<h2>🎁 PIRATE DAILY VOYAGE REWARDS — 7-Day Streak ⚓</h2>';
+  h += `<div class="shopitem" style="border: 1.5px solid #ff5e62; background: linear-gradient(135deg, rgba(255, 94, 98, 0.15), rgba(255, 210, 60, 0.1));">` +
+    `<div class="ic" style="font-size:2rem;display:flex;align-items:center;justify-content:center">🎁</div>` +
+    `<div class="info"><div class="t" style="color:#ffd23c">7-Day Pirate Voyage Calendar</div>` +
+    `<div class="d">${dailyStatus.state === 'READY' ? '🎁 Daily reward is READY to claim!' : (dailyStatus.state === 'MISSED' ? '⚠️ Streak broken! Repair with 5 cores or reset.' : '✔ Daily reward claimed! Next reward tomorrow.')}</div>` +
+    `<div class="lv" style="color:#ff9966">Streak: ${SAVE.data.daily ? SAVE.data.daily.streak : 0} Days 🔥</div></div>` +
+    `<button style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;box-shadow:0 0 15px rgba(255,94,98,0.5)" onclick="openDailyModal(event)">🎁 OPEN</button></div>`;
+
   // 1. COIN UPGRADES AT THE TOP
   h += '<h2>⚙️ SOLAR GALLEON UPGRADES — Buy with Coins 🪙</h2>';
   for (const key in UPG) {
