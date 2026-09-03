@@ -769,7 +769,7 @@
     <button id="startbtn" type="button" onclick="startSolarSail(event)" ontouchend="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" type="button" onclick="openHangar(event)" ontouchend="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ PIRATE HANGAR &amp; UPGRADES</button>
     <button id="dailybtn" type="button" onclick="openDailyModal(event)" ontouchend="openDailyModal(event)" style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(255,94,98,0.55);position:relative;cursor:pointer">🎁 DAILY REWARDS <span id="dailyBadge" class="daily-badge hidden">!</span></button>
-    <button id="bossbtn" type="button" onclick="openBossIntelModal(event)" ontouchend="openBossIntelModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">👾 BOSS INTEL</button>
+    <button id="bossbtn" type="button" onclick="openBossIntelModal(event)" ontouchend="openBossIntelModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">👾 BOSS & FLEET INTEL</button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.1rem; color:#ffd23c; font-weight:bold"></p>
   <p id="bestline" style="margin-top:0.2rem; font-size:1rem; color:#ffd23c; font-weight:bold; min-height:1.2em"></p>
@@ -891,20 +891,26 @@
   </div>
 </div>
 
-<!-- Flagship Boss Intel Dossier & Archive Modal -->
+<!-- Flagship Boss & Enemy Fleet Intel Modal -->
 <div id="bossIntelModal" class="overlay hidden" style="z-index: 126;">
   <div class="boss-intel-card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <div style="text-align:left">
         <span style="font-size:0.75rem;font-weight:bold;color:#00ffee;letter-spacing:1.5px;text-transform:uppercase">🔬 TACTICAL RADAR DATABASE</span>
-        <h1 style="font-family:'Orbitron',sans-serif;font-size:1.4rem;color:#ffd23c;margin:2px 0">ALIEN FLAGSHIP BOSS INTEL</h1>
+        <h1 id="intelModalTitle" style="font-family:'Orbitron',sans-serif;font-size:1.35rem;color:#ffd23c;margin:2px 0">STAR WARS BOSS & FLEET INTEL</h1>
       </div>
       <button onclick="closeBossIntelModal()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:8px 16px;cursor:pointer;font-family:'Orbitron',sans-serif">✖ CLOSE</button>
+    </div>
+
+    <!-- Interactive Tabs: Flagship Bosses vs Star Wars Enemy Armada -->
+    <div style="display:flex;gap:10px;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.12);padding-bottom:10px">
+      <button id="tabBossIntel" onclick="switchIntelTab('bosses')" style="flex:1;background:linear-gradient(135deg,#00ffaa,#0284c7);color:#020617;font-weight:900;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem;box-shadow:0 0 14px rgba(0,255,170,0.4)">🛸 SECTOR FLAGSHIP BOSSES (6)</button>
+      <button id="tabFleetIntel" onclick="switchIntelTab('fleet')" style="flex:1;background:rgba(255,255,255,0.08);color:#94a3b8;font-weight:700;border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem">🚀 STAR WARS ENEMY FLEET (10)</button>
     </div>
     
     <div id="bossIntelGrid" class="boss-intel-grid"></div>
     
-    <div style="margin-top:12px;font-size:0.85rem;color:#8fa6cb">
+    <div id="intelProTip" style="margin-top:12px;font-size:0.85rem;color:#8fa6cb">
       💡 <b>Captain Noel's Tactical Pro-Tip:</b> Target boss cores with heavy 32-pounder broadsides while dodging their ultimate attack trajectories!
     </div>
   </div>
@@ -2416,6 +2422,306 @@ const BOSS_INTEL = [
   }
 ];
 
+function getEnemySvg(id) {
+  const uid = 'e' + Math.random().toString(36).substr(2, 6);
+  if (id === 'tie') {
+    // 1. Imperial TIE/ln Starfighter
+    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="tie_ball_${uid}" cx="70" cy="35" r="16" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="40%" stop-color="#475569"/>
+          <stop offset="100%" stop-color="#0f172a"/>
+        </radialGradient>
+      </defs>
+      <!-- Port Hexagonal Solar Panel -->
+      <polygon points="18,10 32,5 32,65 18,60 10,35" fill="#1e293b" stroke="#64748b" stroke-width="1.8"/>
+      <line x1="22" y1="8" x2="22" y2="62" stroke="#ff0033" stroke-width="1.2"/>
+      <!-- Starboard Hexagonal Solar Panel -->
+      <polygon points="122,10 108,5 108,65 122,60 130,35" fill="#1e293b" stroke="#64748b" stroke-width="1.8"/>
+      <line x1="118" y1="8" x2="118" y2="62" stroke="#ff0033" stroke-width="1.2"/>
+      <!-- Pylon Connecting Struts -->
+      <rect x="28" y="32" width="84" height="6" fill="#090d16" stroke="#475569" stroke-width="1.2"/>
+      <!-- Central Spherical Cockpit Pod -->
+      <circle cx="70" cy="35" r="16" fill="url(#tie_ball_${uid})" stroke="#020617" stroke-width="2"/>
+      <!-- Pilot Viewport Frame with Glowing Red Center -->
+      <circle cx="70" cy="35" r="7" fill="#0f172a" stroke="#ff0033" stroke-width="1.4"/>
+      <circle cx="70" cy="35" r="3" fill="#ff0033"/>
+      <!-- Twin Chin Red Laser Barrels -->
+      <rect x="65" y="47" width="3" height="6" fill="#ff0033"/>
+      <rect x="72" y="47" width="3" height="6" fill="#ff0033"/>
+    </svg>`;
+  } else if (id === 'vulture') {
+    // 2. Separatist Vulture Droid Fighter
+    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="vul_hull_${uid}" x1="0" y1="35" x2="140" y2="35" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#581c87"/>
+          <stop offset="50%" stop-color="#7e22ce"/>
+          <stop offset="100%" stop-color="#1e1b4b"/>
+        </linearGradient>
+      </defs>
+      <!-- Dual Forward Mandible Claws (Port & Starboard) -->
+      <polygon points="10,12 55,24 50,30 25,26" fill="#0f051d" stroke="#c084fc" stroke-width="1.5"/>
+      <polygon points="10,58 55,46 50,40 25,44" fill="#0f051d" stroke="#c084fc" stroke-width="1.5"/>
+      <polygon points="130,12 85,24 90,30 115,26" fill="#0f051d" stroke="#c084fc" stroke-width="1.5"/>
+      <polygon points="130,58 85,46 90,40 115,44" fill="#0f051d" stroke="#c084fc" stroke-width="1.5"/>
+      <!-- Central Droid Head Pod -->
+      <polygon points="70,18 90,35 70,52 50,35" fill="url(#vul_hull_${uid})" stroke="#c084fc" stroke-width="1.8"/>
+      <!-- Red Droid Photoreceptor Eye -->
+      <circle cx="70" cy="35" r="4.5" fill="#ff0033" stroke="#ffffff" stroke-width="1"/>
+      <circle cx="70" cy="35" r="1.8" fill="#ffffff"/>
+    </svg>`;
+  } else if (id === 'tie_bomber') {
+    // 3. Imperial TIE Bomber
+    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Port Cockpit Pod -->
+      <circle cx="56" cy="35" r="13" fill="#1e293b" stroke="#64748b" stroke-width="1.8"/>
+      <circle cx="53" cy="35" r="4" fill="#ff0033"/>
+      <!-- Starboard Bombing Pod -->
+      <circle cx="84" cy="35" r="13" fill="#0f172a" stroke="#00e5ff" stroke-width="1.8"/>
+      <circle cx="87" cy="35" r="4" fill="#00e5ff"/>
+      <!-- Connecting Strut -->
+      <rect x="64" y="32" width="12" height="6" fill="#020617"/>
+      <!-- Outer Bent Solar Wings -->
+      <polygon points="14,14 26,10 32,35 26,60 14,56" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+      <polygon points="126,14 114,10 108,35 114,60 126,56" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+    </svg>`;
+  } else if (id === 'tie_defender') {
+    // 4. Imperial TIE Defender (Triple Wing)
+    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Central Cockpit -->
+      <circle cx="70" cy="35" r="12" fill="#1e293b" stroke="#00ffee" stroke-width="1.8"/>
+      <circle cx="70" cy="35" r="4" fill="#00ffee"/>
+      <!-- 3 Radial Solar Array Wings -->
+      <line x1="70" y1="35" x2="70" y2="8" stroke="#64748b" stroke-width="2.5"/>
+      <polygon points="56,8 84,8 70,2" fill="#1e293b" stroke="#00ffee" stroke-width="1.2"/>
+      <line x1="70" y1="35" x2="42" y2="55" stroke="#64748b" stroke-width="2.5"/>
+      <polygon points="34,44 48,64 30,58" fill="#1e293b" stroke="#00ffee" stroke-width="1.2"/>
+      <line x1="70" y1="35" x2="98" y2="55" stroke="#64748b" stroke-width="2.5"/>
+      <polygon points="106,44 92,64 110,58" fill="#1e293b" stroke="#00ffee" stroke-width="1.2"/>
+    </svg>`;
+  } else if (id === 'tri_fighter') {
+    // 5. Separatist Tri-Fighter
+    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Central Droid Brain -->
+      <circle cx="70" cy="35" r="10" fill="#450a0a" stroke="#c084fc" stroke-width="1.8"/>
+      <circle cx="70" cy="35" r="4" fill="#ff0033"/>
+      <!-- 3 Curved Pincer Claws -->
+      <path d="M70 25 Q70 8 50 10" stroke="#c084fc" stroke-width="2.5" fill="none"/>
+      <path d="M62 42 Q40 55 45 65" stroke="#c084fc" stroke-width="2.5" fill="none"/>
+      <path d="M78 42 Q100 55 95 65" stroke="#c084fc" stroke-width="2.5" fill="none"/>
+    </svg>`;
+  } else if (id === 'cruiser') {
+    // 6. Imperial Arquitens Light Cruiser
+    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Dagger Wedge Hull -->
+      <polygon points="10,35 110,12 125,24 125,46 110,58" fill="#1e293b" stroke="#00ffaa" stroke-width="1.8"/>
+      <!-- Twin Side Bridge Pods -->
+      <circle cx="95" cy="18" r="6" fill="#0f172a" stroke="#00ffaa" stroke-width="1.2"/>
+      <circle cx="95" cy="52" r="6" fill="#0f172a" stroke="#00ffaa" stroke-width="1.2"/>
+      <!-- Central Emerald Core -->
+      <circle cx="65" cy="35" r="7" fill="#00ffaa" opacity="0.85"/>
+      <!-- 3 Rear Engines -->
+      <circle cx="123" cy="28" r="3.5" fill="#00ffaa"/>
+      <circle cx="125" cy="35" r="4" fill="#ffffff"/>
+      <circle cx="123" cy="42" r="3.5" fill="#00ffaa"/>
+    </svg>`;
+  } else if (id === 'tesla') {
+    // 7. Separatist Munificent Star Frigate
+    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Slender Needle Bow -->
+      <polygon points="8,35 60,18 122,22 122,48 60,52" fill="#1e293b" stroke="#00e5ff" stroke-width="1.8"/>
+      <!-- Dorsal Tower -->
+      <rect x="68" y="8" width="12" height="54" fill="#0f172a" stroke="#38bdf8" stroke-width="1.2"/>
+      <!-- Ion Prow Core -->
+      <circle cx="35" cy="35" r="7" fill="#00e5ff"/>
+    </svg>`;
+  } else if (id === 'brood') {
+    // 8. Imperial Gozanti Armed Gunship
+    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Heavy Cargo Hull -->
+      <polygon points="12,35 45,15 115,20 125,35 115,50 45,55" fill="#450a0a" stroke="#ff5500" stroke-width="2"/>
+      <!-- Dorsal Turret -->
+      <rect x="58" y="22" width="24" height="26" fill="#180408" stroke="#ffd23c" stroke-width="1.2"/>
+      <circle cx="70" cy="35" r="7" fill="#ffdd33"/>
+    </svg>`;
+  } else if (id === 'cryo_gunship') {
+    // 9. Chiss Ascendancy Clawcraft Cruiser
+    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- 4 Curved Claw Wings -->
+      <path d="M70 25 Q30 10 15 15" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
+      <path d="M70 45 Q30 60 15 55" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
+      <path d="M70 25 Q110 10 125 15" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
+      <path d="M70 45 Q110 60 125 55" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
+      <!-- Cockpit Pod -->
+      <circle cx="70" cy="35" r="14" fill="#082f49" stroke="#e0f2fe" stroke-width="2"/>
+      <circle cx="70" cy="35" r="5" fill="#38bdf8"/>
+    </svg>`;
+  } else {
+    // 10. Imperial Raider Heavy Corvette
+    return `<svg viewBox="0 0 140 70" width="130" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="10,35 50,15 118,20 122,35 118,50 50,55" fill="#331802" stroke="#ffd23c" stroke-width="2.2"/>
+      <polygon points="45,35 75,22 105,24 105,46 75,48" fill="#78350f" stroke="#fde047" stroke-width="1.2"/>
+      <circle cx="65" cy="35" r="7" fill="#ffd23c"/>
+    </svg>`;
+  }
+}
+
+const ENEMY_INTEL = [
+  // 5 STARFIGHTERS
+  {
+    id: 'tie',
+    name: 'Imperial TIE/ln Starfighter',
+    type: 'Starfighter · Swarm',
+    col: '#ff2255',
+    hp: '1 - 3 HP',
+    spd: '270 - 445 km/s',
+    weapons: 'Twin Red Chin Laser Blasters (Rapid Dogfight Bursts)',
+    tactic: 'Shoot them down in swarms before they flank your galleon\'s broadside arc!'
+  },
+  {
+    id: 'vulture',
+    name: 'Separatist Vulture Droid Fighter',
+    type: 'Droid Interceptor',
+    col: '#a855f7',
+    hp: '1 - 2 HP',
+    spd: '260 - 435 km/s',
+    weapons: 'Quad High-Velocity Mandible Laser Cannons',
+    tactic: 'Evade their high-speed strafing runs and blast their central photoreceptor eye.'
+  },
+  {
+    id: 'tie_bomber',
+    name: 'Imperial TIE Bomber',
+    type: 'Heavy Bomber',
+    col: '#ff3344',
+    hp: '1 - 2 HP',
+    spd: '350 - 550 km/s',
+    weapons: 'Heavy Proton Bomb & Plasma Torpedo Barrage',
+    tactic: 'High-threat kinetic artillery! Priority target before they drop explosive payload.'
+  },
+  {
+    id: 'tie_defender',
+    name: 'Imperial TIE Defender',
+    type: 'Elite Fighter',
+    col: '#00ffee',
+    hp: '1 - 2 HP',
+    spd: '340 - 520 km/s',
+    weapons: 'Triple-Wing Rapid Ion Cannon Storm',
+    tactic: 'Fastest fighter in the galaxy. Counter with Chain Lightning or Homing Missiles!'
+  },
+  {
+    id: 'tri_fighter',
+    name: 'Separatist Tri-Fighter',
+    type: 'Droid Hunter',
+    col: '#c084fc',
+    hp: '2 - 3 HP',
+    spd: '310 - 470 km/s',
+    weapons: '3-Pincer Tracking Laser Burst',
+    tactic: 'Heavy armored droid brain. Requires direct cannon hits to shatter the pincer claws.'
+  },
+
+  // 5 WARSHIPS
+  {
+    id: 'cruiser',
+    name: 'Imperial Arquitens Light Cruiser',
+    type: 'Light Cruiser · Sector 1+',
+    col: '#00ffaa',
+    hp: '5 - 10 HP',
+    spd: '130 - 240 km/s',
+    weapons: 'Dual Aimed Turbo-Railgun Cannons + Emerald Plasma',
+    tactic: 'Dodge the aimed turbo-railguns and fire full broadsides into the side bridge pods!'
+  },
+  {
+    id: 'tesla',
+    name: 'Separatist Munificent Star Frigate',
+    type: 'Star Frigate · Sector 2+',
+    col: '#00e5ff',
+    hp: '6 - 12 HP',
+    spd: '130 - 240 km/s',
+    weapons: '360° EMP Shockwave Ring & Prow Heavy Ion Blast',
+    tactic: 'Weave through the EMP ring and focus firepower on the dorsal communications spine.'
+  },
+  {
+    id: 'brood',
+    name: 'Imperial Gozanti Armed Gunship',
+    type: 'Armed Gunship · Sector 3+',
+    col: '#ff5500',
+    hp: '7 - 13 HP',
+    spd: '130 - 240 km/s',
+    weapons: 'Solar Magma Torpedo & 3-Way Scatter Salvo',
+    tactic: 'Bank hard away from the magma torpedoes to avoid explosive burn damage.'
+  },
+  {
+    id: 'cryo_gunship',
+    name: 'Chiss Ascendancy Clawcraft Cruiser',
+    type: 'Heavy Bastion · Sector 4+',
+    col: '#38bdf8',
+    hp: '7 - 13 HP',
+    spd: '130 - 240 km/s',
+    weapons: 'Dual Sub-Zero Cryo Freeze Beams',
+    tactic: 'Cryo beams freeze your solar sails! Keep maximum distance and snipe the cockpit.'
+  },
+  {
+    id: 'imperial',
+    name: 'Imperial Raider Heavy Corvette',
+    type: 'Heavy Corvette · Sector 5+',
+    col: '#ffd23c',
+    hp: '9 - 16 HP',
+    spd: '130 - 240 km/s',
+    weapons: '3-Way Heavy Golden Turbolaser Salvo',
+    tactic: 'Heaviest non-boss warship in the armada. Use deflector shields to absorb the gold salvo!'
+  }
+];
+
+let currentIntelTab = 'bosses';
+
+function switchIntelTab(tab) {
+  currentIntelTab = tab;
+  const tabBoss = document.getElementById('tabBossIntel');
+  const tabFleet = document.getElementById('tabFleetIntel');
+  const title = document.getElementById('intelModalTitle');
+  const tip = document.getElementById('intelProTip');
+
+  if (tab === 'fleet') {
+    if (tabBoss) {
+      tabBoss.style.background = 'rgba(255,255,255,0.08)';
+      tabBoss.style.color = '#94a3b8';
+      tabBoss.style.fontWeight = '700';
+      tabBoss.style.boxShadow = 'none';
+      tabBoss.style.border = '1px solid rgba(255,255,255,0.15)';
+    }
+    if (tabFleet) {
+      tabFleet.style.background = 'linear-gradient(135deg,#a855f7,#00e5ff)';
+      tabFleet.style.color = '#020617';
+      tabFleet.style.fontWeight = '900';
+      tabFleet.style.boxShadow = '0 0 14px rgba(168,85,247,0.45)';
+      tabFleet.style.border = 'none';
+    }
+    if (title) title.textContent = 'STAR WARS ENEMY FLEET & FIGHTERS (10)';
+    if (tip) tip.innerHTML = '💡 <b>Tactical Pro-Tip:</b> Use Chain Lightning & Homing Missiles against TIE and Vulture Droid swarms!';
+    renderFleetIntelUI();
+  } else {
+    if (tabFleet) {
+      tabFleet.style.background = 'rgba(255,255,255,0.08)';
+      tabFleet.style.color = '#94a3b8';
+      tabFleet.style.fontWeight = '700';
+      tabFleet.style.boxShadow = 'none';
+      tabFleet.style.border = '1px solid rgba(255,255,255,0.15)';
+    }
+    if (tabBoss) {
+      tabBoss.style.background = 'linear-gradient(135deg,#00ffaa,#0284c7)';
+      tabBoss.style.color = '#020617';
+      tabBoss.style.fontWeight = '900';
+      tabBoss.style.boxShadow = '0 0 14px rgba(0,255,170,0.4)';
+      tabBoss.style.border = 'none';
+    }
+    if (title) title.textContent = 'STAR WARS SECTOR FLAGSHIP BOSSES (6)';
+    if (tip) tip.innerHTML = '💡 <b>Captain Noel\'s Tactical Pro-Tip:</b> Target boss cores with heavy 32-pounder broadsides while dodging their ultimate attack trajectories!';
+    renderBossIntelModalUI();
+  }
+}
+
 function renderBossIntelModalUI() {
   const grid = document.getElementById('bossIntelGrid');
   if (!grid) return;
@@ -2442,9 +2748,36 @@ function renderBossIntelModalUI() {
   }).join('');
 }
 
+function renderFleetIntelUI() {
+  const grid = document.getElementById('bossIntelGrid');
+  if (!grid) return;
+
+  grid.innerHTML = ENEMY_INTEL.map(e => {
+    const svg = getEnemySvg(e.id);
+    return `
+      <div class="boss-card-item" style="border-color:${e.col}44;box-shadow:0 4px 18px ${e.col}22">
+        <div class="boss-img-wrap">${svg}</div>
+        <div class="boss-name-tag" style="color:${e.col}">${e.name}</div>
+        <div style="font-size:0.78rem;color:#ffd23c;font-weight:bold;margin-bottom:6px">${e.type} · ❤️ ${e.hp} · ⚡ ${e.spd}</div>
+        <div style="font-size:0.78rem;color:#cfe4ff;margin-bottom:6px;width:100%">
+          <b>⚔️ Armament & Weaponry:</b>
+          <div style="margin:2px 0;padding-left:4px;border-left:2px solid ${e.col}">${e.weapons}</div>
+        </div>
+        <div style="font-size:0.72rem;color:#94a3b8;font-style:italic">
+          🎯 <b>Counter-Tactic:</b> ${e.tactic}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
 function openBossIntelModal(e) {
   if (e) { e.preventDefault(); e.stopPropagation(); }
-  renderBossIntelModalUI();
+  if (currentIntelTab === 'fleet') {
+    renderFleetIntelUI();
+  } else {
+    renderBossIntelModalUI();
+  }
   const m = document.getElementById('bossIntelModal');
   if (m) m.classList.remove('hidden');
 }
