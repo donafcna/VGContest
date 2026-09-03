@@ -2635,7 +2635,7 @@ function update(dt) {
       }
     }
 
-    // Galleon Cannons Aim & Unleash Broadside during Stage 2+
+    // Galleon Cannons Aim & Unleash Broadside during Stage 2
     const cannon1X = ship.x + 38, cannon1Y = ship.y + 16;
     const cannon2X = ship.x + 12, cannon2Y = ship.y + 24;
     
@@ -2651,14 +2651,14 @@ function update(dt) {
       parts.push({ type: 'ring', x: cannon1X + 14, y: cannon1Y, r: 6, maxR: 36, life: 0.4, maxLife: 0.4, col: '#ffe552', lw: 3 });
       parts.push({ type: 'ring', x: cannon2X + 14, y: cannon2Y, r: 6, maxR: 36, life: 0.4, maxLife: 0.4, col: '#00ffee', lw: 3 });
 
-      // Launch 4 Supercharged Corkscrew Cannonballs
+      // Launch 4 Supercharged Corkscrew Cannonballs (Fast flight straight into target!)
       // Cannonball 1: High loop -> Fighter 1
       balls.push({
         sx: cannon1X, sy: cannon1Y,
         tx: introUfos[0] ? introUfos[0].x : W * 0.62,
         ty: introUfos[0] ? introUfos[0].y : H * 0.34,
         x: cannon1X, y: cannon1Y, r: 14, isIntro: 1,
-        flightT: 0, flightDur: 0.95, loopDir: 1, col: '#ffd23c'
+        flightT: 0, flightDur: 0.65, loopDir: 1, col: '#ffd23c'
       });
       // Cannonball 2: High spiral -> Fighter 1
       balls.push({
@@ -2666,7 +2666,7 @@ function update(dt) {
         tx: introUfos[0] ? introUfos[0].x : W * 0.62,
         ty: introUfos[0] ? introUfos[0].y : H * 0.34,
         x: cannon1X, y: cannon1Y, r: 12, isIntro: 1,
-        flightT: -0.06, flightDur: 0.95, loopDir: -0.7, col: '#ff9900'
+        flightT: -0.05, flightDur: 0.65, loopDir: -0.7, col: '#ff9900'
       });
 
       // Cannonball 3: Low inverted loop -> Fighter 2
@@ -2675,7 +2675,7 @@ function update(dt) {
         tx: introUfos[1] ? introUfos[1].x : W * 0.68,
         ty: introUfos[1] ? introUfos[1].y : H * 0.66,
         x: cannon2X, y: cannon2Y, r: 14, isIntro: 2,
-        flightT: 0, flightDur: 0.95, loopDir: -1, col: '#00ffee'
+        flightT: 0, flightDur: 0.65, loopDir: -1, col: '#00ffee'
       });
       // Cannonball 4: Low spiral -> Fighter 2
       balls.push({
@@ -2683,69 +2683,17 @@ function update(dt) {
         tx: introUfos[1] ? introUfos[1].x : W * 0.68,
         ty: introUfos[1] ? introUfos[1].y : H * 0.66,
         x: cannon2X, y: cannon2Y, r: 12, isIntro: 2,
-        flightT: -0.06, flightDur: 0.95, loopDir: 0.7, col: '#38bdf8'
+        flightT: -0.05, flightDur: 0.65, loopDir: 0.7, col: '#38bdf8'
       });
     }
 
-    // Trigger Supernova Impacts on Stage 3+
-    if (storyStage >= 3) {
-      for (let k = 0; k < introUfos.length; k++) {
-        const u = introUfos[k];
-        if (u && !u.dead) {
-          u.dead = true;
-          explode(u.x, u.y, u.col, 80);
-          sfx('boom');
-          addShake(36);
-
-          // Expanding Shockwave Rings
-          parts.push({ type: 'ring', x: u.x, y: u.y, r: 8, maxR: 90, life: 0.55, maxLife: 0.55, col: '#ffffff', lw: 5 });
-          parts.push({ type: 'ring', x: u.x, y: u.y, r: 6, maxR: 70, life: 0.45, maxLife: 0.45, col: u.col, lw: 4 });
-
-          // 24 Hexagonal Energy Shield Shards
-          for (let s = 0; s < 24; s++) {
-            const ang = (s / 24) * Math.PI * 2;
-            const spd = 160 + Math.random() * 220;
-            shieldShards.push({
-              x: u.x, y: u.y,
-              vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
-              rot: Math.random() * Math.PI * 2, vrot: (Math.random() - 0.5) * 16,
-              size: 9 + Math.random() * 9, col: u.col,
-              life: 0.75, maxLife: 0.75
-            });
-          }
-
-          // Fractured Burning Hull Fragments
-          for (let w = 0; w < 4; w++) {
-            const wAng = (w / 4) * Math.PI * 2 + 0.3;
-            wreckage.push({
-              x: u.x + Math.cos(wAng) * 16, y: u.y + Math.sin(wAng) * 16,
-              vx: Math.cos(wAng) * (110 + Math.random() * 80),
-              vy: Math.sin(wAng) * (90 + Math.random() * 80),
-              rot: u.pitch || 0, vrot: (Math.random() - 0.5) * 10,
-              col: u.col, half: w % 2 === 0 ? 'top' : 'bottom', w: u.w * 0.7, h: u.h * 0.7, life: 2.8, maxLife: 2.8
-            });
-          }
-
-          // Magnetic Dubloon & Plasma Inflow
-          for (let c = 0; c < 8; c++) {
-            coins.push({
-              x: u.x, y: u.y,
-              vx: -180 + Math.random() * 80,
-              vy: (c - 3.5) * 35 + (Math.random() - 0.5) * 20,
-              magnetic: true
-            });
-          }
-        }
-      }
-    }
-
-    // Projectile Physics
+    // Projectile Physics & Direct Supernova Detonations
     for (let i = balls.length - 1; i >= 0; i--) {
       const b = balls[i];
       if (b.isIntro) {
         b.flightT += dt;
         if (b.flightT < 0) continue;
-        const p = Math.min(1, b.flightT / (b.flightDur || 0.95));
+        const p = Math.min(1, b.flightT / (b.flightDur || 0.65));
         
         const targetUfo = (b.isIntro === 1) ? introUfos[0] : introUfos[1];
         if (targetUfo) { b.tx = targetUfo.x; b.ty = targetUfo.y; }
@@ -2771,7 +2719,54 @@ function update(dt) {
           size: 4 + Math.random() * 3.5
         });
 
+        // Direct Hit Supernova Explosion
         if (p >= 1.0) {
+          const u = (b.isIntro === 1) ? introUfos[0] : introUfos[1];
+          if (u && !u.dead) {
+            u.dead = true;
+            explode(u.x, u.y, u.col, 95);
+            sfx('boom');
+            addShake(36);
+
+            // Expanding Shockwave Rings
+            parts.push({ type: 'ring', x: u.x, y: u.y, r: 8, maxR: 95, life: 0.55, maxLife: 0.55, col: '#ffffff', lw: 5 });
+            parts.push({ type: 'ring', x: u.x, y: u.y, r: 6, maxR: 75, life: 0.45, maxLife: 0.45, col: u.col, lw: 4 });
+
+            // 24 Hexagonal Energy Shield Shards
+            for (let s = 0; s < 24; s++) {
+              const ang = (s / 24) * Math.PI * 2;
+              const spd = 160 + Math.random() * 220;
+              shieldShards.push({
+                x: u.x, y: u.y,
+                vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+                rot: Math.random() * Math.PI * 2, vrot: (Math.random() - 0.5) * 16,
+                size: 9 + Math.random() * 9, col: u.col,
+                life: 0.75, maxLife: 0.75
+              });
+            }
+
+            // Fractured Burning Hull Fragments
+            for (let w = 0; w < 4; w++) {
+              const wAng = (w / 4) * Math.PI * 2 + 0.3;
+              wreckage.push({
+                x: u.x + Math.cos(wAng) * 16, y: u.y + Math.sin(wAng) * 16,
+                vx: Math.cos(wAng) * (110 + Math.random() * 80),
+                vy: Math.sin(wAng) * (90 + Math.random() * 80),
+                rot: u.pitch || 0, vrot: (Math.random() - 0.5) * 10,
+                col: u.col, half: w % 2 === 0 ? 'top' : 'bottom', w: u.w * 0.7, h: u.h * 0.7, life: 2.8, maxLife: 2.8
+              });
+            }
+
+            // Magnetic Dubloon & Plasma Inflow
+            for (let c = 0; c < 8; c++) {
+              coins.push({
+                x: u.x, y: u.y,
+                vx: -180 + Math.random() * 80,
+                vy: (c - 3.5) * 35 + (Math.random() - 0.5) * 20,
+                magnetic: true
+              });
+            }
+          }
           balls.splice(i, 1);
         }
       }
