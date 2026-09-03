@@ -2929,40 +2929,23 @@ async function renderLeaderboard(cid, myScore, myName) {
 // ---------- SPAWN STAR WARS ENEMY ARCHETYPES WITH UNIQUE POWERS & SECTOR PROGRESSION ----------
 function spawnFort() {
   const roll = Math.random();
-  let variant = 'cruiser', col = '#00ffaa', name = 'IMPERIAL ARQUITENS CRUISER', hp = 5, w = 125, h = 66;
+  let variant = 'cruiser', col = '#38bdf8', name = 'IMPERIAL ARQUITENS CRUISER', hp = 5, w = 125, h = 66;
   
-  if (level <= 1) {
-    // Sector 1: Imperial Arquitens Light Cruiser
-    variant = 'cruiser'; col = '#00ffaa'; name = 'IMPERIAL ARQUITENS CRUISER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
-  } else if (level <= 2) {
-    // Sector 2: + Separatist Munificent Frigate
-    if (roll < 0.5) {
-      variant = 'cruiser'; col = '#00ffaa'; name = 'IMPERIAL ARQUITENS CRUISER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
-    } else {
-      variant = 'tesla'; col = '#00e5ff'; name = 'SEPARATIST MUNIFICENT FRIGATE'; hp = 6 + Math.floor(level * 0.9); w = 118; h = 70;
-    }
-  } else if (level <= 3) {
-    // Sector 3: + Imperial Gozanti Gunship
-    if (roll < 0.33) {
-      variant = 'cruiser'; col = '#00ffaa'; name = 'IMPERIAL ARQUITENS CRUISER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
-    } else if (roll < 0.66) {
-      variant = 'tesla'; col = '#00e5ff'; name = 'SEPARATIST MUNIFICENT FRIGATE'; hp = 6 + Math.floor(level * 0.9); w = 118; h = 70;
-    } else {
-      variant = 'brood'; col = '#ff5500'; name = 'IMPERIAL GOZANTI GUNSHIP'; hp = 7 + Math.floor(level * 0.9); w = 126; h = 68;
-    }
+  if (roll < 0.28) {
+    // 1. Imperial Arquitens Light Cruiser (Imperial Slate Titanium & Deflector Shields)
+    variant = 'cruiser'; col = '#38bdf8'; name = 'IMPERIAL ARQUITENS CRUISER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
+  } else if (roll < 0.52) {
+    // 2. Separatist Munificent Star Frigate (Electric Cyan & Navy)
+    variant = 'tesla'; col = '#00e5ff'; name = 'SEPARATIST MUNIFICENT FRIGATE'; hp = 6 + Math.floor(level * 0.8); w = 118; h = 70;
+  } else if (roll < 0.72) {
+    // 3. Imperial Gozanti Armed Gunship (Magma Orange & Heavy Armor)
+    variant = 'brood'; col = '#ff5500'; name = 'IMPERIAL GOZANTI GUNSHIP'; hp = 7 + Math.floor(level * 0.9); w = 126; h = 68;
+  } else if (roll < 0.88) {
+    // 4. Chiss Ascendancy Clawcraft Cruiser (Glacial Frost Ice)
+    variant = 'cryo_gunship'; col = '#93c5fd'; name = 'CHISS ASCENDANCY CLAWCRAFT'; hp = 7 + Math.floor(level * 0.9); w = 122; h = 64;
   } else {
-    // Sector 4+: All 5 Heavy Warships including Chiss Clawcraft & Imperial Raider Corvette!
-    if (roll < 0.22) {
-      variant = 'cruiser'; col = '#00ffaa'; name = 'IMPERIAL ARQUITENS CRUISER'; hp = 6 + Math.floor(level * 0.8); w = 125; h = 66;
-    } else if (roll < 0.44) {
-      variant = 'tesla'; col = '#00e5ff'; name = 'SEPARATIST MUNIFICENT FRIGATE'; hp = 7 + Math.floor(level * 1.0); w = 118; h = 70;
-    } else if (roll < 0.65) {
-      variant = 'brood'; col = '#ff5500'; name = 'IMPERIAL GOZANTI GUNSHIP'; hp = 8 + Math.floor(level * 1.0); w = 126; h = 68;
-    } else if (roll < 0.82) {
-      variant = 'cryo_gunship'; col = '#38bdf8'; name = 'CHISS ASCENDANCY CLAWCRAFT'; hp = 7 + Math.floor(level * 0.9); w = 122; h = 64;
-    } else {
-      variant = 'imperial'; col = '#ffd23c'; name = 'IMPERIAL RAIDER CORVETTE'; hp = 9 + Math.floor(level * 1.1); w = 130; h = 72;
-    }
+    // 5. Imperial Raider Heavy Corvette (24K Gold & Stealth Dagger)
+    variant = 'imperial'; col = '#ffd23c'; name = 'IMPERIAL RAIDER CORVETTE'; hp = 8 + Math.floor(level * 1.0); w = 130; h = 72;
   }
 
   forts.push({
@@ -2985,25 +2968,27 @@ function spawnGlider(xPos, yPos, forceType) {
   let roll = forceType;
   if (!roll) {
     const r = Math.random();
-    if (level <= 1) roll = 'tie';
-    else if (level <= 2) roll = r < 0.5 ? 'tie' : 'stalker';
-    else if (level <= 3) roll = r < 0.35 ? 'tie' : r < 0.70 ? 'stalker' : 'rammer';
-    else roll = r < 0.25 ? 'tie' : r < 0.50 ? 'stalker' : r < 0.75 ? 'rammer' : r < 0.88 ? 'drone' : 'phantom';
+    if (r < 0.32) roll = 'tie';
+    else if (r < 0.56) roll = 'stalker';
+    else if (r < 0.74) roll = 'rammer';
+    else if (r < 0.88) roll = 'drone';
+    else roll = 'phantom';
   }
 
   let col = '#ff2255', name = 'IMPERIAL TIE FIGHTER', spd = 270 + level * 35, w = 76, h = 48, hp = 1;
   if (roll === 'stalker') {
-    col = '#a855f7'; name = 'SEPARATIST VULTURE DROID'; spd = 260 + level * 35; w = 56; h = 36; hp = 1 + (level >= 4 ? 1 : 0);
+    col = '#a855f7'; name = 'SEPARATIST VULTURE DROID'; spd = 260 + level * 35; w = 56; h = 36; hp = 1 + (level >= 3 ? 1 : 0);
   } else if (roll === 'rammer') {
-    col = '#ff3344'; name = 'IMPERIAL TIE BOMBER'; spd = 350 + level * 50; w = 60; h = 32; hp = 1 + (level >= 3 ? 1 : 0);
+    col = '#ff4433'; name = 'IMPERIAL TIE BOMBER'; spd = 350 + level * 50; w = 60; h = 32; hp = 1 + (level >= 3 ? 1 : 0);
   } else if (roll === 'drone') {
     col = '#00ffee'; name = 'IMPERIAL TIE DEFENDER'; spd = 340 + level * 45; w = 54; h = 34; hp = 1 + (level >= 3 ? 1 : 0);
   } else if (roll === 'phantom') {
-    col = '#c084fc'; name = 'SEPARATIST TRI-FIGHTER'; spd = 310 + level * 40; w = 62; h = 38; hp = 2 + (level >= 5 ? 1 : 0);
+    col = '#c084fc'; name = 'SEPARATIST TRI-FIGHTER'; spd = 310 + level * 40; w = 62; h = 38; hp = 2 + (level >= 4 ? 1 : 0);
   } else {
     // THE TIE FIGHTER
     name = 'IMPERIAL TIE FIGHTER';
-    hp = 1 + (level >= 3 ? 1 : 0) + (level >= 5 ? 1 : 0);
+    col = '#ff2255';
+    hp = 1 + (level >= 3 ? 1 : 0);
   }
 
   gliders.push({
@@ -3082,17 +3067,17 @@ function spawnBoss() {
   popup(W * 0.5, H * 0.35, `🚨 SECTOR ${level} BOSS: ${b.name}!`, '#ffd23c');
 }
 
-// ---------- GAME FLOW ----------
 function startCombat() {
   state = 'play';
   sfx('incoming');
   addShake(18);
-  addAlert('🚨 RED ALERT: ALIEN UFO BATTLEGROUP ATTACKING!', 'incoming');
+  addAlert('🚨 RED ALERT: IMPERIAL STARFLEET & SEPARATIST FIGHTERS ATTACKING!', 'incoming');
   updateDpadVisibility();
-  spawnGlider();
-  spawnGlider();
+  spawnGlider(W + 50, H * 0.22, 'tie');
+  spawnGlider(W + 110, H * 0.75, 'stalker');
+  spawnGlider(W + 170, H * 0.48, 'rammer');
   spawnFort();
-  fortT = 2.4;
+  fortT = 3.5;
 }
 
 function startSolarSail(e) {
@@ -5575,7 +5560,7 @@ function draw() {
     } else {
       // 1. IMPERIAL ARQUITENS LIGHT CRUISER (Dagger Arrowhead, Twin Side Bridge Pods, 3 Engine Bells)
       const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.54);
-      sg.addColorStop(0, 'rgba(0, 255, 170, 0.45)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      sg.addColorStop(0, 'rgba(56, 189, 248, 0.40)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = sg; cx.beginPath(); cx.ellipse(0, 0, f.w * 0.52, f.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
 
       // Main Triangular Arquitens Dagger Hull
@@ -5591,21 +5576,21 @@ function draw() {
       cx.lineTo(f.w * 0.26, f.h * 0.42);         // Starboard main wing
       cx.lineTo(-f.w * 0.26, f.h * 0.36);        // Starboard forward slope
       cx.closePath(); cx.fill();
-      cx.strokeStyle = '#00ffaa'; cx.lineWidth = 2.2; cx.stroke();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.2; cx.stroke();
 
       // Iconic Twin Side-Mounted Round Bridge Pods (Signature Arquitens Class!)
       for (const cy of [-f.h * 0.34, f.h * 0.34]) {
         cx.fillStyle = '#0f172a'; cx.beginPath(); cx.arc(f.w * 0.12, cy, 9, 0, Math.PI * 2); cx.fill();
-        cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1.4; cx.stroke();
-        cx.fillStyle = '#00ffaa'; cx.fillRect(f.w * 0.08, cy - 2, 3, 4);
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.4; cx.stroke();
+        cx.fillStyle = '#38bdf8'; cx.fillRect(f.w * 0.08, cy - 2, 3, 4);
       }
 
-      // Central Reactor Core with Orbiting Emerald Arc
+      // Central Command Core with Blue Ion Shielding
       const rcg = cx.createRadialGradient(0, 0, 1, 0, 0, 12);
-      rcg.addColorStop(0, '#ffffff'); rcg.addColorStop(0.4, '#00ffaa'); rcg.addColorStop(1, '#064e3b');
+      rcg.addColorStop(0, '#ffffff'); rcg.addColorStop(0.4, '#38bdf8'); rcg.addColorStop(1, '#082f49');
       cx.fillStyle = rcg;
       cx.beginPath(); cx.arc(0, 0, 9 + Math.sin(t * 14) * 1.5, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1.5;
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.5;
       cx.beginPath(); cx.arc(0, 0, 13, t * 8, t * 8 + Math.PI); cx.stroke();
 
       // Dual Aimed Turbo-Railgun Cannons
@@ -5613,15 +5598,15 @@ function draw() {
       for (const wy of [-f.h * 0.20, f.h * 0.20]) {
         cx.save(); cx.translate(-f.w * 0.08, wy); cx.rotate(aimAng);
         cx.fillStyle = '#020617'; cx.fillRect(0, -3, 16, 6);
-        cx.fillStyle = '#00ffaa'; cx.fillRect(14, -2, 4, 4);
-        cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1; cx.strokeRect(0, -3, 16, 6);
+        cx.fillStyle = '#38bdf8'; cx.fillRect(14, -2, 4, 4);
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1; cx.strokeRect(0, -3, 16, 6);
         cx.restore();
       }
 
       // 3 Rear Ion Plasma Thrusters
       for (const ty of [-f.h * 0.14, 0, f.h * 0.14]) {
         const jg = cx.createLinearGradient(f.w * 0.44, ty, f.w * 0.65, ty);
-        jg.addColorStop(0, '#00ffaa'); jg.addColorStop(0.5, '#0284c7'); jg.addColorStop(1, 'rgba(0,0,0,0)');
+        jg.addColorStop(0, '#38bdf8'); jg.addColorStop(0.5, '#0284c7'); jg.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = jg; cx.beginPath();
         cx.moveTo(f.w * 0.44, ty - 4); cx.lineTo(f.w * 0.62 + Math.random() * 8, ty); cx.lineTo(f.w * 0.44, ty + 4);
         cx.closePath(); cx.fill();
