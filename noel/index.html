@@ -598,6 +598,68 @@
     box-shadow: 0 0 10px rgba(255, 51, 68, 0.8);
     animation: pulseGlow 1s infinite alternate;
   }
+  
+  /* Boss Intel Archive Styles */
+  .boss-intel-card {
+    background: linear-gradient(145deg, rgba(8, 16, 36, 0.95), rgba(2, 6, 16, 0.98)) !important;
+    border: 2px solid rgba(0, 229, 255, 0.45) !important;
+    border-radius: 20px !important;
+    padding: 22px 24px !important;
+    max-width: 960px !important;
+    width: 95vw !important;
+    max-height: 88vh !important;
+    overflow-y: auto !important;
+    box-shadow: 0 0 35px rgba(0, 229, 255, 0.35) !important;
+    text-align: center !important;
+    color: #ffffff !important;
+    position: relative !important;
+  }
+  .boss-intel-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 14px !important;
+    margin: 16px 0 !important;
+  }
+  .boss-card-item {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 14px !important;
+    padding: 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: left !important;
+    transition: transform 0.2s, border-color 0.2s !important;
+  }
+  .boss-card-item:hover {
+    transform: translateY(-3px) !important;
+    border-color: rgba(255, 210, 60, 0.6) !important;
+  }
+  .boss-img-wrap {
+    width: 100% !important;
+    height: 90px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(0, 0, 0, 0.35) !important;
+    border-radius: 10px !important;
+    margin-bottom: 10px !important;
+  }
+  .boss-name-tag {
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: 0.92rem !important;
+    font-weight: 900 !important;
+    margin-bottom: 4px !important;
+    width: 100% !important;
+  }
+  .boss-power-badge {
+    display: inline-block !important;
+    font-size: 0.75rem !important;
+    padding: 3px 7px !important;
+    border-radius: 6px !important;
+    margin: 2px 0 !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+  }
 
   #touchHint {
     position: fixed; bottom: 20px; right: 20px;
@@ -707,6 +769,7 @@
     <button id="startbtn" type="button" onclick="startSolarSail(event)" ontouchend="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" type="button" onclick="openHangar(event)" ontouchend="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ PIRATE HANGAR &amp; UPGRADES</button>
     <button id="dailybtn" type="button" onclick="openDailyModal(event)" ontouchend="openDailyModal(event)" style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(255,94,98,0.55);position:relative;cursor:pointer">🎁 DAILY REWARDS <span id="dailyBadge" class="daily-badge hidden">!</span></button>
+    <button id="bossbtn" type="button" onclick="openBossIntelModal(event)" ontouchend="openBossIntelModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">👾 BOSS INTEL</button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.1rem; color:#ffd23c; font-weight:bold"></p>
   <p id="bestline" style="margin-top:0.2rem; font-size:1rem; color:#ffd23c; font-weight:bold; min-height:1.2em"></p>
@@ -825,6 +888,25 @@
 
     <!-- Action & Streak Recovery Area -->
     <div id="dailyActionArea" style="display:flex;flex-direction:column;gap:10px;margin-top:6px"></div>
+  </div>
+</div>
+
+<!-- Flagship Boss Intel Dossier & Archive Modal -->
+<div id="bossIntelModal" class="overlay hidden" style="z-index: 126;">
+  <div class="boss-intel-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="text-align:left">
+        <span style="font-size:0.75rem;font-weight:bold;color:#00ffee;letter-spacing:1.5px;text-transform:uppercase">🔬 TACTICAL RADAR DATABASE</span>
+        <h1 style="font-family:'Orbitron',sans-serif;font-size:1.4rem;color:#ffd23c;margin:2px 0">ALIEN FLAGSHIP BOSS INTEL</h1>
+      </div>
+      <button onclick="closeBossIntelModal()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:8px 16px;cursor:pointer;font-family:'Orbitron',sans-serif">✖ CLOSE</button>
+    </div>
+    
+    <div id="bossIntelGrid" class="boss-intel-grid"></div>
+    
+    <div style="margin-top:12px;font-size:0.85rem;color:#8fa6cb">
+      💡 <b>Captain Noel's Tactical Pro-Tip:</b> Target boss cores with heavy 32-pounder broadsides while dodging their ultimate attack trajectories!
+    </div>
   </div>
 </div>
 
@@ -1953,6 +2035,286 @@ function getShipSvg(shipId, cols) {
   </svg>`;
 }
 
+function getBossSvg(id) {
+  const uid = 'b' + Math.random().toString(36).substr(2, 6);
+  if (id === 'dread') {
+    // Grand Admiral Vex: Omega Dreadnought
+    return `<svg viewBox="0 0 140 80" width="130" height="74" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="vg_${uid}" x1="140" y1="40" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#020617"/>
+          <stop offset="40%" stop-color="#0f172a"/>
+          <stop offset="70%" stop-color="#1e293b"/>
+          <stop offset="100%" stop-color="#334155"/>
+        </linearGradient>
+        <radialGradient id="vc_${uid}" cx="50" cy="40" r="24" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="40%" stop-color="#00ffaa"/>
+          <stop offset="100%" stop-color="#064e3b"/>
+        </radialGradient>
+      </defs>
+      <path d="M10 40 L45 8 L125 10 L135 24 L135 56 L125 70 L45 72 Z" fill="url(#vg_${uid})" stroke="#00ffaa" stroke-width="2.5"/>
+      <rect x="85" y="24" width="35" height="32" fill="#020617" stroke="#00ffaa" stroke-width="1.5" rx="3"/>
+      <line x1="90" y1="32" x2="115" y2="32" stroke="#00ffaa" stroke-width="2"/>
+      <line x1="90" y1="48" x2="115" y2="48" stroke="#00ffaa" stroke-width="2"/>
+      <circle cx="50" cy="40" r="16" fill="url(#vc_${uid})" stroke="#ffffff" stroke-width="1.8"/>
+      <rect x="35" y="16" width="22" height="6" fill="#020617" stroke="#00ffaa" stroke-width="1.2"/>
+      <rect x="35" y="58" width="22" height="6" fill="#020617" stroke="#00ffaa" stroke-width="1.2"/>
+      <circle cx="132" cy="22" r="4" fill="#00ffaa"/>
+      <circle cx="132" cy="34" r="4" fill="#00ffaa"/>
+      <circle cx="132" cy="46" r="4" fill="#00ffaa"/>
+      <circle cx="132" cy="58" r="4" fill="#00ffaa"/>
+    </svg>`;
+  } else if (id === 'hive') {
+    // Overlord Chronos: Tesla Citadel Prime
+    return `<svg viewBox="0 0 140 80" width="130" height="74" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="tg_${uid}" x1="70" y1="0" x2="70" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#38bdf8"/>
+          <stop offset="40%" stop-color="#0369a1"/>
+          <stop offset="100%" stop-color="#082f49"/>
+        </linearGradient>
+        <radialGradient id="tc_${uid}" cx="70" cy="40" r="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="40%" stop-color="#00e5ff"/>
+          <stop offset="100%" stop-color="#0c4a6e"/>
+        </radialGradient>
+      </defs>
+      <polygon points="70,6 98,13 118,31 118,49 98,67 70,74 42,67 22,49 22,31 42,13" fill="url(#tg_${uid})" stroke="#00e5ff" stroke-width="2.5"/>
+      <circle cx="70" cy="40" r="26" stroke="rgba(0,255,238,0.4)" stroke-width="1.5" fill="none"/>
+      <circle cx="70" cy="40" r="18" fill="url(#tc_${uid})" stroke="#ffffff" stroke-width="2"/>
+      <circle cx="34" cy="22" r="9" fill="#0f172a" stroke="#00ffee" stroke-width="1.8"/>
+      <circle cx="34" cy="22" r="4" fill="#ffffff"/>
+      <circle cx="106" cy="22" r="9" fill="#0f172a" stroke="#00ffee" stroke-width="1.8"/>
+      <circle cx="106" cy="22" r="4" fill="#ffffff"/>
+      <circle cx="34" cy="58" r="9" fill="#0f172a" stroke="#00ffee" stroke-width="1.8"/>
+      <circle cx="34" cy="58" r="4" fill="#ffffff"/>
+      <circle cx="106" cy="58" r="9" fill="#0f172a" stroke="#00ffee" stroke-width="1.8"/>
+      <circle cx="106" cy="58" r="4" fill="#ffffff"/>
+    </svg>`;
+  } else if (id === 'ram') {
+    // Warlord Ignis: Solar Apocalypse Leviathan
+    return `<svg viewBox="0 0 140 80" width="130" height="74" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ig_${uid}" x1="140" y1="40" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#1c0509"/>
+          <stop offset="40%" stop-color="#4c0519"/>
+          <stop offset="75%" stop-color="#9f1239"/>
+          <stop offset="100%" stop-color="#e11d48"/>
+        </linearGradient>
+        <radialGradient id="ic_${uid}" cx="60" cy="40" r="24" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="30%" stop-color="#ffdd33"/>
+          <stop offset="70%" stop-color="#ff3300"/>
+          <stop offset="100%" stop-color="#450a0a"/>
+        </radialGradient>
+      </defs>
+      <path d="M10 40 L35 10 L60 22 L115 12 L132 26 L124 40 L132 54 L115 68 L60 58 L35 70 Z" fill="url(#ig_${uid})" stroke="#ff5500" stroke-width="2.5"/>
+      <circle cx="60" cy="40" r="18" fill="url(#ic_${uid})" stroke="#ffd23c" stroke-width="2"/>
+      <path d="M45 40 Q55 25 80 25 M45 40 Q55 55 80 55" stroke="#ffaa00" stroke-width="1.8" fill="none"/>
+      <circle cx="128" cy="28" r="4" fill="#ff4400"/>
+      <circle cx="128" cy="52" r="4" fill="#ff4400"/>
+    </svg>`;
+  } else if (id === 'void') {
+    // Archon Umbra: Phantom Void Harbinger
+    return `<svg viewBox="0 0 140 80" width="130" height="74" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ug_${uid}" x1="140" y1="40" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#0f051d"/>
+          <stop offset="40%" stop-color="#3b0764"/>
+          <stop offset="75%" stop-color="#7e22ce"/>
+          <stop offset="100%" stop-color="#c084fc"/>
+        </linearGradient>
+        <radialGradient id="uc_${uid}" cx="70" cy="40" r="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#000000"/>
+          <stop offset="40%" stop-color="#3b0764"/>
+          <stop offset="75%" stop-color="#9333ea"/>
+          <stop offset="100%" stop-color="#c084fc"/>
+        </radialGradient>
+      </defs>
+      <path d="M8 40 L45 10 L105 12 L130 26 L120 40 L130 54 L105 68 L45 70 Z" fill="url(#ug_${uid})" stroke="#c084fc" stroke-width="2.5"/>
+      <circle cx="70" cy="40" r="18" fill="url(#uc_${uid})" stroke="#e9d5ff" stroke-width="2"/>
+      <ellipse cx="70" cy="40" rx="28" ry="12" stroke="#c084fc" stroke-width="1.5" fill="none"/>
+      <circle cx="126" cy="28" r="4" fill="#c084fc"/>
+      <circle cx="126" cy="52" r="4" fill="#c084fc"/>
+    </svg>`;
+  } else if (id === 'cryo') {
+    // General Frostbyte: Glacial Cryo-Colossus
+    return `<svg viewBox="0 0 140 80" width="130" height="74" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cg_${uid}" x1="70" y1="0" x2="70" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f0f9ff"/>
+          <stop offset="35%" stop-color="#38bdf8"/>
+          <stop offset="75%" stop-color="#0284c7"/>
+          <stop offset="100%" stop-color="#082f49"/>
+        </linearGradient>
+        <radialGradient id="cc_${uid}" cx="70" cy="40" r="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="40%" stop-color="#38bdf8"/>
+          <stop offset="100%" stop-color="#0369a1"/>
+        </radialGradient>
+      </defs>
+      <polygon points="70,8 108,18 126,40 108,62 70,72 32,62 14,40 32,18" fill="url(#cg_${uid})" stroke="#e0f2fe" stroke-width="2.5"/>
+      <circle cx="70" cy="40" r="17" fill="url(#cc_${uid})" stroke="#ffffff" stroke-width="2"/>
+      <line x1="45" y1="40" x2="95" y2="40" stroke="#bae6fd" stroke-width="1.5"/>
+      <line x1="70" y1="15" x2="70" y2="65" stroke="#bae6fd" stroke-width="1.5"/>
+      <circle cx="36" cy="24" r="6" fill="#e0f2fe" stroke="#38bdf8" stroke-width="1.5"/>
+      <circle cx="104" cy="24" r="6" fill="#e0f2fe" stroke="#38bdf8" stroke-width="1.5"/>
+      <circle cx="36" cy="56" r="6" fill="#e0f2fe" stroke="#38bdf8" stroke-width="1.5"/>
+      <circle cx="104" cy="56" r="6" fill="#e0f2fe" stroke="#38bdf8" stroke-width="1.5"/>
+    </svg>`;
+  } else {
+    // Emperor Aurelius: Imperial Golden Titan-Lord
+    return `<svg viewBox="0 0 140 80" width="130" height="74" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ag_${uid}" x1="140" y1="40" x2="0" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#78350f"/>
+          <stop offset="35%" stop-color="#d97706"/>
+          <stop offset="70%" stop-color="#fbbf24"/>
+          <stop offset="100%" stop-color="#fffbeb"/>
+        </linearGradient>
+        <radialGradient id="ac_${uid}" cx="68" cy="40" r="24" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="35%" stop-color="#fff2b0"/>
+          <stop offset="75%" stop-color="#f59e0b"/>
+          <stop offset="100%" stop-color="#78350f"/>
+        </radialGradient>
+      </defs>
+      <path d="M8 40 L40 8 L108 10 L132 26 L122 40 L132 54 L108 70 L40 72 Z" fill="url(#ag_${uid})" stroke="#ffd23c" stroke-width="2.8"/>
+      <rect x="52" y="24" width="38" height="32" fill="#b45309" stroke="#ffffff" stroke-width="1.5" rx="3"/>
+      <circle cx="68" cy="40" r="18" fill="url(#ac_${uid})" stroke="#ffffff" stroke-width="2"/>
+      <ellipse cx="68" cy="40" rx="30" ry="14" stroke="#ffd23c" stroke-width="1.8" fill="none"/>
+      <circle cx="128" cy="28" r="4.5" fill="#ffd23c"/>
+      <circle cx="128" cy="52" r="4.5" fill="#ffd23c"/>
+    </svg>`;
+  }
+}
+
+const BOSS_INTEL = [
+  {
+    id: 'dread',
+    name: 'Grand Admiral Vex: Omega Dreadnought',
+    sector: 'Sector 1 Flagship',
+    col: '#00ffaa',
+    hp: 60,
+    powers: [
+      '⚡ Tachyon Hyper-Beam Death Ray (Continuous concentrated laser)',
+      '🛸 Escort Hunter Drones (Flanks and fires tracking lasers)',
+      '💥 Dual Heavy Kinetic Railguns'
+    ],
+    loot: '+2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +75 🪙',
+    tactic: 'Dodge the horizontal Tachyon beam by banking high or low, and take out the escort hunter drones!'
+  },
+  {
+    id: 'hive',
+    name: 'Overlord Chronos: Tesla Citadel Prime',
+    sector: 'Sector 2 Flagship',
+    col: '#00e5ff',
+    hp: 65,
+    powers: [
+      '⚡ 360° Quantum Tesla Tempest (10-way expanding EMP ring)',
+      '⚡ Orbiting Ball Lightning Clusters (Branching shock arcs)',
+      '🛡️ Kinetic Tesla Overcharge Deflector'
+    ],
+    loot: '+2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +100 🪙',
+    tactic: 'Slip between the gaps of the expanding 10-way EMP ring before unleashing broadsides at the central reactor core!'
+  },
+  {
+    id: 'ram',
+    name: 'Warlord Ignis: Solar Apocalypse Leviathan',
+    sector: 'Sector 3 Flagship',
+    col: '#ff3300',
+    hp: 70,
+    powers: [
+      '🔥 Supernova Meteor Cataclysm (Giant sun meteor that bursts into 6 fireballs)',
+      '🔥 Spiral Magma Inferno (10-way spinning vortex of molten plasma)',
+      '💥 Supernova Core Explosion on Defeat'
+    ],
+    loot: '+3 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +125 🪙',
+    tactic: 'Keep maximum distance when Ignis casts the Supernova Meteor, and weave through the spiral lava streams!'
+  },
+  {
+    id: 'void',
+    name: 'Archon Umbra: Phantom Void Harbinger',
+    sector: 'Sector 4 Flagship',
+    col: '#c084fc',
+    hp: 75,
+    powers: [
+      '🌀 Event Horizon Gravitational Vortex (Dual black holes with gravity pull)',
+      '🌌 Quantum Phase Warp Blink (Teleports across space to dodge broadsides)',
+      '⚡ Void Amethyst Hyper-Lances'
+    ],
+    loot: '+3 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +150 🪙',
+    tactic: 'Counter the gravitational vortex by accelerating solar thrusters away from the event horizon!'
+  },
+  {
+    id: 'cryo',
+    name: 'General Frostbyte: Glacial Cryo-Colossus',
+    sector: 'Sector 5 Flagship',
+    col: '#38bdf8',
+    hp: 80,
+    powers: [
+      '❄️ Absolute Zero Cryo-Blizzard (8-shard piercing ice lance spread)',
+      '❄️ Glacial Sub-Zero Cryo-Mines (Freezes sails on contact)',
+      '🛡️ Diamond-Ice Citadel Bastion (+30% armor plating)'
+    ],
+    loot: '+4 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +175 🪙',
+    tactic: 'Destroy the rotating ice shield shards to expose the vulnerable Absolute Zero core!'
+  },
+  {
+    id: 'titan',
+    name: 'Emperor Aurelius: Imperial Golden Titan-Lord',
+    sector: 'Sector 6 Final Emperor',
+    col: '#ffd23c',
+    hp: 95,
+    powers: [
+      '👑 Royal Sovereign Judgement (11-way golden laser fan + twin siege shells)',
+      '🪙 Midas Golden Treasure Rain (Fires gilded ordnance bursting into gold coins)',
+      '⚡ Emperor\'s Imperial Royal Command (Enraged overload barrage)'
+    ],
+    loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +200 🪙 + Gold Loot Rain',
+    tactic: 'Use your Galleon deflector shield to absorb the 11-way laser fan, then unleash full broadside salvos during reload!'
+  }
+];
+
+function renderBossIntelModalUI() {
+  const grid = document.getElementById('bossIntelGrid');
+  if (!grid) return;
+  
+  grid.innerHTML = BOSS_INTEL.map(b => {
+    const svg = getBossSvg(b.id);
+    return `
+      <div class="boss-card-item" style="border-color:${b.col}44;box-shadow:0 4px 18px ${b.col}22">
+        <div class="boss-img-wrap">${svg}</div>
+        <div class="boss-name-tag" style="color:${b.col}">${b.name}</div>
+        <div style="font-size:0.78rem;color:#ffd23c;font-weight:bold;margin-bottom:6px">${b.sector} · ❤️ ${b.hp} Base HP</div>
+        <div style="font-size:0.78rem;color:#cfe4ff;margin-bottom:6px;width:100%">
+          <b>⚡ Signature Super Powers:</b>
+          ${b.powers.map(p => `<div style="margin:2px 0;padding-left:4px;border-left:2px solid ${b.col}">${p}</div>`).join('')}
+        </div>
+        <div style="font-size:0.74rem;color:#3eed87;margin-bottom:6px;background:rgba(62,237,135,0.08);padding:4px 8px;border-radius:6px;width:100%">
+          <b>🎁 Bounty Loot:</b> ${b.loot}
+        </div>
+        <div style="font-size:0.72rem;color:#94a3b8;font-style:italic">
+          🎯 <b>Tactic:</b> ${b.tactic}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openBossIntelModal(e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  renderBossIntelModalUI();
+  const m = document.getElementById('bossIntelModal');
+  if (m) m.classList.remove('hidden');
+}
+
+function closeBossIntelModal() {
+  const m = document.getElementById('bossIntelModal');
+  if (m) m.classList.add('hidden');
+}
+
 let cachedLeaderboardRows = [];
 
 function openDossier(pilotIndex) {
@@ -2912,6 +3274,15 @@ function buildShop() {
     `<div class="lv" style="color:#ff9966">Streak: ${SAVE.data.daily ? SAVE.data.daily.streak : 0} Days 🔥</div></div>` +
     `<button style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;box-shadow:0 0 15px rgba(255,94,98,0.5)" onclick="openDailyModal(event)">🎁 OPEN</button></div>`;
 
+  // 0B. BOSS INTEL ARCHIVE
+  h += '<h2>👾 ALIEN FLAGSHIP BOSS INTEL — Inspect Powers &amp; Tactics 🔬</h2>';
+  h += `<div class="shopitem" style="border: 1.5px solid #00e5ff; background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(168, 85, 247, 0.1));">` +
+    `<div class="ic" style="font-size:2rem;display:flex;align-items:center;justify-content:center">🔬</div>` +
+    `<div class="info"><div class="t" style="color:#00ffee">Tactical Flagship Boss Database</div>` +
+    `<div class="d">Inspect all 6 Sector Bosses: Grand Admiral Vex, Chronos, Ignis, Umbra, Frostbyte &amp; Emperor Aurelius!</div>` +
+    `<div class="lv" style="color:#c084fc">6 Sector Flagships Documented 👾</div></div>` +
+    `<button style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;box-shadow:0 0 15px rgba(0,229,255,0.5)" onclick="openBossIntelModal(event)">🔬 INSPECT</button></div>`;
+
   // 1. COIN UPGRADES AT THE TOP
   h += '<h2>⚙️ SOLAR GALLEON UPGRADES — Buy with Coins 🪙</h2>';
   for (const key in UPG) {
@@ -3666,147 +4037,158 @@ function update(dt) {
       const spdBonus = (1 + Math.min(1.0, (level - 1) * 0.08)) * (boss.enraged ? 1.2 : 1.0);
 
       if (boss.type === 'dread') {
-        // Boss 1: OMEGA-STAR DREADNOUGHT
+        // Boss 1: GRAND ADMIRAL VEX: OMEGA DREADNOUGHT
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Mega Tachyon Orbital Death Ray + 7-Way Beam Fan!
-          for (const cy of [-30, 30]) {
-            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: (dx / dist) * 720 * spdBonus, vy: (dy / dist) * 720 * spdBonus, r: 24 });
+          // ULTIMATE: Tachyon Hyper-Beam Death Ray + Escort Hunter Gliders!
+          for (const cy of [-30, 0, 30]) {
+            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: (dx / dist) * 780 * spdBonus, vy: (dy / dist) * 780 * spdBonus, r: 24 });
           }
-          for (const ang of [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36]) {
-            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.45, y: boss.y, vx: -640 * spdBonus * Math.cos(ang), vy: 640 * spdBonus * Math.sin(ang), r: 14 });
+          if (gliders.length < 3) {
+            gliders.push({
+              variant: 'tie', name: 'VEX ESCORT TIE', col: '#ff0033', maxHp: 2, hp: 2,
+              x: boss.x - boss.w * 0.3, y: boss.y + (Math.random() - 0.5) * 120,
+              vx: -240, vy: (Math.random() - 0.5) * 80, shootT: 1.5, w: 56, h: 42
+            });
           }
-          addShake(20);
-          popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: TACHYON DEATH RAY!', '#00ffaa');
+          addShake(22);
+          popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: TACHYON HYPER-DEATH-RAY!', '#00ffaa');
           sfx('laser');
         } else if (boss.atkCycle === 1) {
           for (const cy of [-36, 36]) {
-            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 680 * spdBonus, vy: (dy / dist) * 680 * spdBonus, r: 18 });
+            eballs.push({ type: 'emp', col: '#00ffaa', x: boss.x - boss.w * 0.40, y: boss.y + cy, vx: (dx / dist) * 620 * spdBonus, vy: (dy / dist) * 620 * spdBonus, r: 18 });
           }
+          popup(boss.x - 40, boss.y - 45, '⚡ DUAL TACHYON RAILGUNS!', '#00ffaa');
           sfx('laser');
         } else {
-          const angles = level >= 3 ? [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36] : [-0.32, -0.16, 0, 0.16, 0.32];
-          for (const ang of angles) {
-            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.45, y: boss.y, vx: -620 * spdBonus * Math.cos(ang), vy: 620 * spdBonus * Math.sin(ang), r: 15 });
+          for (const ang of [-0.22, 0, 0.22]) {
+            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.42, y: boss.y, vx: -640 * spdBonus * Math.cos(ang), vy: 640 * spdBonus * Math.sin(ang), r: 18 });
           }
           sfx('laser');
           popup(boss.x - 40, boss.y - 45, 'TACHYON BEAM BARRAGE!', '#00ffaa');
         }
 
       } else if (boss.type === 'hive') {
-        // Boss 2: CHRONOS TESLA CITADEL
+        // Boss 2: OVERLORD CHRONOS: TESLA CITADEL PRIME
         if (boss.atkCycle === 2) {
-          // ULTIMATE: 360° Tesla Tempest Overload (8 radial EMP shockwave rings)!
-          for (let k = 0; k < 8; k++) {
-            const ang = (k / 8) * Math.PI * 2;
-            eballs.push({ type: 'emp', col: '#00e5ff', x: boss.x - boss.w * 0.2, y: boss.y, vx: Math.cos(ang) * 440 * spdBonus, vy: Math.sin(ang) * 440 * spdBonus, r: 20 });
+          // ULTIMATE: 360° Tesla Tempest Overload (10 radial EMP shockwave rings)!
+          for (let k = 0; k < 10; k++) {
+            const ang = (k / 10) * Math.PI * 2;
+            eballs.push({ type: 'emp', col: '#00e5ff', x: boss.x - boss.w * 0.2, y: boss.y, vx: Math.cos(ang) * 460 * spdBonus, vy: Math.sin(ang) * 460 * spdBonus, r: 22 });
           }
-          addShake(22);
+          addShake(24);
           popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: 360° TESLA TEMPEST!', '#00e5ff');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          for (const cy of [-40, 40]) {
-            eballs.push({ type: 'emp', col: '#00e5ff', x: boss.x - boss.w * 0.40, y: boss.y + cy, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 16 });
+          for (const cy of [-44, 0, 44]) {
+            eballs.push({ type: 'emp', col: '#00ffee', x: boss.x - boss.w * 0.40, y: boss.y + cy, vx: (dx / dist) * 600 * spdBonus, vy: (dy / dist) * 600 * spdBonus, r: 18 });
           }
+          popup(boss.x - 40, boss.y - 45, '⚡ BALL LIGHTNING DISCHARGE!', '#00ffee');
           sfx('incoming');
         } else {
-          for (const ang of [-0.20, 0, 0.20]) {
-            eballs.push({ type: 'emp', col: '#00e5ff', x: boss.x - boss.w * 0.42, y: boss.y, vx: -480 * spdBonus * Math.cos(ang), vy: 480 * spdBonus * Math.sin(ang), r: 20 });
+          for (const ang of [-0.25, -0.10, 0.10, 0.25]) {
+            eballs.push({ type: 'emp', col: '#00e5ff', x: boss.x - boss.w * 0.42, y: boss.y, vx: -500 * spdBonus * Math.cos(ang), vy: 500 * spdBonus * Math.sin(ang), r: 20 });
           }
           popup(boss.x - 40, boss.y - 45, '⚡ EMP OVERLOAD CASCADE!', '#00e5ff');
           sfx('incoming');
         }
 
       } else if (boss.type === 'ram') {
-        // Boss 3: SOLAR APOCALYPSE LEVIATHAN
+        // Boss 3: WARLORD IGNIS: SOLAR APOCALYPSE LEVIATHAN
         if (boss.atkCycle === 2) {
           // ULTIMATE: Supernova Meteor Strike (Colossal Molten Sun Meteor)!
-          eballs.push({ type: 'magma', col: '#ff3300', x: boss.x - boss.w * 0.45, y: boss.y, vx: (dx / dist) * 560 * spdBonus, vy: (dy / dist) * 560 * spdBonus, r: 30, spin: 0 });
-          addShake(22);
+          eballs.push({ type: 'magma', col: '#ff3300', x: boss.x - boss.w * 0.45, y: boss.y, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 34, spin: 0 });
+          addShake(26);
           popup(boss.x - 40, boss.y - 45, '🔥 ULTIMATE: SUPERNOVA METEOR STRIKE!', '#ff3300');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          for (const cy of [-32, 32]) {
-            eballs.push({ type: 'magma', col: '#ff4400', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: (dx / dist) * 530 * spdBonus, vy: (dy / dist) * 530 * spdBonus, r: 22, spin: 0 });
+          for (let k = 0; k < 6; k++) {
+            const spr = ((k - 2.5) / 5) * 0.42;
+            eballs.push({ type: 'magma', col: '#ff4400', x: boss.x - boss.w * 0.45, y: boss.y, vx: -540 * spdBonus * Math.cos(spr), vy: 540 * spdBonus * Math.sin(spr), r: 22, spin: 0 });
           }
-          popup(boss.x - 40, boss.y - 45, '🔥 SOLAR MAGMA BARRAGE!', '#ff5500');
+          popup(boss.x - 40, boss.y - 45, '🔥 SPIRAL MAGMA INFERNO!', '#ff5500');
           sfx('incoming');
         } else {
-          const angles = level >= 3 ? [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36] : [-0.30, -0.15, 0, 0.15, 0.30];
+          const angles = [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36];
           for (const ang of angles) {
-            eballs.push({ type: 'laser', col: '#ff5500', x: boss.x - boss.w * 0.45, y: boss.y, vx: -600 * spdBonus * Math.cos(ang), vy: 600 * spdBonus * Math.sin(ang), r: 16 });
+            eballs.push({ type: 'laser', col: '#ff5500', x: boss.x - boss.w * 0.45, y: boss.y, vx: -620 * spdBonus * Math.cos(ang), vy: 620 * spdBonus * Math.sin(ang), r: 17 });
           }
           sfx('laser');
+          popup(boss.x - 40, boss.y - 45, '🔥 SOLAR PLASMA FLURRY!', '#ff5500');
         }
 
       } else if (boss.type === 'void') {
-        // Boss 4: PHANTOM VOID HARBINGER
+        // Boss 4: ARCHON UMBRA: PHANTOM VOID HARBINGER
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Dual Event Horizon Singularity Rifts!
-          for (const cy of [-35, 35]) {
-            eballs.push({ type: 'vortex', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: -360 * spdBonus, vy: (dy / dist) * 120, r: 26, spin: 0 });
+          // ULTIMATE: Dual Event Horizon Singularity Rifts + Gravitational Pull!
+          for (const cy of [-38, 38]) {
+            eballs.push({ type: 'vortex', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: -380 * spdBonus, vy: (dy / dist) * 140, r: 28, spin: 0 });
           }
-          addShake(20);
-          popup(boss.x - 40, boss.y - 45, '🌀 ULTIMATE: DUAL EVENT HORIZON!', '#c084fc');
+          // Quantum Phase Blink Warp
+          boss.y = Math.max(90, Math.min(H - 110, boss.y + (Math.random() < 0.5 ? -140 : 140)));
+          explode(boss.x, boss.y, '#c084fc', 30);
+          addShake(22);
+          popup(boss.x - 40, boss.y - 45, '🌀 ULTIMATE: EVENT HORIZON SINGULARITY!', '#c084fc');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          for (const cy of [-38, 0, 38]) {
-            eballs.push({ type: 'laser', col: '#c084fc', x: boss.x - boss.w * 0.40, y: boss.y + cy, vx: (dx / dist) * 660 * spdBonus, vy: (dy / dist) * 660 * spdBonus, r: 16 });
+          for (const cy of [-40, 0, 40]) {
+            eballs.push({ type: 'laser', col: '#c084fc', x: boss.x - boss.w * 0.40, y: boss.y + cy, vx: (dx / dist) * 680 * spdBonus, vy: (dy / dist) * 680 * spdBonus, r: 18 });
           }
           sfx('laser');
         } else {
-          eballs.push({ type: 'vortex', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y, vx: -340 * spdBonus, vy: (dy / dist) * 110, r: 28, spin: 0 });
+          eballs.push({ type: 'vortex', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y, vx: -360 * spdBonus, vy: (dy / dist) * 120, r: 30, spin: 0 });
           popup(boss.x - 40, boss.y - 45, '🌀 QUANTUM VOID SINGULARITY!', '#c084fc');
           sfx('incoming');
         }
 
       } else if (boss.type === 'cryo') {
-        // Boss 5: GLACIAL CRYO-COLOSSUS
+        // Boss 5: GENERAL FROSTBYTE: GLACIAL CRYO-COLOSSUS
         if (boss.atkCycle === 2) {
-          // ULTIMATE: 6-Shard Blizzard Cryo-Lance Volley!
-          for (let k = 0; k < 6; k++) {
-            const spr = ((k - 2.5) / 5) * 0.35;
-            eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.45, y: boss.y, vx: -540 * spdBonus * Math.cos(spr), vy: 540 * spdBonus * Math.sin(spr), r: 16 });
+          // ULTIMATE: 8-Shard Blizzard Cryo-Lance Volley!
+          for (let k = 0; k < 8; k++) {
+            const spr = ((k - 3.5) / 7) * 0.40;
+            eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.45, y: boss.y, vx: -560 * spdBonus * Math.cos(spr), vy: 560 * spdBonus * Math.sin(spr), r: 18 });
           }
-          addShake(20);
+          addShake(22);
           popup(boss.x - 40, boss.y - 45, '❄️ ULTIMATE: BLIZZARD CRYO-VOLLEY!', '#38bdf8');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          for (const cy of [-34, 34]) {
-            eballs.push({ type: 'laser', col: '#38bdf8', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 650 * spdBonus, vy: (dy / dist) * 650 * spdBonus, r: 17 });
+          for (const cy of [-38, 38]) {
+            eballs.push({ type: 'laser', col: '#38bdf8', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 670 * spdBonus, vy: (dy / dist) * 670 * spdBonus, r: 18 });
           }
+          popup(boss.x - 40, boss.y - 45, '❄️ GLACIAL CRYO-LANCES!', '#38bdf8');
           sfx('laser');
         } else {
-          for (const ang of [-0.28, -0.10, 0.10, 0.28]) {
-            eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.45, y: boss.y, vx: -500 * spdBonus * Math.cos(ang), vy: 500 * spdBonus * Math.sin(ang), r: 18 });
+          for (const ang of [-0.30, -0.10, 0.10, 0.30]) {
+            eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.45, y: boss.y, vx: -520 * spdBonus * Math.cos(ang), vy: 520 * spdBonus * Math.sin(ang), r: 20 });
           }
           popup(boss.x - 40, boss.y - 45, '❄️ ABSOLUTE ZERO CRYO-NOVA!', '#38bdf8');
           sfx('incoming');
         }
 
       } else {
-        // Boss 6: IMPERIAL GOLDEN TITAN-LORD
+        // Boss 6: EMPEROR AURELIUS: IMPERIAL GOLDEN TITAN-LORD
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Royal Sovereign Judgement (9-Way Golden Laser Fan + Dual Siege Shells)!
-          for (const ang of [-0.40, -0.30, -0.20, -0.10, 0, 0.10, 0.20, 0.30, 0.40]) {
-            eballs.push({ type: 'laser', col: '#ffd23c', x: boss.x - boss.w * 0.45, y: boss.y, vx: -660 * spdBonus * Math.cos(ang), vy: 660 * spdBonus * Math.sin(ang), r: 16 });
+          // ULTIMATE: Royal Sovereign Judgement (11-Way Golden Laser Fan + Dual Siege Shells)!
+          for (const ang of [-0.45, -0.36, -0.27, -0.18, -0.09, 0, 0.09, 0.18, 0.27, 0.36, 0.45]) {
+            eballs.push({ type: 'laser', col: '#ffd23c', x: boss.x - boss.w * 0.45, y: boss.y, vx: -680 * spdBonus * Math.cos(ang), vy: 680 * spdBonus * Math.sin(ang), r: 17 });
           }
-          for (const cy of [-44, 44]) {
-            eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 24, spin: 0 });
+          for (const cy of [-48, 48]) {
+            eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 600 * spdBonus, vy: (dy / dist) * 600 * spdBonus, r: 26, spin: 0 });
           }
-          addShake(24);
+          addShake(26);
           popup(boss.x - 40, boss.y - 45, '👑 ULTIMATE: ROYAL SOVEREIGN JUDGEMENT!', '#ffd23c');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          for (const cy of [-44, 44]) {
-            eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 550 * spdBonus, vy: (dy / dist) * 550 * spdBonus, r: 24, spin: 0 });
+          for (const cy of [-48, 0, 48]) {
+            eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 570 * spdBonus, vy: (dy / dist) * 570 * spdBonus, r: 24, spin: 0 });
           }
+          popup(boss.x - 40, boss.y - 45, '🪙 MIDAS GOLDEN TREASURE CANNON!', '#ffd23c');
           sfx('incoming');
         } else {
           for (const ang of [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36]) {
-            eballs.push({ type: 'laser', col: '#ffd23c', x: boss.x - boss.w * 0.45, y: boss.y, vx: -640 * spdBonus * Math.cos(ang), vy: 640 * spdBonus * Math.sin(ang), r: 16 });
+            eballs.push({ type: 'laser', col: '#ffd23c', x: boss.x - boss.w * 0.45, y: boss.y, vx: -660 * spdBonus * Math.cos(ang), vy: 660 * spdBonus * Math.sin(ang), r: 17 });
           }
           popup(boss.x - 40, boss.y - 45, '👑 GILDED ROYAL BARRAGE!', '#ffd23c');
-          sfx('laser');
         }
       }
     }
@@ -5355,14 +5737,14 @@ function draw() {
     }
     
     if (boss.type === 'dread') {
-      // BOSS 1: OMEGA-STAR DREADNOUGHT (Colossal Cyber Galactic Flagship)
-      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.52);
+      // BOSS 1: GRAND ADMIRAL VEX: OMEGA DREADNOUGHT (Imperial Cyber Flagship)
+      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.55);
       bg.addColorStop(0, 'rgba(0, 255, 170, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
-      cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.52, boss.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.54, boss.h * 0.50, 0, 0, Math.PI * 2); cx.fill();
 
       // Main Dagger-Wedge Mega Star-Destroyer Armor Hull
       const dg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
-      dg.addColorStop(0, '#020617'); dg.addColorStop(0.4, '#0f172a'); dg.addColorStop(0.7, '#1e293b'); dg.addColorStop(1, '#334155');
+      dg.addColorStop(0, '#020617'); dg.addColorStop(0.35, '#0f172a'); dg.addColorStop(0.7, '#1e293b'); dg.addColorStop(1, '#334155');
       cx.fillStyle = dg;
       cx.beginPath();
       cx.moveTo(-boss.w * 0.48, 0);
@@ -5376,37 +5758,57 @@ function draw() {
       cx.fill();
       cx.strokeStyle = '#00ffaa'; cx.lineWidth = 3.5; cx.stroke();
 
-      // Elevated Command Superstructure (Double-tier tower)
+      // Armor Panel Seam Grid Lines & Rivets
+      cx.strokeStyle = 'rgba(0, 255, 170, 0.35)'; cx.lineWidth = 1.2;
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.15, -boss.h * 0.38); cx.lineTo(boss.w * 0.25, -boss.h * 0.38);
+      cx.moveTo(-boss.w * 0.15, boss.h * 0.38); cx.lineTo(boss.w * 0.25, boss.h * 0.38);
+      cx.moveTo(0, -boss.h * 0.38); cx.lineTo(0, boss.h * 0.38);
+      cx.stroke();
+
+      // Elevated Command Superstructure (Double-tier citadel tower)
       cx.fillStyle = '#020617';
-      cx.fillRect(boss.w * 0.08, -boss.h * 0.20, boss.w * 0.25, boss.h * 0.40);
-      cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1.8;
-      cx.strokeRect(boss.w * 0.08, -boss.h * 0.20, boss.w * 0.25, boss.h * 0.40);
+      cx.fillRect(boss.w * 0.08, -boss.h * 0.22, boss.w * 0.26, boss.h * 0.44);
+      cx.strokeStyle = '#00ffaa'; cx.lineWidth = 2;
+      cx.strokeRect(boss.w * 0.08, -boss.h * 0.22, boss.w * 0.26, boss.h * 0.44);
 
-      // Central Tachyon Core Emitter
-      const cr = cx.createRadialGradient(-boss.w * 0.1, 0, 4, -boss.w * 0.1, 0, 36);
-      cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.35, '#00ffaa'); cr.addColorStop(1, '#064e3b');
-      cx.fillStyle = cr; cx.beginPath(); cx.arc(-boss.w * 0.1, 0, 26 + Math.sin(t * 12) * 3, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2; cx.stroke();
+      // Glowing Bridge Viewports
+      cx.fillStyle = '#00ffaa';
+      for (const vy of [-boss.h * 0.14, -boss.h * 0.05, boss.h * 0.05, boss.h * 0.14]) {
+        cx.fillRect(boss.w * 0.12, vy - 3, 16, 6);
+      }
 
-      // Dual Aimed Heavy Railgun Cannons
+      // Central Tachyon Death Ray Core Emitter
+      const cr = cx.createRadialGradient(-boss.w * 0.1, 0, 4, -boss.w * 0.1, 0, 40);
+      cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.35, '#00ffaa'); cr.addColorStop(0.8, '#064e3b'); cr.addColorStop(1, '#022c22');
+      cx.fillStyle = cr; cx.beginPath(); cx.arc(-boss.w * 0.1, 0, 28 + Math.sin(t * 12) * 3, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.5; cx.stroke();
+
+      // Dual Aimed Heavy Sponson Railgun Cannons
       const aimAng = Math.atan2(ship.y - boss.y, ship.x - boss.x);
-      for (const wy of [-boss.h * 0.30, boss.h * 0.30]) {
+      for (const wy of [-boss.h * 0.32, boss.h * 0.32]) {
         cx.save(); cx.translate(-boss.w * 0.15, wy); cx.rotate(aimAng);
-        cx.fillStyle = '#020617'; cx.fillRect(0, -5, 26, 10);
-        cx.fillStyle = '#00ffaa'; cx.fillRect(22, -3.5, 6, 7);
-        cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1.5; cx.strokeRect(0, -5, 26, 10);
+        cx.fillStyle = '#020617'; cx.fillRect(0, -6, 32, 12);
+        cx.fillStyle = '#00ffaa'; cx.fillRect(26, -4, 8, 8);
+        cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1.6; cx.strokeRect(0, -6, 32, 12);
         cx.restore();
       }
 
-    } else if (boss.type === 'hive') {
-      // BOSS 2: CHRONOS TESLA CITADEL (Orbital Fortress with 4 Rotating Tesla Pylons)
-      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.52);
-      bg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
-      cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.50, 0, Math.PI * 2); cx.fill();
+      // 4 Rear Emerald Ion Plasma Thrusters
+      for (const ty of [-boss.h * 0.26, -boss.h * 0.10, boss.h * 0.10, boss.h * 0.26]) {
+        cx.fillStyle = '#00ffaa';
+        cx.beginPath(); cx.arc(boss.w * 0.48, ty, 6 + Math.sin(t * 18 + ty) * 2, 0, Math.PI * 2); cx.fill();
+      }
 
-      // Dodecagonal Armored Citadel Hull
+    } else if (boss.type === 'hive') {
+      // BOSS 2: OVERLORD CHRONOS: TESLA CITADEL PRIME (Cyber Space Fortress)
+      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.55);
+      bg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.52, 0, Math.PI * 2); cx.fill();
+
+      // Dodecagonal Armored Citadel Hull with Electric Conduits
       const tg = cx.createLinearGradient(0, -boss.h * 0.48, 0, boss.h * 0.48);
-      tg.addColorStop(0, '#38bdf8'); tg.addColorStop(0.4, '#0369a1'); tg.addColorStop(1, '#082f49');
+      tg.addColorStop(0, '#38bdf8'); tg.addColorStop(0.35, '#0369a1'); tg.addColorStop(0.8, '#082f49'); tg.addColorStop(1, '#020617');
       cx.fillStyle = tg;
       cx.beginPath();
       for (let k = 0; k < 12; k++) {
@@ -5417,32 +5819,49 @@ function draw() {
       cx.closePath(); cx.fill();
       cx.strokeStyle = '#00e5ff'; cx.lineWidth = 4; cx.stroke();
 
-      // 4 Heavy Outer Rotating Tesla Pylons
+      // Concentric Circuit Inlays
+      cx.strokeStyle = 'rgba(0, 255, 238, 0.4)'; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.arc(0, 0, boss.w * 0.32, 0, Math.PI * 2); cx.stroke();
+      cx.beginPath(); cx.arc(0, 0, boss.w * 0.20, 0, Math.PI * 2); cx.stroke();
+
+      // 4 Heavy Outer Rotating Tesla Pylons with Real Lightning Arcs
       for (let k = 0; k < 4; k++) {
         const a = (k / 4) * Math.PI * 2 + boss.spinRing * 0.6;
         const px = Math.cos(a) * (boss.w * 0.38), py = Math.sin(a) * (boss.h * 0.36);
-        cx.fillStyle = '#0f172a'; cx.beginPath(); cx.arc(px, py, 18, 0, Math.PI * 2); cx.fill();
+        cx.fillStyle = '#0f172a'; cx.beginPath(); cx.arc(px, py, 20, 0, Math.PI * 2); cx.fill();
         cx.strokeStyle = '#00ffee'; cx.lineWidth = 2.5; cx.stroke();
-        // Electric Arcs
-        cx.strokeStyle = '#ffffff'; cx.lineWidth = 2;
-        cx.beginPath(); cx.arc(px, py, 10 + Math.sin(t * 18 + k) * 3, 0, Math.PI * 2); cx.stroke();
+        
+        // Pulsing Electric Core inside Pylon
+        cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(px, py, 8, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2;
+        cx.beginPath(); cx.arc(px, py, 12 + Math.sin(t * 18 + k) * 3, 0, Math.PI * 2); cx.stroke();
+
+        // Arcing Lightning Bolt to Center
+        if (Math.random() < 0.6) {
+          cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.8;
+          cx.beginPath();
+          cx.moveTo(px, py);
+          cx.lineTo(px * 0.5 + (Math.random() - 0.5) * 14, py * 0.5 + (Math.random() - 0.5) * 14);
+          cx.lineTo(0, 0);
+          cx.stroke();
+        }
       }
 
       // Central Blinding EMP Reactor Core
-      const cr = cx.createRadialGradient(0, 0, 4, 0, 0, 36);
-      cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.4, '#00e5ff'); cr.addColorStop(1, '#0c4a6e');
-      cx.fillStyle = cr; cx.beginPath(); cx.arc(0, 0, 28, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.5; cx.stroke();
+      const cr = cx.createRadialGradient(0, 0, 4, 0, 0, 40);
+      cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.35, '#00e5ff'); cr.addColorStop(0.75, '#0284c7'); cr.addColorStop(1, '#0c4a6e');
+      cx.fillStyle = cr; cx.beginPath(); cx.arc(0, 0, 30, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 3; cx.stroke();
 
     } else if (boss.type === 'ram') {
-      // BOSS 3: SOLAR APOCALYPSE LEVIATHAN (Molten Volcanic Super-Destroyer)
-      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.54);
+      // BOSS 3: WARLORD IGNIS: SOLAR APOCALYPSE LEVIATHAN (Volcanic Magma Dragon)
+      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.56);
       bg.addColorStop(0, 'rgba(255, 68, 0, 0.55)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
-      cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.52, boss.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.54, boss.h * 0.50, 0, 0, Math.PI * 2); cx.fill();
 
-      // Forward-Swept Molten Trident Hull
+      // Forward-Swept Molten Obsidian Trident Hull
       const mg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
-      mg.addColorStop(0, '#1c0509'); mg.addColorStop(0.4, '#4c0519'); mg.addColorStop(0.75, '#9f1239'); mg.addColorStop(1, '#e11d48');
+      mg.addColorStop(0, '#1c0509'); mg.addColorStop(0.35, '#4c0519'); mg.addColorStop(0.7, '#9f1239'); mg.addColorStop(1, '#e11d48');
       cx.fillStyle = mg;
       cx.beginPath();
       cx.moveTo(-boss.w * 0.48, 0);                 // Center prow
@@ -5457,27 +5876,36 @@ function draw() {
       cx.lineTo(-boss.w * 0.32, boss.h * 0.46);     // Starboard outer claw
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#ff5500'; cx.lineWidth = 3.5; cx.stroke();
+      cx.strokeStyle = '#ff5500'; cx.lineWidth = 3.8; cx.stroke();
 
-      // Blazing Supernova Core (Pulsing Mini-Sun)
-      const cr = cx.createRadialGradient(-boss.w * 0.05, 0, 5, -boss.w * 0.05, 0, 38);
-      cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.35, '#ffdd33'); cr.addColorStop(0.7, '#ff3300'); cr.addColorStop(1, '#660000');
-      cx.fillStyle = cr; cx.beginPath(); cx.arc(-boss.w * 0.05, 0, 30 + Math.sin(t * 14) * 3, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.5; cx.stroke();
+      // Glowing Lava Veins on Hull
+      cx.strokeStyle = '#ffaa00'; cx.lineWidth = 2;
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.35, 0); cx.lineTo(-boss.w * 0.1, -boss.h * 0.2); cx.lineTo(boss.w * 0.2, -boss.h * 0.2);
+      cx.moveTo(-boss.w * 0.35, 0); cx.lineTo(-boss.w * 0.1, boss.h * 0.2); cx.lineTo(boss.w * 0.2, boss.h * 0.2);
+      cx.stroke();
+
+      // Blazing Supernova Mini-Sun Core
+      const cr = cx.createRadialGradient(-boss.w * 0.05, 0, 5, -boss.w * 0.05, 0, 42);
+      cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.3, '#ffdd33'); cr.addColorStop(0.65, '#ff4400'); cr.addColorStop(1, '#450a0a');
+      cx.fillStyle = cr; cx.beginPath(); cx.arc(-boss.w * 0.05, 0, 32 + Math.sin(t * 14) * 3, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 3; cx.stroke();
 
       // Solar Corona Flare Rings
-      cx.strokeStyle = '#ff9900'; cx.lineWidth = 2;
-      cx.beginPath(); cx.arc(-boss.w * 0.05, 0, 42, t * 8, t * 8 + Math.PI * 1.3); cx.stroke();
+      cx.strokeStyle = '#ff7700'; cx.lineWidth = 2.5;
+      cx.beginPath(); cx.arc(-boss.w * 0.05, 0, 46, t * 8, t * 8 + Math.PI * 1.3); cx.stroke();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.8;
+      cx.beginPath(); cx.arc(-boss.w * 0.05, 0, 52, -t * 6, -t * 6 + Math.PI * 1.1); cx.stroke();
 
     } else if (boss.type === 'void') {
-      // BOSS 4: PHANTOM VOID HARBINGER (Colossal Quantum Phase Dreadnought)
-      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.54);
+      // BOSS 4: ARCHON UMBRA: PHANTOM VOID HARBINGER (Amethyst Void Dreadnought)
+      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.56);
       bg.addColorStop(0, 'rgba(192, 132, 252, 0.55)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
-      cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.52, boss.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.54, boss.h * 0.50, 0, 0, Math.PI * 2); cx.fill();
 
       // Crystalline Amethyst Needle Hull
       const vg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
-      vg.addColorStop(0, '#1e1035'); vg.addColorStop(0.4, '#581c87'); vg.addColorStop(0.8, '#9333ea'); vg.addColorStop(1, '#c084fc');
+      vg.addColorStop(0, '#0f051d'); vg.addColorStop(0.35, '#3b0764'); vg.addColorStop(0.7, '#7e22ce'); vg.addColorStop(1, '#c084fc');
       cx.fillStyle = vg;
       cx.beginPath();
       cx.moveTo(-boss.w * 0.50, 0);                 // Forward warp lance
@@ -5490,27 +5918,29 @@ function draw() {
       cx.lineTo(-boss.w * 0.25, boss.h * 0.44);     // Starboard outer wing
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#c084fc'; cx.lineWidth = 3.5; cx.stroke();
+      cx.strokeStyle = '#c084fc'; cx.lineWidth = 3.8; cx.stroke();
 
-      // Pulsing Dark Matter Warp Singularity
-      const cr = cx.createRadialGradient(0, 0, 4, 0, 0, 36);
-      cr.addColorStop(0, '#000000'); cr.addColorStop(0.4, '#c084fc'); cr.addColorStop(1, '#3b0764');
-      cx.fillStyle = cr; cx.beginPath(); cx.arc(0, 0, 28, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#e9d5ff'; cx.lineWidth = 2.5; cx.stroke();
+      // Pulsing Dark Matter Black Hole Singularity
+      const cr = cx.createRadialGradient(0, 0, 4, 0, 0, 40);
+      cr.addColorStop(0, '#000000'); cr.addColorStop(0.35, '#3b0764'); cr.addColorStop(0.7, '#9333ea'); cr.addColorStop(1, '#c084fc');
+      cx.fillStyle = cr; cx.beginPath(); cx.arc(0, 0, 30, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#e9d5ff'; cx.lineWidth = 2.8; cx.stroke();
 
-      // Phased Event Horizon Rings
-      cx.strokeStyle = '#c084fc'; cx.lineWidth = 2;
-      cx.beginPath(); cx.arc(0, 0, 40, t * 10, t * 10 + Math.PI * 1.4); cx.stroke();
+      // Accretion Disk Gravitational Swirl
+      cx.strokeStyle = '#c084fc'; cx.lineWidth = 2.4;
+      cx.beginPath(); cx.arc(0, 0, 44, t * 10, t * 10 + Math.PI * 1.4); cx.stroke();
+      cx.strokeStyle = '#f3e8ff'; cx.lineWidth = 1.6;
+      cx.beginPath(); cx.arc(0, 0, 50, -t * 8, -t * 8 + Math.PI * 1.2); cx.stroke();
 
     } else if (boss.type === 'cryo') {
-      // BOSS 5: GLACIAL CRYO-COLOSSUS (Sub-Zero Diamond Frost Bastion)
-      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.52);
+      // BOSS 5: GENERAL FROSTBYTE: GLACIAL CRYO-COLOSSUS (Diamond Ice Bastion)
+      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.55);
       bg.addColorStop(0, 'rgba(56, 189, 248, 0.50)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
-      cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.50, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.52, 0, Math.PI * 2); cx.fill();
 
       // Octagonal Diamond Ice Fortress Hull
       const cg = cx.createLinearGradient(0, -boss.h * 0.46, 0, boss.h * 0.46);
-      cg.addColorStop(0, '#e0f2fe'); cg.addColorStop(0.35, '#38bdf8'); cg.addColorStop(0.75, '#0284c7'); cg.addColorStop(1, '#082f49');
+      cg.addColorStop(0, '#f0f9ff'); cg.addColorStop(0.35, '#38bdf8'); cg.addColorStop(0.75, '#0284c7'); cg.addColorStop(1, '#082f49');
       cx.fillStyle = cg;
       cx.beginPath();
       for (let k = 0; k < 8; k++) {
@@ -5519,28 +5949,38 @@ function draw() {
         if (k === 0) cx.moveTo(rx, ry); else cx.lineTo(rx, ry);
       }
       cx.closePath(); cx.fill();
-      cx.strokeStyle = '#e0f2fe'; cx.lineWidth = 3.5; cx.stroke();
+      cx.strokeStyle = '#e0f2fe'; cx.lineWidth = 3.8; cx.stroke();
 
       // 6 Rotating Crystalline Ice Shield Shards
       for (let k = 0; k < 6; k++) {
         const a = (k / 6) * Math.PI * 2 + boss.spinRing * 0.5;
         const px = Math.cos(a) * (boss.w * 0.38), py = Math.sin(a) * (boss.h * 0.36);
-        cx.fillStyle = 'rgba(224, 242, 254, 0.8)';
-        cx.beginPath(); cx.arc(px, py, 12, 0, Math.PI * 2); cx.fill();
-        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2; cx.stroke();
+        cx.fillStyle = 'rgba(224, 242, 254, 0.85)';
+        cx.beginPath(); cx.arc(px, py, 14, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.5; cx.stroke();
       }
 
       // Absolute Zero Frost Core
-      const cr = cx.createRadialGradient(0, 0, 3, 0, 0, 32);
-      cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.4, '#38bdf8'); cr.addColorStop(1, '#0369a1');
-      cx.fillStyle = cr; cx.beginPath(); cx.arc(0, 0, 26, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.5; cx.stroke();
+      const cr = cx.createRadialGradient(0, 0, 3, 0, 0, 36);
+      cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.4, '#38bdf8'); cr.addColorStop(0.8, '#0284c7'); cr.addColorStop(1, '#0369a1');
+      cx.fillStyle = cr; cx.beginPath(); cx.arc(0, 0, 28, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.8; cx.stroke();
+
+      // Sub-Zero Snowflake Prism Spikes
+      cx.strokeStyle = '#bae6fd'; cx.lineWidth = 2;
+      for (let s = 0; s < 4; s++) {
+        const sa = (s / 4) * Math.PI + t * 2;
+        cx.beginPath();
+        cx.moveTo(Math.cos(sa) * 36, Math.sin(sa) * 36);
+        cx.lineTo(-Math.cos(sa) * 36, -Math.sin(sa) * 36);
+        cx.stroke();
+      }
 
     } else {
-      // BOSS 6: IMPERIAL GOLDEN TITAN-LORD (The 24K Sovereign Alien Emperor Flagship)
-      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.55);
-      bg.addColorStop(0, 'rgba(255, 210, 60, 0.60)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
-      cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.52, boss.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
+      // BOSS 6: EMPEROR AURELIUS: IMPERIAL GOLDEN TITAN-LORD (24K Sovereign Flagship)
+      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
+      bg.addColorStop(0, 'rgba(255, 210, 60, 0.65)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.55, boss.h * 0.50, 0, 0, Math.PI * 2); cx.fill();
 
       // 24K Royal Gilded Multi-Tier Hull
       const tg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
@@ -5557,23 +5997,25 @@ function draw() {
       cx.lineTo(-boss.w * 0.28, boss.h * 0.46);     // Starboard crown wing
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 4; cx.stroke();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 4.5; cx.stroke();
 
       // Imperial Crown Spire Towers
       cx.fillStyle = '#b45309';
-      cx.fillRect(-boss.w * 0.15, -boss.h * 0.22, boss.w * 0.30, boss.h * 0.44);
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2;
-      cx.strokeRect(-boss.w * 0.15, -boss.h * 0.22, boss.w * 0.30, boss.h * 0.44);
+      cx.fillRect(-boss.w * 0.15, -boss.h * 0.24, boss.w * 0.30, boss.h * 0.48);
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.2;
+      cx.strokeRect(-boss.w * 0.15, -boss.h * 0.24, boss.w * 0.30, boss.h * 0.48);
 
       // Radiant Solar Diamond Core
-      const cr = cx.createRadialGradient(0, 0, 4, 0, 0, 36);
+      const cr = cx.createRadialGradient(0, 0, 4, 0, 0, 40);
       cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.3, '#fff2b0'); cr.addColorStop(0.7, '#f59e0b'); cr.addColorStop(1, '#78350f');
-      cx.fillStyle = cr; cx.beginPath(); cx.arc(0, 0, 28, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.5; cx.stroke();
+      cx.fillStyle = cr; cx.beginPath(); cx.arc(0, 0, 30, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.8; cx.stroke();
       
-      // Royal Halo Ring
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.5;
-      cx.beginPath(); cx.arc(0, 0, 42, t * 6, t * 6 + Math.PI * 1.5); cx.stroke();
+      // Royal Halo Orbit Rings
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.8;
+      cx.beginPath(); cx.arc(0, 0, 46, t * 6, t * 6 + Math.PI * 1.5); cx.stroke();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.8;
+      cx.beginPath(); cx.arc(0, 0, 54, -t * 5, -t * 5 + Math.PI * 1.2); cx.stroke();
     }
 
     // Boss Giant Health Bar & Glowing Title Badge
