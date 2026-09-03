@@ -2274,42 +2274,71 @@ function getBossSvg(id) {
       <circle cx="146" cy="58" r="2.5" fill="#ffffff"/>
     </svg>`;
   } else {
-    // 6. EMPEROR AURELIUS: THE SOLAR SUPREMACY (24K Gold Gilded Mega-Titan)
+    // 6. GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
     return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <filter id="glow_gold_${uid}" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glow_atat_${uid}" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="2.5" result="blur"/>
           <feComposite in="SourceGraphic" in2="blur" operator="over"/>
         </filter>
-        <linearGradient id="sup_gold_${uid}" x1="0" y1="42" x2="160" y2="42" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#fffbeb"/>
-          <stop offset="25%" stop-color="#fef08a"/>
-          <stop offset="55%" stop-color="#f59e0b"/>
-          <stop offset="85%" stop-color="#b45309"/>
-          <stop offset="100%" stop-color="#451a03"/>
+        <linearGradient id="atat_hull_${uid}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#f8fafc"/>
+          <stop offset="35%" stop-color="#cbd5e1"/>
+          <stop offset="70%" stop-color="#64748b"/>
+          <stop offset="100%" stop-color="#1e293b"/>
         </linearGradient>
       </defs>
-      <!-- Colossal 24K Flying-Wing Mega-Destroyer Hull (60km Span!) -->
-      <path d="M6 42 L52 6 L128 8 L154 22 L144 42 L154 62 L128 76 L52 78 Z" fill="url(#sup_gold_${uid})" stroke="#ffd23c" stroke-width="2.8"/>
-      <!-- Dorsal Cityscape Superstructure Ridge -->
-      <polygon points="35,42 75,18 135,22 128,42 135,62 75,66" fill="#291203" stroke="#ffd23c" stroke-width="1.6"/>
-      <!-- Emperor's Golden Throne Citadel Spire -->
-      <rect x="88" y="28" width="34" height="28" fill="#78350f" stroke="#ffffff" stroke-width="1.8" rx="2"/>
-      <line x1="92" y1="36" x2="118" y2="36" stroke="#ffd23c" stroke-width="2"/>
-      <line x1="92" y1="48" x2="118" y2="48" stroke="#ffd23c" stroke-width="2"/>
-      <polygon points="122,42 130,34 130,50" fill="#ffd23c"/>
-      <line x1="130" y1="42" x2="148" y2="42" stroke="#ffd23c" stroke-width="2.2"/>
-      <!-- 5 Massive Imperial Golden Ion Hyper-Thrusters -->
-      <circle cx="152" cy="24" r="5" fill="#ffd23c" filter="url(#glow_gold_${uid})"/>
-      <circle cx="152" cy="24" r="2.5" fill="#ffffff"/>
-      <circle cx="144" cy="33" r="5" fill="#ffd23c" filter="url(#glow_gold_${uid})"/>
-      <circle cx="144" cy="33" r="2.5" fill="#ffffff"/>
-      <circle cx="140" cy="42" r="5.5" fill="#ffd23c" filter="url(#glow_gold_${uid})"/>
-      <circle cx="140" cy="42" r="3" fill="#ffffff"/>
-      <circle cx="144" cy="51" r="5" fill="#ffd23c" filter="url(#glow_gold_${uid})"/>
-      <circle cx="144" cy="51" r="2.5" fill="#ffffff"/>
-      <circle cx="152" cy="60" r="5" fill="#ffd23c" filter="url(#glow_gold_${uid})"/>
-      <circle cx="152" cy="60" r="2.5" fill="#ffffff"/>
+      <!-- 4 Massive Multi-Jointed Hydraulic Walker Stomping Legs -->
+      <!-- Rear Port Leg -->
+      <line x1="120" y1="36" x2="114" y2="58" stroke="#334155" stroke-width="6"/>
+      <circle cx="114" cy="58" r="4.5" fill="#0f172a" stroke="#64748b" stroke-width="1.2"/>
+      <line x1="114" y1="58" x2="110" y2="76" stroke="#475569" stroke-width="5"/>
+      <polygon points="102,76 118,76 115,82 105,82" fill="#0f172a" stroke="#94a3b8" stroke-width="1.2"/>
+
+      <!-- Rear Starboard Leg -->
+      <line x1="135" y1="36" x2="130" y2="58" stroke="#1e293b" stroke-width="6"/>
+      <circle cx="130" cy="58" r="4.5" fill="#0f172a" stroke="#64748b" stroke-width="1.2"/>
+      <line x1="130" y1="58" x2="128" y2="76" stroke="#334155" stroke-width="5"/>
+      <polygon points="120,76 136,76 133,82 123,82" fill="#0f172a" stroke="#64748b" stroke-width="1.2"/>
+
+      <!-- Front Starboard Leg -->
+      <line x1="72" y1="36" x2="68" y2="58" stroke="#1e293b" stroke-width="6"/>
+      <circle cx="68" cy="58" r="4.5" fill="#0f172a" stroke="#64748b" stroke-width="1.2"/>
+      <line x1="68" y1="58" x2="66" y2="76" stroke="#334155" stroke-width="5"/>
+      <polygon points="58,76 74,76 71,82 61,82" fill="#0f172a" stroke="#64748b" stroke-width="1.2"/>
+
+      <!-- Front Port Leg -->
+      <line x1="58" y1="36" x2="52" y2="58" stroke="#334155" stroke-width="6"/>
+      <circle cx="52" cy="58" r="4.5" fill="#0f172a" stroke="#64748b" stroke-width="1.2"/>
+      <line x1="52" y1="58" x2="48" y2="76" stroke="#475569" stroke-width="5"/>
+      <polygon points="40,76 56,76 53,82 43,82" fill="#0f172a" stroke="#94a3b8" stroke-width="1.2"/>
+
+      <!-- Main Heavy Armored Troop Transport Chassis Hull -->
+      <polygon points="45,14 142,12 148,22 144,38 48,40 42,26" fill="url(#atat_hull_${uid})" stroke="#94a3b8" stroke-width="2.2"/>
+      <!-- Side Armor Blast Hatches & Vent Grilles -->
+      <rect x="62" y="18" width="32" height="16" fill="#1e293b" stroke="#64748b" stroke-width="1.2" rx="1.5"/>
+      <rect x="102" y="18" width="34" height="16" fill="#1e293b" stroke="#64748b" stroke-width="1.2" rx="1.5"/>
+      <line x1="106" y1="22" x2="132" y2="22" stroke="#ff4400" stroke-width="1"/>
+      <line x1="106" y1="26" x2="132" y2="26" stroke="#ff4400" stroke-width="1"/>
+      <line x1="106" y1="30" x2="132" y2="30" stroke="#ff4400" stroke-width="1"/>
+
+      <!-- Flexible Hydraulic Neck Collar Joint -->
+      <rect x="34" y="20" width="12" height="14" fill="#0f172a" stroke="#ef4444" stroke-width="1.4" rx="2"/>
+
+      <!-- Armored Cockpit Command Head -->
+      <polygon points="12,18 36,16 36,34 14,32 8,24" fill="url(#atat_hull_${uid})" stroke="#ef4444" stroke-width="2"/>
+      <!-- Command Viewport Horizontal Slit Visor (Red Imperial Glow) -->
+      <rect x="12" y="21" width="16" height="3.5" fill="#ff0033" stroke="#ffffff" stroke-width="0.8" filter="url(#glow_atat_${uid})"/>
+
+      <!-- Dual Heavy Chin-Mounted MS-1 Turbolaser Blaster Cannons -->
+      <rect x="2" y="30" width="14" height="3" fill="#0f172a" stroke="#ef4444" stroke-width="1"/>
+      <rect x="2" y="34" width="14" height="3" fill="#0f172a" stroke="#ef4444" stroke-width="1"/>
+      <circle cx="2" cy="31.5" r="2.5" fill="#ff0033" filter="url(#glow_atat_${uid})"/>
+      <circle cx="2" cy="35.5" r="2.5" fill="#ff0033" filter="url(#glow_atat_${uid})"/>
+
+      <!-- Temple Repeating Blaster Pod -->
+      <circle cx="28" cy="18" r="3.5" fill="#0f172a" stroke="#ffd23c" stroke-width="1"/>
+      <line x1="28" y1="18" x2="20" y2="15" stroke="#ffd23c" stroke-width="1.8"/>
     </svg>`;
   }
 }
@@ -2387,17 +2416,17 @@ const BOSS_INTEL = [
   },
   {
     id: 'titan',
-    name: 'Emperor Aurelius: The Supremacy Mega-Titan',
-    sector: 'Sector 6 Final Emperor · 60km 24K Sovereign Flying-Wing Dreadnought',
-    col: '#ffd23c',
+    name: 'General Veers: Imperial AT-AT Siege Colossus',
+    sector: 'Sector 6 Final Commander · Heavy Armored All-Terrain Siege Titan',
+    col: '#ef4444',
     hp: 95,
     powers: [
-      '👑 Celestial Orbiting Halo Rings (Fly out and circle your galleon with crosshair lasers)',
-      '🪙 Midas Gold Dubloon Cannon Fountain (Mortar bursts into 12 collectible gold coins)',
-      '👑 Royal Sovereign Judgement (11-way golden laser artillery fan + mega-concussion shells)'
+      '💥 Heavy Chin MS-1 Turbolaser Barrage (Dual piercing heavy red laser cannons)',
+      '⚡ Temple Repeating Blaster Sweeping Flurry (Rapid 8-shot suppressive fire)',
+      '💣 Orbital Seismic Artillery Bombardment & Stomp Shockwaves (Massive 36-coin gold rain upon defeat)'
     ],
-    loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +200 🪙 + Massive Gold Treasure Rain',
-    tactic: 'Use your deflector shield to weather the Sovereign Judgement laser fan, then unleash your super broadside on the Golden Throne Citadel!'
+    loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +200 🪙 + 36 Gold Coins Cascade',
+    tactic: 'Weave between the heavy chin blaster barrels and target the mechanical neck swivel joint with heavy broadsides!'
   }
 ];
 
@@ -3137,7 +3166,7 @@ const BTYPES = [
   { id: 'ram',   name: 'Warlord Ignis: Resurgent Sith Silencer Star Destroyer',   col: '#ff0033', w: 300, h: 160, hp: 70, spd: 48, atk: 'magma_barrage' },
   { id: 'void',  name: 'Captain Solo: The Rogue Millennium Falcon (YT-1300)', col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52, atk: 'quad_laser_barrage' },
   { id: 'cryo',  name: 'General Frostbyte: Imperial Interdictor Cruiser (Immobilizer)', col: '#38bdf8', w: 290, h: 170, hp: 80, spd: 42, atk: 'cryo_nova' },
-  { id: 'titan', name: 'Emperor Aurelius: Supreme Command Mega-Dreadnought (Supremacy)', col: '#ffd23c', w: 320, h: 175, hp: 95, spd: 52, atk: 'gilded_barrage' },
+  { id: 'titan', name: 'General Veers: Imperial AT-AT Siege Colossus', col: '#ef4444', w: 310, h: 180, hp: 95, spd: 48, atk: 'heavy_chin_blasters' },
 ];
 
 function spawnBoss() {
@@ -3854,7 +3883,7 @@ function buildShop() {
   h += `<div class="shopitem" style="border: 1.5px solid #00e5ff; background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(168, 85, 247, 0.1));">` +
     `<div class="ic" style="font-size:2rem;display:flex;align-items:center;justify-content:center">🔬</div>` +
     `<div class="info"><div class="t" style="color:#00ffee">Tactical Flagship Boss Database</div>` +
-    `<div class="d">Inspect all 6 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Sith Warlord Ignis, Captain Solo, Frostbyte &amp; Emperor Aurelius!</div>` +
+    `<div class="d">Inspect all 6 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Sith Warlord Ignis, Captain Solo, Frostbyte &amp; General Veers AT-AT!</div>` +
     `<div class="lv" style="color:#c084fc">6 Sector Flagships Documented 👾</div></div>` +
     `<button style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;box-shadow:0 0 15px rgba(0,229,255,0.5)" onclick="openBossIntelModal(event)">🔬 INSPECT</button></div>`;
 
@@ -4817,31 +4846,33 @@ function update(dt) {
         }
 
       } else {
-        // Boss 6: EMPEROR AURELIUS: 24K SOLAR SUPREMACY MEGA-TITAN
+        // Boss 6: GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Royal Sovereign Judgement (11-Way Golden Laser Fan + Dual Siege Shells)!
-          for (const ang of [-0.45, -0.36, -0.27, -0.18, -0.09, 0, 0.09, 0.18, 0.27, 0.36, 0.45]) {
-            eballs.push({ type: 'laser', col: '#ffd23c', x: boss.x - boss.w * 0.45, y: boss.y, vx: -700 * spdBonus * Math.cos(ang), vy: 700 * spdBonus * Math.sin(ang), r: 18 });
+          // ULTIMATE: Maximum Firepower MS-1 Heavy Turbolaser Bombardment + Stomp Shockwaves!
+          for (const ang of [-0.42, -0.32, -0.22, -0.11, 0, 0.11, 0.22, 0.32, 0.42]) {
+            eballs.push({ type: 'laser', col: '#ff0033', x: boss.x - boss.w * 0.48, y: boss.y - 15, vx: -720 * spdBonus * Math.cos(ang), vy: 720 * spdBonus * Math.sin(ang), r: 20 });
           }
-          for (const cy of [-48, 48]) {
-            eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 620 * spdBonus, vy: (dy / dist) * 620 * spdBonus, r: 28, spin: 0 });
+          for (const cy of [-35, 35]) {
+            eballs.push({ type: 'magma', col: '#ff5500', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: (dx / dist) * 640 * spdBonus, vy: (dy / dist) * 640 * spdBonus, r: 30, spin: 0 });
           }
-          addShake(30);
-          popup(boss.x - 40, boss.y - 45, '👑 ULTIMATE: ROYAL SOVEREIGN JUDGEMENT!', '#ffd23c');
+          addShake(32);
+          popup(boss.x - 40, boss.y - 45, '💥 ULTIMATE: AT-AT MAXIMUM FIREPOWER!', '#ef4444');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          // Celestial Orbiting Halo Ring Cross-Lasers
-          boss.haloActive = true;
-          boss.haloT = 3.5;
-          for (const cy of [-48, 48]) {
-            eballs.push({ type: 'laser', col: '#ffd23c', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 660 * spdBonus, vy: (dy / dist) * 660 * spdBonus, r: 22 });
+          // Temple Repeating Blaster Sweeping Flurry (Rapid 8-shot suppressive fire!)
+          for (let k = 0; k < 8; k++) {
+            const spr = ((k - 3.5) / 7) * 0.48;
+            eballs.push({ type: 'laser', col: '#ef4444', x: boss.x - boss.w * 0.45, y: boss.y - 8, vx: -680 * spdBonus * Math.cos(spr), vy: 680 * spdBonus * Math.sin(spr), r: 16 });
           }
-          popup(boss.x - 40, boss.y - 45, '👑 CELESTIAL HALO RING SIGHTS!', '#ffd23c');
-          sfx('incoming');
+          popup(boss.x - 40, boss.y - 45, '⚡ TEMPLE REPEATING CANNONS!', '#ef4444');
+          sfx('laser');
         } else {
-          // Midas Gold Dubloon Cannon Fountain (Fires gilded mortar that explodes into 12 coins!)
-          eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.45, y: boss.y, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 30, spin: 0 });
-          popup(boss.x - 40, boss.y - 45, '🪙 MIDAS GOLDEN TREASURE CANNON!', '#ffd23c');
+          // Heavy Chin MS-1 Turbolaser Twin Blaster Blast & Seismic Mortar (Explodes into gold coins upon impact/defeat!)
+          for (const cy of [-14, 14]) {
+            eballs.push({ type: 'laser', col: '#ff0033', x: boss.x - boss.w * 0.50, y: boss.y + cy, vx: (dx / dist) * 660 * spdBonus, vy: (dy / dist) * 660 * spdBonus, r: 22 });
+          }
+          eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.35, y: boss.y, vx: -420 * spdBonus, vy: 0, r: 28, spin: 0 });
+          popup(boss.x - 40, boss.y - 45, '💥 HEAVY CHIN MS-1 BLASTERS!', '#ef4444');
           sfx('incoming');
         }
       }
@@ -4889,7 +4920,7 @@ function update(dt) {
           tokensRun += bTokens; spinsRun += 1;
           popup(W / 2, H * 0.35, `${boss.name.toUpperCase()} DESTROYED! +${bTokens} 🎟️ +1 🎡`, '#ffd23c');
           
-          // Emperor Aurelius drops a massive gold treasure cascade on destruction!
+          // General Veers AT-AT Colossus drops a massive gold coin cascade on destruction!
           const coinCount = boss.type === 'titan' ? 36 : 18;
           for (let k = 0; k < coinCount; k++) {
             coins.push({
@@ -7186,51 +7217,123 @@ function draw() {
       }
 
     } else {
-      // BOSS 6: EMPEROR AURELIUS: IMPERIAL SOVEREIGN MEGA-TITAN (Star Wars 24K Supremacy Super Dreadnought)
+      // BOSS 6: GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.60);
-      bg.addColorStop(0, 'rgba(255, 210, 60, 0.65)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
+      bg.addColorStop(0, 'rgba(239, 68, 68, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.58, boss.h * 0.54, 0, 0, Math.PI * 2); cx.fill();
 
-      // Colossal 24K Flying-Wing Mega-Destroyer Hull
+      // Animated Mechanical Stomping Cycle for 4 Giant Hydraulic Walker Legs
+      const stompPhase = t * 6;
+      const legs = [
+        { bx: boss.w * 0.28, phaseOff: 0, isFront: false, isPort: false },
+        { bx: boss.w * 0.18, phaseOff: Math.PI, isFront: false, isPort: true },
+        { bx: -boss.w * 0.12, phaseOff: Math.PI * 0.5, isFront: true, isPort: false },
+        { bx: -boss.w * 0.24, phaseOff: Math.PI * 1.5, isFront: true, isPort: true }
+      ];
+
+      for (const leg of legs) {
+        const footLift = Math.max(0, Math.sin(stompPhase + leg.phaseOff)) * 14;
+        const kneeBend = Math.sin(stompPhase + leg.phaseOff) * 8;
+        const hipY = -boss.h * 0.05;
+        const kneeX = leg.bx + kneeBend;
+        const kneeY = boss.h * 0.24 - footLift * 0.5;
+        const footX = leg.bx + (leg.isFront ? -6 : 6);
+        const footY = boss.h * 0.48 - footLift;
+
+        // Upper Thigh Strut
+        cx.strokeStyle = leg.isPort ? '#334155' : '#1e293b';
+        cx.lineWidth = leg.isPort ? 9 : 11;
+        cx.beginPath(); cx.moveTo(leg.bx, hipY); cx.lineTo(kneeX, kneeY); cx.stroke();
+
+        // Knee Drive Gear Joint
+        cx.fillStyle = '#0f172a';
+        cx.beginPath(); cx.arc(kneeX, kneeY, leg.isPort ? 6 : 7.5, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#ef4444'; cx.lineWidth = 1.6; cx.stroke();
+
+        // Lower Calf Strut & Hydraulic Piston
+        cx.strokeStyle = leg.isPort ? '#475569' : '#334155';
+        cx.lineWidth = leg.isPort ? 7 : 9;
+        cx.beginPath(); cx.moveTo(kneeX, kneeY); cx.lineTo(footX, footY); cx.stroke();
+
+        // Heavy Round Armored Footpad with Terrain Grips
+        cx.fillStyle = '#0f172a';
+        cx.beginPath(); cx.roundRect(footX - 16, footY, 32, 10, 3); cx.fill();
+        cx.strokeStyle = '#94a3b8'; cx.lineWidth = 2; cx.strokeRect(footX - 16, footY, 32, 10);
+      }
+
+      // Main Heavy Armored Troop Transport Chassis Hull
       const tg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
-      tg.addColorStop(0, '#5a2403'); tg.addColorStop(0.3, '#b45309'); tg.addColorStop(0.65, '#f59e0b'); tg.addColorStop(0.9, '#fde047'); tg.addColorStop(1, '#fffbeb');
+      tg.addColorStop(0, '#0f172a'); tg.addColorStop(0.35, '#334155'); tg.addColorStop(0.7, '#64748b'); tg.addColorStop(1, '#cbd5e1');
       cx.fillStyle = tg;
       cx.beginPath();
-      cx.moveTo(-boss.w * 0.50, 0);                 // Golden Imperial Crest Prow
-      cx.lineTo(-boss.w * 0.28, -boss.h * 0.48);    // Port crown wing
-      cx.lineTo(boss.w * 0.34, -boss.h * 0.46);     // Port broadside flank
-      cx.lineTo(boss.w * 0.48, -boss.h * 0.22);     // Port heavy thruster
-      cx.lineTo(boss.w * 0.40, 0);                  // Aft royal spire
-      cx.lineTo(boss.w * 0.48, boss.h * 0.22);      // Starboard heavy thruster
-      cx.lineTo(boss.w * 0.34, boss.h * 0.46);      // Starboard broadside flank
-      cx.lineTo(-boss.w * 0.28, boss.h * 0.48);     // Starboard crown wing
-      cx.closePath();
-      cx.fill();
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 4.5; cx.stroke();
+      cx.moveTo(-boss.w * 0.32, -boss.h * 0.36); // Forward upper slope
+      cx.lineTo(boss.w * 0.44, -boss.h * 0.38);  // Aft upper spine
+      cx.lineTo(boss.w * 0.48, -boss.h * 0.15);  // Aft engine notch
+      cx.lineTo(boss.w * 0.42, boss.h * 0.12);   // Aft lower slope
+      cx.lineTo(-boss.w * 0.28, boss.h * 0.14);  // Forward belly
+      cx.lineTo(-boss.w * 0.36, -boss.h * 0.12); // Forward neck mount
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#ef4444'; cx.lineWidth = 3.8; cx.stroke();
 
-      // Dorsal Cityscape Superstructure & Emperor's Golden Throne Citadel
-      cx.fillStyle = '#78350f';
-      cx.fillRect(boss.w * 0.06, -boss.h * 0.25, boss.w * 0.26, boss.h * 0.50);
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.2;
-      cx.strokeRect(boss.w * 0.06, -boss.h * 0.25, boss.w * 0.26, boss.h * 0.50);
+      // Side Armor Blast Hatches & Vent Grilles
+      cx.fillStyle = '#1e293b';
+      cx.fillRect(-boss.w * 0.18, -boss.h * 0.26, boss.w * 0.26, boss.h * 0.28);
+      cx.fillRect(boss.w * 0.14, -boss.h * 0.26, boss.w * 0.26, boss.h * 0.28);
+      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 1.8;
+      cx.strokeRect(-boss.w * 0.18, -boss.h * 0.26, boss.w * 0.26, boss.h * 0.28);
+      cx.strokeRect(boss.w * 0.14, -boss.h * 0.26, boss.w * 0.26, boss.h * 0.28);
 
-      // Radiant Kyber Diamond Planet-Killer Core
-      const cr = cx.createRadialGradient(-boss.w * 0.12, 0, 4, -boss.w * 0.12, 0, 38);
-      cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.35, '#fef08a'); cr.addColorStop(0.7, '#f59e0b'); cr.addColorStop(1, '#78350f');
-      cx.fillStyle = cr; cx.beginPath(); cx.arc(-boss.w * 0.12, 0, 24, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.8; cx.stroke();
-      
-      // Dual Orbiting Celestial Halo Rings
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.8;
-      cx.beginPath(); cx.arc(-boss.w * 0.12, 0, 38, t * 6, t * 6 + Math.PI * 1.5); cx.stroke();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.8;
-      cx.beginPath(); cx.arc(-boss.w * 0.12, 0, 46, -t * 5, -t * 5 + Math.PI * 1.2); cx.stroke();
-
-      // 5 Massive Golden Ion Hyper-Thrusters
-      for (const ty of [-boss.h * 0.22, -boss.h * 0.11, 0, boss.h * 0.11, boss.h * 0.22]) {
-        cx.fillStyle = '#ffd23c';
-        cx.beginPath(); cx.arc(boss.w * 0.46, ty, 5.5 + Math.sin(t * 22 + ty) * 1.8, 0, Math.PI * 2); cx.fill();
+      // Imperial Thermal Reactor Vent Grilles (Orange Glow)
+      for (const vy of [-boss.h * 0.20, -boss.h * 0.12, -boss.h * 0.04]) {
+        cx.fillStyle = '#ff4400';
+        cx.fillRect(boss.w * 0.18, vy, boss.w * 0.18, 4);
       }
+
+      // Flexible Hydraulic Neck Collar Joint
+      cx.fillStyle = '#0f172a';
+      cx.beginPath(); cx.roundRect(-boss.w * 0.42, -boss.h * 0.22, boss.w * 0.12, boss.h * 0.26, 4); cx.fill();
+      cx.strokeStyle = '#ef4444'; cx.lineWidth = 2.2; cx.stroke();
+
+      // Armored Cockpit Command Head
+      const aimAng = Math.atan2(ship.y - boss.y, ship.x - boss.x);
+      cx.save();
+      cx.translate(-boss.w * 0.40, -boss.h * 0.12);
+      cx.rotate(aimAng * 0.4); // Head smoothly swivels to track player!
+
+      const hg = cx.createLinearGradient(16, 0, -32, 0);
+      hg.addColorStop(0, '#334155'); hg.addColorStop(0.5, '#64748b'); hg.addColorStop(1, '#e2e8f0');
+      cx.fillStyle = hg;
+      cx.beginPath();
+      cx.moveTo(-34, -18);
+      cx.lineTo(12, -18);
+      cx.lineTo(16, 16);
+      cx.lineTo(-28, 20);
+      cx.lineTo(-38, 4);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#ef4444'; cx.lineWidth = 2.4; cx.stroke();
+
+      // Command Viewport Horizontal Slit Visor (Glowing Red Imperial Visor)
+      cx.fillStyle = '#ff0033';
+      cx.fillRect(-34, -8, 28, 5);
+      cx.fillStyle = '#ffffff'; cx.fillRect(-32, -6.5, 24, 2);
+
+      // DUAL HEAVY CHIN-MOUNTED MS-1 TURBOLASER CANNONS
+      for (const cy of [12, 22]) {
+        cx.fillStyle = '#0f172a'; cx.fillRect(-44, cy - 3, 26, 6);
+        cx.strokeStyle = '#ef4444'; cx.lineWidth = 1.4; cx.strokeRect(-44, cy - 3, 26, 6);
+        cx.fillStyle = '#ff0033'; cx.fillRect(-52, cy - 2, 8, 4);
+      }
+
+      // Temple Repeating Blaster Pod
+      cx.fillStyle = '#0f172a'; cx.beginPath(); cx.arc(-8, -18, 6, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.4; cx.stroke();
+      cx.fillStyle = '#ffd23c'; cx.fillRect(-22, -20, 14, 4);
+
+      cx.restore();
+
+      // Rear Heavy Exhaust Thruster Bell
+      cx.fillStyle = '#ff4400';
+      cx.beginPath(); cx.arc(boss.w * 0.48, -boss.h * 0.10, 9 + Math.sin(t * 18) * 2, 0, Math.PI * 2); cx.fill();
     }
 
     // Boss Giant Health Bar & Glowing Title Badge
