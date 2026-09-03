@@ -2101,7 +2101,7 @@ function startSolarSail(e) {
     {
       type: 'tie_fighter',
       name: 'Imperial Shadow TIE-Fighter',
-      x: W * 0.98, y: H * 0.28, targetX: W * 0.62, targetY: H * 0.34,
+      x: W * 1.45, y: H * 0.28, targetX: W * 0.62, targetY: H * 0.34,
       vx: -260, vy: 30, pitch: 0.16, roll: 0.2,
       col: '#ff0033', w: 80, h: 60, saucerSpin: 0,
       shield: 1.0, dead: false, engineGlow: 1.0, shotFired: false
@@ -2109,7 +2109,7 @@ function startSolarSail(e) {
     {
       type: 'interceptor',
       name: 'Imperial Shadow Interceptor',
-      x: W * 1.06, y: H * 0.72, targetX: W * 0.68, targetY: H * 0.66,
+      x: W * 1.55, y: H * 0.72, targetX: W * 0.68, targetY: H * 0.66,
       vx: -280, vy: -30, pitch: -0.16, roll: -0.2,
       col: '#00ffee', w: 80, h: 56, saucerSpin: 0,
       shield: 1.0, dead: false, engineGlow: 1.0, shotFired: false
@@ -4477,7 +4477,7 @@ function draw() {
 
   // 5.5 Render Intro UFO Scouts & Fractured Wreckage
   // 5.5 Render Intro Imperial Star Wars Fighters & Fractured Wreckage
-  if (state === 'intro') {
+  if (state === 'intro' && storyStage >= 1) {
     for (const u of introUfos) {
       if (!u.dead) {
         cx.save();
