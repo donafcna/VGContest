@@ -675,32 +675,20 @@ function getCameraTransform() {
   let camX = W * 0.5, camY = H * 0.5;
   
   if (state === 'intro') {
-    if (introT < 1.9) {
-      // Act 1: Wide cinematic panoramic view of galleon and advancing starfighters
+    if (storyStage === 0) {
+      // Stage 0: Wide dispatch view
       zoom = 1.05;
       camX = W * 0.5;
       camY = H * 0.5;
-    } else if (introT < 2.4) {
-      // Smoothly zoom slightly closer for the broadside action
-      const p = (introT - 1.9) / 0.5;
-      zoom = 1.05 + p * (1.35 - 1.05);
-      camX = (W * 0.5) + p * (W * 0.48 - W * 0.5);
-      camY = H * 0.5;
-    } else if (introT < 5.2) {
-      // Act 2: Perfect widescreen action view of all 4 corkscrewing cannonballs & starfighters
-      zoom = 1.35;
+    } else if (storyStage === 1) {
+      // Stage 1: Focused dogfight view
+      zoom = 1.15;
       camX = W * 0.48;
       camY = H * 0.5;
-    } else if (introT < 7.2) {
-      // Act 3: Smoothly zoom back out as the supernova shockwaves and dubloons burst
-      const p = (introT - 5.2) / 2.0;
-      zoom = 1.35 - p * (1.35 - 1.05);
-      camX = (W * 0.48) - p * (W * 0.48 - W * 0.5);
-      camY = H * 0.5;
     } else {
-      // Act 4: Full panoramic view as the massive Imperial Armada drops out of warp
-      zoom = 1.05;
-      camX = W * 0.5;
+      // Stage 2 (Finale): Up-front heroic perspective looking ahead at incoming armada
+      zoom = 1.0;
+      camX = W * 0.44;
       camY = H * 0.5;
     }
   }
@@ -2951,6 +2939,42 @@ function update(dt) {
       if (w.life <= 0) wreckage.splice(i, 1);
     }
 
+    // Stage 2 (Finale): Spawn & Advance Enemy Fleet Coming Towards Us From Far Away
+    if (storyStage >= 2) {
+      if (introArmada.length === 0) {
+        introArmada = [
+          { type: 'tie', dist: 2.4, targetX: W * 0.68, baseOffY: -110, col: '#ff0033', spd: 0.42, bank: 0.12 },
+          { type: 'interceptor', dist: 2.7, targetX: W * 0.78, baseOffY: -55, col: '#00ffee', spd: 0.46, bank: -0.16 },
+          { type: 'cruiser', dist: 3.2, targetX: W * 0.88, baseOffY: 0, col: '#c084fc', spd: 0.35, bank: 0 },
+          { type: 'interceptor', dist: 2.8, targetX: W * 0.76, baseOffY: 55, col: '#00ffee', spd: 0.44, bank: 0.16 },
+          { type: 'tie', dist: 2.5, targetX: W * 0.66, baseOffY: 110, col: '#ff0033', spd: 0.40, bank: -0.12 }
+        ];
+      }
+
+      for (const f of introArmada) {
+        // Advance smoothly from far distance towards the front
+        f.dist = Math.max(0, f.dist - dt * f.spd);
+        const progress = 1 - Math.min(1, f.dist / 3.0);
+        f.scale = 0.20 + Math.pow(progress, 1.2) * 0.85;
+        f.x = (W * 1.45) - progress * (W * 1.45 - f.targetX);
+        f.y = (H * 0.5 + f.baseOffY * (0.3 + progress * 0.7)) + Math.sin(t * 3 + f.dist * 3) * 12;
+        f.rot = Math.sin(t * 3.5 + f.dist * 2) * f.bank;
+
+        // Ion Engine Particle Trails
+        if (Math.random() < 0.6) {
+          parts.push({
+            type: 'spark',
+            x: f.x + 20 * f.scale,
+            y: f.y + (Math.random() - 0.5) * 6 * f.scale,
+            vx: 130 * f.scale + Math.random() * 30,
+            vy: (Math.random() - 0.5) * 15,
+            life: 0.3, maxLife: 0.3,
+            col: f.col, size: 2.5 * f.scale
+          });
+        }
+      }
+    }
+
     for (let i = shieldShards.length - 1; i >= 0; i--) {
       const s = shieldShards[i];
       s.x += s.vx * dt; s.y += s.vy * dt;
@@ -4639,6 +4663,73 @@ function draw() {
         cx.stroke();
       }
       cx.restore();
+    }
+
+    // Render Advancing Hostile Armada Coming from Far Away in Deep Space (Stage 2 Finale)
+    if (storyStage >= 2 && introArmada) {
+      for (const f of introArmada) {
+        cx.save();
+        cx.translate(f.x, f.y);
+        cx.scale(f.scale, f.scale);
+        cx.rotate(f.rot);
+
+        if (f.type === 'tie') {
+          // IMPERIAL TIE HEAVY FIGHTER
+          const cg = cx.createRadialGradient(-6, -6, 3, 0, 0, 20);
+          cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.35, '#475569'); cg.addColorStop(1, '#0f172a');
+          cx.fillStyle = cg;
+          cx.beginPath(); cx.arc(0, 0, 18, 0, Math.PI * 2); cx.fill();
+          cx.strokeStyle = '#020617'; cx.lineWidth = 2.5; cx.stroke();
+
+          // Ruby Targeting Cockpit
+          cx.fillStyle = '#ff0033';
+          cx.beginPath(); cx.arc(-6, 0, 5, 0, Math.PI * 2); cx.fill();
+
+          // Vertical Hexagonal Radiator Panels
+          for (const wx of [-20, 20]) {
+            cx.fillStyle = '#1e293b'; cx.strokeStyle = '#ff0033'; cx.lineWidth = 1.8;
+            cx.beginPath();
+            cx.moveTo(wx, -24); cx.lineTo(wx - 7, -30); cx.lineTo(wx - 7, 30); cx.lineTo(wx, 24);
+            cx.closePath(); cx.fill(); cx.stroke();
+          }
+
+          // Rear Ion Plumes
+          cx.fillStyle = '#00ffee';
+          cx.beginPath(); cx.arc(18, -4, 4, 0, Math.PI * 2); cx.fill();
+          cx.beginPath(); cx.arc(18, 4, 4, 0, Math.PI * 2); cx.fill();
+
+        } else if (f.type === 'interceptor') {
+          // IMPERIAL DAGGER INTERCEPTOR
+          const ig = cx.createLinearGradient(-30, 0, 22, 0);
+          ig.addColorStop(0, '#38bdf8'); ig.addColorStop(0.4, '#0284c7'); ig.addColorStop(1, '#082f49');
+          cx.fillStyle = ig;
+          cx.beginPath();
+          cx.moveTo(-30, 0); cx.lineTo(-10, -20); cx.lineTo(20, -12); cx.lineTo(12, 0);
+          cx.lineTo(20, 12); cx.lineTo(-10, 20); cx.closePath();
+          cx.fill(); cx.strokeStyle = '#00ffee'; cx.lineWidth = 2; cx.stroke();
+
+          // Glowing Viewport
+          cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-7, 0, 4.5, 0, Math.PI * 2); cx.fill();
+          cx.fillStyle = '#38bdf8'; cx.beginPath(); cx.arc(20, 0, 4.5, 0, Math.PI * 2); cx.fill();
+
+        } else {
+          // HEAVY ALIEN CRUISER BATTLESHIP
+          const bg = cx.createLinearGradient(-50, 0, 50, 0);
+          bg.addColorStop(0, '#c084fc'); bg.addColorStop(0.5, '#7c3aed'); bg.addColorStop(1, '#3b0764');
+          cx.fillStyle = bg;
+          cx.beginPath();
+          cx.moveTo(-50, 0); cx.lineTo(-20, -26); cx.lineTo(45, -18); cx.lineTo(35, 0);
+          cx.lineTo(45, 18); cx.lineTo(-20, 26); cx.closePath();
+          cx.fill(); cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.5; cx.stroke();
+
+          // Pulsing Command Core
+          cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-15, 0, 7, 0, Math.PI * 2); cx.fill();
+          cx.fillStyle = '#ff0080'; cx.beginPath(); cx.arc(40, -7, 4.5, 0, Math.PI * 2); cx.fill();
+          cx.beginPath(); cx.arc(40, 7, 4.5, 0, Math.PI * 2); cx.fill();
+        }
+
+        cx.restore();
+      }
     }
 
   }
