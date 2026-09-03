@@ -2572,7 +2572,7 @@ function update(dt) {
       });
     }
 
-    // Advance Enemy Starfighters with Aggressive Pincer Sweeps during Stage 1+
+    // Advance Enemy Starfighters with Continuous Laser Barrages during Stage 1
     if (storyStage >= 1) {
       for (let k = 0; k < introUfos.length; k++) {
         const u = introUfos[k];
@@ -2581,20 +2581,23 @@ function update(dt) {
           u.x += (u.targetX - u.x) * Math.min(1, dt * 2.6);
           u.y += (u.targetY - u.y) * Math.min(1, dt * 2.6);
 
-          // Enemy Starfighters Fire Lasers at Galleon
-          if (!u.shotFired) {
-            u.shotFired = true;
-            sfx('shot');
-            // Spawn dual laser bolts
-            for (const lOff of [-10, 10]) {
-              introLasers.push({
-                x: u.x - 24,
-                y: u.y + lOff,
-                vx: -780,
-                vy: ((ship.y + lOff) - (u.y + lOff)) * 1.2,
-                col: u.col,
-                life: 1.2
-              });
+          // Continuous Enemy Laser Barrages during Stage 1
+          if (storyStage === 1) {
+            u.shootCool = (u.shootCool || (0.2 + k * 0.3)) - dt;
+            if (u.shootCool <= 0) {
+              u.shootCool = 0.65 + Math.random() * 0.2;
+              sfx('shot');
+              // Spawn dual laser bolts targeting the galleon
+              for (const lOff of [-10, 10]) {
+                introLasers.push({
+                  x: u.x - 24,
+                  y: u.y + lOff,
+                  vx: -780,
+                  vy: ((ship.y + lOff) - (u.y + lOff)) * 1.2,
+                  col: u.col,
+                  life: 1.2
+                });
+              }
             }
           }
         }
@@ -2608,20 +2611,20 @@ function update(dt) {
       l.y += l.vy * dt;
       l.life -= dt;
 
-      // Laser deflection against galleon's energy shield
-      if (l.x <= ship.x + 48 && l.x >= ship.x - 20 && Math.abs(l.y - ship.y) < 48) {
+      // Laser deflection against galleon's glowing energy shield dome
+      if (l.x <= ship.x + 52 && l.x >= ship.x - 24 && Math.abs(l.y - ship.y) < 52) {
         introShieldFlare = 1.0;
-        addShake(9);
+        addShake(7);
         sfx('hit');
         // Deflection spark ring & ricochet sparks
-        parts.push({ type: 'ring', x: l.x, y: l.y, r: 4, maxR: 32, life: 0.35, maxLife: 0.35, col: '#00ffee', lw: 3 });
+        parts.push({ type: 'ring', x: l.x, y: l.y, r: 4, maxR: 36, life: 0.35, maxLife: 0.35, col: '#00ffee', lw: 3 });
         for (let s = 0; s < 8; s++) {
           const sAng = Math.random() * Math.PI * 2;
           parts.push({
             type: 'spark',
             x: l.x, y: l.y,
-            vx: Math.cos(sAng) * (140 + Math.random() * 120),
-            vy: Math.sin(sAng) * (140 + Math.random() * 120),
+            vx: Math.cos(sAng) * (150 + Math.random() * 140),
+            vy: Math.sin(sAng) * (150 + Math.random() * 140),
             life: 0.3, maxLife: 0.3,
             col: '#00ffee', size: 3.5
           });
@@ -4495,25 +4498,29 @@ function draw() {
       cx.restore();
     }
 
-    // Render Glowing Deflector Shield on Galleon
-    if (introShieldFlare > 0.05) {
+    // Render Glowing Deflector Shield on Galleon (Active in Stage 1 & on Flared Hits)
+    if (storyStage === 1 || introShieldFlare > 0.05) {
       cx.save();
       cx.translate(ship.x + 8, ship.y + 8);
-      cx.globalAlpha = Math.min(1, introShieldFlare * 0.9);
-      const shg = cx.createRadialGradient(0, 0, 30, 0, 0, 75);
-      shg.addColorStop(0, 'rgba(0, 255, 238, 0)');
-      shg.addColorStop(0.7, 'rgba(0, 255, 238, 0.25)');
-      shg.addColorStop(1, 'rgba(0, 255, 238, 0.85)');
+      const shieldAlpha = Math.max(introShieldFlare, 0.65 + Math.sin(t * 8) * 0.2);
+      cx.globalAlpha = Math.min(1, shieldAlpha);
+      const shg = cx.createRadialGradient(0, 0, 30, 0, 0, 80);
+      shg.addColorStop(0, 'rgba(0, 255, 238, 0.05)');
+      shg.addColorStop(0.7, 'rgba(0, 255, 238, 0.35)');
+      shg.addColorStop(1, 'rgba(0, 255, 238, 0.95)');
       cx.fillStyle = shg;
-      cx.beginPath(); cx.arc(0, 0, 75, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#00ffee'; cx.lineWidth = 3;
-      cx.beginPath(); cx.arc(0, 0, 75, 0, Math.PI * 2); cx.stroke();
-      // Hexagonal energy grid
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.arc(0, 0, 80, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#00ffee'; cx.lineWidth = 3.5;
+      cx.shadowColor = '#00ffee'; cx.shadowBlur = 18;
+      cx.beginPath(); cx.arc(0, 0, 80, 0, Math.PI * 2); cx.stroke();
+      // Hexagonal energy grid with subtle energy rotation
+      cx.shadowBlur = 0;
+      cx.rotate(t * 0.6);
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.8;
       for (let h = 0; h < 6; h++) {
         const ha = h * Math.PI / 3;
-        cx.beginPath(); cx.moveTo(Math.cos(ha) * 60, Math.sin(ha) * 60);
-        cx.lineTo(Math.cos(ha + Math.PI/3) * 60, Math.sin(ha + Math.PI/3) * 60);
+        cx.beginPath(); cx.moveTo(Math.cos(ha) * 65, Math.sin(ha) * 65);
+        cx.lineTo(Math.cos(ha + Math.PI/3) * 65, Math.sin(ha + Math.PI/3) * 65);
         cx.stroke();
       }
       cx.restore();
