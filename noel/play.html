@@ -3854,7 +3854,7 @@ function buildShop() {
   h += `<div class="shopitem" style="border: 1.5px solid #00e5ff; background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(168, 85, 247, 0.1));">` +
     `<div class="ic" style="font-size:2rem;display:flex;align-items:center;justify-content:center">🔬</div>` +
     `<div class="info"><div class="t" style="color:#00ffee">Tactical Flagship Boss Database</div>` +
-    `<div class="d">Inspect all 6 Sector Bosses: Grand Admiral Vex, Chronos, Ignis, Umbra, Frostbyte &amp; Emperor Aurelius!</div>` +
+    `<div class="d">Inspect all 6 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Sith Warlord Ignis, Captain Solo, Frostbyte &amp; Emperor Aurelius!</div>` +
     `<div class="lv" style="color:#c084fc">6 Sector Flagships Documented 👾</div></div>` +
     `<button style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;box-shadow:0 0 15px rgba(0,229,255,0.5)" onclick="openBossIntelModal(event)">🔬 INSPECT</button></div>`;
 
@@ -4861,10 +4861,10 @@ function update(dt) {
     
     let hit = false;
     if (boss && Math.abs(b.x - boss.x) < boss.w * 0.5 && Math.abs(b.y - boss.y) < boss.h * 0.5) {
-      // 1. Archon Umbra Hyperspace Phase Cloak: Intangible phase defense!
+      // 1. Captain Solo: Kessel Run Hyperdrive Overdrive (High-speed hyperspace dodge!)
       if (boss.isCloaked) {
-        popup(b.x, b.y, '🌀 PHASED / MISSED!', '#c084fc');
-        explode(b.x, b.y, '#c084fc', 8);
+        popup(b.x, b.y, '⚡ HYPERDRIVE DODGE!', '#00ffee');
+        explode(b.x, b.y, '#00ffee', 8);
         balls.splice(i, 1);
         continue;
       }
@@ -6798,7 +6798,7 @@ function draw() {
       }
     }
     
-    // Umbra Hyperspace Phase Cloaking Transparency Shimmer
+    // Captain Solo Hyperspace Overdrive Transparency Shimmer
     if (boss.isCloaked) {
       cx.globalAlpha = 0.22 + Math.sin(t * 18) * 0.12;
     }
