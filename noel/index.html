@@ -3174,19 +3174,21 @@ function startSolarSail(e) {
   shieldShards = [];
   introUfos = [
     {
+      variant: 'tie',
       type: 'tie_fighter',
-      name: 'Imperial Shadow TIE-Fighter',
+      name: 'Imperial TIE/ln Starfighter',
       x: W * 1.45, y: H * 0.28, targetX: W * 0.62, targetY: H * 0.34,
       vx: -260, vy: 30, pitch: 0.16, roll: 0.2,
       col: '#ff0033', w: 80, h: 60, saucerSpin: 0,
       shield: 1.0, dead: false, engineGlow: 1.0, shotFired: false
     },
     {
-      type: 'interceptor',
-      name: 'Imperial Shadow Interceptor',
+      variant: 'stalker',
+      type: 'vulture_droid',
+      name: 'Separatist Vulture Droid',
       x: W * 1.55, y: H * 0.72, targetX: W * 0.68, targetY: H * 0.66,
       vx: -280, vy: -30, pitch: -0.16, roll: -0.2,
-      col: '#00ffee', w: 80, h: 56, saucerSpin: 0,
+      col: '#a855f7', w: 64, h: 44, saucerSpin: 0,
       shield: 1.0, dead: false, engineGlow: 1.0, shotFired: false
     }
   ];
@@ -6171,10 +6173,84 @@ function draw() {
         cx.translate(u.x, u.y);
         cx.rotate(u.pitch || 0);
 
-        if (u.type === 'tie_fighter') {
-          // IMPERIAL TIE HEAVY FIGHTER
+        if (u.variant === 'stalker' || u.type === 'vulture_droid' || u.type === 'stalker') {
+          // 2. SEPARATIST VULTURE DROID FIGHTER (Quad Razor Mandibles & Red Photoreceptor Eye)
           const bank = Math.sin(t * 8 + u.x * 0.05) * 0.15;
           cx.rotate(bank);
+
+          // Bronze / Purple Separatist Droid Hull
+          const vg = cx.createLinearGradient(-26, 0, 22, 0);
+          vg.addColorStop(0, '#581c87'); vg.addColorStop(0.5, '#7e22ce'); vg.addColorStop(1, '#1e1b4b');
+          cx.fillStyle = vg;
+
+          // Central Body Pod
+          cx.beginPath();
+          cx.moveTo(-16, 0); cx.lineTo(14, -8); cx.lineTo(18, 0); cx.lineTo(14, 8);
+          cx.closePath(); cx.fill();
+          cx.strokeStyle = '#c084fc'; cx.lineWidth = 1.8; cx.stroke();
+
+          // Distinctive Dual Mandible Claw Wings (Top & Bottom forward blades)
+          for (const sign of [-1, 1]) {
+            cx.fillStyle = '#0f051d';
+            cx.beginPath();
+            cx.moveTo(-4, sign * 6);
+            cx.lineTo(-26, sign * 18);   // Forward razor pincer tip
+            cx.lineTo(-14, sign * 20);
+            cx.lineTo(16, sign * 12);
+            cx.closePath(); cx.fill();
+            cx.strokeStyle = '#a855f7'; cx.lineWidth = 1.6; cx.stroke();
+          }
+
+          // Red Droid Photoreceptor Eye
+          cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(-10, 0, 3.5, 0, Math.PI * 2); cx.fill();
+          cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-10, 0, 1.5, 0, Math.PI * 2); cx.fill();
+
+          // Purple Thruster Flame
+          const pg = cx.createLinearGradient(18, 0, 32, 0);
+          pg.addColorStop(0, '#ffffff'); pg.addColorStop(0.4, '#c084fc'); pg.addColorStop(1, 'rgba(0,0,0,0)');
+          cx.fillStyle = pg; cx.beginPath();
+          cx.moveTo(18, -3); cx.lineTo(28 + Math.random() * 6, 0); cx.lineTo(18, 3);
+          cx.closePath(); cx.fill();
+
+        } else if (u.variant === 'drone' || u.type === 'drone') {
+          // 4. IMPERIAL TIE DEFENDER (3 Solar Array Wings at 120° Angles + High Agility Ion Jets)
+          const bank = Math.sin(t * 9 + u.x * 0.06) * 0.2;
+          cx.rotate(bank);
+
+          // Central Spherical Armored Cockpit
+          const cg = cx.createRadialGradient(-3, -3, 2, 0, 0, 16);
+          cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.4, '#334155'); cg.addColorStop(1, '#0f172a');
+          cx.fillStyle = cg; cx.beginPath(); cx.arc(0, 0, 14, 0, Math.PI * 2); cx.fill();
+          cx.strokeStyle = '#00ffee'; cx.lineWidth = 2; cx.stroke();
+
+          // Cockpit Window (Cyan Telemetry Glow)
+          cx.fillStyle = '#00ffee'; cx.beginPath(); cx.arc(-5, 0, 4, 0, Math.PI * 2); cx.fill();
+
+          // 3 Solar Array Wings at 120° Radiating Outward
+          for (let k = 0; k < 3; k++) {
+            const ang = (k * Math.PI * 2 / 3) - Math.PI / 2;
+            const wx = Math.cos(ang) * 22, wy = Math.sin(ang) * 22;
+            cx.strokeStyle = '#475569'; cx.lineWidth = 2.5;
+            cx.beginPath(); cx.moveTo(0, 0); cx.lineTo(wx, wy); cx.stroke();
+
+            cx.fillStyle = '#1e293b'; cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.4;
+            cx.beginPath(); cx.arc(wx, wy, 8, ang - Math.PI / 3, ang + Math.PI / 3); cx.stroke();
+
+            cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(wx - 2, wy, 2, 0, Math.PI * 2); cx.fill();
+          }
+
+          // Triple Ion Engines
+          cx.fillStyle = '#00ffee';
+          cx.beginPath(); cx.arc(14, 0, 4.5 + Math.random() * 1.5, 0, Math.PI * 2); cx.fill();
+
+        } else {
+          // 1. IMPERIAL TIE/LN STARFIGHTER
+          const bank = Math.sin(t * 8 + u.x * 0.05) * 0.15;
+          cx.rotate(bank);
+
+          // Horizontal Connecting Pylon Struts
+          cx.fillStyle = '#0f172a'; cx.fillRect(-12, -3, 24, 6);
+          cx.strokeStyle = '#475569'; cx.lineWidth = 1.2; cx.strokeRect(-12, -3, 24, 6);
 
           // Central Spherical Armored Cockpit Ball
           const cg = cx.createRadialGradient(-6, -6, 3, 0, 0, 22);
@@ -6199,8 +6275,8 @@ function draw() {
 
           // Massive Vertical Hexagonal Solar Radiator Panels
           for (const wx of [-22, 22]) {
-            cx.fillStyle = '#1e293b';
-            cx.strokeStyle = '#64748b'; cx.lineWidth = 2.5;
+            cx.fillStyle = '#090d16';
+            cx.strokeStyle = '#475569'; cx.lineWidth = 2.5;
             cx.beginPath();
             cx.moveTo(wx, -26);
             cx.lineTo(wx - 8, -34);
@@ -6220,40 +6296,12 @@ function draw() {
           cx.fillStyle = '#00ffee';
           cx.beginPath(); cx.arc(20, -5, 4.5 + Math.sin(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
           cx.beginPath(); cx.arc(20, 5, 4.5 + Math.cos(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
-
-        } else {
-          // IMPERIAL DAGGER INTERCEPTOR
-          const bank = Math.sin(t * 7 + u.x * 0.05) * 0.18;
-          cx.rotate(bank);
-
-          const ig = cx.createLinearGradient(-32, 0, 24, 0);
-          ig.addColorStop(0, '#38bdf8'); ig.addColorStop(0.4, '#0284c7'); ig.addColorStop(1, '#082f49');
-          cx.fillStyle = ig;
-          cx.beginPath();
-          cx.moveTo(-32, 0);               // Forward Arrow Prow
-          cx.lineTo(-12, -22);             // Upper Wing Fin
-          cx.lineTo(22, -14);              // Upper Rear
-          cx.lineTo(14, 0);                // Engine Core
-          cx.lineTo(22, 14);               // Lower Rear
-          cx.lineTo(-12, 22);              // Lower Wing Fin
-          cx.closePath();
-          cx.fill();
-          cx.strokeStyle = '#00ffee'; cx.lineWidth = 2; cx.stroke();
-
-          // Glowing Cyan Plasma Viewport
-          cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-8, 0, 5, 0, Math.PI * 2); cx.fill();
-          cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.5;
-          cx.beginPath(); cx.arc(-8, 0, 8 + Math.sin(t * 16) * 1.5, 0, Math.PI * 2); cx.stroke();
-
-          // Rear Ion Plumes
-          cx.fillStyle = '#38bdf8';
-          cx.beginPath(); cx.arc(22, 0, 5 + Math.sin(t * 22) * 2, 0, Math.PI * 2); cx.fill();
         }
 
         // Active Ion Deflector Shield for Starfighters
-        if (g.shield && g.shield > 0) {
+        if (u.shield && u.shield > 0) {
           cx.strokeStyle = 'rgba(0, 255, 238, 0.75)'; cx.lineWidth = 2;
-          cx.beginPath(); cx.ellipse(0, 0, g.w * 0.58, g.h * 0.68, 0, 0, Math.PI * 2); cx.stroke();
+          cx.beginPath(); cx.ellipse(0, 0, (u.w || 64) * 0.58, (u.h || 44) * 0.68, 0, 0, Math.PI * 2); cx.stroke();
           cx.fillStyle = 'rgba(0, 255, 238, 0.15)'; cx.fill();
         }
 
