@@ -2219,59 +2219,68 @@ function getBossSvg(id) {
       <circle cx="118" cy="49" r="4" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
     </svg>`;
   } else if (id === 'cryo') {
-    // 5. GENERAL FROSTBYTE: THE GLACIAL COLOSSUS (Diamond Citadel Titan)
+    // 5. ADMIRAL SLOANE: IMPERIAL CANTWELL-CLASS ARRESTOR BATTLECRUISER (4 SWEPT OUTRIGGERS)
     return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <filter id="glow_ice_${uid}" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glow_cant_${uid}" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="2" result="blur"/>
           <feComposite in="SourceGraphic" in2="blur" operator="over"/>
         </filter>
-        <linearGradient id="ice_hull_${uid}" x1="0" y1="42" x2="160" y2="42" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#082f49"/>
-          <stop offset="35%" stop-color="#0c4a6e"/>
-          <stop offset="70%" stop-color="#0284c7"/>
-          <stop offset="100%" stop-color="#38bdf8"/>
+        <linearGradient id="cant_hull_${uid}" x1="0" y1="42" x2="160" y2="42" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#0f172a"/>
+          <stop offset="35%" stop-color="#1e293b"/>
+          <stop offset="70%" stop-color="#475569"/>
+          <stop offset="100%" stop-color="#94a3b8"/>
         </linearGradient>
-        <radialGradient id="ice_core_${uid}" cx="80" cy="42" r="22" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#ffffff"/>
-          <stop offset="40%" stop-color="#38bdf8"/>
-          <stop offset="85%" stop-color="#0284c7"/>
-          <stop offset="100%" stop-color="#082f49"/>
-        </radialGradient>
       </defs>
-      <!-- Heavy Diamond-Faceted Wedge Battleship Hull -->
-      <path d="M8 42 L136 8 L148 22 L148 62 L136 76 Z" fill="url(#ice_hull_${uid})" stroke="#e0f2fe" stroke-width="2.2"/>
-      <!-- Chiss Faceted Armored Spine & Bridge Structure -->
-      <polygon points="45,42 95,22 136,24 136,60 95,62" fill="#041a2e" stroke="#38bdf8" stroke-width="1.4"/>
-      <rect x="110" y="32" width="18" height="20" fill="#082f49" stroke="#e0f2fe" stroke-width="1.2" rx="2"/>
-      <!-- 4 ICONIC CRYO-GRAVITY PROJECTOR DOMES -->
-      <!-- Forward Port Dome -->
-      <circle cx="62" cy="18" r="10" fill="#082f49" stroke="#38bdf8" stroke-width="2"/>
-      <circle cx="62" cy="18" r="5" fill="#e0f2fe" filter="url(#glow_ice_${uid})"/>
-      <circle cx="62" cy="18" r="13" stroke="rgba(56,189,248,0.5)" stroke-width="1" stroke-dasharray="3 2"/>
-      <!-- Aft Port Dome -->
-      <circle cx="110" cy="18" r="10" fill="#082f49" stroke="#38bdf8" stroke-width="2"/>
-      <circle cx="110" cy="18" r="5" fill="#e0f2fe" filter="url(#glow_ice_${uid})"/>
-      <circle cx="110" cy="18" r="13" stroke="rgba(56,189,248,0.5)" stroke-width="1" stroke-dasharray="3 2"/>
-      <!-- Forward Starboard Dome -->
-      <circle cx="62" cy="66" r="10" fill="#082f49" stroke="#38bdf8" stroke-width="2"/>
-      <circle cx="62" cy="66" r="5" fill="#e0f2fe" filter="url(#glow_ice_${uid})"/>
-      <circle cx="62" cy="66" r="13" stroke="rgba(56,189,248,0.5)" stroke-width="1" stroke-dasharray="3 2"/>
-      <!-- Aft Starboard Dome -->
-      <circle cx="110" cy="66" r="10" fill="#082f49" stroke="#38bdf8" stroke-width="2"/>
-      <circle cx="110" cy="66" r="5" fill="#e0f2fe" filter="url(#glow_ice_${uid})"/>
-      <circle cx="110" cy="66" r="13" stroke="rgba(56,189,248,0.5)" stroke-width="1" stroke-dasharray="3 2"/>
-      <!-- Central Absolute Zero Cryo-Core with Snowflake Prism Spikes -->
-      <circle cx="85" cy="42" r="15" fill="url(#ice_core_${uid})" stroke="#ffffff" stroke-width="2"/>
-      <line x1="68" y1="42" x2="102" y2="42" stroke="#ffffff" stroke-width="1.8"/>
-      <line x1="85" y1="25" x2="85" y2="59" stroke="#ffffff" stroke-width="1.8"/>
-      <!-- Triple Cryo-Ion Engine Thrusters -->
-      <circle cx="146" cy="26" r="5.5" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/>
-      <circle cx="146" cy="26" r="2.5" fill="#ffffff"/>
-      <circle cx="148" cy="42" r="6" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/>
+      <!-- 4 Massive Swept Outrigger Stabilizer Wings / Radiator Pylons -->
+      <!-- Upper Port Outrigger -->
+      <path d="M50 20 L28 4 L42 4 L76 22 Z" fill="#1e293b" stroke="#00ffaa" stroke-width="1.4"/>
+      <line x1="28" y1="4" x2="12" y2="10" stroke="#00ffaa" stroke-width="2" filter="url(#glow_cant_${uid})"/>
+      <!-- Lower Port Outrigger -->
+      <path d="M50 64 L28 80 L42 80 L76 62 Z" fill="#1e293b" stroke="#00ffaa" stroke-width="1.4"/>
+      <line x1="28" y1="80" x2="12" y2="74" stroke="#00ffaa" stroke-width="2" filter="url(#glow_cant_${uid})"/>
+      <!-- Upper Starboard Aft Outrigger -->
+      <path d="M110 24 L138 6 L124 6 L90 24 Z" fill="#0f172a" stroke="#ff0033" stroke-width="1.4"/>
+      <line x1="138" y1="6" x2="152" y2="12" stroke="#ff0033" stroke-width="1.8"/>
+      <!-- Lower Starboard Aft Outrigger -->
+      <path d="M110 60 L138 78 L124 78 L90 60 Z" fill="#0f172a" stroke="#ff0033" stroke-width="1.4"/>
+      <line x1="138" y1="78" x2="152" y2="72" stroke="#ff0033" stroke-width="1.8"/>
+
+      <!-- Heavy Diamond-Faceted Arrowhead Cruiser Hull -->
+      <polygon points="12,42 78,14 136,18 148,42 136,66 78,70" fill="url(#cant_hull_${uid})" stroke="#cbd5e1" stroke-width="2.2"/>
+      <!-- Longitudinal Dorsal Spine Ridge -->
+      <polygon points="26,42 74,26 130,28 130,56 74,58" fill="#0f172a" stroke="#00ffaa" stroke-width="1.4"/>
+      
+      <!-- Elevated Command Bridge Superstructure Tower -->
+      <polygon points="85,32 115,30 118,42 115,54 85,52" fill="#334155" stroke="#ffffff" stroke-width="1.5"/>
+      <rect x="94" y="38" width="16" height="8" fill="#00ffaa" filter="url(#glow_cant_${uid})"/>
+
+      <!-- Accompanying Imperial TIE Fighter Escort -->
+      <g transform="translate(18, 12) scale(0.65)">
+        <line x1="0" y1="0" x2="0" y2="16" stroke="#64748b" stroke-width="2"/>
+        <line x1="14" y1="0" x2="14" y2="16" stroke="#64748b" stroke-width="2"/>
+        <line x1="0" y1="8" x2="14" y2="8" stroke="#cbd5e1" stroke-width="1.5"/>
+        <circle cx="7" cy="8" r="3" fill="#ff0033"/>
+      </g>
+      <g transform="translate(18, 62) scale(0.65)">
+        <line x1="0" y1="0" x2="0" y2="16" stroke="#64748b" stroke-width="2"/>
+        <line x1="14" y1="0" x2="14" y2="16" stroke="#64748b" stroke-width="2"/>
+        <line x1="0" y1="8" x2="14" y2="8" stroke="#cbd5e1" stroke-width="1.5"/>
+        <circle cx="7" cy="8" r="3" fill="#ff0033"/>
+      </g>
+
+      <!-- Emerald Green and Ruby Laser Discharge Lances -->
+      <line x1="42" y1="34" x2="6" y2="30" stroke="#00ffaa" stroke-width="1.8" filter="url(#glow_cant_${uid})"/>
+      <line x1="42" y1="50" x2="6" y2="54" stroke="#00ffaa" stroke-width="1.8" filter="url(#glow_cant_${uid})"/>
+
+      <!-- Triple Heavy Sub-Light Ion Thrusters -->
+      <circle cx="146" cy="30" r="5" fill="#00ffaa" filter="url(#glow_cant_${uid})"/>
+      <circle cx="146" cy="30" r="2.5" fill="#ffffff"/>
+      <circle cx="148" cy="42" r="5.5" fill="#00ffaa" filter="url(#glow_cant_${uid})"/>
       <circle cx="148" cy="42" r="3" fill="#ffffff"/>
-      <circle cx="146" cy="58" r="5.5" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/>
-      <circle cx="146" cy="58" r="2.5" fill="#ffffff"/>
+      <circle cx="146" cy="54" r="5" fill="#00ffaa" filter="url(#glow_cant_${uid})"/>
+      <circle cx="146" cy="54" r="2.5" fill="#ffffff"/>
     </svg>`;
   } else {
     // 6. GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
@@ -2402,17 +2411,17 @@ const BOSS_INTEL = [
   },
   {
     id: 'cryo',
-    name: 'General Frostbyte: Imperial Interdictor Cruiser',
-    sector: 'Sector 5 Flagship · Immobilizer 418 Gravity-Well Cruiser',
-    col: '#38bdf8',
+    name: 'Admiral Sloane: Imperial Cantwell Battlecruiser',
+    sector: 'Sector 5 Flagship · Heavy Outrigger Siege Battlecruiser',
+    col: '#00ffaa',
     hp: 80,
     powers: [
-      '🛡️ 6 Rotating Crystalline Ice Shield Shards (Physically blocks cannonballs)',
-      '❄️ 4 Gravity-Well Cryo-Traps (Freezes solar sails on contact, cutting speed by 50%)',
-      '❄️ Absolute-Zero Polar Blizzard (8-shard freezing cryo-pulse volley)'
+      '⚡ Quad Outrigger Emerald Turbolaser Barrage (Dual converging piercing green laser lances from 4 outriggers)',
+      '🛸 Ventral TIE Interceptor Carrier Sortie (Launches twin Imperial TIE escorts into the sector)',
+      '🧲 High-Energy Kinetic Arrestor Siege Cannon (Heavy kinetic concussion mortar with gravity shockwave)'
     ],
     loot: '+4 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +175 🪙',
-    tactic: 'Shatter all 6 rotating ice shield crystals with rapid cannon fire before targeting the 4 gravity well projector domes!'
+    tactic: 'Weave between the 4 swept outrigger stabilizer wings to target the central bridge superstructure with concentrated cannon broadsides!'
   },
   {
     id: 'titan',
@@ -3165,7 +3174,7 @@ const BTYPES = [
   { id: 'hive',  name: 'Overlord Chronos: DS-1 Death Star Orbital Battlestation', col: '#00e5ff', w: 290, h: 165, hp: 65, spd: 40, atk: 'emp_cascade' },
   { id: 'ram',   name: 'Warlord Ignis: Resurgent Sith Silencer Star Destroyer',   col: '#ff0033', w: 300, h: 160, hp: 70, spd: 48, atk: 'magma_barrage' },
   { id: 'void',  name: 'Captain Solo: The Rogue Millennium Falcon (YT-1300)', col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52, atk: 'quad_laser_barrage' },
-  { id: 'cryo',  name: 'General Frostbyte: Imperial Interdictor Cruiser (Immobilizer)', col: '#38bdf8', w: 290, h: 170, hp: 80, spd: 42, atk: 'cryo_nova' },
+  { id: 'cryo',  name: 'Admiral Sloane: Imperial Cantwell Battlecruiser', col: '#00ffaa', w: 305, h: 175, hp: 80, spd: 44, atk: 'outrigger_turbolasers' },
   { id: 'titan', name: 'General Veers: Imperial AT-AT Siege Colossus', col: '#ef4444', w: 310, h: 180, hp: 95, spd: 48, atk: 'heavy_chin_blasters' },
 ];
 
@@ -3883,7 +3892,7 @@ function buildShop() {
   h += `<div class="shopitem" style="border: 1.5px solid #00e5ff; background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(168, 85, 247, 0.1));">` +
     `<div class="ic" style="font-size:2rem;display:flex;align-items:center;justify-content:center">🔬</div>` +
     `<div class="info"><div class="t" style="color:#00ffee">Tactical Flagship Boss Database</div>` +
-    `<div class="d">Inspect all 6 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Sith Warlord Ignis, Captain Solo, Frostbyte &amp; General Veers AT-AT!</div>` +
+    `<div class="d">Inspect all 6 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Sith Warlord Ignis, Captain Solo, Admiral Sloane Cantwell &amp; General Veers AT-AT!</div>` +
     `<div class="lv" style="color:#c084fc">6 Sector Flagships Documented 👾</div></div>` +
     `<button style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;box-shadow:0 0 15px rgba(0,229,255,0.5)" onclick="openBossIntelModal(event)">🔬 INSPECT</button></div>`;
 
@@ -4818,30 +4827,32 @@ function update(dt) {
         }
 
       } else if (boss.type === 'cryo') {
-        // Boss 5: GENERAL FROSTBYTE: IMPERIAL INTERDICTOR CRYO-TITAN
+        // Boss 5: ADMIRAL SLOANE: IMPERIAL CANTWELL-CLASS ARRESTOR BATTLECRUISER (OUTRIGGER SIEGE DREADNOUGHT)
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Absolute-Zero Polar Blizzard + Ice Shard Regeneration!
-          boss.iceShards = 6;
-          for (let k = 0; k < 8; k++) {
-            const spr = ((k - 3.5) / 7) * 0.42;
-            eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.45, y: boss.y, vx: -580 * spdBonus * Math.cos(spr), vy: 580 * spdBonus * Math.sin(spr), r: 18 });
+          // ULTIMATE: Quad Outrigger Emerald Turbolaser Barrage + TIE Fighter Squadron Sortie!
+          boss.iceShards = 4;
+          for (const cy of [-65, -35, 35, 65]) {
+            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.35, y: boss.y + cy, vx: (dx / dist) * 750 * spdBonus, vy: (dy / dist) * 750 * spdBonus, r: 22 });
           }
-          addShake(24);
-          popup(boss.x - 40, boss.y - 45, '❄️ ULTIMATE: ABSOLUTE ZERO BLIZZARD!', '#38bdf8');
+          // Launch twin Imperial TIE escorts from ventral bay!
+          for (const sy of [-75, 75]) {
+            gliders.push({ x: boss.x - 30, y: boss.y + sy, vx: -(200 + level * 15), vy: (sy < 0 ? -40 : 40), r: 16, col: '#94a3b8', type: 'scout', isTie: true, shootT: 1.2 });
+          }
+          addShake(25);
+          popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: QUAD OUTRIGGER BARRAGE!', '#00ffaa');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          // Glacial Cryo-Gravity Projector Traps (Slows player speed on hit)
-          for (const cy of [-42, 42]) {
-            eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 540 * spdBonus, vy: (dy / dist) * 540 * spdBonus, r: 24 });
+          // Dual Broadside Emerald & Ruby Laser Lances
+          for (const ang of [-0.35, -0.15, 0.15, 0.35]) {
+            const isGrn = Math.abs(ang) < 0.25;
+            eballs.push({ type: 'laser', col: isGrn ? '#00ffaa' : '#ff0033', x: boss.x - boss.w * 0.42, y: boss.y, vx: -680 * spdBonus * Math.cos(ang), vy: 680 * spdBonus * Math.sin(ang), r: 20 });
           }
-          popup(boss.x - 40, boss.y - 45, '❄️ GLACIAL CRYO-GRAVITY TRAPS!', '#38bdf8');
+          popup(boss.x - 40, boss.y - 45, '💥 BROADSIDE TURBOLASERS!', '#00ffaa');
           sfx('laser');
         } else {
-          // Quad Sub-Zero Cryo-Pulses
-          for (const ang of [-0.30, -0.10, 0.10, 0.30]) {
-            eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.45, y: boss.y, vx: -540 * spdBonus * Math.cos(ang), vy: 540 * spdBonus * Math.sin(ang), r: 20 });
-          }
-          popup(boss.x - 40, boss.y - 45, '❄️ QUAD CRYO-PULSES!', '#38bdf8');
+          // High-Energy Kinetic Arrestor Siege Shell & Quad Repeating Cannons
+          eballs.push({ type: 'magma', col: '#00ffaa', x: boss.x - boss.w * 0.45, y: boss.y, vx: (dx / dist) * 600 * spdBonus, vy: (dy / dist) * 600 * spdBonus, r: 28, spin: 0 });
+          popup(boss.x - 40, boss.y - 45, '🧲 KINETIC ARRESTOR SIEGE CANNON!', '#00ffaa');
           sfx('incoming');
         }
 
@@ -4900,12 +4911,12 @@ function update(dt) {
         continue;
       }
 
-      // 2. General Frostbyte Crystalline Ice Shield Shards: Blocks cannonballs!
+      // 2. Admiral Sloane Outrigger Deflector Barrier: Outrigger wings absorb initial hits!
       if (boss.type === 'cryo' && boss.iceShards > 0) {
         boss.iceShards--;
         hit = true;
-        explode(b.x, b.y, '#38bdf8', 16);
-        popup(boss.x, boss.y - 35, `❄️ ICE SHARD SHATTERED! (${boss.iceShards} REMAINING)`, '#38bdf8');
+        explode(b.x, b.y, '#00ffaa', 18);
+        popup(boss.x, boss.y - 35, `🛡️ OUTRIGGER DEFLECTOR SHATTERED! (${boss.iceShards} REMAINING)`, '#00ffaa');
         sfx('metal');
         addShake(6);
       } else {
@@ -7166,54 +7177,86 @@ function draw() {
       }
 
     } else if (boss.type === 'cryo') {
-      // BOSS 5: GENERAL FROSTBYTE: IMPERIAL INTERDICTOR CRYO-TITAN (Star Wars Interdictor Cruiser)
+      // BOSS 5: ADMIRAL SLOANE: IMPERIAL CANTWELL-CLASS ARRESTOR BATTLECRUISER (4 SWEPT OUTRIGGERS)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
-      bg.addColorStop(0, 'rgba(56, 189, 248, 0.50)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
+      bg.addColorStop(0, 'rgba(0, 255, 170, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.54, 0, Math.PI * 2); cx.fill();
+
+      // 4 MASSIVE SWEPT OUTRIGGER STABILIZER WINGS / RADIATOR PYLONS (From User Reference Photo)
+      const outriggers = [
+        { sx: -boss.w * 0.15, sy: -boss.h * 0.22, tx: -boss.w * 0.42, ty: -boss.h * 0.48, col: '#00ffaa' }, // Upper-Forward Port
+        { sx: -boss.w * 0.15, sy: boss.h * 0.22, tx: -boss.w * 0.42, ty: boss.h * 0.48, col: '#00ffaa' },  // Lower-Forward Starboard
+        { sx: boss.w * 0.18, sy: -boss.h * 0.22, tx: boss.w * 0.46, ty: -boss.h * 0.46, col: '#ff0033' },   // Upper-Aft Port
+        { sx: boss.w * 0.18, sy: boss.h * 0.22, tx: boss.w * 0.46, ty: boss.h * 0.46, col: '#ff0033' }     // Lower-Aft Starboard
+      ];
+
+      for (const out of outriggers) {
+        cx.fillStyle = '#0f172a';
+        cx.beginPath();
+        cx.moveTo(out.sx, out.sy);
+        cx.lineTo(out.tx, out.ty);
+        cx.lineTo(out.tx + 18, out.ty + (out.ty < 0 ? 8 : -8));
+        cx.lineTo(out.sx + 24, out.sy);
+        cx.closePath(); cx.fill();
+        cx.strokeStyle = out.col; cx.lineWidth = 2.4; cx.stroke();
+
+        // Glowing Laser Emitter Tip
+        cx.fillStyle = out.col;
+        cx.beginPath(); cx.arc(out.tx, out.ty, 4.5 + Math.sin(t * 14) * 1.5, 0, Math.PI * 2); cx.fill();
+      }
 
       // Heavy Diamond-Faceted Arrowhead Cruiser Hull
       const cg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
-      cg.addColorStop(0, '#041a2e'); cg.addColorStop(0.35, '#082f49'); cg.addColorStop(0.7, '#0284c7'); cg.addColorStop(1, '#38bdf8');
+      cg.addColorStop(0, '#0f172a'); cg.addColorStop(0.35, '#1e293b'); cg.addColorStop(0.7, '#475569'); cg.addColorStop(1, '#cbd5e1');
       cx.fillStyle = cg;
       cx.beginPath();
-      cx.moveTo(-boss.w * 0.50, 0);                 // Forward cryo prow
-      cx.lineTo(boss.w * 0.38, -boss.h * 0.46);     // Port aft wing
-      cx.lineTo(boss.w * 0.48, -boss.h * 0.22);     // Port engine
+      cx.moveTo(-boss.w * 0.50, 0);                 // Forward prow apex
+      cx.lineTo(-boss.w * 0.10, -boss.h * 0.38);    // Forward port slope
+      cx.lineTo(boss.w * 0.38, -boss.h * 0.36);     // Port aft wing
+      cx.lineTo(boss.w * 0.48, -boss.h * 0.18);     // Port engine
       cx.lineTo(boss.w * 0.40, 0);                  // Aft spine
-      cx.lineTo(boss.w * 0.48, boss.h * 0.22);      // Starboard engine
-      cx.lineTo(boss.w * 0.38, boss.h * 0.46);      // Starboard aft wing
+      cx.lineTo(boss.w * 0.48, boss.h * 0.18);      // Starboard engine
+      cx.lineTo(boss.w * 0.38, boss.h * 0.36);      // Starboard aft wing
+      cx.lineTo(-boss.w * 0.10, boss.h * 0.38);     // Forward starboard slope
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#e0f2fe'; cx.lineWidth = 3.8; cx.stroke();
+      cx.strokeStyle = '#00ffaa'; cx.lineWidth = 3.6; cx.stroke();
 
-      // 4 Massive Interdictor Gravity-Well Projector Domes
-      for (const pos of [
-        { x: -boss.w * 0.15, y: -boss.h * 0.26 },
-        { x: boss.w * 0.18, y: -boss.h * 0.26 },
-        { x: -boss.w * 0.15, y: boss.h * 0.26 },
-        { x: boss.w * 0.18, y: boss.h * 0.26 }
-      ]) {
-        cx.fillStyle = '#082f49'; cx.beginPath(); cx.arc(pos.x, pos.y, 16, 0, Math.PI * 2); cx.fill();
-        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.5; cx.stroke();
-        cx.fillStyle = '#e0f2fe'; cx.beginPath(); cx.arc(pos.x, pos.y, 8, 0, Math.PI * 2); cx.fill();
+      // Elevated Command Bridge Superstructure Tower
+      cx.fillStyle = '#1e293b';
+      cx.beginPath();
+      cx.moveTo(boss.w * 0.05, -boss.h * 0.18);
+      cx.lineTo(boss.w * 0.28, -boss.h * 0.16);
+      cx.lineTo(boss.w * 0.28, boss.h * 0.16);
+      cx.lineTo(boss.w * 0.05, boss.h * 0.18);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.8; cx.stroke();
+
+      // Glowing Emerald Command Bridge Viewport Slits
+      cx.fillStyle = '#00ffaa';
+      cx.fillRect(boss.w * 0.10, -boss.h * 0.08, boss.w * 0.12, 4);
+      cx.fillRect(boss.w * 0.10, boss.h * 0.05, boss.w * 0.12, 4);
+
+      // Accompanying TIE Interceptor Escort Formation
+      for (const ty of [-boss.h * 0.42, boss.h * 0.42]) {
+        cx.save(); cx.translate(-boss.w * 0.25, ty);
+        cx.strokeStyle = '#64748b'; cx.lineWidth = 2;
+        cx.beginPath(); cx.moveTo(-8, -10); cx.lineTo(-8, 10); cx.moveTo(8, -10); cx.lineTo(8, 10); cx.stroke();
+        cx.fillStyle = '#0f172a'; cx.beginPath(); cx.arc(0, 0, 4, 0, Math.PI * 2); cx.fill();
+        cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(0, 0, 1.8, 0, Math.PI * 2); cx.fill();
+        cx.restore();
       }
 
-      // Central Absolute Zero Cryo-Core with Snowflake Prism Spikes
-      const cr = cx.createRadialGradient(0, 0, 3, 0, 0, 36);
-      cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.4, '#38bdf8'); cr.addColorStop(0.8, '#0284c7'); cr.addColorStop(1, '#0369a1');
-      cx.fillStyle = cr; cx.beginPath(); cx.arc(0, 0, 22, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.8; cx.stroke();
-
-      // Active Rotating Crystalline Ice Shield Shards (Physically Blocks Cannonballs!)
-      const shardsCount = boss.iceShards !== undefined ? boss.iceShards : 6;
+      // Active Outrigger Deflector Shield Barrier (Absorbs Hits)
+      const shardsCount = boss.iceShards !== undefined ? boss.iceShards : 4;
       for (let k = 0; k < shardsCount; k++) {
-        const a = (k / 6) * Math.PI * 2 + boss.spinRing * 0.5;
-        const px = Math.cos(a) * (boss.w * 0.38), py = Math.sin(a) * (boss.h * 0.36);
-        cx.fillStyle = 'rgba(224, 242, 254, 0.9)';
+        const a = (k / 4) * Math.PI * 2 + boss.spinRing * 0.4;
+        const px = Math.cos(a) * (boss.w * 0.38), py = Math.sin(a) * (boss.h * 0.38);
+        cx.fillStyle = 'rgba(0, 255, 170, 0.85)';
         cx.beginPath();
-        cx.moveTo(px, py - 14); cx.lineTo(px + 10, py); cx.lineTo(px, py + 14); cx.lineTo(px - 10, py);
+        cx.moveTo(px, py - 12); cx.lineTo(px + 10, py); cx.lineTo(px, py + 12); cx.lineTo(px - 10, py);
         cx.closePath(); cx.fill();
-        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.2; cx.stroke();
+        cx.strokeStyle = '#ffffff'; cx.lineWidth = 2; cx.stroke();
       }
 
     } else {
