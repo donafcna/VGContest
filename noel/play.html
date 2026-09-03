@@ -4575,6 +4575,10 @@ function update(dt) {
   // Boss updates
   if (!boss) { bossT -= dt; if (bossT <= 0) spawnBoss(); }
   if (boss) {
+    const dx = ship.x - boss.x, dy = ship.y - boss.y;
+    const dist = Math.hypot(dx, dy) || 1;
+    const spdBonus = (1 + Math.min(1.0, (level - 1) * 0.08)) * (boss.enraged ? 1.2 : 1.0);
+
     if (boss.x > boss.targetX && !boss.isRamming) boss.x -= 130 * dt;
     boss.phase += dt;
     boss.spinRing += dt * (boss.enraged ? 7 : 4);
@@ -4588,7 +4592,7 @@ function update(dt) {
       // Planet-Killer Death Ray deals damage if player galleon touches the beam
       if (Math.abs(ship.y - boss.y) < 36 && ship.x < boss.x) {
         if (ship.inv <= 0) {
-          hurtPlayer();
+          damageShip();
           popup(ship.x, ship.y - 25, '⚡ TACHYON BEAM HIT!', '#00ffaa');
         }
       }
@@ -4617,7 +4621,7 @@ function update(dt) {
         // Charging pass - surge forward at supersonic speed
         boss.x -= 720 * dt;
         if (Math.hypot(ship.x - boss.x, ship.y - boss.y) < 85 && ship.inv <= 0) {
-          hurtPlayer();
+          damageShip();
           popup(ship.x, ship.y - 25, '💥 SITH RAM COLLISION!', '#ff0033');
           addShake(28);
         }
@@ -4665,10 +4669,6 @@ function update(dt) {
       const baseCd = boss.enraged ? (1.6 - level * 0.12) : (2.4 - level * 0.15);
       boss.atkT = Math.max(0.75, baseCd);
       boss.atkCycle = ((boss.atkCycle || 0) + 1) % 3;
-      
-      const dx = ship.x - boss.x, dy = ship.y - boss.y;
-      const dist = Math.hypot(dx, dy) || 1;
-      const spdBonus = (1 + Math.min(1.0, (level - 1) * 0.08)) * (boss.enraged ? 1.2 : 1.0);
 
       if (boss.type === 'dread') {
         // Boss 1: GRAND ADMIRAL VEX: OMEGA DREADNOUGHT
@@ -4851,6 +4851,7 @@ function update(dt) {
       if (boss.isCloaked) {
         popup(b.x, b.y, '🌀 PHASED / MISSED!', '#c084fc');
         explode(b.x, b.y, '#c084fc', 8);
+        balls.splice(i, 1);
         continue;
       }
 
@@ -7171,6 +7172,7 @@ function draw() {
     }
 
     // Boss Giant Health Bar & Glowing Title Badge
+    cx.globalAlpha = 1.0;
     const barW = boss.w * 0.85;
     const barY = -boss.h * 0.5 - 28;
     
