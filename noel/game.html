@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Space Pirates: Galleon vs Star Wars UFOs — Realistic Space Combat with 7-Day Daily Rewards by Noel v27.0 -->
+<!-- Space Pirates: Galleon vs Star Wars UFOs — Realistic Space Combat with 7-Day Daily Rewards by Noel v28.0 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -2122,50 +2122,60 @@ function getBossSvg(id) {
       <circle cx="62" cy="25" r="3.5" fill="#ffffff" stroke="#00e5ff" stroke-width="1.5" filter="url(#glow_ds_${uid})"/>
     </svg>`;
   } else if (id === 'ram') {
-    // 3. WARLORD IGNIS: THE HELLFIRE LEVIATHAN (Obsidian Sith-Leviathan)
+    // 3. ADMIRAL RADDUS: MON CALAMARI MC85 STAR CRUISER (THE PROFUNDITY / RADDUS)
     return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <filter id="glow_sith_${uid}" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glow_moncal_${uid}" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="2" result="blur"/>
           <feComposite in="SourceGraphic" in2="blur" operator="over"/>
         </filter>
-        <linearGradient id="sith_wing_${uid}" x1="0" y1="42" x2="160" y2="42" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#0a0507"/>
-          <stop offset="35%" stop-color="#2a0812"/>
-          <stop offset="70%" stop-color="#5c0d24"/>
-          <stop offset="100%" stop-color="#881337"/>
+        <linearGradient id="moncal_hull_${uid}" x1="0" y1="25" x2="160" y2="25" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f8fafc"/>
+          <stop offset="35%" stop-color="#cbd5e1"/>
+          <stop offset="70%" stop-color="#64748b"/>
+          <stop offset="100%" stop-color="#1e293b"/>
         </linearGradient>
-        <radialGradient id="sith_core_${uid}" cx="80" cy="42" r="22" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#ffffff"/>
-          <stop offset="30%" stop-color="#fde047"/>
-          <stop offset="65%" stop-color="#ef4444"/>
-          <stop offset="100%" stop-color="#450a0a"/>
-        </radialGradient>
       </defs>
-      <!-- Upper Dagger Stealth Wing Array -->
-      <polygon points="10,8 150,6 128,32 50,32" fill="url(#sith_wing_${uid})" stroke="#ef4444" stroke-width="1.8"/>
-      <line x1="22" y1="12" x2="138" y2="10" stroke="#ff0033" stroke-width="1.2"/>
-      <line x1="50" y1="32" x2="128" y2="32" stroke="#ff0033" stroke-width="1.2"/>
-      <rect x="70" y="16" width="45" height="8" fill="#180408" stroke="#ff0033" stroke-width="1"/>
-      <!-- Lower Dagger Stealth Wing Array -->
-      <polygon points="10,76 150,78 128,52 50,52" fill="url(#sith_wing_${uid})" stroke="#ef4444" stroke-width="1.8"/>
-      <line x1="22" y1="72" x2="138" y2="74" stroke="#ff0033" stroke-width="1.2"/>
-      <line x1="50" y1="52" x2="128" y2="52" stroke="#ff0033" stroke-width="1.2"/>
-      <rect x="70" y="60" width="45" height="8" fill="#180408" stroke="#ff0033" stroke-width="1"/>
-      <!-- Wingtip Heavy Crimson Laser Cannons -->
-      <rect x="6" y="6" width="16" height="5" fill="#ff0033" rx="1.5"/>
-      <rect x="6" y="73" width="16" height="5" fill="#ff0033" rx="1.5"/>
-      <!-- Heavy Center Hull Body & Armored Cockpit Nacelle -->
-      <polygon points="40,42 70,22 110,24 125,42 110,60 70,62" fill="#0f0206" stroke="#ef4444" stroke-width="2"/>
-      <!-- Sith Cockpit Slit Visor with Crimson Telemetry Glow -->
-    <polygon points="50,42 66,36 88,36 78,42 88,48 66,48" fill="#ff0033" stroke="#ffffff" stroke-width="1.2" filter="url(#glow_sith_${uid})"/>
-      <!-- Pulsing Sith Kyber Supernova Core -->
-      <circle cx="82" cy="42" r="14" fill="url(#sith_core_${uid})" stroke="#ffd23c" stroke-width="2"/>
-      <!-- Twin Rear High-Output Sith Red Ion Engines -->
-      <circle cx="118" cy="34" r="5" fill="#ef4444" stroke="#ff0033" stroke-width="1.5"/>
-      <circle cx="118" cy="34" r="2" fill="#ffffff" filter="url(#glow_sith_${uid})"/>
-      <circle cx="118" cy="50" r="5" fill="#ef4444" stroke="#ff0033" stroke-width="1.5"/>
-      <circle cx="118" cy="50" r="2" fill="#ffffff" filter="url(#glow_sith_${uid})"/>
+      <!-- Deep Ventral Command City Fin / Spire Mast (Iconic MC85 / MC75 Feature) -->
+      <path d="M72 32 L78 74 L84 74 L90 32 Z" fill="#334155" stroke="#38bdf8" stroke-width="1.4"/>
+      <ellipse cx="81" cy="74" rx="6" ry="3.5" fill="#0f172a" stroke="#00e5ff" stroke-width="1.2"/>
+      <circle cx="81" cy="74" r="2" fill="#00e5ff" filter="url(#glow_moncal_${uid})"/>
+      <!-- Fin Support Conduits & Sensor Pods -->
+      <line x1="79" y1="36" x2="79" y2="68" stroke="#64748b" stroke-width="1"/>
+      <line x1="83" y1="36" x2="83" y2="68" stroke="#64748b" stroke-width="1"/>
+      <rect x="76" y="48" width="10" height="4" fill="#0f172a" stroke="#38bdf8" stroke-width="0.8"/>
+
+      <!-- Main Curved Organic Whale-like Oval Upper Hull -->
+      <path d="M8 26 Q40 8 136 12 Q152 24 148 38 Q100 44 8 26 Z" fill="url(#moncal_hull_${uid})" stroke="#94a3b8" stroke-width="2"/>
+      <!-- Mon Calamari Organic Hull Blister Domes -->
+      <ellipse cx="48" cy="18" rx="14" ry="5" fill="#475569" stroke="#cbd5e1" stroke-width="1"/>
+      <ellipse cx="88" cy="19" rx="18" ry="6" fill="#475569" stroke="#cbd5e1" stroke-width="1"/>
+      <ellipse cx="120" cy="22" rx="12" ry="5" fill="#334155" stroke="#cbd5e1" stroke-width="1"/>
+      <circle cx="58" cy="17" r="2.5" fill="#38bdf8"/>
+      <circle cx="94" cy="18" r="2.5" fill="#38bdf8"/>
+
+      <!-- Dorsal Command Bridge Tower -->
+      <polygon points="105,14 125,10 132,15 118,17" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+      <line x1="112" y1="13" x2="124" y2="12" stroke="#00e5ff" stroke-width="1.4"/>
+
+      <!-- Accompanying Nebulon-B Escort Frigate -->
+      <g transform="translate(122, 50) scale(0.55)">
+        <polygon points="0,6 18,0 24,12 0,8" fill="#cbd5e1" stroke="#38bdf8" stroke-width="1"/>
+        <line x1="18" y1="6" x2="36" y2="6" stroke="#475569" stroke-width="2"/>
+        <polygon points="36,0 46,2 46,12 36,10" fill="#334155" stroke="#94a3b8" stroke-width="1"/>
+      </g>
+
+      <!-- Azure Blue Heavy Turbolaser Discharge Beams -->
+      <line x1="32" y1="28" x2="2" y2="34" stroke="#00e5ff" stroke-width="2" filter="url(#glow_moncal_${uid})"/>
+      <line x1="68" y1="32" x2="38" y2="38" stroke="#38bdf8" stroke-width="1.8" filter="url(#glow_moncal_${uid})"/>
+
+      <!-- Rear Multi-Engine Sub-Light Ion Thrusters -->
+      <circle cx="146" cy="20" r="4.5" fill="#00e5ff" filter="url(#glow_moncal_${uid})"/>
+      <circle cx="146" cy="20" r="2" fill="#ffffff"/>
+      <circle cx="148" cy="28" r="5" fill="#00e5ff" filter="url(#glow_moncal_${uid})"/>
+      <circle cx="148" cy="28" r="2.5" fill="#ffffff"/>
+      <circle cx="144" cy="35" r="4.5" fill="#00e5ff" filter="url(#glow_moncal_${uid})"/>
+      <circle cx="144" cy="35" r="2" fill="#ffffff"/>
     </svg>`;
   } else if (id === 'void') {
     // 4. CAPTAIN SOLO: THE ROGUE MILLENNIUM FALCON (YT-1300 CORELLIAN GUNSHIP)
@@ -2383,17 +2393,17 @@ const BOSS_INTEL = [
   },
   {
     id: 'ram',
-    name: 'Warlord Ignis: Resurgent Sith Silencer',
-    sector: 'Sector 3 Flagship · Obsidian Sith-Leviathan Star Destroyer',
-    col: '#ff0033',
+    name: 'Admiral Raddus: Mon Calamari MC85 Star Cruiser',
+    sector: 'Sector 3 Flagship · Heavy Mon Calamari Command Cruiser (The Profundity)',
+    col: '#38bdf8',
     hp: 70,
     powers: [
-      '🚀 Supersonic Sith Dagger Ramming Charge (Surges forward across the screen at 720 km/s)',
-      '⚡ Sith Force Lightning Web (Branching red electricity sweeping flight corridors)',
-      '🔥 Molten Kyber Sun Meteor (Detonates into 8 flaming magma shards)'
+      '🌊 Ventral Spire Heavy Ion Ray (Piercing azure continuous beam sweeping flight lanes)',
+      '🚀 Dual Guided Concussion Torpedo Volleys & Deflector Shield Bubbles',
+      '⚡ Mon Calamari 8-Gun Broadside Turbolaser Salvo (High-speed azure blue plasma fire)'
     ],
     loot: '+3 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +125 🪙',
-    tactic: 'Bank vertically when Ignis ignites his crimson afterburners for the ramming rush, then broadside the Kyber reactor!'
+    tactic: 'Stay above the deep ventral command fin to avoid the downward ion beam, and target the dorsal shield blister domes!'
   },
   {
     id: 'void',
@@ -3172,7 +3182,7 @@ function spawnMine() {
 const BTYPES = [
   { id: 'dread', name: 'Grand Admiral Vex: Imperial Star Destroyer (The Eclipse)', col: '#00ffaa', w: 305, h: 165, hp: 60, spd: 44, atk: 'tachyon' },
   { id: 'hive',  name: 'Overlord Chronos: DS-1 Death Star Orbital Battlestation', col: '#00e5ff', w: 290, h: 165, hp: 65, spd: 40, atk: 'emp_cascade' },
-  { id: 'ram',   name: 'Warlord Ignis: Resurgent Sith Silencer Star Destroyer',   col: '#ff0033', w: 300, h: 160, hp: 70, spd: 48, atk: 'magma_barrage' },
+  { id: 'ram',   name: 'Admiral Raddus: Mon Calamari MC85 Star Cruiser', col: '#38bdf8', w: 305, h: 185, hp: 70, spd: 46, atk: 'mon_cal_broadside' },
   { id: 'void',  name: 'Captain Solo: The Rogue Millennium Falcon (YT-1300)', col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52, atk: 'quad_laser_barrage' },
   { id: 'cryo',  name: 'Admiral Sloane: Imperial Cantwell Battlecruiser', col: '#00ffaa', w: 305, h: 175, hp: 80, spd: 44, atk: 'outrigger_turbolasers' },
   { id: 'titan', name: 'General Veers: Imperial AT-AT Siege Colossus', col: '#ef4444', w: 310, h: 180, hp: 95, spd: 48, atk: 'heavy_chin_blasters' },
@@ -3892,7 +3902,7 @@ function buildShop() {
   h += `<div class="shopitem" style="border: 1.5px solid #00e5ff; background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(168, 85, 247, 0.1));">` +
     `<div class="ic" style="font-size:2rem;display:flex;align-items:center;justify-content:center">🔬</div>` +
     `<div class="info"><div class="t" style="color:#00ffee">Tactical Flagship Boss Database</div>` +
-    `<div class="d">Inspect all 6 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Sith Warlord Ignis, Captain Solo, Admiral Sloane Cantwell &amp; General Veers AT-AT!</div>` +
+    `<div class="d">Inspect all 6 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Admiral Raddus, Captain Solo, Admiral Sloane &amp; General Veers AT-AT!</div>` +
     `<div class="lv" style="color:#c084fc">6 Sector Flagships Documented 👾</div></div>` +
     `<button style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;box-shadow:0 0 15px rgba(0,229,255,0.5)" onclick="openBossIntelModal(event)">🔬 INSPECT</button></div>`;
 
@@ -4773,28 +4783,30 @@ function update(dt) {
         }
 
       } else if (boss.type === 'ram') {
-        // Boss 3: WARLORD IGNIS: SITH SILENCER KYBER-LEVIATHAN
+        // Boss 3: ADMIRAL RADDUS: MON CALAMARI MC85 STAR CRUISER (THE PROFUNDITY)
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Supersonic Sith Dagger Ramming Charge!
-          boss.isRamming = true;
-          boss.ramChargeT = 1.6;
-          boss.ramStartX = boss.x;
-          addShake(32);
-          popup(boss.x - 40, boss.y - 45, '🔥 ULTIMATE: SUPERSONIC SITH RAM!', '#ff0033');
-          sfx('incoming');
-        } else if (boss.atkCycle === 1) {
-          // Sith Force Lightning Web across top and bottom lanes
-          for (let k = 0; k < 6; k++) {
-            const spr = ((k - 2.5) / 5) * 0.46;
-            eballs.push({ type: 'laser', col: '#ff0033', x: boss.x - boss.w * 0.45, y: boss.y, vx: -680 * spdBonus * Math.cos(spr), vy: 680 * spdBonus * Math.sin(spr), r: 20 });
+          // ULTIMATE: Ventral Spire Heavy Ion Ray (Piercing azure beam + screen shake)!
+          for (let k = 0; k < 8; k++) {
+            const spr = ((k - 3.5) / 7) * 0.44;
+            eballs.push({ type: 'laser', col: '#00e5ff', x: boss.x - boss.w * 0.35, y: boss.y + 25, vx: -720 * spdBonus * Math.cos(spr), vy: 720 * spdBonus * Math.sin(spr), r: 20 });
           }
-          popup(boss.x - 40, boss.y - 45, '⚡ SITH FORCE LIGHTNING WEB!', '#ff0033');
+          addShake(28);
+          popup(boss.x - 40, boss.y - 45, '🌊 ULTIMATE: VENTRAL ION CANNON RAY!', '#00e5ff');
           sfx('laser');
-        } else {
-          // Molten Kyber Sun Meteor (Detonates into 8 flaming magma shards!)
-          eballs.push({ type: 'magma', col: '#ff3300', x: boss.x - boss.w * 0.45, y: boss.y, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 34, spin: 0 });
+        } else if (boss.atkCycle === 1) {
+          // Dual Guided Concussion Torpedo Volleys & Deflector Shield Bubbles
+          for (const cy of [-32, 18]) {
+            eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 22 });
+          }
+          popup(boss.x - 40, boss.y - 45, '🚀 GUIDED CONCUSSION TORPEDOES!', '#38bdf8');
           sfx('incoming');
-          popup(boss.x - 40, boss.y - 45, '🔥 MOLTEN KYBER SUN METEOR!', '#ff5500');
+        } else {
+          // Mon Calamari 8-Gun Broadside Turbolaser Salvo
+          for (const ang of [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36]) {
+            eballs.push({ type: 'laser', col: '#00ffee', x: boss.x - boss.w * 0.40, y: boss.y - 12, vx: -660 * spdBonus * Math.cos(ang), vy: 660 * spdBonus * Math.sin(ang), r: 18 });
+          }
+          sfx('laser');
+          popup(boss.x - 40, boss.y - 45, '💥 MON CALAMARI BROADSIDE!', '#00ffee');
         }
 
       } else if (boss.type === 'void') {
@@ -7013,78 +7025,85 @@ function draw() {
       }
 
     } else if (boss.type === 'ram') {
-      // BOSS 3: WARLORD IGNIS: SITH SILENCER KYBER-LEVIATHAN (Star Wars Sith TIE Silencer)
+      // BOSS 3: ADMIRAL RADDUS: MON CALAMARI MC85 STAR CRUISER (THE PROFUNDITY / RADDUS)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
-      bg.addColorStop(0, 'rgba(255, 0, 51, 0.55)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
+      bg.addColorStop(0, 'rgba(56, 189, 248, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.56, boss.h * 0.52, 0, 0, Math.PI * 2); cx.fill();
 
-      // Active Supersonic Ramming Pass Crimson Afterburners
-      if (boss.isRamming) {
-        cx.save();
-        const flg = cx.createLinearGradient(boss.w * 0.4, 0, boss.w * 0.4 + 220, 0);
-        flg.addColorStop(0, '#ffffff'); flg.addColorStop(0.2, '#ffdd33'); flg.addColorStop(0.6, '#ff0033'); flg.addColorStop(1, 'rgba(0,0,0,0)');
-        cx.fillStyle = flg;
-        cx.beginPath();
-        cx.moveTo(boss.w * 0.44, -boss.h * 0.35);
-        cx.lineTo(boss.w * 0.44 + 240 + Math.random() * 60, 0);
-        cx.lineTo(boss.w * 0.44, boss.h * 0.35);
-        cx.closePath(); cx.fill();
-        // Supersonic Bow Shockwave
-        cx.strokeStyle = 'rgba(255, 0, 51, 0.8)'; cx.lineWidth = 4;
-        cx.beginPath(); cx.arc(-boss.w * 0.52, 0, 60, -Math.PI * 0.4, Math.PI * 0.4); cx.stroke();
-        cx.restore();
-      }
+      // MASSIVE DEEP VENTRAL COMMAND CITY FIN / SPIRE MAST (From User Reference Photo)
+      const finX = -boss.w * 0.05;
+      const fg = cx.createLinearGradient(finX, 0, finX, boss.h * 0.50);
+      fg.addColorStop(0, '#334155'); fg.addColorStop(0.5, '#475569'); fg.addColorStop(1, '#0f172a');
+      cx.fillStyle = fg;
+      cx.beginPath();
+      cx.moveTo(finX - 16, 0);
+      cx.lineTo(finX - 8, boss.h * 0.48);
+      cx.lineTo(finX + 8, boss.h * 0.48);
+      cx.lineTo(finX + 22, 0);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.4; cx.stroke();
 
-      // Forward-Swept Jagged Sith Silencer Dagger Wings
+      // Ventral Observation Command Bridge Pod at Bottom of Fin
+      cx.fillStyle = '#0f172a';
+      cx.beginPath(); cx.ellipse(finX, boss.h * 0.48, 16, 8, 0, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#00e5ff'; cx.lineWidth = 2; cx.stroke();
+      cx.fillStyle = '#00e5ff';
+      cx.beginPath(); cx.arc(finX, boss.h * 0.48, 4.5 + Math.sin(t * 12) * 1.5, 0, Math.PI * 2); cx.fill();
+
+      // Main Hydrodynamic Curved Whale-like Mon Calamari Upper Hull
       const mg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
-      mg.addColorStop(0, '#0a0507'); mg.addColorStop(0.35, '#3b0712'); mg.addColorStop(0.7, '#881337'); mg.addColorStop(1, '#e11d48');
+      mg.addColorStop(0, '#0f172a'); mg.addColorStop(0.3, '#334155'); mg.addColorStop(0.65, '#94a3b8'); mg.addColorStop(0.9, '#e2e8f0'); mg.addColorStop(1, '#f8fafc');
       cx.fillStyle = mg;
       cx.beginPath();
-      cx.moveTo(-boss.w * 0.50, 0);                 // Forward prow needle
-      cx.lineTo(-boss.w * 0.36, -boss.h * 0.48);    // Port dagger claw
-      cx.lineTo(-boss.w * 0.15, -boss.h * 0.28);    // Port wing root
-      cx.lineTo(boss.w * 0.38, -boss.h * 0.44);     // Port aft wing
-      cx.lineTo(boss.w * 0.48, -boss.h * 0.20);     // Port engine
-      cx.lineTo(boss.w * 0.38, 0);                  // Aft notch
-      cx.lineTo(boss.w * 0.48, boss.h * 0.20);      // Starboard engine
-      cx.lineTo(boss.w * 0.38, boss.h * 0.44);      // Starboard aft wing
-      cx.lineTo(-boss.w * 0.15, boss.h * 0.28);     // Starboard wing root
-      cx.lineTo(-boss.w * 0.36, boss.h * 0.48);     // Starboard dagger claw
+      cx.moveTo(-boss.w * 0.50, -boss.h * 0.12);     // Forward bulbous prow
+      cx.quadraticCurveTo(-boss.w * 0.15, -boss.h * 0.48, boss.w * 0.38, -boss.h * 0.38); // Dorsal curve
+      cx.lineTo(boss.w * 0.48, -boss.h * 0.18);      // Aft upper engine notch
+      cx.lineTo(boss.w * 0.46, boss.h * 0.08);       // Aft lower spine
+      cx.quadraticCurveTo(0, boss.h * 0.14, -boss.w * 0.50, -boss.h * 0.12); // Ventral keel curve
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#ff0033'; cx.lineWidth = 3.8; cx.stroke();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 3.6; cx.stroke();
 
-      // Stealth Carbon Solar Inlays on Outer Wings
-      cx.fillStyle = '#180408';
-      cx.fillRect(boss.w * 0.05, -boss.h * 0.38, boss.w * 0.25, boss.h * 0.14);
-      cx.fillRect(boss.w * 0.05, boss.h * 0.24, boss.w * 0.25, boss.h * 0.14);
-      cx.strokeStyle = 'rgba(255,0,51,0.5)'; cx.lineWidth = 1.4;
-      cx.strokeRect(boss.w * 0.05, -boss.h * 0.38, boss.w * 0.25, boss.h * 0.14);
-      cx.strokeRect(boss.w * 0.05, boss.h * 0.24, boss.w * 0.25, boss.h * 0.14);
+      // Mon Calamari Organic Hull Blister Domes & Shield Bulbs
+      const blisters = [
+        { x: -boss.w * 0.28, y: -boss.h * 0.28, rx: 22, ry: 8 },
+        { x: -boss.w * 0.05, y: -boss.h * 0.32, rx: 28, ry: 9 },
+        { x: boss.w * 0.20, y: -boss.h * 0.26, rx: 20, ry: 7 },
+        { x: -boss.w * 0.32, y: -boss.h * 0.04, rx: 16, ry: 6 }
+      ];
+      for (const b of blisters) {
+        cx.fillStyle = '#1e293b';
+        cx.beginPath(); cx.ellipse(b.x, b.y, b.rx, b.ry, 0, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 1.4; cx.stroke();
+        cx.fillStyle = '#38bdf8'; cx.beginPath(); cx.arc(b.x, b.y, 3, 0, Math.PI * 2); cx.fill();
+      }
 
-      // Sith Cockpit Slit Visor with Crimson Telemetry Glow
-      cx.fillStyle = '#ff0033';
+      // Dorsal Command Spire & Sensor Mast
+      cx.fillStyle = '#0f172a';
       cx.beginPath();
-      cx.moveTo(-boss.w * 0.25, 0);
-      cx.lineTo(-boss.w * 0.10, -7);
-      cx.lineTo(boss.w * 0.05, -7);
-      cx.lineTo(0, 0);
-      cx.lineTo(boss.w * 0.05, 7);
-      cx.lineTo(-boss.w * 0.10, 7);
-      cx.closePath();
-      cx.fill();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.4; cx.stroke();
+      cx.moveTo(boss.w * 0.08, -boss.h * 0.34);
+      cx.lineTo(boss.w * 0.24, -boss.h * 0.44);
+      cx.lineTo(boss.w * 0.28, -boss.h * 0.36);
+      cx.lineTo(boss.w * 0.12, -boss.h * 0.28);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#00e5ff'; cx.lineWidth = 1.6; cx.stroke();
 
-      // Blazing Sith Kyber-Crystal Supernova Core
-      const cr = cx.createRadialGradient(-boss.w * 0.08, 0, 4, -boss.w * 0.08, 0, 38);
-      cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.3, '#ffdd33'); cr.addColorStop(0.65, '#ff0033'); cr.addColorStop(1, '#450a0a');
-      cx.fillStyle = cr; cx.beginPath(); cx.arc(-boss.w * 0.08, 0, 24 + Math.sin(t * 14) * 3, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.8; cx.stroke();
+      // Accompanying Nebulon-B Escort Frigate in Formation
+      cx.save(); cx.translate(boss.w * 0.28, boss.h * 0.32);
+      cx.fillStyle = '#cbd5e1'; cx.beginPath();
+      cx.moveTo(-16, -4); cx.lineTo(4, -8); cx.lineTo(8, 6); cx.lineTo(-16, 2);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.5; cx.stroke();
+      cx.strokeStyle = '#475569'; cx.lineWidth = 2.5; cx.beginPath(); cx.moveTo(8, -1); cx.lineTo(24, -1); cx.stroke();
+      cx.fillStyle = '#334155'; cx.fillRect(24, -6, 12, 10);
+      cx.restore();
 
-      // Twin Sith Crimson Hyper-Engines
-      for (const ty of [-boss.h * 0.20, boss.h * 0.20]) {
-        cx.fillStyle = '#ff0033';
-        cx.beginPath(); cx.arc(boss.w * 0.46, ty, 7 + Math.sin(t * 20 + ty) * 2, 0, Math.PI * 2); cx.fill();
+      // Multi-Engine Sub-Light Ion Thrusters Cluster (Cyan Glow)
+      for (const ty of [-boss.h * 0.26, -boss.h * 0.18, -boss.h * 0.08, 0]) {
+        cx.fillStyle = '#00e5ff';
+        cx.beginPath(); cx.arc(boss.w * 0.46, ty, 5.5 + Math.sin(t * 18 + ty) * 1.8, 0, Math.PI * 2); cx.fill();
+        cx.fillStyle = '#ffffff';
+        cx.beginPath(); cx.arc(boss.w * 0.46, ty, 2.5, 0, Math.PI * 2); cx.fill();
       }
 
     } else if (boss.type === 'void') {

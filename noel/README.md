@@ -22,7 +22,7 @@ Command your authentic wooden Solar Pirate Galleon through deep space, blast Sta
 ## 👾 6 Colossal Star Wars Flagship Bosses
 - 🛸 **Sector 1**: Grand Admiral Vex (Imperial Star Destroyer - The Eclipse)
 - 🌕 **Sector 2**: Overlord Chronos (DS-1 Orbital Death Star)
-- 🔺 **Sector 3**: Warlord Ignis (Resurgent Sith Silencer)
+- 🌊 **Sector 3**: Admiral Raddus (Mon Calamari MC85 Star Cruiser)
 - 🛸 **Sector 4**: Captain Solo (The Rogue Millennium Falcon YT-1300)
 - ⚡ **Sector 5**: Admiral Sloane (Imperial Cantwell-Class Arrestor Battlecruiser)
 - 🦿 **Sector 6**: General Veers (Imperial AT-AT Siege Colossus)
