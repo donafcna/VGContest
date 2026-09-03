@@ -575,7 +575,7 @@ let combo = 0, comboT = 0;
 let rapidT = 0, shieldT = 0, tripleT = 0, slowT = 0;
 let maxHp = 5, baseCool = 0.25, spdMul = 1, magnetBonus = 0, goldMult = 1;
 let baseSpread = [0], shipCols = ['#c88a55', '#8c5528', '#3b1c06'], tokensRun = 0, killsRun = 0, spinsRun = 0;
-let introT = 0, storySectorAnnounced = 0, storyStage = 0;
+let introT = 0, storySectorAnnounced = 0, storyStage = 0, storyCooldown = 0;
 let introUfos = [], introShot1 = false, introShot2 = false;
 let wreckage = [], shieldShards = [], introLasers = [], introShieldFlare = 0, introArmada = [];
 
@@ -695,7 +695,8 @@ let touchOn = false;
 if (isTouch) document.getElementById('touchHint').style.display = 'block';
 
 function advanceStory() {
-  if (state !== 'intro') return;
+  if (state !== 'intro' || storyCooldown > 0) return;
+  storyCooldown = 0.35;
   sfx('pew');
   storyStage++;
   if (storyStage > 3) {
@@ -1957,6 +1958,7 @@ function startSolarSail(e) {
 
   introT = 0;
   storyStage = 0;
+  storyCooldown = 0.5;
   introShot1 = false;
   introShot2 = false;
   introLasers = [];
@@ -2819,10 +2821,8 @@ function update(dt) {
       if (p.life <= 0) parts.splice(i, 1);
     }
 
-    // When you shoot the 2 ships and more advance, launch directly into combat!
-    if (introT >= 5.4) {
-      startCombat();
-    }
+    // Story only advances when player clicks Continue button or presses Space/Enter
+    storyCooldown = Math.max(0, storyCooldown - dt);
     return;
   }
 
