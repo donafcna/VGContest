@@ -575,7 +575,7 @@ let combo = 0, comboT = 0;
 let rapidT = 0, shieldT = 0, tripleT = 0, slowT = 0;
 let maxHp = 5, baseCool = 0.25, spdMul = 1, magnetBonus = 0, goldMult = 1;
 let baseSpread = [0], shipCols = ['#c88a55', '#8c5528', '#3b1c06'], tokensRun = 0, killsRun = 0, spinsRun = 0;
-let introT = 0, storySectorAnnounced = 0;
+let introT = 0, storySectorAnnounced = 0, storyStage = 0;
 let introUfos = [], introShot1 = false, introShot2 = false;
 let wreckage = [], shieldShards = [], introLasers = [], introShieldFlare = 0, introArmada = [];
 
@@ -694,12 +694,22 @@ const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in win
 let touchOn = false;
 if (isTouch) document.getElementById('touchHint').style.display = 'block';
 
+function advanceStory() {
+  if (state !== 'intro') return;
+  sfx('pew');
+  storyStage++;
+  if (storyStage > 3) {
+    startCombat();
+  }
+}
+window.advanceStory = advanceStory;
+
 addEventListener('keydown', e => {
   initAudio();
   keys[e.code] = true;
-  if (e.code === 'Space') {
+  if (e.code === 'Space' || e.code === 'Enter') {
     e.preventDefault();
-    if (state === 'intro') { startCombat(); return; }
+    if (state === 'intro') { advanceStory(); return; }
   }
   if (e.code === 'Escape' || e.code === 'KeyP') togglePause();
 });
@@ -708,7 +718,7 @@ addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }
 addEventListener('mousedown', e => {
   initAudio();
   if (e.button === 0) {
-    if (state === 'intro') { startCombat(); return; }
+    if (state === 'intro') { advanceStory(); return; }
     mouse.down = true;
   }
 });
@@ -716,7 +726,7 @@ addEventListener('mouseup', e => { if (e.button === 0) mouse.down = false; });
 
 cv.addEventListener('touchstart', e => {
   initAudio();
-  if (state === 'intro') { startCombat(); return; }
+  if (state === 'intro') { advanceStory(); return; }
   touchOn = true;
   const tc = e.touches[0];
   mouse.x = tc.clientX; mouse.y = tc.clientY;
@@ -1946,6 +1956,7 @@ function startSolarSail(e) {
   ship.vx = 0; ship.vy = 0; ship.pitch = 0;
 
   introT = 0;
+  storyStage = 0;
   introShot1 = false;
   introShot2 = false;
   introLasers = [];
@@ -2517,29 +2528,28 @@ function update(dt) {
     if (popups[i].life <= 0) popups.splice(i, 1);
   }
 
-  // CINEMATIC HIGH-OCTANE STORYLINE PROLOGUE LOGIC
+  // CINEMATIC HIGH-OCTANE STORYLINE PROLOGUE LOGIC (STAGE-DRIVEN)
   if (state === 'intro') {
     introT += dt;
-    const targetX = introT >= 6.4 ? W * 0.36 : W * 0.22;
+    const targetX = storyStage >= 3 ? W * 0.36 : W * 0.22;
     ship.x += (targetX - ship.x) * Math.min(1, dt * 3.2);
 
     // Evasive Flight Dynamics, Acrobatic Rolls & Warp Acceleration
-    if (introT < 2.4) {
+    if (storyStage === 0) {
+      ship.y = H * 0.5 + Math.sin(t * 1.8) * 12;
+      ship.pitch = Math.sin(t * 1.8) * 0.04;
+    } else if (storyStage === 1) {
       // High-speed evasive wave
-      ship.y = H * 0.5 + Math.sin(introT * 3.2) * 26;
-      ship.pitch = Math.cos(introT * 3.2) * 0.12;
-    } else if (introT < 4.2) {
+      ship.y = H * 0.5 + Math.sin(t * 3.2) * 24;
+      ship.pitch = Math.cos(t * 3.2) * 0.12;
+    } else if (storyStage === 2) {
       // 360° Acrobatic combat pitch & barrel roll
-      const rollP = (introT - 2.4) / 1.8;
-      ship.y = H * 0.5 + Math.sin(introT * 2.0) * 14;
-      ship.pitch = Math.sin(rollP * Math.PI * 2) * 0.35;
-    } else if (introT >= 6.4) {
-      // Surging directly forward into the battle!
-      ship.y = H * 0.5 + Math.sin(introT * 4.0) * 10;
-      ship.pitch = 0.08;
+      ship.y = H * 0.5 + Math.sin(t * 2.5) * 14;
+      ship.pitch = Math.sin(t * 3.5) * 0.35;
     } else {
-      ship.y = H * 0.5 + Math.sin(introT * 1.5) * 12;
-      ship.pitch = Math.sin(introT * 1.5) * 0.04;
+      // Surging directly forward into the battle!
+      ship.y = H * 0.5 + Math.sin(t * 3.0) * 10;
+      ship.pitch = 0.08;
     }
 
     ship.flagWave += dt * 12;
@@ -2560,30 +2570,30 @@ function update(dt) {
       });
     }
 
-    // Advance Enemy Starfighters with Aggressive Pincer Sweeps
-    for (let k = 0; k < introUfos.length; k++) {
-      const u = introUfos[k];
-      if (!u.dead) {
-        u.saucerSpin += dt * 8;
-        if (introT > 0.2) {
+    // Advance Enemy Starfighters with Aggressive Pincer Sweeps during Stage 1+
+    if (storyStage >= 1) {
+      for (let k = 0; k < introUfos.length; k++) {
+        const u = introUfos[k];
+        if (!u.dead) {
+          u.saucerSpin += dt * 8;
           u.x += (u.targetX - u.x) * Math.min(1, dt * 2.6);
           u.y += (u.targetY - u.y) * Math.min(1, dt * 2.6);
-        }
 
-        // Enemy Starfighters Fire Lasers at Galleon
-        if (introT >= (0.8 + k * 0.6) && !u.shotFired) {
-          u.shotFired = true;
-          sfx('shot');
-          // Spawn dual laser bolts
-          for (const lOff of [-10, 10]) {
-            introLasers.push({
-              x: u.x - 24,
-              y: u.y + lOff,
-              vx: -780,
-              vy: ((ship.y + lOff) - (u.y + lOff)) * 1.2,
-              col: u.col,
-              life: 1.2
-            });
+          // Enemy Starfighters Fire Lasers at Galleon
+          if (!u.shotFired) {
+            u.shotFired = true;
+            sfx('shot');
+            // Spawn dual laser bolts
+            for (const lOff of [-10, 10]) {
+              introLasers.push({
+                x: u.x - 24,
+                y: u.y + lOff,
+                vx: -780,
+                vy: ((ship.y + lOff) - (u.y + lOff)) * 1.2,
+                col: u.col,
+                life: 1.2
+              });
+            }
           }
         }
       }
@@ -2608,80 +2618,123 @@ function update(dt) {
           parts.push({
             type: 'spark',
             x: l.x, y: l.y,
-            vx: Math.cos(sAng) * (180 + Math.random() * 120),
-            vy: Math.sin(sAng) * (180 + Math.random() * 120),
-            life: 0.4, maxLife: 0.4,
-            col: '#00ffee', size: 3.5 + Math.random() * 3
+            vx: Math.cos(sAng) * (140 + Math.random() * 120),
+            vy: Math.sin(sAng) * (140 + Math.random() * 120),
+            life: 0.3, maxLife: 0.3,
+            col: '#00ffee', size: 3.5
           });
         }
         introLasers.splice(i, 1);
-        continue;
+      } else if (l.life <= 0 || l.x < -30) {
+        introLasers.splice(i, 1);
       }
-      if (l.life <= 0 || l.x < -50) introLasers.splice(i, 1);
     }
 
-    // Pirate Broadside Cannons: 4-Cannon Acrobatic Salvo
+    // Galleon Cannons Aim & Unleash Broadside during Stage 2+
     const cannon1X = ship.x + 38, cannon1Y = ship.y + 16;
     const cannon2X = ship.x + 12, cannon2Y = ship.y + 24;
     
-    if (introT < 2.2) {
-      ship.aimAngle = 0;
-    } else if (introT < 4.8) {
-      if (introUfos[0] && !introUfos[0].dead) {
-        ship.aimAngle = Math.atan2(introUfos[0].y - cannon1Y, introUfos[0].x - cannon1X);
-      }
-      
-      // QUAD OVERCHARGED BROADSIDE at introT = 2.4s!
-      if (introT >= 2.4 && !introShot1) {
-        introShot1 = true;
-        introShot2 = true;
-        sfx('shot');
-        ship.recoil = 1.2;
-        muzzleFlash = 1.2;
-        addShake(22);
+    if (storyStage >= 2 && !introShot1) {
+      introShot1 = true;
+      introShot2 = true;
+      sfx('shot');
+      ship.recoil = 1.2;
+      muzzleFlash = 1.2;
+      addShake(22);
 
-        // Muzzle smoke blast rings
-        parts.push({ type: 'ring', x: cannon1X + 14, y: cannon1Y, r: 6, maxR: 36, life: 0.4, maxLife: 0.4, col: '#ffe552', lw: 3 });
-        parts.push({ type: 'ring', x: cannon2X + 14, y: cannon2Y, r: 6, maxR: 36, life: 0.4, maxLife: 0.4, col: '#00ffee', lw: 3 });
+      // Muzzle smoke blast rings
+      parts.push({ type: 'ring', x: cannon1X + 14, y: cannon1Y, r: 6, maxR: 36, life: 0.4, maxLife: 0.4, col: '#ffe552', lw: 3 });
+      parts.push({ type: 'ring', x: cannon2X + 14, y: cannon2Y, r: 6, maxR: 36, life: 0.4, maxLife: 0.4, col: '#00ffee', lw: 3 });
 
-        // Launch 4 Supercharged Corkscrew Cannonballs
-        // Cannonball 1: High loop -> Fighter 1
-        balls.push({
-          sx: cannon1X, sy: cannon1Y,
-          tx: introUfos[0] ? introUfos[0].x : W * 0.62,
-          ty: introUfos[0] ? introUfos[0].y : H * 0.34,
-          x: cannon1X, y: cannon1Y, r: 14, isIntro: 1,
-          flightT: 0, flightDur: 0.95, loopDir: 1, col: '#ffd23c'
-        });
-        // Cannonball 2: High spiral -> Fighter 1
-        balls.push({
-          sx: cannon1X - 8, sy: cannon1Y + 6,
-          tx: introUfos[0] ? introUfos[0].x : W * 0.62,
-          ty: introUfos[0] ? introUfos[0].y : H * 0.34,
-          x: cannon1X, y: cannon1Y, r: 12, isIntro: 1,
-          flightT: -0.06, flightDur: 0.95, loopDir: -0.7, col: '#ff9900'
-        });
+      // Launch 4 Supercharged Corkscrew Cannonballs
+      // Cannonball 1: High loop -> Fighter 1
+      balls.push({
+        sx: cannon1X, sy: cannon1Y,
+        tx: introUfos[0] ? introUfos[0].x : W * 0.62,
+        ty: introUfos[0] ? introUfos[0].y : H * 0.34,
+        x: cannon1X, y: cannon1Y, r: 14, isIntro: 1,
+        flightT: 0, flightDur: 0.95, loopDir: 1, col: '#ffd23c'
+      });
+      // Cannonball 2: High spiral -> Fighter 1
+      balls.push({
+        sx: cannon1X - 8, sy: cannon1Y + 6,
+        tx: introUfos[0] ? introUfos[0].x : W * 0.62,
+        ty: introUfos[0] ? introUfos[0].y : H * 0.34,
+        x: cannon1X, y: cannon1Y, r: 12, isIntro: 1,
+        flightT: -0.06, flightDur: 0.95, loopDir: -0.7, col: '#ff9900'
+      });
 
-        // Cannonball 3: Low inverted loop -> Fighter 2
-        balls.push({
-          sx: cannon2X, sy: cannon2Y,
-          tx: introUfos[1] ? introUfos[1].x : W * 0.68,
-          ty: introUfos[1] ? introUfos[1].y : H * 0.66,
-          x: cannon2X, y: cannon2Y, r: 14, isIntro: 2,
-          flightT: 0, flightDur: 0.95, loopDir: -1, col: '#00ffee'
-        });
-        // Cannonball 4: Low spiral -> Fighter 2
-        balls.push({
-          sx: cannon2X - 8, sy: cannon2Y + 6,
-          tx: introUfos[1] ? introUfos[1].x : W * 0.68,
-          ty: introUfos[1] ? introUfos[1].y : H * 0.66,
-          x: cannon2X, y: cannon2Y, r: 12, isIntro: 2,
-          flightT: -0.06, flightDur: 0.95, loopDir: 0.7, col: '#38bdf8'
-        });
+      // Cannonball 3: Low inverted loop -> Fighter 2
+      balls.push({
+        sx: cannon2X, sy: cannon2Y,
+        tx: introUfos[1] ? introUfos[1].x : W * 0.68,
+        ty: introUfos[1] ? introUfos[1].y : H * 0.66,
+        x: cannon2X, y: cannon2Y, r: 14, isIntro: 2,
+        flightT: 0, flightDur: 0.95, loopDir: -1, col: '#00ffee'
+      });
+      // Cannonball 4: Low spiral -> Fighter 2
+      balls.push({
+        sx: cannon2X - 8, sy: cannon2Y + 6,
+        tx: introUfos[1] ? introUfos[1].x : W * 0.68,
+        ty: introUfos[1] ? introUfos[1].y : H * 0.66,
+        x: cannon2X, y: cannon2Y, r: 12, isIntro: 2,
+        flightT: -0.06, flightDur: 0.95, loopDir: 0.7, col: '#38bdf8'
+      });
+    }
+
+    // Trigger Supernova Impacts on Stage 3+
+    if (storyStage >= 3) {
+      for (let k = 0; k < introUfos.length; k++) {
+        const u = introUfos[k];
+        if (u && !u.dead) {
+          u.dead = true;
+          explode(u.x, u.y, u.col, 80);
+          sfx('boom');
+          addShake(36);
+
+          // Expanding Shockwave Rings
+          parts.push({ type: 'ring', x: u.x, y: u.y, r: 8, maxR: 90, life: 0.55, maxLife: 0.55, col: '#ffffff', lw: 5 });
+          parts.push({ type: 'ring', x: u.x, y: u.y, r: 6, maxR: 70, life: 0.45, maxLife: 0.45, col: u.col, lw: 4 });
+
+          // 24 Hexagonal Energy Shield Shards
+          for (let s = 0; s < 24; s++) {
+            const ang = (s / 24) * Math.PI * 2;
+            const spd = 160 + Math.random() * 220;
+            shieldShards.push({
+              x: u.x, y: u.y,
+              vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+              rot: Math.random() * Math.PI * 2, vrot: (Math.random() - 0.5) * 16,
+              size: 9 + Math.random() * 9, col: u.col,
+              life: 0.75, maxLife: 0.75
+            });
+          }
+
+          // Fractured Burning Hull Fragments
+          for (let w = 0; w < 4; w++) {
+            const wAng = (w / 4) * Math.PI * 2 + 0.3;
+            wreckage.push({
+              x: u.x + Math.cos(wAng) * 16, y: u.y + Math.sin(wAng) * 16,
+              vx: Math.cos(wAng) * (110 + Math.random() * 80),
+              vy: Math.sin(wAng) * (90 + Math.random() * 80),
+              rot: u.pitch || 0, vrot: (Math.random() - 0.5) * 10,
+              col: u.col, half: w % 2 === 0 ? 'top' : 'bottom', w: u.w * 0.7, h: u.h * 0.7, life: 2.8, maxLife: 2.8
+            });
+          }
+
+          // Magnetic Dubloon & Plasma Inflow
+          for (let c = 0; c < 8; c++) {
+            coins.push({
+              x: u.x, y: u.y,
+              vx: -180 + Math.random() * 80,
+              vy: (c - 3.5) * 35 + (Math.random() - 0.5) * 20,
+              magnetic: true
+            });
+          }
+        }
       }
     }
 
-    // Projectile Physics & Slow-Mo Supernova Impacts
+    // Projectile Physics
     for (let i = balls.length - 1; i >= 0; i--) {
       const b = balls[i];
       if (b.isIntro) {
@@ -2713,76 +2766,29 @@ function update(dt) {
           size: 4 + Math.random() * 3.5
         });
 
-        // Supernova impact
         if (p >= 1.0) {
-          const u = (b.isIntro === 1) ? introUfos[0] : introUfos[1];
-          if (u && !u.dead) {
-            u.dead = true;
-            explode(u.x, u.y, u.col, 80);
-            sfx('boom');
-            addShake(36);
-
-            // Expanding Shockwave Rings
-            parts.push({ type: 'ring', x: u.x, y: u.y, r: 8, maxR: 90, life: 0.55, maxLife: 0.55, col: '#ffffff', lw: 5 });
-            parts.push({ type: 'ring', x: u.x, y: u.y, r: 6, maxR: 70, life: 0.45, maxLife: 0.45, col: u.col, lw: 4 });
-
-            // 24 Hexagonal Energy Shield Shards
-            for (let k = 0; k < 24; k++) {
-              const ang = (k / 24) * Math.PI * 2;
-              const spd = 160 + Math.random() * 220;
-              shieldShards.push({
-                x: u.x, y: u.y,
-                vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
-                rot: Math.random() * Math.PI * 2, vrot: (Math.random() - 0.5) * 16,
-                size: 9 + Math.random() * 9, col: u.col,
-                life: 0.75, maxLife: 0.75
-              });
-            }
-
-            // Fractured Burning Hull Fragments
-            for (let w = 0; w < 4; w++) {
-              const wAng = (w / 4) * Math.PI * 2 + 0.3;
-              wreckage.push({
-                x: u.x + Math.cos(wAng) * 16, y: u.y + Math.sin(wAng) * 16,
-                vx: Math.cos(wAng) * (110 + Math.random() * 80),
-                vy: Math.sin(wAng) * (90 + Math.random() * 80),
-                rot: u.pitch || 0, vrot: (Math.random() - 0.5) * 10,
-                col: u.col, half: w % 2 === 0 ? 'top' : 'bottom', w: u.w * 0.7, h: u.h * 0.7, life: 2.8, maxLife: 2.8
-              });
-            }
-
-            // Magnetic Dubloon & Plasma Crystal Inflow
-            for (let c = 0; c < 8; c++) {
-              coins.push({
-                x: u.x, y: u.y,
-                vx: -180 + Math.random() * 80,
-                vy: (c - 3.5) * 35 + (Math.random() - 0.5) * 20,
-                magnetic: true
-              });
-            }
-          }
           balls.splice(i, 1);
         }
       }
     }
 
-    // Magnetic Attraction of Dubloons to Galleon
+    // Update Magnetic Dubloons
     for (let i = coins.length - 1; i >= 0; i--) {
       const c = coins[i];
       if (c.magnetic) {
-        const dx = ship.x - c.x, dy = ship.y - c.y;
-        const dist = Math.hypot(dx, dy) || 1;
-        c.vx = (c.vx || 0) + (dx / dist) * 750 * dt;
-        c.vy = (c.vy || 0) + (dy / dist) * 750 * dt;
-        c.x += c.vx * dt; c.y += c.vy * dt;
-        c.spin = (c.spin || 0) + 9 * dt;
-        if (dist < 38) {
-          sfx('coin');
-          popups.push({ x: ship.x, y: ship.y - 20, text: '+100 🪙', col: '#ffd23c', life: 0.6 });
+        const dx = (ship.x - 20) - c.x;
+        const dy = ship.y - c.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 48) {
           coins.splice(i, 1);
+          coinsN += 15;
+          sfx('coin');
+          continue;
         }
-      } else {
-        c.x += (c.vx || -90) * dt; c.y += (c.vy || 0) * dt;
+        c.vx += (dx / dist) * 780 * dt;
+        c.vy += (dy / dist) * 780 * dt;
+        c.x += c.vx * dt;
+        c.y += c.vy * dt;
         c.spin = (c.spin || 0) + 7 * dt;
         if (c.x < -40) coins.splice(i, 1);
       }
@@ -2795,16 +2801,6 @@ function update(dt) {
       w.rot += w.vrot * dt;
       w.vx *= 0.98; w.vy *= 0.98;
       w.life -= dt;
-      if (Math.random() < 0.7) {
-        parts.push({
-          type: 'fireball',
-          x: w.x + (Math.random() - 0.5) * 16,
-          y: w.y + (Math.random() - 0.5) * 16,
-          vx: (Math.random() - 0.5) * 30, vy: (Math.random() - 0.5) * 30,
-          life: 0.35, maxLife: 0.35,
-          r: 5, maxR: 16, col: w.col
-        });
-      }
       if (w.life <= 0) wreckage.splice(i, 1);
     }
 
@@ -5842,10 +5838,10 @@ function draw() {
     }
     cx.stroke();
 
-    // 1. Top Mission Dispatch
+    // 1. Top Mission Dispatch Header
     cx.textAlign = 'center';
     cx.font = 'bold 12px "Orbitron", sans-serif';
-    cx.fillStyle = '#ff385c';
+    cx.fillStyle = (storyStage === 0 && Math.sin(t * 8) > 0) ? '#ffd23c' : '#4bd5ee';
     cx.fillText('⚡ MISSION: ELIMINATE AS MANY ENEMY SHIPS AS YOU CAN!', W / 2, barH - 24);
 
     // Dynamic Bounty calculation based on active player stats & username
@@ -5860,15 +5856,33 @@ function draw() {
     const textFont = 'bold ' + Math.min(14, Math.max(11, W * 0.032)) + 'px "Outfit", sans-serif';
     const warnFont = 'bold ' + Math.min(13, Math.max(11, W * 0.030)) + 'px "Orbitron", sans-serif';
 
-    if (introT < 2.5) {
-      // 2. Stage 1 (The Mission, Bounty & Danger)
+    if (storyStage === 0) {
+      // Stage 0: Top Mission Dispatch Briefing
+      cx.font = titleFont;
+      cx.fillStyle = '#ffd23c';
+      cx.fillText('⚡ TOP MISSION DISPATCH: DEEP SPACE SECTOR PATROL', W / 2, H - barH + 28);
+
+      cx.font = textFont;
+      cx.fillStyle = '#ffffff';
+      cx.fillText('👑 "Your mission is to eliminate as many enemy ships as you can!"', W / 2, H - barH + 52);
+
+      cx.font = textFont;
+      cx.fillStyle = '#4bd5ee';
+      cx.fillText(`🌌 "Captain ${captainUpper}, prepare your Solar Galleon for incoming hostile waves!"`, W / 2, H - barH + 74);
+
+      cx.font = warnFont;
+      cx.fillStyle = '#00ffee';
+      cx.fillText('⚡ PRESS CONTINUE OR TAP ANYWHERE TO ADVANCE ❯', W / 2, H - barH + 98);
+
+    } else if (storyStage === 1) {
+      // Stage 1: (The Mission, Bounty & Danger)
       cx.font = titleFont;
       cx.fillStyle = '#ffd23c';
       cx.fillText(`🏴‍☠️ WANTED: CAPTAIN ${captainUpper} • BOUNTY: 🪙 ${bountyNum}`, W / 2, H - barH + 28);
 
       cx.font = textFont;
       cx.fillStyle = '#ffffff';
-      cx.fillText(`👑 "Your mission is to eliminate as many enemy ships as you can!"`, W / 2, H - barH + 52);
+      cx.fillText('👑 "Your mission is to eliminate as many enemy ships as you can!"', W / 2, H - barH + 52);
 
       cx.font = textFont;
       cx.fillStyle = '#ffd23c';
@@ -5878,8 +5892,8 @@ function draw() {
       cx.fillStyle = '#ff385c';
       cx.fillText('🚨 [RADAR]: "DANGER! DANGER! TWO ENEMY SHIPS ARE COMING!"', W / 2, H - barH + 98);
 
-    } else if (introT < 4.0) {
-      // 3. Stage 2 (Broadside Cannons)
+    } else if (storyStage === 2) {
+      // Stage 2: (Broadside Cannons)
       cx.font = titleFont;
       cx.fillStyle = '#38bdf8';
       cx.fillText('⚔️ ACROBATIC BROADSIDE CANNONS LOCKED!', W / 2, H - barH + 28);
@@ -5897,7 +5911,7 @@ function draw() {
       cx.fillText('⚡ 4 SUPERCHARGED CANNONBALLS TRACKING TARGET POWER CORES!', W / 2, H - barH + 102);
 
     } else {
-      // 4. Stage 3 (Destruction & More Ships Advancing)
+      // Stage 3: (Destruction & More Ships Advancing)
       cx.font = titleFont;
       cx.fillStyle = '#00dfa2';
       cx.fillText('💥 DIRECT HIT! BOTH ENEMY SHIPS DESTROYED!', W / 2, H - barH + 28);
@@ -5915,11 +5929,37 @@ function draw() {
       cx.fillText('⚔️ LAUNCHES DIRECTLY INTO THE LIVE BATTLE! ⚔️', W / 2, H - barH + 102);
     }
 
-    // Interactive Skip Button on bottom right
+    // Interactive Glowing Continue Button (For Every Stage)
+    const btnLabel = (storyStage === 3) ? '⚔️ START BATTLE ❯' : 'CONTINUE ❯';
+    const btnW = Math.min(180, Math.max(130, W * 0.32));
+    const btnH = 34;
+    const btnX = W - btnW - 16;
+    const btnY = H - barH + 48;
+
+    cx.save();
+    cx.fillStyle = (storyStage === 3) ? 'rgba(255, 56, 92, 0.95)' : 'rgba(255, 210, 60, 0.95)';
+    cx.shadowColor = (storyStage === 3) ? '#ff385c' : '#ffd23c';
+    cx.shadowBlur = 12;
+    cx.beginPath();
+    cx.roundRect(btnX, btnY, btnW, btnH, 8);
+    cx.fill();
+
+    cx.strokeStyle = '#ffffff';
+    cx.lineWidth = 1.8;
+    cx.stroke();
+
+    cx.shadowBlur = 0;
+    cx.font = 'bold 12px "Orbitron", sans-serif';
+    cx.fillStyle = (storyStage === 3) ? '#ffffff' : '#020308';
+    cx.textAlign = 'center';
+    cx.fillText(btnLabel, btnX + btnW / 2, btnY + 22);
+    cx.restore();
+
+    // Tap Anywhere / Space Hint on bottom right
     cx.textAlign = 'right';
-    cx.font = 'bold 11px "Orbitron", sans-serif';
-    cx.fillStyle = Math.sin(t * 8) > 0 ? '#ffd23c' : '#ffffff';
-    cx.fillText('⏩ TAP ANYWHERE / SPACE TO SKIP ▶', W - 20, H - barH - 12);
+    cx.font = 'bold 10px "Orbitron", sans-serif';
+    cx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    cx.fillText('TAP ANYWHERE / SPACE ❯', W - 16, H - barH - 8);
   }
 }
 
