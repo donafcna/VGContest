@@ -414,6 +414,191 @@
   .shopitem .maxed { color:#3fd07a; font-weight:bold; font-size:0.9rem; white-space:nowrap; }
   #losetext, #wintext { white-space:pre-line; }
 
+  /* Daily Rewards Modal Styles */
+  .daily-card {
+    background: linear-gradient(135deg, rgba(8, 15, 30, 0.95), rgba(15, 25, 45, 0.95));
+    border: 2px solid rgba(255, 100, 100, 0.45);
+    border-radius: 20px;
+    padding: 20px 24px;
+    max-width: 580px;
+    width: 92vw;
+    box-shadow: 0 0 35px rgba(255, 94, 98, 0.35), inset 0 0 20px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(14px);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+    box-sizing: border-box;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .daily-badge-tag {
+    background: linear-gradient(135deg, #ff5e62, #ff9966);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 900;
+    padding: 4px 12px;
+    border-radius: 99px;
+    letter-spacing: 1px;
+    align-self: center;
+    box-shadow: 0 0 12px rgba(255, 94, 98, 0.5);
+    font-family: 'Orbitron', sans-serif;
+  }
+  .daily-title {
+    font-size: clamp(1.4rem, 4.5vw, 1.8rem);
+    color: #ffd23c;
+    font-family: 'Cinzel', 'Orbitron', serif;
+    margin: 0;
+    text-shadow: 0 0 10px rgba(255, 210, 60, 0.4);
+  }
+  .daily-streak-info {
+    font-size: 0.95rem;
+    color: #cfe4ff;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+  }
+  .daily-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 6px 0;
+  }
+  @media (max-width: 480px) {
+    .daily-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .daily-day-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 210, 60, 0.2);
+    border-radius: 14px;
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  .daily-day-card.day-7 {
+    grid-column: span 2;
+    background: linear-gradient(135deg, rgba(255, 210, 60, 0.15), rgba(168, 85, 247, 0.15));
+    border: 1.5px solid #ffd23c;
+    box-shadow: 0 0 15px rgba(255, 210, 60, 0.25);
+  }
+  .daily-day-card.claimed {
+    border-color: rgba(63, 208, 122, 0.5);
+    background: rgba(63, 208, 122, 0.08);
+    opacity: 0.75;
+  }
+  .daily-day-card.active {
+    border: 2px solid #ffd23c;
+    background: linear-gradient(135deg, rgba(255, 210, 60, 0.25), rgba(255, 94, 98, 0.2));
+    box-shadow: 0 0 20px rgba(255, 210, 60, 0.6);
+    transform: scale(1.04);
+  }
+  .daily-day-card.missed {
+    border: 2px solid #ff3344;
+    background: rgba(255, 51, 68, 0.12);
+  }
+  .daily-day-num {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #8fa6cb;
+    font-family: 'Orbitron', sans-serif;
+  }
+  .daily-day-card.active .daily-day-num { color: #ffd23c; }
+  .daily-day-icon {
+    font-size: 1.6rem;
+    margin: 2px 0;
+  }
+  .daily-day-reward {
+    font-size: 0.76rem;
+    font-weight: bold;
+    color: #ffffff;
+    line-height: 1.25;
+    text-align: center;
+  }
+  .daily-day-status {
+    font-size: 0.68rem;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-top: 4px;
+    font-family: 'Orbitron', sans-serif;
+  }
+  .daily-status-claimed { background: #3fd07a; color: #02200d; }
+  .daily-status-ready { background: #ffd23c; color: #1e0c02; animation: pulseGlow 1.2s infinite alternate; }
+  .daily-status-locked { background: rgba(255, 255, 255, 0.1); color: #8fa6cb; }
+  .daily-status-missed { background: #ff3344; color: #fff; }
+
+  .daily-repair-banner {
+    background: rgba(255, 51, 68, 0.15);
+    border: 1px solid #ff3344;
+    border-radius: 12px;
+    padding: 10px 14px;
+    color: #ffb4ba;
+    font-size: 0.88rem;
+    line-height: 1.35;
+    text-align: center;
+  }
+  .daily-claim-btn {
+    background: linear-gradient(135deg, #ffd23c, #ff9966) !important;
+    color: #1a0802 !important;
+    font-size: 1.15rem !important;
+    padding: 12px 24px !important;
+    border-radius: 14px !important;
+    font-weight: 900 !important;
+    letter-spacing: 1px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 22px rgba(255, 210, 60, 0.6) !important;
+    transition: all 0.15s ease !important;
+    font-family: 'Orbitron', sans-serif !important;
+  }
+  .daily-claim-btn:hover:not(:disabled) {
+    transform: scale(1.02) !important;
+    box-shadow: 0 6px 30px rgba(255, 210, 60, 0.85) !important;
+  }
+  .daily-repair-btn {
+    background: linear-gradient(135deg, #a855f7, #6366f1) !important;
+    color: #fff !important;
+    font-size: 1.05rem !important;
+    padding: 10px 20px !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 18px rgba(168, 85, 247, 0.5) !important;
+    font-family: 'Orbitron', sans-serif !important;
+  }
+  .daily-reset-btn {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #cfe4ff !important;
+    font-size: 0.92rem !important;
+    padding: 8px 16px !important;
+    border-radius: 10px !important;
+    cursor: pointer !important;
+    font-family: 'Orbitron', sans-serif !important;
+  }
+  .daily-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #ff3344;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 900;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 10px rgba(255, 51, 68, 0.8);
+    animation: pulseGlow 1s infinite alternate;
+  }
+
   #touchHint {
     position: fixed; bottom: 20px; right: 20px;
     color: rgba(255,255,255,0.9); font-size: 0.84rem; pointer-events: none;
@@ -521,6 +706,7 @@
   <div class="btnrow">
     <button id="startbtn" type="button" onclick="startSolarSail(event)" ontouchend="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" type="button" onclick="openHangar(event)" ontouchend="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ PIRATE HANGAR &amp; UPGRADES</button>
+    <button id="dailybtn" type="button" onclick="openDailyModal(event)" ontouchend="openDailyModal(event)" style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;box-shadow:0 4px 18px rgba(255,94,98,0.45);position:relative">🎁 DAILY REWARDS <span id="dailyBadge" class="daily-badge hidden">!</span></button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.1rem; color:#ffd23c; font-weight:bold"></p>
   <p id="bestline" style="margin-top:0.2rem; font-size:1rem; color:#ffd23c; font-weight:bold; min-height:1.2em"></p>
@@ -624,6 +810,21 @@
       <button id="spinPullBtn" class="spin-pull-btn">🎡 SPIN WHEEL (<span id="spinCountLeft">0</span> left)</button>
       <button id="spinCloseBtn" class="spin-close-btn">✖ CLOSE WHEEL</button>
     </div>
+  </div>
+</div>
+
+<!-- Pirate 7-Day Voyage Daily Rewards Modal -->
+<div id="dailyModal" class="overlay hidden" style="z-index: 125;">
+  <div class="daily-card">
+    <span class="daily-badge-tag">🎁 PIRATE DAILY VOYAGE REWARDS ⚓</span>
+    <h1 class="daily-title">7-DAY VOYAGE REWARDS</h1>
+    <div id="dailyStreakText" class="daily-streak-info">⚓ Start your 7-Day Voyage Streak today!</div>
+    
+    <!-- 7-Day Interactive Grid -->
+    <div id="dailyGrid" class="daily-grid"></div>
+
+    <!-- Action & Streak Recovery Area -->
+    <div id="dailyActionArea" style="display:flex;flex-direction:column;gap:10px;margin-top:6px"></div>
   </div>
 </div>
 
@@ -2178,12 +2379,266 @@ function lose() {
   endGame('lbLose');
 }
 
-// ---------- HANGAR UI ----------
+// ---------- HANGAR UI & DAILY REWARDS ----------
 function renderWallet() {
   const w = `🪙 ${SAVE.data.coins}  🎟️ ${SAVE.data.tokens}  🎡 ${SAVE.data.spins}  ☠️ ${SAVE.data.kills}`;
   const ml = document.getElementById('walletline'); if (ml) ml.textContent = w;
   const sw = document.getElementById('shopwallet'); if (sw) sw.textContent = w;
+  updateDailyBadge();
 }
+
+// ---------- DAILY REWARDS SYSTEM (7-DAY PIRATE VOYAGE STREAK & TOKEN RECOVERY) ----------
+const DAILY_REWARDS = [
+  { day: 1, name: 'Day 1', icon: '🪙', coins: 150, spins: 1, tokens: 0, text: '+150 🪙 Dubloons\n+1 🎡 Lucky Spin' },
+  { day: 2, name: 'Day 2', icon: '🎟️', coins: 300, spins: 0, tokens: 1, text: '+300 🪙 Dubloons\n+1 🎟️ Plasma Core' },
+  { day: 3, name: 'Day 3', icon: '🎡', coins: 500, spins: 2, tokens: 0, text: '+500 🪙 Dubloons\n+2 🎡 Lucky Spins' },
+  { day: 4, name: 'Day 4', icon: '🎟️', coins: 800, spins: 0, tokens: 2, text: '+800 🪙 Dubloons\n+2 🎟️ Plasma Cores' },
+  { day: 5, name: 'Day 5', icon: '🎡', coins: 1200, spins: 3, tokens: 0, text: '+1,200 🪙 Dubloons\n+3 🎡 Lucky Spins' },
+  { day: 6, name: 'Day 6', icon: '🎟️', coins: 1800, spins: 0, tokens: 3, text: '+1,800 🪙 Dubloons\n+3 🎟️ Plasma Cores' },
+  { day: 7, name: 'Day 7: MEGA CHEST 👑', icon: '👑', coins: 3500, spins: 5, tokens: 5, text: '+3,500 🪙 Dubloons\n+5 🎟️ Cores · +5 🎡 Spins\n+ 🛡️ Kinetic Shield' }
+];
+
+function getTodayString() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function getDaysBetween(dateStr1, dateStr2) {
+  if (!dateStr1 || !dateStr2) return 999;
+  const d1 = new Date(dateStr1 + 'T00:00:00Z');
+  const d2 = new Date(dateStr2 + 'T00:00:00Z');
+  const diffTime = d2.getTime() - d1.getTime();
+  return Math.round(diffTime / (1000 * 60 * 60 * 24));
+}
+
+function getDailyRewardStatus() {
+  if (!SAVE.data.daily) {
+    SAVE.data.daily = { streak: 0, lastClaimDate: null, missedStreak: 0, repairAvailable: false };
+    SAVE.save();
+  }
+  const daily = SAVE.data.daily;
+  const today = getTodayString();
+  const lastDate = daily.lastClaimDate;
+
+  if (!lastDate) {
+    // First time ever playing
+    return { state: 'READY', currentDay: 1, streak: 0, daysDiff: 0 };
+  }
+
+  const diff = getDaysBetween(lastDate, today);
+
+  if (diff === 0) {
+    // Already claimed today
+    const nextDay = (daily.streak % 7) + 1;
+    return { state: 'ALREADY_CLAIMED', currentDay: nextDay, streak: daily.streak, daysDiff: 0 };
+  } else if (diff === 1) {
+    // Consecutive next day
+    const nextDay = (daily.streak % 7) + 1;
+    return { state: 'READY', currentDay: nextDay, streak: daily.streak, daysDiff: 1 };
+  } else {
+    // Missed 1 or more days!
+    const missedStreak = daily.streak > 0 ? daily.streak : 1;
+    return { state: 'MISSED', currentDay: (missedStreak % 7) + 1, streak: missedStreak, daysDiff: diff };
+  }
+}
+
+function updateDailyBadge() {
+  const badge = document.getElementById('dailyBadge');
+  if (!badge) return;
+  const status = getDailyRewardStatus();
+  if (status.state === 'READY' || status.state === 'MISSED') {
+    badge.classList.remove('hidden');
+    badge.textContent = status.state === 'MISSED' ? '!' : '🎁';
+  } else {
+    badge.classList.add('hidden');
+  }
+}
+
+function renderDailyModalUI() {
+  const status = getDailyRewardStatus();
+  const daily = SAVE.data.daily || { streak: 0 };
+  const container = document.getElementById('dailyGrid');
+  const banner = document.getElementById('dailyActionArea');
+  const streakText = document.getElementById('dailyStreakText');
+  if (!container || !banner) return;
+
+  if (streakText) {
+    streakText.innerHTML = status.streak > 0 
+      ? `🔥 <span style="color:#ffd23c;font-weight:bold">${status.streak}-Day Voyage Streak</span> ${status.state === 'MISSED' ? '<span style="color:#ff3344">(BROKEN)</span>' : 'Active'}`
+      : `⚓ Start your 7-Day Voyage Streak today!`;
+  }
+
+  let html = '';
+  for (let i = 0; i < DAILY_REWARDS.length; i++) {
+    const r = DAILY_REWARDS[i];
+    const dayNum = i + 1;
+    let cardClass = 'daily-day-card';
+    if (dayNum === 7) cardClass += ' day-7';
+
+    let statusBadge = '';
+    const activeClaimIndex = status.state === 'READY' ? status.currentDay : (status.state === 'MISSED' ? status.currentDay : 0);
+    
+    const claimedDaysInCycle = (daily.streak % 7);
+    const hasClaimedThis = status.state === 'ALREADY_CLAIMED' 
+      ? (dayNum <= claimedDaysInCycle || (claimedDaysInCycle === 0 && daily.streak > 0))
+      : (dayNum < status.currentDay);
+
+    if (hasClaimedThis) {
+      cardClass += ' claimed';
+      statusBadge = '<span class="daily-day-status daily-status-claimed">✔ CLAIMED</span>';
+    } else if (dayNum === activeClaimIndex) {
+      if (status.state === 'MISSED') {
+        cardClass += ' missed';
+        statusBadge = '<span class="daily-day-status daily-status-missed">⚠️ MISSED</span>';
+      } else {
+        cardClass += ' active';
+        statusBadge = '<span class="daily-day-status daily-status-ready">🎁 CLAIM!</span>';
+      }
+    } else {
+      cardClass += ' locked';
+      statusBadge = '<span class="daily-day-status daily-status-locked">🔒 LOCKED</span>';
+    }
+
+    html += `
+      <div class="${cardClass}">
+        <span class="daily-day-num">${r.name}</span>
+        <span class="daily-day-icon">${r.icon}</span>
+        <span class="daily-day-reward">${r.text.replace(/\n/g, '<br>')}</span>
+        ${statusBadge}
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+
+  // Render Action Area
+  if (status.state === 'READY') {
+    banner.innerHTML = `
+      <button id="claimDailyBtn" class="daily-claim-btn" onclick="claimDailyReward()">
+        🎁 CLAIM DAY ${status.currentDay} REWARD!
+      </button>
+      <button class="daily-reset-btn" onclick="closeDailyModal()">✖ CLOSE</button>
+    `;
+  } else if (status.state === 'MISSED') {
+    const repairCost = 5;
+    const canRepair = SAVE.data.tokens >= repairCost;
+    banner.innerHTML = `
+      <div class="daily-repair-banner">
+        ⚠️ <b>VOYAGE STREAK BROKEN!</b> You missed yesterday's reward (Day ${status.currentDay}).<br>
+        You can <b>reset to Day 1</b> for free, or <b>repair your streak</b> using <b>5 Plasma Cores 🎟️</b>!
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
+        <button id="repairStreakBtn" class="daily-repair-btn" onclick="repairDailyStreak()" ${canRepair ? '' : 'disabled'}>
+          🎟️ REPAIR STREAK (5 Cores) · You have ${SAVE.data.tokens} 🎟️
+        </button>
+        <button id="resetStreakBtn" class="daily-reset-btn" onclick="resetDailyStreak()" style="background:rgba(255,210,60,0.15)!important;color:#ffd23c!important;font-weight:bold">
+          🔄 RESET TO DAY 1 (FREE)
+        </button>
+        <button class="daily-reset-btn" onclick="closeDailyModal()">✖ CLOSE</button>
+      </div>
+    `;
+  } else {
+    banner.innerHTML = `
+      <div style="color:#3fd07a;font-weight:bold;font-size:1rem;margin-bottom:6px">
+        ✔ Today's Voyage Reward has been banked!
+      </div>
+      <div style="color:#8fa6cb;font-size:0.86rem;margin-bottom:10px">
+        Come back tomorrow for your next reward!
+      </div>
+      <button class="daily-reset-btn" onclick="closeDailyModal()">✖ CLOSE</button>
+    `;
+  }
+}
+
+function claimDailyReward() {
+  const status = getDailyRewardStatus();
+  if (status.state !== 'READY') return;
+
+  const dayIndex = status.currentDay - 1;
+  const reward = DAILY_REWARDS[dayIndex];
+  if (!reward) return;
+
+  // Award Loot
+  SAVE.data.coins += reward.coins;
+  SAVE.data.spins += reward.spins;
+  SAVE.data.tokens += reward.tokens;
+  SAVE.data.daily.streak = (SAVE.data.daily.streak || 0) + 1;
+  SAVE.data.daily.lastClaimDate = getTodayString();
+  SAVE.save();
+
+  initAudio();
+  sfx('coin');
+  sfx('map');
+
+  popup(W * 0.5, H * 0.4, `🎉 DAY ${status.currentDay} CLAIMED! +${reward.coins} 🪙`, '#ffd23c');
+  if (reward.tokens > 0) popup(W * 0.5, H * 0.46, `+${reward.tokens} 🎟️ Plasma Cores!`, '#c084fc');
+  if (reward.spins > 0) popup(W * 0.5, H * 0.52, `+${reward.spins} 🎡 Lucky Spins!`, '#00ffee');
+
+  renderWallet();
+  updateDailyBadge();
+  renderDailyModalUI();
+}
+window.claimDailyReward = claimDailyReward;
+
+function repairDailyStreak() {
+  const repairCost = 5;
+  if (SAVE.data.tokens < repairCost) return;
+
+  SAVE.data.tokens -= repairCost;
+  const yest = new Date();
+  yest.setDate(yest.getDate() - 1);
+  const y = yest.getFullYear();
+  const m = String(yest.getMonth() + 1).padStart(2, '0');
+  const d = String(yest.getDate()).padStart(2, '0');
+  SAVE.data.daily.lastClaimDate = `${y}-${m}-${d}`;
+  SAVE.save();
+
+  initAudio();
+  sfx('map');
+  popup(W * 0.5, H * 0.4, '🛡️ VOYAGE STREAK REPAIRED! (-5 🎟️)', '#a855f7');
+
+  renderWallet();
+  updateDailyBadge();
+  renderDailyModalUI();
+}
+window.repairDailyStreak = repairDailyStreak;
+
+function resetDailyStreak() {
+  SAVE.data.daily.streak = 0;
+  SAVE.data.daily.lastClaimDate = null;
+  SAVE.save();
+
+  initAudio();
+  sfx('coin');
+  popup(W * 0.5, H * 0.4, '🔄 VOYAGE STREAK RESET TO DAY 1!', '#ffd23c');
+
+  renderWallet();
+  updateDailyBadge();
+  renderDailyModalUI();
+}
+window.resetDailyStreak = resetDailyStreak;
+
+function openDailyModal(e) {
+  if (e) {
+    try { e.stopPropagation(); } catch (err) {}
+  }
+  initAudio();
+  const modal = document.getElementById('dailyModal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  renderDailyModalUI();
+}
+window.openDailyModal = openDailyModal;
+
+function closeDailyModal() {
+  const modal = document.getElementById('dailyModal');
+  if (modal) modal.classList.add('hidden');
+  renderWallet();
+  updateDailyBadge();
+}
+window.closeDailyModal = closeDailyModal;
 
 // ---------- ROBLOX GROW A GARDEN STYLE LUCKY PRIZE WHEEL ENGINE ----------
 const WHEEL_SLICES = [
