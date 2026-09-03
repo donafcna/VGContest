@@ -3833,29 +3833,7 @@ function draw() {
   }
   cx.globalAlpha = 1;
 
-  // Incoming Alien UFO Fleet Advancing from Deep Space (Stage 4 Red Alert)
-  if (state === 'intro' && introT >= 5.2) {
-    const fleetProgress = Math.min(1, (introT - 5.2) / 2.4);
-    const fleetBaseX = W * 1.15 - fleetProgress * (W * 0.38);
-    
-    for (const [offX, offY, size, col] of [[0, -70, 0.75, '#ff3366'], [40, 20, 0.9, '#00ff66'], [15, 90, 0.7, '#00e5ff']]) {
-      cx.save();
-      cx.translate(fleetBaseX + offX, H * 0.5 + offY);
-      
-      const sg = cx.createRadialGradient(0, 0, 5, 0, 0, 45 * size);
-      sg.addColorStop(0, col + 'aa'); sg.addColorStop(1, 'rgba(0,0,0,0)');
-      cx.fillStyle = sg;
-      cx.beginPath(); cx.ellipse(0, 0, 45 * size, 26 * size, 0, 0, Math.PI * 2); cx.fill();
 
-      cx.fillStyle = '#1e2530';
-      cx.beginPath(); cx.ellipse(0, 0, 42 * size, 18 * size, 0, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = col; cx.lineWidth = 2; cx.stroke();
-
-      cx.fillStyle = col;
-      cx.beginPath(); cx.arc(0, -4 * size, 6 * size, 0, Math.PI * 2); cx.fill();
-      cx.restore();
-    }
-  }
 
   // Realistic 3D Craggy Asteroids with Crater Shading & Specular Rim Light
   for (const a of asteroids) {
