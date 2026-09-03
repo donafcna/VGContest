@@ -2158,7 +2158,7 @@ function getBossSvg(id) {
       <!-- Heavy Center Hull Body & Armored Cockpit Nacelle -->
       <polygon points="40,42 70,22 110,24 125,42 110,60 70,62" fill="#0f0206" stroke="#ef4444" stroke-width="2"/>
       <!-- Sith Cockpit Slit Visor with Crimson Telemetry Glow -->
-      <polygon points="50,42 66,36 88,36 78,42 88,48 66,48" fill="#ff0033" stroke="#ffffff" stroke-width="1.2" filter="url(#glow_sith_${uid})"/>
+    <polygon points="50,42 66,36 88,36 78,42 88,48 66,48" fill="#ff0033" stroke="#ffffff" stroke-width="1.2" filter="url(#glow_sith_${uid})"/>
       <!-- Pulsing Sith Kyber Supernova Core -->
       <circle cx="82" cy="42" r="14" fill="url(#sith_core_${uid})" stroke="#ffd23c" stroke-width="2"/>
       <!-- Twin Rear High-Output Sith Red Ion Engines -->
@@ -2168,45 +2168,55 @@ function getBossSvg(id) {
       <circle cx="118" cy="50" r="2" fill="#ffffff" filter="url(#glow_sith_${uid})"/>
     </svg>`;
   } else if (id === 'void') {
-    // 4. ARCHON UMBRA: THE VOID PHANTOM (Crystalline Stealth Harbinger)
+    // 4. CAPTAIN SOLO: THE ROGUE MILLENNIUM FALCON (YT-1300 CORELLIAN GUNSHIP)
     return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <filter id="glow_void_${uid}" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glow_falcon_${uid}" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="2" result="blur"/>
           <feComposite in="SourceGraphic" in2="blur" operator="over"/>
         </filter>
-        <linearGradient id="void_hull_${uid}" x1="0" y1="42" x2="160" y2="42" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#0f051d"/>
-          <stop offset="30%" stop-color="#3b0764"/>
-          <stop offset="70%" stop-color="#6b21a8"/>
-          <stop offset="100%" stop-color="#a855f7"/>
+        <linearGradient id="falcon_hull_${uid}" x1="0" y1="42" x2="160" y2="42" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f8fafc"/>
+          <stop offset="35%" stop-color="#cbd5e1"/>
+          <stop offset="70%" stop-color="#64748b"/>
+          <stop offset="100%" stop-color="#1e293b"/>
         </linearGradient>
-        <radialGradient id="void_core_${uid}" cx="76" cy="42" r="22" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#000000"/>
-          <stop offset="35%" stop-color="#3b0764"/>
-          <stop offset="75%" stop-color="#9333ea"/>
-          <stop offset="100%" stop-color="#c084fc"/>
-        </radialGradient>
       </defs>
-      <!-- Swept Crescent Hammerhead Prow & Stealth Wings -->
-      <path d="M8 42 L30 10 L58 20 L134 10 L152 26 L138 42 L152 58 L134 74 L58 64 L30 74 Z" fill="url(#void_hull_${uid})" stroke="#c084fc" stroke-width="2.2"/>
-      <!-- Bold Central Command Spine Striping -->
-      <polygon points="12,42 45,32 138,32 138,52 45,52" fill="#18042b" stroke="#a855f7" stroke-width="1.4"/>
-      <!-- Dual Elevated Bridge Towers (Signature Venator-Style) -->
-      <rect x="110" y="16" width="20" height="12" fill="#0f021c" stroke="#c084fc" stroke-width="1.2" rx="2"/>
-      <circle cx="120" cy="16" r="3" fill="#c084fc" filter="url(#glow_void_${uid})"/>
-      <rect x="110" y="56" width="20" height="12" fill="#0f021c" stroke="#c084fc" stroke-width="1.2" rx="2"/>
-      <circle cx="120" cy="68" r="3" fill="#c084fc" filter="url(#glow_void_${uid})"/>
-      <!-- Graviton Tractor-Beam Projector Ring in Prow -->
-      <ellipse cx="76" cy="42" rx="28" ry="16" stroke="#c084fc" stroke-width="2" fill="none" stroke-dasharray="6 3"/>
-      <!-- Pulsing Black Hole Singularity Core -->
-      <circle cx="76" cy="42" r="16" fill="url(#void_core_${uid})" stroke="#e9d5ff" stroke-width="2"/>
-      <ellipse cx="76" cy="42" rx="22" ry="7" stroke="#ffffff" stroke-width="1.2" fill="none" filter="url(#glow_void_${uid})"/>
-      <!-- Quad Heavy Stealth Ion Thrusters -->
-      <circle cx="146" cy="22" r="4.5" fill="#a855f7"/>
-      <circle cx="140" cy="34" r="4.5" fill="#c084fc"/>
-      <circle cx="140" cy="50" r="4.5" fill="#c084fc"/>
-      <circle cx="146" cy="62" r="4.5" fill="#a855f7"/>
+      <!-- Glowing Cyan Sub-Light Ion Engine Strip along Stern -->
+      <path d="M136 24 Q152 42 136 60" stroke="#00ffee" stroke-width="5" fill="none" filter="url(#glow_falcon_${uid})"/>
+      <path d="M136 26 Q150 42 136 58" stroke="#ffffff" stroke-width="2.5" fill="none"/>
+
+      <!-- Main Circular Saucer Hull -->
+      <ellipse cx="80" cy="42" rx="48" ry="34" fill="url(#falcon_hull_${uid})" stroke="#94a3b8" stroke-width="2.4"/>
+      
+      <!-- Forward Cargo Docking Mandibles -->
+      <polygon points="40,24 10,22 10,34 38,36" fill="#1e293b" stroke="#94a3b8" stroke-width="1.8"/>
+      <polygon points="40,60 10,62 10,50 38,48" fill="#1e293b" stroke="#94a3b8" stroke-width="1.8"/>
+      <line x1="12" y1="28" x2="34" y2="29" stroke="#ef4444" stroke-width="1.2"/>
+      <line x1="12" y1="56" x2="34" y2="55" stroke="#ef4444" stroke-width="1.2"/>
+
+      <!-- Offset Starboard Cockpit Corridor Tube & Conical Viewport -->
+      <rect x="52" y="10" width="32" height="10" fill="#334155" stroke="#94a3b8" stroke-width="1.4" rx="2"/>
+      <polygon points="84,8 102,12 102,18 84,22" fill="#0f172a" stroke="#00ffee" stroke-width="1.4"/>
+      <circle cx="94" cy="15" r="2.5" fill="#00ffee" filter="url(#glow_falcon_${uid})"/>
+
+      <!-- Dorsal Center Rotating Quad-Laser Blaster Turret -->
+      <circle cx="80" cy="42" r="11" fill="#0f172a" stroke="#ffd23c" stroke-width="1.8"/>
+      <circle cx="80" cy="42" r="6" fill="#475569"/>
+      <line x1="80" y1="42" x2="55" y2="42" stroke="#ff0033" stroke-width="2.8"/>
+      <line x1="80" y1="39" x2="58" y2="39" stroke="#ff0033" stroke-width="1.8"/>
+      <line x1="80" y1="45" x2="58" y2="45" stroke="#ff0033" stroke-width="1.8"/>
+
+      <!-- Round Sensor Radar Dish -->
+      <circle cx="62" cy="26" r="8" fill="#475569" stroke="#94a3b8" stroke-width="1.4"/>
+      <line x1="62" y1="26" x2="54" y2="20" stroke="#00ffee" stroke-width="1.6"/>
+      <circle cx="54" cy="20" r="1.8" fill="#00ffee"/>
+
+      <!-- Heat Exhaust Grille Ports -->
+      <circle cx="106" cy="32" r="4" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+      <circle cx="118" cy="35" r="4" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+      <circle cx="106" cy="52" r="4" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+      <circle cx="118" cy="49" r="4" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
     </svg>`;
   } else if (id === 'cryo') {
     // 5. GENERAL FROSTBYTE: THE GLACIAL COLOSSUS (Diamond Citadel Titan)
@@ -2288,18 +2298,18 @@ function getBossSvg(id) {
       <line x1="92" y1="36" x2="118" y2="36" stroke="#ffd23c" stroke-width="2"/>
       <line x1="92" y1="48" x2="118" y2="48" stroke="#ffd23c" stroke-width="2"/>
       <polygon points="122,42 130,34 130,50" fill="#ffd23c"/>
-      <!-- Radiant Kyber Planet-Killer Core Focus Crystal -->
-      <circle cx="58" cy="42" r="16" fill="#ffffff" stroke="#ffd23c" stroke-width="2.5" filter="url(#glow_gold_${uid})"/>
-      <circle cx="58" cy="42" r="8" fill="#ffd23c"/>
-      <!-- Dual Celestial Orbiting Halo Rings -->
-      <ellipse cx="58" cy="42" rx="26" ry="12" stroke="#ffd23c" stroke-width="1.8" fill="none"/>
-      <ellipse cx="58" cy="42" rx="30" ry="15" stroke="#ffffff" stroke-width="1.2" fill="none" stroke-dasharray="6 3"/>
+      <line x1="130" y1="42" x2="148" y2="42" stroke="#ffd23c" stroke-width="2.2"/>
       <!-- 5 Massive Imperial Golden Ion Hyper-Thrusters -->
-      <circle cx="150" cy="24" r="4.5" fill="#ffd23c" stroke="#fffbeb" stroke-width="1"/>
-      <circle cx="146" cy="33" r="4.5" fill="#ffd23c" stroke="#fffbeb" stroke-width="1"/>
-      <circle cx="146" cy="42" r="5.5" fill="#ffffff" filter="url(#glow_gold_${uid})"/>
-      <circle cx="146" cy="51" r="4.5" fill="#ffd23c" stroke="#fffbeb" stroke-width="1"/>
-      <circle cx="150" cy="60" r="4.5" fill="#ffd23c" stroke="#fffbeb" stroke-width="1"/>
+      <circle cx="152" cy="24" r="5" fill="#ffd23c" filter="url(#glow_gold_${uid})"/>
+      <circle cx="152" cy="24" r="2.5" fill="#ffffff"/>
+      <circle cx="144" cy="33" r="5" fill="#ffd23c" filter="url(#glow_gold_${uid})"/>
+      <circle cx="144" cy="33" r="2.5" fill="#ffffff"/>
+      <circle cx="140" cy="42" r="5.5" fill="#ffd23c" filter="url(#glow_gold_${uid})"/>
+      <circle cx="140" cy="42" r="3" fill="#ffffff"/>
+      <circle cx="144" cy="51" r="5" fill="#ffd23c" filter="url(#glow_gold_${uid})"/>
+      <circle cx="144" cy="51" r="2.5" fill="#ffffff"/>
+      <circle cx="152" cy="60" r="5" fill="#ffd23c" filter="url(#glow_gold_${uid})"/>
+      <circle cx="152" cy="60" r="2.5" fill="#ffffff"/>
     </svg>`;
   }
 }
@@ -2312,26 +2322,26 @@ const BOSS_INTEL = [
     col: '#00ffaa',
     hp: 60,
     powers: [
-      '⚡ Axial Planet-Killer Death Ray (Continuous screen-spanning emerald superlaser)',
-      '🛸 Ventral Hangar TIE Carrier Launch (Scrambles escort Imperial TIE Fighters)',
-      '💥 Dual Sponson Heavy Crosshair Turbolasers'
+      '⚡ Axial Planet-Killer Death Ray (Continuous piercing emerald superlaser)',
+      '🛸 Ventral TIE Carrier Launch (Deploys Imperial TIE/ln escorts)',
+      '⚡ Dual Sponson Heavy Tachyon Railguns & 5-Round Turbolaser Salvos'
     ],
     loot: '+2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +75 🪙',
-    tactic: 'Steer clear of the green axial superlaser beam and destroy the escort TIE fighters to open fire on the command bridge!'
+    tactic: 'Dodge the charging green axial superlaser by staying above or below the center flight axis!'
   },
   {
     id: 'hive',
-    name: 'Overlord Chronos: DS-1 Death Star Citadel',
-    sector: 'Sector 2 Flagship · Imperial Planetary Battlestation',
+    name: 'Overlord Chronos: DS-1 Death Star',
+    sector: 'Sector 2 Flagship · Orbital Planet-Siege Battlestation',
     col: '#00e5ff',
     hp: 65,
     powers: [
-      '🧲 Gravitational Magnetic Tractor Beam (Pulls your galleon into the battlestation)',
-      '⚡ 360° Equatorial Turbolaser Trench Burst (12-way expanding EMP plasma ring)',
-      '⚡ 8-Beam Kyber Dish Superlaser Convergence'
+      '💥 360° Equatorial Turbolaser Trench Burst (12 radiating EMP plasma shells)',
+      '🧲 Gravitational Magnetic Tractor Beam (Pulls player ship toward the trench)',
+      '⚡ 8-Tributary Kyber Dish Superlaser Convergence'
     ],
     loot: '+2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +100 🪙',
-    tactic: 'Throttle full speed against the gravitational tractor beam and weave through the equatorial turbolaser ring!'
+    tactic: 'Break away from the tractor beam pull by boosting into vertical lanes, then fire broadsides into the Kyber dish!'
   },
   {
     id: 'ram',
@@ -2349,17 +2359,17 @@ const BOSS_INTEL = [
   },
   {
     id: 'void',
-    name: 'Archon Umbra: The Malevolence Subjugator',
-    sector: 'Sector 4 Flagship · Separatist Heavy Mega-Ion Dreadnought',
-    col: '#c084fc',
+    name: 'Captain Solo: The Rogue Millennium Falcon',
+    sector: 'Sector 4 Flagship · Legendary Modified Corellian YT-1300 Gunship',
+    col: '#00ffee',
     hp: 75,
     powers: [
-      '🌌 Hyperspace Phase-Shift Cloaking Ambush (Becomes intangible, teleports & ambushes)',
-      '🌀 Event Horizon Graviton Singularity (Spawns a swirling dark-matter Black Hole)',
-      '⚡ Dual Piercing Void Anti-Matter Lances'
+      '⚡ Kessel Run Hyperdrive Overdrive (Fast hyperspace drift & quad-laser burst)',
+      '🚀 Dual Forward Concussion Proton Torpedoes & Magnetic Decoy Mines',
+      '🔥 360° Dorsal & Ventral Rotating Quad-Laser Cannon Strafe'
     ],
     loot: '+3 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +150 🪙',
-    tactic: 'When Umbra phase-cloaks, wait for the uncloak shockwave and immediately broadside the flank mega-ion ring!'
+    tactic: 'Avoid the rotating quad-laser tracking line and fire full broadsides into the forward mandibles when the hyperdrive cools down!'
   },
   {
     id: 'cryo',
@@ -3125,7 +3135,7 @@ const BTYPES = [
   { id: 'dread', name: 'Grand Admiral Vex: Imperial Star Destroyer (The Eclipse)', col: '#00ffaa', w: 305, h: 165, hp: 60, spd: 44, atk: 'tachyon' },
   { id: 'hive',  name: 'Overlord Chronos: DS-1 Death Star Orbital Battlestation', col: '#00e5ff', w: 290, h: 165, hp: 65, spd: 40, atk: 'emp_cascade' },
   { id: 'ram',   name: 'Warlord Ignis: Resurgent Sith Silencer Star Destroyer',   col: '#ff0033', w: 300, h: 160, hp: 70, spd: 48, atk: 'magma_barrage' },
-  { id: 'void',  name: 'Archon Umbra: Separatist Mega-Ion Dreadnought (Malevolence)', col: '#c084fc', w: 295, h: 155, hp: 75, spd: 50, atk: 'void_singularity' },
+  { id: 'void',  name: 'Captain Solo: The Rogue Millennium Falcon (YT-1300)', col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52, atk: 'quad_laser_barrage' },
   { id: 'cryo',  name: 'General Frostbyte: Imperial Interdictor Cruiser (Immobilizer)', col: '#38bdf8', w: 290, h: 170, hp: 80, spd: 42, atk: 'cryo_nova' },
   { id: 'titan', name: 'Emperor Aurelius: Supreme Command Mega-Dreadnought (Supremacy)', col: '#ffd23c', w: 320, h: 175, hp: 95, spd: 52, atk: 'gilded_barrage' },
 ];
@@ -4750,28 +4760,32 @@ function update(dt) {
         }
 
       } else if (boss.type === 'void') {
-        // Boss 4: ARCHON UMBRA: SEPARATIST VOID HARBINGER
+        // Boss 4: CAPTAIN SOLO: THE ROGUE MILLENNIUM FALCON (YT-1300)
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Hyperspace Phase-Shift Cloak Ambush!
+          // ULTIMATE: Kessel Run Hyperdrive Overdrive! (Hyperspace warp & quad-laser ambush!)
           boss.isCloaked = true;
-          boss.cloakT = 2.0;
-          boss.y = Math.max(90, Math.min(H - 110, (ship.y + (Math.random() < 0.5 ? -120 : 120))));
-          explode(boss.x, boss.y, '#c084fc', 30);
-          addShake(22);
-          popup(boss.x - 40, boss.y - 45, '🌀 ULTIMATE: HYPERSPACE VOID CLOAK!', '#c084fc');
+          boss.cloakT = 1.8;
+          boss.y = Math.max(90, Math.min(H - 110, (ship.y + (Math.random() < 0.5 ? -130 : 130))));
+          explode(boss.x, boss.y, '#00ffee', 32);
+          addShake(24);
+          popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: KESSEL RUN HYPERDRIVE!', '#00ffee');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          // Event Horizon Graviton Singularity Vortex
-          eballs.push({ type: 'vortex', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y, vx: -360 * spdBonus, vy: (dy / dist) * 120, r: 32, spin: 0 });
-          popup(boss.x - 40, boss.y - 45, '🌀 GRAVITON SINGULARITY VORTEX!', '#c084fc');
+          // Dual Forward Concussion Proton Torpedoes + Cargo Decoy Mines
+          for (const cy of [-22, 22]) {
+            eballs.push({ type: 'emp', col: '#00ffee', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: -560 * spdBonus, vy: (dy / dist) * 140, r: 22 });
+          }
+          eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.25, y: boss.y, vx: -380 * spdBonus, vy: 0, r: 26, spin: 0 });
+          popup(boss.x - 40, boss.y - 45, '🚀 CONCUSSION TORPEDO SALVO!', '#00ffee');
           sfx('incoming');
         } else {
-          // Dual Piercing Void Anti-Matter Lances
-          for (const cy of [-36, 36]) {
-            eballs.push({ type: 'laser', col: '#c084fc', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 720 * spdBonus, vy: (dy / dist) * 720 * spdBonus, r: 20 });
+          // 360° Rotating Dorsal Quad-Laser 6-Round Blaster Strafe!
+          for (let k = 0; k < 6; k++) {
+            const spr = ((k - 2.5) / 5) * 0.38;
+            eballs.push({ type: 'laser', col: '#ff0033', x: boss.x - boss.w * 0.35, y: boss.y, vx: -700 * spdBonus * Math.cos(spr), vy: 700 * spdBonus * Math.sin(spr), r: 18 });
           }
           sfx('laser');
-          popup(boss.x - 40, boss.y - 45, '🌀 PIERCING VOID LANCES!', '#c084fc');
+          popup(boss.x - 40, boss.y - 45, '🔥 DORSAL QUAD-LASER STRAFE!', '#ff0033');
         }
 
       } else if (boss.type === 'cryo') {
@@ -7032,45 +7046,93 @@ function draw() {
       }
 
     } else if (boss.type === 'void') {
-      // BOSS 4: ARCHON UMBRA: SEPARATIST VOID HARBINGER (Star Wars Invisible Hand Tractor Dreadnought)
+      // BOSS 4: CAPTAIN SOLO: THE ROGUE MILLENNIUM FALCON (YT-1300 CORELLIAN GUNSHIP)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
-      bg.addColorStop(0, 'rgba(192, 132, 252, 0.55)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
+      bg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.56, boss.h * 0.52, 0, 0, Math.PI * 2); cx.fill();
 
-      // Swept Crescent Hammerhead Prow & Stealth Wings
-      const vg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
-      vg.addColorStop(0, '#0f051d'); vg.addColorStop(0.35, '#3b0764'); vg.addColorStop(0.7, '#7e22ce'); vg.addColorStop(1, '#c084fc');
-      cx.fillStyle = vg;
+      // Glowing Full-Width Cyan Sub-Light Ion Thruster Strip along Stern
+      const eg = cx.createLinearGradient(boss.w * 0.35, 0, boss.w * 0.65, 0);
+      eg.addColorStop(0, '#ffffff'); eg.addColorStop(0.35, '#00ffee'); eg.addColorStop(0.75, '#0284c7'); eg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = eg;
       cx.beginPath();
-      cx.moveTo(-boss.w * 0.50, 0);                 // Forward hammerhead tip
-      cx.lineTo(-boss.w * 0.32, -boss.h * 0.44);    // Port hammerhead wing
-      cx.lineTo(-boss.w * 0.15, -boss.h * 0.24);    // Port neck
-      cx.lineTo(boss.w * 0.35, -boss.h * 0.44);     // Port aft wing
-      cx.lineTo(boss.w * 0.48, -boss.h * 0.20);     // Port thruster
-      cx.lineTo(boss.w * 0.38, 0);                  // Aft center
-      cx.lineTo(boss.w * 0.48, boss.h * 0.20);      // Starboard thruster
-      cx.lineTo(boss.w * 0.35, boss.h * 0.44);      // Starboard aft wing
-      cx.lineTo(-boss.w * 0.15, boss.h * 0.24);     // Starboard neck
-      cx.lineTo(-boss.w * 0.32, boss.h * 0.44);     // Starboard hammerhead wing
-      cx.closePath();
+      cx.moveTo(boss.w * 0.34, -boss.h * 0.32);
+      cx.lineTo(boss.w * 0.58 + Math.random() * 12, 0);
+      cx.lineTo(boss.w * 0.34, boss.h * 0.32);
+      cx.closePath(); cx.fill();
+
+      // Main Circular Saucer Hull in Light Industrial Plating
+      const fg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
+      fg.addColorStop(0, '#0f172a'); fg.addColorStop(0.35, '#334155'); fg.addColorStop(0.7, '#64748b'); fg.addColorStop(1, '#f8fafc');
+      cx.fillStyle = fg;
+      cx.beginPath();
+      cx.ellipse(0, 0, boss.w * 0.44, boss.h * 0.42, 0, 0, Math.PI * 2);
       cx.fill();
-      cx.strokeStyle = '#c084fc'; cx.lineWidth = 3.8; cx.stroke();
+      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 3.6; cx.stroke();
 
-      // Graviton Tractor-Beam Projector Ring
-      cx.strokeStyle = '#c084fc'; cx.lineWidth = 2.4;
-      cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.28, boss.h * 0.26, 0, 0, Math.PI * 2); cx.stroke();
+      // Forward Cargo Docking Mandibles with Central Freight Notch
+      cx.fillStyle = '#1e293b';
+      cx.fillRect(-boss.w * 0.48, -boss.h * 0.32, boss.w * 0.36, boss.h * 0.18);
+      cx.fillRect(-boss.w * 0.48, boss.h * 0.14, boss.w * 0.36, boss.h * 0.18);
+      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 2.4;
+      cx.strokeRect(-boss.w * 0.48, -boss.h * 0.32, boss.w * 0.36, boss.h * 0.18);
+      cx.strokeRect(-boss.w * 0.48, boss.h * 0.14, boss.w * 0.36, boss.h * 0.18);
 
-      // Pulsing Dark Matter Black Hole Singularity Core
-      const cr = cx.createRadialGradient(0, 0, 4, 0, 0, 36);
-      cr.addColorStop(0, '#000000'); cr.addColorStop(0.35, '#3b0764'); cr.addColorStop(0.7, '#9333ea'); cr.addColorStop(1, '#c084fc');
-      cx.fillStyle = cr; cx.beginPath(); cx.arc(0, 0, 24, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#e9d5ff'; cx.lineWidth = 2.8; cx.stroke();
+      // Red Hazard Racing Stripes on Mandibles
+      cx.fillStyle = '#ef4444';
+      cx.fillRect(-boss.w * 0.44, -boss.h * 0.25, boss.w * 0.26, 4);
+      cx.fillRect(-boss.w * 0.44, boss.h * 0.21, boss.w * 0.26, 4);
 
-      // Accretion Disk Gravitational Swirl
-      cx.strokeStyle = '#c084fc'; cx.lineWidth = 2.4;
-      cx.beginPath(); cx.arc(0, 0, 38, t * 10, t * 10 + Math.PI * 1.4); cx.stroke();
-      cx.strokeStyle = '#f3e8ff'; cx.lineWidth = 1.6;
-      cx.beginPath(); cx.arc(0, 0, 44, -t * 8, -t * 8 + Math.PI * 1.2); cx.stroke();
+      // Offset Starboard Cockpit Corridor Tube
+      cx.fillStyle = '#334155';
+      cx.fillRect(-boss.w * 0.18, -boss.h * 0.46, boss.w * 0.32, boss.h * 0.14);
+      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 2;
+      cx.strokeRect(-boss.w * 0.18, -boss.h * 0.46, boss.w * 0.32, boss.h * 0.14);
+
+      // Conical Starboard Cockpit Pod with Illuminated Viewport Grid
+      cx.fillStyle = '#0f172a';
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.18, -boss.h * 0.48);
+      cx.lineTo(-boss.w * 0.34, -boss.h * 0.44);
+      cx.lineTo(-boss.w * 0.34, -boss.h * 0.36);
+      cx.lineTo(-boss.w * 0.18, -boss.h * 0.32);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.8; cx.stroke();
+      cx.fillStyle = '#00ffee'; cx.beginPath(); cx.arc(-boss.w * 0.26, -boss.h * 0.40, 4, 0, Math.PI * 2); cx.fill();
+
+      // Top Center Rotating Dorsal Quad-Laser Blaster Turret
+      const aimAng = Math.atan2(ship.y - boss.y, ship.x - boss.x);
+      cx.save(); cx.translate(0, 0); cx.rotate(aimAng);
+      cx.fillStyle = '#0f172a'; cx.beginPath(); cx.arc(0, 0, 16, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.4; cx.stroke();
+      cx.fillStyle = '#475569'; cx.beginPath(); cx.arc(0, 0, 8, 0, Math.PI * 2); cx.fill();
+      // Quad Blaster Barrels
+      cx.fillStyle = '#ff0033';
+      cx.fillRect(4, -6, 26, 3.5);
+      cx.fillRect(4, -2, 28, 4);
+      cx.fillRect(4, 2.5, 26, 3.5);
+      cx.restore();
+
+      // Military Sensor Radar Dish with Scanning Beam
+      cx.fillStyle = '#475569';
+      cx.beginPath(); cx.arc(-boss.w * 0.14, -boss.h * 0.18, 10, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 1.8; cx.stroke();
+      cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.moveTo(-boss.w * 0.14, -boss.h * 0.18);
+      cx.lineTo(-boss.w * 0.14 + Math.cos(t * 8) * 16, -boss.h * 0.18 + Math.sin(t * 8) * 16);
+      cx.stroke();
+
+      // 4 Aft Circular Heat Exhaust Grille Ports
+      for (const pos of [
+        { x: boss.w * 0.14, y: -boss.h * 0.16 },
+        { x: boss.w * 0.26, y: -boss.h * 0.12 },
+        { x: boss.w * 0.14, y: boss.h * 0.16 },
+        { x: boss.w * 0.26, y: boss.h * 0.12 }
+      ]) {
+        cx.fillStyle = '#0f172a'; cx.beginPath(); cx.arc(pos.x, pos.y, 6.5, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#64748b'; cx.lineWidth = 1.4; cx.stroke();
+        cx.fillStyle = '#ff4400'; cx.beginPath(); cx.arc(pos.x, pos.y, 2.5, 0, Math.PI * 2); cx.fill();
+      }
 
     } else if (boss.type === 'cryo') {
       // BOSS 5: GENERAL FROSTBYTE: IMPERIAL INTERDICTOR CRYO-TITAN (Star Wars Interdictor Cruiser)
