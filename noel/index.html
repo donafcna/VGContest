@@ -5840,55 +5840,47 @@ function draw() {
       // Stage 0: Top Mission Dispatch Briefing
       cx.font = titleFont;
       cx.fillStyle = '#ffd23c';
-      cx.fillText('⚡ TOP MISSION DISPATCH: DEEP SPACE SECTOR PATROL', W / 2, H - barH + 28);
-
-      cx.font = textFont;
-      cx.fillStyle = '#ffffff';
-      cx.fillText('mission:to eliminate as many enemy ships as u can', W / 2, H - barH + 52);
+      cx.fillText('⚡ TOP MISSION DISPATCH: DEEP SPACE SECTOR PATROL', W / 2, H - barH + 34);
 
       cx.font = textFont;
       cx.fillStyle = '#4bd5ee';
-      cx.fillText(`🌌 "Captain ${captainUpper}, prepare your Solar Galleon for incoming hostile waves!"`, W / 2, H - barH + 74);
+      cx.fillText(`🌌 "Captain ${captainUpper}, prepare your Solar Galleon for incoming hostile waves!"`, W / 2, H - barH + 64);
 
       cx.font = warnFont;
       cx.fillStyle = '#00ffee';
-      cx.fillText('⚡ PRESS CONTINUE OR TAP ANYWHERE TO ADVANCE ❯', W / 2, H - barH + 98);
+      cx.fillText('⚡ PRESS CONTINUE OR TAP ANYWHERE TO ADVANCE ❯', W / 2, H - barH + 94);
 
     } else if (storyStage === 1) {
-      // Stage 1: (The Mission, Bounty & Danger)
+      // Stage 1: (Stat-based Bounty & Danger Warning)
       cx.font = titleFont;
       cx.fillStyle = '#ffd23c';
-      cx.fillText(`🏴‍☠️ WANTED: CAPTAIN ${captainUpper} • BOUNTY: 🪙 ${bountyNum}`, W / 2, H - barH + 28);
-
-      cx.font = textFont;
-      cx.fillStyle = '#ffffff';
-      cx.fillText('mission:to eliminate as many enemy ships as u can', W / 2, H - barH + 52);
+      cx.fillText(`🏴‍☠️ WANTED: CAPTAIN ${captainUpper} • BOUNTY: 🪙 ${bountyNum}`, W / 2, H - barH + 34);
 
       cx.font = textFont;
       cx.fillStyle = '#ffd23c';
-      cx.fillText(`💰 "They are trying to kill you for your coin bounty!"`, W / 2, H - barH + 74);
+      cx.fillText('💰 "They are trying to kill you for your coin bounty!"', W / 2, H - barH + 64);
 
       cx.font = warnFont;
       cx.fillStyle = '#ff385c';
-      cx.fillText('🚨 [RADAR]: "DANGER! DANGER! TWO ENEMY SHIPS ARE COMING!"', W / 2, H - barH + 98);
+      cx.fillText('🚨 [RADAR]: "DANGER! DANGER! TWO ENEMY SHIPS ARE COMING!"', W / 2, H - barH + 94);
 
     } else {
       // Stage 2 (Merged): Broadside Cannons Shoot, Hit, Explode & More Ships Advancing!
       cx.font = titleFont;
       cx.fillStyle = '#00dfa2';
-      cx.fillText('💥 DIRECT HIT! BROADSIDE CANNONS DESTROYED BOTH ENEMY SHIPS!', W / 2, H - barH + 28);
+      cx.fillText('💥 DIRECT HIT! BROADSIDE CANNONS DESTROYED BOTH ENEMY SHIPS!', W / 2, H - barH + 30);
 
       cx.font = warnFont;
       cx.fillStyle = '#ff385c';
-      cx.fillText('🚨 [RADAR]: "MORE ENEMY SHIPS ARE ADVANCING TOWARDS YOU! GET READY TO FIGHT!"', W / 2, H - barH + 54);
+      cx.fillText('🚨 [RADAR]: "MORE ENEMY SHIPS ARE ADVANCING TOWARDS YOU! GET READY TO FIGHT!"', W / 2, H - barH + 56);
 
       cx.font = textFont;
       cx.fillStyle = '#ffd23c';
-      cx.fillText(`👑 [CAPTAIN ${captainUpper}]: "ALL HANDS TO BATTLE STATIONS — ENGAGE!"`, W / 2, H - barH + 78);
+      cx.fillText(`👑 [CAPTAIN ${captainUpper}]: "ALL HANDS TO BATTLE STATIONS — ENGAGE!"`, W / 2, H - barH + 80);
 
       cx.font = warnFont;
       cx.fillStyle = '#00dfa2';
-      cx.fillText('⚔️ CLICK START BATTLE TO ENGAGE THE FLEET! ⚔️', W / 2, H - barH + 102);
+      cx.fillText('⚔️ CLICK START BATTLE TO ENGAGE THE FLEET! ⚔️', W / 2, H - barH + 104);
     }
 
     // Interactive Glowing Continue / Start Battle Button
