@@ -1344,7 +1344,7 @@ SAVE.load();
 const SHIPS = [
   { id: 'cutter',  name: 'Solar Corsair',    cost: 0,  cols: ['#c88a55', '#8c5528', '#3b1c06'], hp: 5, cool: 0.25, spd: 1,    gold: 1,   magnet: 0,  spread: [0],           power: 'Agile & balanced solar galleon' },
   { id: 'galleon', name: 'Armoured Galleon', cost: 5,  cols: ['#dde5ed', '#8a97a4', '#3d464f'], hp: 7, cool: 0.30, spd: 0.9,  gold: 1,   magnet: 0,  spread: [0],           power: '+2 Reinforced Oak & Iron Hearts' },
-  { id: 'runner',  name: 'Astral Sloop',     cost: 6,  cols: ['#9effea', '#26c2a4', '#0d6b5c'], hp: 4, cool: 0.16, spd: 1.35, gold: 1,   magnet: 45, spread: [0],           power: 'High-speed solar sails & rapid fire' },
+  { id: 'runner',  name: 'Azure Storm-Cutter ⚡', cost: 6, cols: ['#00ffee', '#0284c7', '#082f49'], hp: 5, cool: 0.14, spd: 1.45, gold: 1.25, magnet: 80, spread: [0], power: '⚡ Chain-Lightning Plasma Orbs, +45% Speed & Kinetic Shield' },
   { id: 'hind',    name: 'Golden Hind',      cost: 8,  cols: ['#fff0b3', '#f2c14e', '#996f08'], hp: 5, cool: 0.25, spd: 1,    gold: 1.6, magnet: 110, spread: [0],          power: '+60% Gold dubloons & salvage field' },
   { id: 'storm',   name: 'Solar Dreadnought',cost: 10, cols: ['#e4c4ff', '#9b59d0', '#4a1b6d'], hp: 5, cool: 0.30, spd: 1.05, gold: 1,   magnet: 0,  spread: [-0.14, 0.14], power: 'Twin heavy naval broadside battery' },
 ];
@@ -1909,39 +1909,39 @@ async function renderLeaderboard(cid, myScore, myName) {
 // ---------- SPAWN ALIEN ENEMY ARCHETYPES WITH UNIQUE POWERS & SECTOR PROGRESSION ----------
 function spawnFort() {
   const roll = Math.random();
-  let variant = 'cruiser', col = '#00ffaa', name = 'VOID ECLIPSE DESTROYER', hp = 5, w = 125, h = 66;
+  let variant = 'cruiser', col = '#00ffaa', name = 'OBLIVION VOID DESTROYER', hp = 5, w = 125, h = 66;
   
   if (level <= 1) {
     // Sector 1: Void Eclipse Destroyer
-    variant = 'cruiser'; col = '#00ffaa'; name = 'VOID ECLIPSE DESTROYER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
+    variant = 'cruiser'; col = '#00ffaa'; name = 'OBLIVION VOID DESTROYER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
   } else if (level <= 2) {
     // Sector 2: + Cyber-EMP Fortress
     if (roll < 0.5) {
-      variant = 'cruiser'; col = '#00ffaa'; name = 'VOID ECLIPSE DESTROYER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
+      variant = 'cruiser'; col = '#00ffaa'; name = 'OBLIVION VOID DESTROYER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
     } else {
-      variant = 'tesla'; col = '#00e5ff'; name = 'CYBER-EMP FORTRESS'; hp = 6 + Math.floor(level * 0.9); w = 115; h = 70;
+      variant = 'tesla'; col = '#00e5ff'; name = 'ZEUS TESLA CITADEL'; hp = 6 + Math.floor(level * 0.9); w = 115; h = 70;
     }
   } else if (level <= 3) {
     // Sector 3: + Solar Inferno Juggernaut
     if (roll < 0.33) {
-      variant = 'cruiser'; col = '#00ffaa'; name = 'VOID ECLIPSE DESTROYER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
+      variant = 'cruiser'; col = '#00ffaa'; name = 'OBLIVION VOID DESTROYER'; hp = 5 + Math.floor(level * 0.7); w = 125; h = 66;
     } else if (roll < 0.66) {
-      variant = 'tesla'; col = '#00e5ff'; name = 'CYBER-EMP FORTRESS'; hp = 6 + Math.floor(level * 0.9); w = 115; h = 70;
+      variant = 'tesla'; col = '#00e5ff'; name = 'ZEUS TESLA CITADEL'; hp = 6 + Math.floor(level * 0.9); w = 115; h = 70;
     } else {
-      variant = 'brood'; col = '#ff4400'; name = 'SOLAR INFERNO JUGGERNAUT'; hp = 7 + Math.floor(level * 0.9); w = 126; h = 68;
+      variant = 'brood'; col = '#ff4400'; name = 'PROMETHEUS SOLAR JUGGERNAUT'; hp = 7 + Math.floor(level * 0.9); w = 126; h = 68;
     }
   } else {
     // Sector 4+: All 5 Heavy Warships including Cryo-Frost Gunship & Imperial Dread-Corvette!
     if (roll < 0.22) {
-      variant = 'cruiser'; col = '#00ffaa'; name = 'VOID ECLIPSE DESTROYER'; hp = 6 + Math.floor(level * 0.8); w = 125; h = 66;
+      variant = 'cruiser'; col = '#00ffaa'; name = 'OBLIVION VOID DESTROYER'; hp = 6 + Math.floor(level * 0.8); w = 125; h = 66;
     } else if (roll < 0.44) {
-      variant = 'tesla'; col = '#00e5ff'; name = 'CYBER-EMP FORTRESS'; hp = 7 + Math.floor(level * 1.0); w = 115; h = 70;
+      variant = 'tesla'; col = '#00e5ff'; name = 'ZEUS TESLA CITADEL'; hp = 7 + Math.floor(level * 1.0); w = 115; h = 70;
     } else if (roll < 0.65) {
-      variant = 'brood'; col = '#ff4400'; name = 'SOLAR INFERNO JUGGERNAUT'; hp = 8 + Math.floor(level * 1.0); w = 126; h = 68;
+      variant = 'brood'; col = '#ff4400'; name = 'PROMETHEUS SOLAR JUGGERNAUT'; hp = 8 + Math.floor(level * 1.0); w = 126; h = 68;
     } else if (roll < 0.82) {
-      variant = 'cryo_gunship'; col = '#38bdf8'; name = 'CRYO-FROST GUNSHIP'; hp = 7 + Math.floor(level * 0.9); w = 122; h = 64;
+      variant = 'cryo_gunship'; col = '#38bdf8'; name = 'BOREAS CRYO-BASTION'; hp = 7 + Math.floor(level * 0.9); w = 122; h = 64;
     } else {
-      variant = 'imperial'; col = '#ffd23c'; name = 'IMPERIAL DREAD-CORVETTE'; hp = 9 + Math.floor(level * 1.1); w = 130; h = 72;
+      variant = 'imperial'; col = '#ffd23c'; name = 'AURELIUS DREAD-CORVETTE'; hp = 9 + Math.floor(level * 1.1); w = 130; h = 72;
     }
   }
 
@@ -1971,17 +1971,18 @@ function spawnGlider(xPos, yPos, forceType) {
     else roll = r < 0.25 ? 'tie' : r < 0.50 ? 'stalker' : r < 0.75 ? 'rammer' : r < 0.88 ? 'drone' : 'phantom';
   }
 
-  let col = '#ff2255', name = 'THE FIGHTER', spd = 270 + level * 35, w = 76, h = 48, hp = 1;
+  let col = '#ff2255', name = 'IMPERIAL SHADOW TIE', spd = 270 + level * 35, w = 76, h = 48, hp = 1;
   if (roll === 'stalker') {
-    col = '#a855f7'; name = 'QUANTUM PHASE STALKER'; spd = 260 + level * 35; w = 52; h = 32; hp = 1 + (level >= 4 ? 1 : 0);
+    col = '#a855f7'; name = 'CHRONOS PHASE STALKER'; spd = 260 + level * 35; w = 52; h = 32; hp = 1 + (level >= 4 ? 1 : 0);
   } else if (roll === 'rammer') {
-    col = '#ff3344'; name = 'SOLAR KAMIKAZE RAMMER'; spd = 370 + level * 55; w = 56; h = 28; hp = 1;
+    col = '#ff3344'; name = 'APEX HELLFIRE RAMMER'; spd = 370 + level * 55; w = 56; h = 28; hp = 1;
   } else if (roll === 'drone') {
     col = '#00ffee'; name = 'TESLA LIGHTNING DRONE'; spd = 340 + level * 45; w = 50; h = 30; hp = 1 + (level >= 3 ? 1 : 0);
   } else if (roll === 'phantom') {
-    col = '#c084fc'; name = 'SHADOW ECLIPSE PHANTOM'; spd = 300 + level * 40; w = 62; h = 36; hp = 2 + (level >= 5 ? 1 : 0);
+    col = '#c084fc'; name = 'SHADOW VOID PHANTOM'; spd = 300 + level * 40; w = 62; h = 36; hp = 2 + (level >= 5 ? 1 : 0);
   } else {
     // THE FIGHTER
+    name = 'IMPERIAL SHADOW TIE';
     hp = 1 + (level >= 3 ? 1 : 0) + (level >= 5 ? 1 : 0);
   }
 
@@ -2016,12 +2017,12 @@ function spawnMine() {
 }
 
 const BTYPES = [
-  { id: 'dread', name: 'Omega-Star Dreadnought',     col: '#00ffaa', w: 290, h: 165, hp: 60, spd: 44, atk: 'tachyon' },
-  { id: 'hive',  name: 'Chronos Tesla Citadel',      col: '#00e5ff', w: 280, h: 165, hp: 65, spd: 40, atk: 'emp_cascade' },
-  { id: 'ram',   name: 'Solar Apocalypse Leviathan', col: '#ff3300', w: 295, h: 160, hp: 70, spd: 48, atk: 'magma_barrage' },
-  { id: 'void',  name: 'Phantom Void Harbinger',     col: '#c084fc', w: 290, h: 155, hp: 75, spd: 50, atk: 'void_singularity' },
-  { id: 'cryo',  name: 'Glacial Cryo-Colossus',      col: '#38bdf8', w: 280, h: 170, hp: 80, spd: 42, atk: 'cryo_nova' },
-  { id: 'titan', name: 'Imperial Golden Titan-Lord', col: '#ffd23c', w: 310, h: 175, hp: 95, spd: 52, atk: 'gilded_barrage' },
+  { id: 'dread', name: 'Grand Admiral Vex: Omega Dreadnought',       col: '#00ffaa', w: 290, h: 165, hp: 60, spd: 44, atk: 'tachyon' },
+  { id: 'hive',  name: 'Overlord Chronos: Tesla Citadel Prime',      col: '#00e5ff', w: 280, h: 165, hp: 65, spd: 40, atk: 'emp_cascade' },
+  { id: 'ram',   name: 'Warlord Ignis: Solar Apocalypse Leviathan',  col: '#ff3300', w: 295, h: 160, hp: 70, spd: 48, atk: 'magma_barrage' },
+  { id: 'void',  name: 'Archon Umbra: Phantom Void Harbinger',       col: '#c084fc', w: 290, h: 155, hp: 75, spd: 50, atk: 'void_singularity' },
+  { id: 'cryo',  name: 'General Frostbyte: Glacial Cryo-Colossus',   col: '#38bdf8', w: 280, h: 170, hp: 80, spd: 42, atk: 'cryo_nova' },
+  { id: 'titan', name: 'Emperor Aurelius: Imperial Golden Titan-Lord',col: '#ffd23c', w: 310, h: 175, hp: 95, spd: 52, atk: 'gilded_barrage' },
 ];
 
 function spawnBoss() {
@@ -2995,6 +2996,40 @@ function update(dt) {
     return;
   }
 
+  function triggerChainLightning(hitX, hitY) {
+    const targets = [];
+    for (const g of gliders) {
+      if (Math.hypot(g.x - hitX, g.y - hitY) < 240) targets.push(g);
+    }
+    for (const f of forts) {
+      if (Math.hypot(f.x - hitX, f.y - hitY) < 260) targets.push(f);
+    }
+    if (boss && Math.hypot(boss.x - hitX, boss.y - hitY) < 280) targets.push(boss);
+
+    let zapped = 0;
+    for (const t of targets) {
+      if (zapped >= 2) break;
+      t.hp -= 1;
+      zapped++;
+      explode(t.x, t.y, '#00ffee', 14);
+      for (let k = 0; k < 6; k++) {
+        const p = k / 6;
+        const lx = hitX + (t.x - hitX) * p + (Math.random() - 0.5) * 16;
+        const ly = hitY + (t.y - hitY) * p + (Math.random() - 0.5) * 16;
+        parts.push({
+          type: 'spark',
+          x: lx, y: ly,
+          vx: (Math.random() - 0.5) * 40, vy: (Math.random() - 0.5) * 40,
+          life: 0.25, maxLife: 0.25, col: '#00ffee', size: 4
+        });
+      }
+    }
+    if (zapped > 0) {
+      popup(hitX, hitY - 24, '⚡ CHAIN LIGHTNING!', '#00ffee');
+      sfx('laser');
+    }
+  }
+
   if (state !== 'play') return;
 
   // Space Pirate Galleon Navigation & Solar Ether Inertia
@@ -3456,7 +3491,10 @@ function update(dt) {
       }
     }
     
-    if (hit) balls.splice(i, 1);
+    if (hit) {
+      if (b.shipModel === 'runner') triggerChainLightning(b.x, b.y);
+      balls.splice(i, 1);
+    }
   }
 
   // Update Enemy Warships & Unique Powers
@@ -4333,10 +4371,18 @@ function draw() {
       }
     }
     
-    // Health bar
-    cx.fillStyle = 'rgba(0,0,0,0.8)'; cx.fillRect(-35, -f.h * 0.5 - 14, 70, 7);
-    cx.fillStyle = f.col || '#00ff66'; cx.fillRect(-33, -f.h * 0.5 - 13, 66 * Math.max(0, f.hp / f.maxHp), 5);
-    cx.strokeStyle = '#020617'; cx.lineWidth = 1; cx.strokeRect(-35, -f.h * 0.5 - 14, 70, 7);
+    // Name Tag & Health bar
+    cx.font = 'bold 8.5px "Orbitron", sans-serif';
+    cx.textAlign = 'center';
+    cx.fillStyle = f.col || '#00ff66';
+    cx.shadowColor = f.col || '#00ff66';
+    cx.shadowBlur = 5;
+    cx.fillText(f.name || 'ENEMY WARSHIP', 0, -f.h * 0.5 - 18);
+    cx.shadowBlur = 0;
+
+    cx.fillStyle = 'rgba(0,0,0,0.85)'; cx.fillRect(-38, -f.h * 0.5 - 14, 76, 7);
+    cx.fillStyle = f.col || '#00ff66'; cx.fillRect(-36, -f.h * 0.5 - 13, 72 * Math.max(0, f.hp / f.maxHp), 5);
+    cx.strokeStyle = '#020617'; cx.lineWidth = 1; cx.strokeRect(-38, -f.h * 0.5 - 14, 76, 7);
     
     cx.restore();
   }
@@ -4472,6 +4518,22 @@ function draw() {
       cx.beginPath(); cx.arc(20, -5, 4.5 + Math.sin(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
       cx.beginPath(); cx.arc(20, 5, 4.5 + Math.cos(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
     }
+
+    // Glider Name Badge & HP Bar
+    cx.font = 'bold 7.5px "Orbitron", sans-serif';
+    cx.textAlign = 'center';
+    cx.fillStyle = g.col || '#ff3366';
+    cx.shadowColor = g.col || '#ff3366';
+    cx.shadowBlur = 4;
+    cx.fillText(g.name || 'ENEMY SCOUT', 0, -g.h * 0.5 - 12);
+    cx.shadowBlur = 0;
+
+    if (g.maxHp > 1) {
+      cx.fillStyle = 'rgba(0,0,0,0.85)'; cx.fillRect(-22, -g.h * 0.5 - 9, 44, 5);
+      cx.fillStyle = g.col || '#ff3366'; cx.fillRect(-20, -g.h * 0.5 - 8, 40 * Math.max(0, g.hp / g.maxHp), 3);
+      cx.strokeStyle = '#020617'; cx.lineWidth = 1; cx.strokeRect(-22, -g.h * 0.5 - 9, 44, 5);
+    }
+
     cx.restore();
   }
 
@@ -5402,68 +5464,99 @@ function draw() {
     // -------------------------------------------------------------
     // SHAPE 1: ASTRAL SLOOP (runner) — Sleek Futuristic Aerodynamic Trimaran
     // -------------------------------------------------------------
+    // SHAPE 1: AZURE STORM-CUTTER (runner) — High-Tech Crystalline Quantum Trimaran
+    // -------------------------------------------------------------
     if (curShip === 'runner') {
-      // Dual Ether Jet Thrusters (Streaming cyan engine plasma!)
-      for (const ey of [-8, 8]) {
-        const jg = cx.createLinearGradient(-42, ey, -72, ey);
+      // Triple Hyper-Ether Jet Thrusters (Blazing cyan plasma & electric sparks!)
+      for (const ey of [-12, 0, 12]) {
+        const jg = cx.createLinearGradient(-44, ey, -78, ey);
         jg.addColorStop(0, '#ffffff');
-        jg.addColorStop(0.3, '#00ffee');
-        jg.addColorStop(0.7, '#0099ff');
-        jg.addColorStop(1, 'rgba(0,100,255,0)');
+        jg.addColorStop(0.25, '#00ffee');
+        jg.addColorStop(0.65, '#0077ff');
+        jg.addColorStop(1, 'rgba(0,120,255,0)');
         cx.fillStyle = jg;
         cx.beginPath();
-        cx.moveTo(-42, ey - 5);
-        cx.lineTo(-68 - Math.random() * 16, ey);
-        cx.lineTo(-42, ey + 5);
+        cx.moveTo(-44, ey - 4.5);
+        cx.lineTo(-72 - Math.random() * 20, ey);
+        cx.lineTo(-44, ey + 4.5);
         cx.closePath();
         cx.fill();
-        cx.fillStyle = '#1e2836'; cx.fillRect(-44, ey - 6, 6, 12);
-        cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.2; cx.strokeRect(-44, ey - 6, 6, 12);
+        cx.fillStyle = '#08121f'; cx.fillRect(-46, ey - 5, 6, 10);
+        cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.4; cx.strokeRect(-46, ey - 5, 6, 10);
       }
 
-      // Aerodynamic Forward-Swept Wing Sails
-      for (const [mx, mh, myOff, ang] of [[-8, 56, -32, 0.22], [20, 46, -26, 0.32]]) {
+      // 3 Aerodynamic Forward-Swept Photon Sails with Quantum Energy Grids
+      for (const [mx, mh, myOff, ang] of [[-14, 60, -34, 0.18], [12, 52, -30, 0.28], [34, 42, -24, 0.38]]) {
         cx.save(); cx.translate(mx, 10); cx.rotate(ang);
-        cx.strokeStyle = '#0e1622'; cx.lineWidth = 2.5;
+        cx.strokeStyle = '#081c2e'; cx.lineWidth = 3;
         cx.beginPath(); cx.moveTo(0, 0); cx.lineTo(0, -mh); cx.stroke();
-        const sg = cx.createLinearGradient(0, myOff, 26, myOff + 22);
+        
+        // Holographic Photon Sail Membrane (Shimmering Cyan Waveform)
+        const sg = cx.createLinearGradient(0, myOff, 28, myOff + 26);
         sg.addColorStop(0, '#ffffff');
-        sg.addColorStop(0.45, col0);
-        sg.addColorStop(1, col1);
+        sg.addColorStop(0.35, '#00ffee');
+        sg.addColorStop(0.75, '#0284c7');
+        sg.addColorStop(1, '#082f49');
         cx.fillStyle = sg;
         cx.beginPath();
         cx.moveTo(0, myOff);
-        cx.lineTo(26, myOff + 10);
-        cx.lineTo(6, myOff + 24);
-        cx.lineTo(0, myOff + 22);
+        cx.lineTo(28, myOff + 10);
+        cx.lineTo(8, myOff + 26);
+        cx.lineTo(0, myOff + 24);
         cx.closePath();
         cx.fill();
-        cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.8; cx.stroke();
-        // Energy Pulse Circuit on Sail
-        cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.2;
-        cx.beginPath(); cx.moveTo(4, myOff + 6); cx.lineTo(20, myOff + 12); cx.stroke();
+        cx.strokeStyle = '#00ffee'; cx.lineWidth = 2; cx.stroke();
+
+        // Shimmering Quantum Circuit Tracers on Sail
+        cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.4;
+        cx.beginPath(); cx.moveTo(4, myOff + 6); cx.lineTo(22, myOff + 13); cx.stroke();
+        cx.beginPath(); cx.moveTo(6, myOff + 16); cx.lineTo(16, myOff + 20); cx.stroke();
+
+        // Orbiting Quantum Energy Spark
+        const orbAng = t * 6 + mx;
+        cx.fillStyle = '#ffffff';
+        cx.beginPath(); cx.arc(14 + Math.cos(orbAng) * 6, myOff + 12 + Math.sin(orbAng) * 6, 2.5, 0, Math.PI * 2); cx.fill();
         cx.restore();
       }
 
-      // Ultra-Sleek Trimaran Hull (Knife Prow & Outriggers)
-      const hGrad = cx.createLinearGradient(0, 8, 0, 32);
-      hGrad.addColorStop(0, col0);
-      hGrad.addColorStop(0.5, col1);
-      hGrad.addColorStop(1, col2);
+      // Ultra-Sleek Diamond-Faceted Trimaran Hull
+      const hGrad = cx.createLinearGradient(0, 6, 0, 34);
+      hGrad.addColorStop(0, '#38bdf8');
+      hGrad.addColorStop(0.35, '#0284c7');
+      hGrad.addColorStop(0.75, '#0369a1');
+      hGrad.addColorStop(1, '#082f49');
       cx.fillStyle = hGrad;
       cx.beginPath();
-      cx.moveTo(-42, 10);
-      cx.lineTo(38, 10);
-      cx.lineTo(64, 19); // Long Sharp Needle Prow
-      cx.lineTo(38, 28);
-      cx.lineTo(-38, 26);
+      cx.moveTo(-44, 8);
+      cx.lineTo(40, 8);
+      cx.lineTo(68, 19); // Super Sharp Needle Prow
+      cx.lineTo(40, 30);
+      cx.lineTo(-40, 28);
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#00ffee'; cx.lineWidth = 2.2; cx.stroke();
+      cx.strokeStyle = '#00ffee'; cx.lineWidth = 2.4; cx.stroke();
 
-      // Glowing Crystal Energy Prow Core
-      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(58, 19, 5, 0, Math.PI * 2); cx.fill();
-      cx.fillStyle = '#00ffee'; cx.beginPath(); cx.arc(58, 19, 3.5, 0, Math.PI * 2); cx.fill();
+      // Carbon-Weave Upper Deck Inlay
+      cx.fillStyle = '#0f172a';
+      cx.beginPath();
+      cx.moveTo(-36, 11); cx.lineTo(34, 11); cx.lineTo(52, 19); cx.lineTo(34, 25); cx.lineTo(-32, 24);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.2; cx.stroke();
+
+      // Electrified Hydro-Plasma Conduit Lines
+      cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.6;
+      cx.beginPath(); cx.moveTo(-30, 18); cx.lineTo(38, 18); cx.lineTo(58, 19); cx.stroke();
+
+      // Glowing Crystal Energy Prow Focus Core
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(62, 19, 6, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#00ffee'; cx.beginPath(); cx.arc(62, 19, 4, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.arc(62, 19, 9 + Math.sin(t * 16) * 2, 0, Math.PI * 2); cx.stroke();
+
+      // Tinted Crystal Pilot Bridge Cockpit
+      cx.fillStyle = '#0284c7';
+      cx.beginPath(); cx.roundRect(-8, 3, 20, 8, 3); cx.fill();
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(2, 6, 2.5, 0, Math.PI * 2); cx.fill();
 
     // -------------------------------------------------------------
     // SHAPE 2: ARMOURED GALLEON (galleon) — Heavy Riveted Ironclad Fortress
