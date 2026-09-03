@@ -1342,11 +1342,11 @@ const SAVE = {
 SAVE.load();
 
 const SHIPS = [
-  { id: 'cutter',  name: 'Solar Corsair',    cost: 0,  cols: ['#c88a55', '#8c5528', '#3b1c06'], hp: 5, cool: 0.25, spd: 1,    gold: 1,   magnet: 0,  spread: [0],           power: 'Agile & balanced solar galleon' },
-  { id: 'galleon', name: 'Armoured Galleon', cost: 5,  cols: ['#dde5ed', '#8a97a4', '#3d464f'], hp: 7, cool: 0.30, spd: 0.9,  gold: 1,   magnet: 0,  spread: [0],           power: '+2 Reinforced Oak & Iron Hearts' },
-  { id: 'runner',  name: 'Azure Storm-Cutter ⚡', cost: 6, cols: ['#00ffee', '#0284c7', '#082f49'], hp: 5, cool: 0.14, spd: 1.45, gold: 1.25, magnet: 80, spread: [0], power: '⚡ Chain-Lightning Plasma Orbs, +45% Speed & Kinetic Shield' },
-  { id: 'hind',    name: 'Golden Hind',      cost: 8,  cols: ['#fff0b3', '#f2c14e', '#996f08'], hp: 5, cool: 0.25, spd: 1,    gold: 1.6, magnet: 110, spread: [0],          power: '+60% Gold dubloons & salvage field' },
-  { id: 'storm',   name: 'Solar Dreadnought',cost: 10, cols: ['#e4c4ff', '#9b59d0', '#4a1b6d'], hp: 5, cool: 0.30, spd: 1.05, gold: 1,   magnet: 0,  spread: [-0.14, 0.14], power: 'Twin heavy naval broadside battery' },
+  { id: 'cutter',  name: 'Solar Corsair ⚓',         cost: 0,  cols: ['#f59e0b', '#b45309', '#451a03'], hp: 6, cool: 0.20, spd: 1.15, gold: 1.25, magnet: 45, spread: [0], power: '🔥 Solar Plasma Overdrive & Critical Laser Flurry' },
+  { id: 'galleon', name: 'Ironclad Behemoth 🛡️',     cost: 5,  cols: ['#e2e8f0', '#64748b', '#0f172a'], hp: 9, cool: 0.28, spd: 0.95, gold: 1.15, magnet: 35, spread: [0], power: '🛡️ Heavy Titanium Armor (+3 Hearts) & Concussive Blast' },
+  { id: 'runner',  name: 'Azure Storm-Cutter ⚡',     cost: 6,  cols: ['#00ffee', '#0284c7', '#082f49'], hp: 6, cool: 0.14, spd: 1.50, gold: 1.30, magnet: 90, spread: [0], power: '⚡ Chain-Lightning Plasma Orbs, +50% Speed & Kinetic Shield' },
+  { id: 'hind',    name: 'Golden Hind Sovereign ✨', cost: 8,  cols: ['#fff0b3', '#ffd23c', '#78350f'], hp: 6, cool: 0.22, spd: 1.20, gold: 2.00, magnet: 180, spread: [0], power: '🪙 24K Midas Gold Rush (+100% Dubloons) & Gravity Tractor' },
+  { id: 'storm',   name: 'Void Leviathan 🌌',        cost: 10, cols: ['#e9d5ff', '#a855f7', '#1e1035'], hp: 7, cool: 0.25, spd: 1.15, gold: 1.40, magnet: 65, spread: [-0.15, 0.15], power: '🌀 Twin Singularity Void Torpedoes with Gravity Implosion' },
 ];
 
 const UPG = {
@@ -1357,13 +1357,13 @@ const UPG = {
 };
 
 const SKINS = [
-  { id: 'default', name: 'Classic Oak & Sails', kills: 0,    cols: null },
-  { id: 'sunset',  name: 'Solar Flare 🌅',     kills: 25,   cols: ['#ffd7a8', '#ff8a3c', '#b3410e'] },
-  { id: 'toxic',   name: 'Alien Plasma 🧪',    kills: 75,   cols: ['#e0ffb0', '#7ed957', '#2e6b22'] },
-  { id: 'ocean',   name: 'Deep Nebula 🌌',     kills: 150,  cols: ['#a9e0ff', '#2f9be6', '#0f3c63'] },
-  { id: 'shadow',  name: 'Black Pearl 🌑',     kills: 300,  cols: ['#9aa0aa', '#3a3f47', '#111316'] },
-  { id: 'royal',   name: 'Royal Navy 👑',      kills: 600,  cols: ['#e6c2ff', '#b06bff', '#53218c'] },
-  { id: 'legend',  name: 'Golden Legend ✨',   kills: 1200, cols: ['#fff2b0', '#ffcf3c', '#946d0a'] },
+  { id: 'default', name: 'Classic Oak & Brass ⚓', kills: 0,    cols: null },
+  { id: 'sunset',  name: 'Molten Solar Flare 🌅', kills: 25,   cols: ['#ffedd5', '#f97316', '#7c2d12'] },
+  { id: 'toxic',   name: 'Xenon Bio-Plasma 🧪',  kills: 75,   cols: ['#dcfce7', '#22c55e', '#14532d'] },
+  { id: 'ocean',   name: 'Abyssal Deep Nebula 🌌', kills: 150, cols: ['#e0f2fe', '#0ea5e9', '#082f49'] },
+  { id: 'shadow',  name: 'Phantom Black Pearl 🌑', kills: 300, cols: ['#f1f5f9', '#334155', '#020617'] },
+  { id: 'royal',   name: 'Sovereign Royal Navy 👑', kills: 600, cols: ['#f3e8ff', '#a855f7', '#3b0764'] },
+  { id: 'legend',  name: 'Ascended Golden Legend ✨', kills: 1200, cols: ['#fef08a', '#eab308', '#713f12'] },
 ];
 
 function skinById(id) { return SKINS.find(k => k.id === id) || SKINS[0]; }
@@ -1542,17 +1542,17 @@ function esc(s) {
 }
 
 function getShipSvg(shipId, cols) {
-  const c0 = (cols && cols[0]) || '#c88a55';
-  const c1 = (cols && cols[1]) || '#8c5528';
-  const c2 = (cols && cols[2]) || '#3b1c06';
+  const c0 = (cols && cols[0]) || '#f59e0b';
+  const c1 = (cols && cols[1]) || '#b45309';
+  const c2 = (cols && cols[2]) || '#451a03';
   const uid = 's' + Math.random().toString(36).substr(2, 6);
   
   if (shipId === 'runner') {
-    // ASTRAL SLOOP: Futuristic Cyan Cyber Trimaran Interceptor with Dual Plasma Thrusters
+    // AZURE STORM-CUTTER: Crystalline Quantum Trimaran with Triple Photon Sails & Ion Thrusters
     return `<svg viewBox="0 0 92 60" width="88" height="56" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="r_hull_${uid}" x1="0" y1="20" x2="80" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="${c2}"/>
+          <stop offset="0%" stop-color="#082f49"/>
           <stop offset="50%" stop-color="${c1}"/>
           <stop offset="100%" stop-color="${c0}"/>
         </linearGradient>
@@ -1568,33 +1568,32 @@ function getShipSvg(shipId, cols) {
           <stop offset="100%" stop-color="transparent"/>
         </linearGradient>
       </defs>
-      <!-- Dual Ion Plasma Thruster Plumes -->
-      <path d="M20 25L0 27L20 29Z" fill="url(#r_jet_${uid})"/>
-      <path d="M20 37L0 39L20 41Z" fill="url(#r_jet_${uid})"/>
-      <!-- Outrigger Stabilizers -->
-      <path d="M18 20L44 20L56 25L42 29L16 29Z" fill="${c2}" stroke="#00ffee" stroke-width="1.2"/>
-      <path d="M18 37L44 37L56 42L42 46L16 46Z" fill="${c2}" stroke="#00ffee" stroke-width="1.2"/>
-      <line x1="28" y1="25" x2="48" y2="25" stroke="#00ffee" stroke-width="1.5"/>
-      <line x1="28" y1="41" x2="48" y2="41" stroke="#00ffee" stroke-width="1.5"/>
-      <!-- Main Fuselage Hull -->
-      <path d="M12 28L52 28L80 33L52 38L12 38Z" fill="url(#r_hull_${uid})" stroke="#00ffee" stroke-width="2"/>
-      <path d="M20 33L68 33" stroke="#ffffff" stroke-width="1.5"/>
+      <!-- Triple Ion Plasma Thruster Plumes -->
+      <path d="M18 24L0 25.5L18 27Z" fill="url(#r_jet_${uid})"/>
+      <path d="M18 31.5L0 33L18 34.5Z" fill="url(#r_jet_${uid})"/>
+      <path d="M18 39L0 40.5L18 42Z" fill="url(#r_jet_${uid})"/>
+      <!-- Outrigger Stabilizer Fins -->
+      <path d="M16 18L44 18L58 24L42 28L14 28Z" fill="${c2}" stroke="#00ffee" stroke-width="1.2"/>
+      <path d="M16 38L44 38L58 44L42 48L14 48Z" fill="${c2}" stroke="#00ffee" stroke-width="1.2"/>
+      <!-- Main Diamond Fuselage Hull -->
+      <path d="M10 27L52 27L82 33L52 39L10 39Z" fill="url(#r_hull_${uid})" stroke="#00ffee" stroke-width="2"/>
+      <path d="M18 33L70 33" stroke="#ffffff" stroke-width="1.5"/>
       <!-- Glowing Tachyon Crystal Prow Core -->
-      <circle cx="78" cy="33" r="4.5" fill="#00ffee"/>
-      <circle cx="78" cy="33" r="2" fill="#ffffff"/>
-      <!-- Aerodynamic Crystalline Solar Wing Sails -->
-      <path d="M28 30L42 8L56 22L36 30Z" fill="url(#r_sail_${uid})" stroke="#ffffff" stroke-width="1.5" opacity="0.95"/>
-      <line x1="35" y1="19" x2="49" y2="26" stroke="#ffffff" stroke-width="1" opacity="0.7"/>
-      <path d="M48 30L60 12L70 24L54 30Z" fill="url(#r_sail_${uid})" stroke="#ffffff" stroke-width="1.5" opacity="0.95"/>
+      <circle cx="80" cy="33" r="5" fill="#00ffee"/>
+      <circle cx="80" cy="33" r="2.5" fill="#ffffff"/>
+      <!-- 3 Forward-Swept Photon Sails -->
+      <path d="M22 30L36 8L50 22L30 30Z" fill="url(#r_sail_${uid})" stroke="#ffffff" stroke-width="1.5" opacity="0.95"/>
+      <path d="M42 30L56 10L68 24L50 30Z" fill="url(#r_sail_${uid})" stroke="#ffffff" stroke-width="1.5" opacity="0.95"/>
+      <path d="M60 30L70 16L78 26L66 30Z" fill="url(#r_sail_${uid})" stroke="#ffffff" stroke-width="1.2" opacity="0.9"/>
     </svg>`;
   }
 
   if (shipId === 'galleon') {
-    // ARMOURED GALLEON: Heavy Multi-Plate Titanium Ironclad Dreadnought with Heavy Ion Drive
+    // IRONCLAD BEHEMOTH: Heavy Riveted Titanium Fortress with 4 Steel Masts & Battering Ram
     return `<svg viewBox="0 0 92 60" width="88" height="56" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="g_hull_${uid}" x1="0" y1="28" x2="80" y2="55" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#1e293b"/>
+          <stop offset="0%" stop-color="#0f172a"/>
           <stop offset="45%" stop-color="${c1}"/>
           <stop offset="85%" stop-color="${c0}"/>
           <stop offset="100%" stop-color="#f8fafc"/>
@@ -1610,32 +1609,33 @@ function getShipSvg(shipId, cols) {
           <stop offset="100%" stop-color="transparent"/>
         </linearGradient>
       </defs>
-      <!-- Heavy Cobalt Ion Thruster Wake -->
-      <path d="M10 40L0 42L10 44Z" fill="url(#g_jet_${uid})"/>
-      <path d="M10 47L0 49L10 51Z" fill="url(#g_jet_${uid})"/>
-      <!-- Heavy Iron Masts & Crossbeams -->
-      <line x1="26" y1="36" x2="26" y2="10" stroke="#0f172a" stroke-width="3"/>
-      <line x1="46" y1="36" x2="46" y2="6" stroke="#0f172a" stroke-width="3.5"/>
-      <line x1="66" y1="36" x2="66" y2="12" stroke="#0f172a" stroke-width="3"/>
-      <!-- Armored Square Sails with Reinforcement Grid -->
-      <path d="M16 14C26 18 26 18 36 14L34 28C24 32 24 32 18 28Z" fill="url(#g_sail_${uid})" stroke="#38bdf8" stroke-width="1.5"/>
-      <path d="M35 10C46 14 46 14 57 10L55 26C44 30 44 30 37 26Z" fill="url(#g_sail_${uid})" stroke="#38bdf8" stroke-width="1.5"/>
-      <path d="M56 16C65 20 65 20 74 16L73 29C64 33 64 33 57 29Z" fill="url(#g_sail_${uid})" stroke="#38bdf8" stroke-width="1.5"/>
-      <!-- Armored Heavy Beveled Hull -->
-      <path d="M10 32L68 32L82 40L64 52L18 52L10 32Z" fill="url(#g_hull_${uid})" stroke="#ffd23c" stroke-width="2.5"/>
-      <!-- Heavy Ram Beakhead & Citadel Bridge -->
-      <rect x="18" y="28" width="16" height="6" fill="#0f172a" stroke="#ffd23c" stroke-width="1.2"/>
-      <line x1="14" y1="42" x2="72" y2="42" stroke="#0f172a" stroke-width="2"/>
-      <!-- Quad Heavy Broadside Cannon Turrets -->
-      <circle cx="28" cy="42" r="3" fill="#020617" stroke="#ffd23c" stroke-width="1.2"/>
-      <circle cx="42" cy="42" r="3" fill="#020617" stroke="#ffd23c" stroke-width="1.2"/>
-      <circle cx="56" cy="42" r="3" fill="#020617" stroke="#ffd23c" stroke-width="1.2"/>
-      <circle cx="70" cy="42" r="3" fill="#020617" stroke="#ffd23c" stroke-width="1.2"/>
+      <!-- Heavy Cobalt Thruster Wake -->
+      <path d="M8 38L0 40L8 42Z" fill="url(#g_jet_${uid})"/>
+      <path d="M8 46L0 48L8 50Z" fill="url(#g_jet_${uid})"/>
+      <!-- 4 Steel Masts -->
+      <line x1="20" y1="36" x2="20" y2="12" stroke="#0f172a" stroke-width="2.5"/>
+      <line x1="38" y1="36" x2="38" y2="6" stroke="#0f172a" stroke-width="3"/>
+      <line x1="56" y1="36" x2="56" y2="8" stroke="#0f172a" stroke-width="3"/>
+      <line x1="72" y1="36" x2="72" y2="14" stroke="#0f172a" stroke-width="2.5"/>
+      <!-- Armored Square Sails -->
+      <path d="M12 16C20 20 20 20 28 16L26 28C18 31 18 31 14 28Z" fill="url(#g_sail_${uid})" stroke="#38bdf8" stroke-width="1.2"/>
+      <path d="M29 10C39 14 39 14 49 10L47 26C37 30 37 30 31 26Z" fill="url(#g_sail_${uid})" stroke="#38bdf8" stroke-width="1.4"/>
+      <path d="M48 12C57 16 57 16 66 12L65 27C56 31 56 31 50 27Z" fill="url(#g_sail_${uid})" stroke="#38bdf8" stroke-width="1.4"/>
+      <!-- Heavy Riveted Hull & Battering Ram -->
+      <path d="M8 30L68 30L84 38L64 52L16 52L8 30Z" fill="url(#g_hull_${uid})" stroke="#94a3b8" stroke-width="2.5"/>
+      <line x1="12" y1="40" x2="74" y2="40" stroke="#0f172a" stroke-width="2"/>
+      <!-- Armor Stud Rivets -->
+      <circle cx="24" cy="40" r="2" fill="#ffd23c"/>
+      <circle cx="40" cy="40" r="2" fill="#ffd23c"/>
+      <circle cx="56" cy="40" r="2" fill="#ffd23c"/>
+      <circle cx="70" cy="40" r="2" fill="#ffd23c"/>
+      <!-- Steel Ram Prow -->
+      <path d="M72 34L86 38L72 44Z" fill="#64748b" stroke="#ffffff" stroke-width="1.2"/>
     </svg>`;
   }
 
   if (shipId === 'hind') {
-    // GOLDEN HIND: Pure 24K Royal Gilded Treasure Flagship with Radiant Starlight Wake
+    // GOLDEN HIND SOVEREIGN: 24K Mirror Gilded Royal Flagship with Dragon Prow & Midas Attractor
     return `<svg viewBox="0 0 92 60" width="88" height="56" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="h_hull_${uid}" x1="0" y1="28" x2="80" y2="55" gradientUnits="userSpaceOnUse">
@@ -1657,29 +1657,25 @@ function getShipSvg(shipId, cols) {
         </linearGradient>
       </defs>
       <!-- Golden Solar Ether Flame -->
-      <path d="M12 40L0 42L12 44Z" fill="url(#h_jet_${uid})"/>
+      <path d="M10 38L0 40L10 42Z" fill="url(#h_jet_${uid})"/>
       <!-- Golden Masts -->
-      <line x1="30" y1="36" x2="30" y2="8" stroke="#78350f" stroke-width="3"/>
-      <line x1="54" y1="36" x2="54" y2="10" stroke="#78350f" stroke-width="3"/>
-      <!-- Radiant Billowing Gold Solar Sails with Crown Crest -->
-      <path d="M18 12C30 17 30 17 42 12L40 28C28 33 28 33 20 28Z" fill="url(#h_sail_${uid})" stroke="#ffffff" stroke-width="1.5"/>
-      <path d="M42 14C54 19 54 19 66 14L64 29C52 34 52 34 44 29Z" fill="url(#h_sail_${uid})" stroke="#ffffff" stroke-width="1.5"/>
-      <circle cx="30" cy="20" r="3" fill="#ffffff" opacity="0.8"/>
-      <circle cx="54" cy="22" r="3" fill="#ffffff" opacity="0.8"/>
-      <!-- Ornate 24K Tiered Hull -->
-      <path d="M12 32L64 32L78 40L60 52L20 52L12 32Z" fill="url(#h_hull_${uid})" stroke="#ffd23c" stroke-width="2.5"/>
-      <!-- Baroque Gold Filigree Trim -->
-      <line x1="16" y1="42" x2="68" y2="42" stroke="#ffffff" stroke-width="1.8" stroke-dasharray="4 2"/>
-      <!-- Stern Magnetic Salvage Collector Orb -->
-      <circle cx="74" cy="34" r="5.5" fill="#ffd23c" stroke="#ffffff" stroke-width="1.5"/>
-      <circle cx="74" cy="34" r="2.5" fill="#ffffff"/>
-      <!-- Captain's Gilded Stern Castle -->
-      <rect x="16" y="27" width="14" height="7" fill="#b45309" stroke="#ffd23c" stroke-width="1.2"/>
+      <line x1="28" y1="36" x2="28" y2="8" stroke="#78350f" stroke-width="3"/>
+      <line x1="52" y1="36" x2="52" y2="6" stroke="#78350f" stroke-width="3"/>
+      <line x1="70" y1="36" x2="70" y2="12" stroke="#78350f" stroke-width="2.5"/>
+      <!-- Royal Gold Leaf Billowing Sails -->
+      <path d="M16 12C28 17 28 17 40 12L38 28C26 33 26 33 18 28Z" fill="url(#h_sail_${uid})" stroke="#ffffff" stroke-width="1.5"/>
+      <path d="M40 10C52 15 52 15 64 10L62 26C50 31 50 31 42 26Z" fill="url(#h_sail_${uid})" stroke="#ffffff" stroke-width="1.5"/>
+      <!-- Golden Dragon Figurehead & Crown Prow -->
+      <path d="M10 32L64 32L80 38L62 52L18 52L10 32Z" fill="url(#h_hull_${uid})" stroke="#ffd23c" stroke-width="2.5"/>
+      <path d="M66 32L82 28L76 38Z" fill="#ffd23c" stroke="#ffffff" stroke-width="1.2"/>
+      <!-- Gilded Filigree Trim & Magnetic Core -->
+      <circle cx="72" cy="38" r="4.5" fill="#ffd23c" stroke="#ffffff" stroke-width="1.5"/>
+      <circle cx="72" cy="38" r="2" fill="#ffffff"/>
     </svg>`;
   }
 
   if (shipId === 'storm') {
-    // SOLAR DREADNOUGHT: Colossal Obsidian Battlecruiser with Purple Nebular Sails & Void Thruster
+    // VOID LEVIATHAN: Obsidian Dark-Matter Battlecruiser with Singularity Wings
     return `<svg viewBox="0 0 92 60" width="88" height="56" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="s_hull_${uid}" x1="0" y1="28" x2="80" y2="55" gradientUnits="userSpaceOnUse">
@@ -1700,29 +1696,25 @@ function getShipSvg(shipId, cols) {
           <stop offset="100%" stop-color="transparent"/>
         </linearGradient>
       </defs>
-      <!-- Void Magenta Engine Wake -->
-      <path d="M8 38L0 40L8 42Z" fill="url(#s_jet_${uid})"/>
-      <path d="M8 45L0 47L8 49Z" fill="url(#s_jet_${uid})"/>
-      <!-- Heavy Void Masts -->
-      <line x1="28" y1="36" x2="28" y2="6" stroke="#2e1065" stroke-width="3.5"/>
+      <!-- Void Engine Wake -->
+      <path d="M6 36L0 38L6 40Z" fill="url(#s_jet_${uid})"/>
+      <path d="M6 44L0 46L6 48Z" fill="url(#s_jet_${uid})"/>
+      <!-- Void Masts & Singularity Wings -->
+      <line x1="26" y1="36" x2="26" y2="6" stroke="#2e1065" stroke-width="3.5"/>
       <line x1="52" y1="36" x2="52" y2="4" stroke="#2e1065" stroke-width="3.5"/>
-      <!-- Sweeping Violet Nebular Sails with Rune Energy Arcs -->
-      <path d="M14 10L40 16L34 30L12 24Z" fill="url(#s_sail_${uid})" stroke="#e9d5ff" stroke-width="1.5"/>
-      <path d="M40 8L68 14L62 28L36 22Z" fill="url(#s_sail_${uid})" stroke="#e9d5ff" stroke-width="1.5"/>
-      <line x1="24" y1="18" x2="32" y2="23" stroke="#ffd23c" stroke-width="1.2"/>
-      <line x1="50" y1="16" x2="58" y2="21" stroke="#ffd23c" stroke-width="1.2"/>
-      <!-- Angular Dagger Obsidian Hull -->
-      <path d="M8 30L68 30L84 38L64 52L16 52L8 30Z" fill="url(#s_hull_${uid})" stroke="${c0}" stroke-width="2.5"/>
-      <!-- Twin Siege Railgun Turrets with Gold Barrels -->
-      <rect x="26" y="38" width="10" height="5" fill="#ffd23c" stroke="#2e1065" stroke-width="1.2"/>
-      <rect x="44" y="38" width="10" height="5" fill="#ffd23c" stroke="#2e1065" stroke-width="1.2"/>
-      <rect x="62" y="38" width="10" height="5" fill="#ffd23c" stroke="#2e1065" stroke-width="1.2"/>
-      <!-- Pulsing Dark Matter Core -->
-      <circle cx="78" cy="38" r="4" fill="#c084fc" stroke="#ffffff" stroke-width="1.2"/>
+      <!-- Sweeping Nebular Sails -->
+      <path d="M12 10L38 16L32 30L10 24Z" fill="url(#s_sail_${uid})" stroke="#e9d5ff" stroke-width="1.5"/>
+      <path d="M38 8L66 14L60 28L34 22Z" fill="url(#s_sail_${uid})" stroke="#e9d5ff" stroke-width="1.5"/>
+      <!-- Angular Obsidian Battlecruiser Hull -->
+      <path d="M6 28L68 28L86 36L64 52L14 52L6 28Z" fill="url(#s_hull_${uid})" stroke="${c0}" stroke-width="2.5"/>
+      <!-- Twin Singularity Cannons -->
+      <rect x="30" y="36" width="12" height="6" fill="#ffd23c" stroke="#2e1065" stroke-width="1.2"/>
+      <rect x="52" y="36" width="12" height="6" fill="#ffd23c" stroke="#2e1065" stroke-width="1.2"/>
+      <circle cx="80" cy="36" r="4.5" fill="#c084fc" stroke="#ffffff" stroke-width="1.2"/>
     </svg>`;
   }
 
-  // SOLAR CORSAIR: Classic Legendary Wooden 3-Mast Pirate Galleon with Amber Solar Thrusters
+  // SOLAR CORSAIR: Classic Legendary 3-Mast Solar Frigate with Dragon Figurehead & Amber Sails
   return `<svg viewBox="0 0 92 60" width="88" height="56" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="c_hull_${uid}" x1="0" y1="28" x2="80" y2="55" gradientUnits="userSpaceOnUse">
@@ -1746,24 +1738,17 @@ function getShipSvg(shipId, cols) {
     <!-- Solar Thruster Flame -->
     <path d="M10 40L0 42L10 44Z" fill="url(#c_jet_${uid})"/>
     <!-- 3 Wooden Masts & Rigging -->
-    <line x1="32" y1="36" x2="32" y2="6" stroke="#271304" stroke-width="3"/>
-    <line x1="56" y1="36" x2="56" y2="10" stroke="#271304" stroke-width="2.5"/>
-    <!-- Waving Jolly Roger Pirate Flag -->
-    <path d="M32 6L44 10L32 14Z" fill="#0a0a0a" stroke="#ffffff" stroke-width="0.8"/>
-    <circle cx="36" cy="10" r="1.5" fill="#ffffff"/>
-    <!-- Multi-Layer Billowing Amber Solar Sails -->
-    <path d="M20 12C32 17 32 17 44 12L42 28C30 33 30 33 22 28Z" fill="url(#c_sail_${uid})" stroke="#ffffff" stroke-width="1.5"/>
-    <path d="M44 14C56 19 56 19 68 14L66 29C54 34 54 34 46 29Z" fill="url(#c_sail_${uid})" stroke="#ffffff" stroke-width="1.5"/>
-    <!-- Curved Rich Mahogany Galleon Hull -->
-    <path d="M10 32L66 32L80 40L62 52L18 52L10 32Z" fill="url(#c_hull_${uid})" stroke="#ffd23c" stroke-width="2.2"/>
-    <!-- Golden Gunport Stripe & Cannon Ports -->
-    <line x1="16" y1="41" x2="68" y2="41" stroke="#ffd23c" stroke-width="2"/>
-    <circle cx="28" cy="41" r="2.5" fill="#1e0c02" stroke="#ffd23c" stroke-width="1"/>
-    <circle cx="44" cy="41" r="2.5" fill="#1e0c02" stroke="#ffd23c" stroke-width="1"/>
-    <circle cx="60" cy="41" r="2.5" fill="#1e0c02" stroke="#ffd23c" stroke-width="1"/>
-    <!-- Captain's Aft Quarterdeck & Lantern -->
-    <rect x="14" y="27" width="14" height="7" fill="#451a03" stroke="#ffd23c" stroke-width="1.2"/>
-    <circle cx="16" cy="30" r="2" fill="#ffd23c"/>
+    <line x1="24" y1="36" x2="24" y2="10" stroke="#271304" stroke-width="3"/>
+    <line x1="46" y1="36" x2="46" y2="6" stroke="#271304" stroke-width="3.5"/>
+    <line x1="68" y1="36" x2="68" y2="12" stroke="#271304" stroke-width="2.5"/>
+    <!-- 3 Cascading Amber Solar Sails -->
+    <path d="M14 14C24 19 24 19 34 14L32 28C22 33 22 33 16 28Z" fill="url(#c_sail_${uid})" stroke="#ffffff" stroke-width="1.5"/>
+    <path d="M35 10C47 15 47 15 57 10L55 26C43 31 43 31 37 26Z" fill="url(#c_sail_${uid})" stroke="#ffffff" stroke-width="1.5"/>
+    <path d="M58 14C67 18 67 18 76 14L75 28C66 32 66 32 60 28Z" fill="url(#c_sail_${uid})" stroke="#ffffff" stroke-width="1.5"/>
+    <!-- Polished Wooden Galleon Hull & Gold Dragon Figurehead -->
+    <path d="M10 32L64 32L80 38L62 52L18 52L10 32Z" fill="url(#c_hull_${uid})" stroke="#ffd23c" stroke-width="2.5"/>
+    <path d="M64 32L78 28L72 38Z" fill="#ffd23c" stroke="#271304" stroke-width="1.2"/>
+    <line x1="16" y1="42" x2="68" y2="42" stroke="#ffd23c" stroke-width="1.5"/>
   </svg>`;
 }
 
