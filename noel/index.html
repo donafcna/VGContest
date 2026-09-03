@@ -415,11 +415,69 @@
   #losetext, #wintext { white-space:pre-line; }
 
   #touchHint {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-    color: rgba(255,255,255,0.85); font-size: 0.9rem; pointer-events: none;
-    background: rgba(6, 14, 30, 0.8); border: 1px solid rgba(255, 210, 60, 0.3);
-    padding: 6px 16px; border-radius: 99px; backdrop-filter: blur(4px);
+    position: fixed; bottom: 20px; right: 20px;
+    color: rgba(255,255,255,0.9); font-size: 0.84rem; pointer-events: none;
+    background: rgba(6, 14, 30, 0.85); border: 1px solid rgba(255, 210, 60, 0.4);
+    padding: 6px 14px; border-radius: 99px; backdrop-filter: blur(6px);
     font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;
+    z-index: 40; box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+  }
+
+  /* On-Screen Mobile Flight D-Pad */
+  #dpad {
+    position: fixed;
+    bottom: 22px;
+    left: 22px;
+    z-index: 45;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+  .dpad-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dpad-center {
+    width: 48px;
+    height: 48px;
+    background: radial-gradient(circle, rgba(255, 210, 60, 0.2) 0%, rgba(2, 6, 23, 0.7) 80%);
+    border: 1px dashed rgba(255, 210, 60, 0.35);
+    border-radius: 12px;
+    pointer-events: none;
+  }
+  .dpad-btn {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    background: rgba(8, 18, 38, 0.88);
+    border: 2px solid rgba(255, 210, 60, 0.55);
+    color: #ffd23c;
+    font-size: 1.35rem;
+    font-weight: 900;
+    font-family: 'Orbitron', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.7), inset 0 0 10px rgba(255, 210, 60, 0.15);
+    transition: transform 0.08s, background 0.08s, box-shadow 0.08s, border-color 0.08s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+  .dpad-btn:active, .dpad-btn.active {
+    background: rgba(255, 210, 60, 0.45);
+    border-color: #00ffee;
+    color: #ffffff;
+    box-shadow: 0 0 20px #00ffee, inset 0 0 12px #00ffee;
+    transform: scale(0.92);
   }
 </style>
 </head>
@@ -427,7 +485,18 @@
 <canvas id="cv"></canvas>
 <button id="musicbtn">🔊</button>
 <button id="pausebtn">⏸</button>
-<div id="touchHint" style="display:none;">🎯 DRAG FINGER TO SAIL YOUR SPACE GALLEON</div>
+<div id="touchHint" style="display:none;">🕹️ D-PAD: MOVE • TAP SCREEN: SHOOT 💥</div>
+
+<!-- Mobile Flight D-Pad -->
+<div id="dpad" style="display:none;">
+  <button class="dpad-btn dpad-up" id="btnUp" aria-label="Fly Up">▲</button>
+  <div class="dpad-row">
+    <button class="dpad-btn dpad-left" id="btnLeft" aria-label="Fly Left">◀</button>
+    <div class="dpad-center"></div>
+    <button class="dpad-btn dpad-right" id="btnRight" aria-label="Fly Right">▶</button>
+  </div>
+  <button class="dpad-btn dpad-down" id="btnDown" aria-label="Fly Down">▼</button>
+</div>
 
 <div id="pauseoverlay" class="overlay hidden">
   <h1>⏸ WARP STASIS</h1>
@@ -444,9 +513,9 @@
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
   Sail through deep cosmic space and blast <b>Star Wars-style alien UFO squadrons &amp; Motherships</b> with heavy naval broadsides!</p>
   <div class="keys">
-    🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM in any direction</b> • <b>LEFT CLICK</b> or <b>SPACE</b> = Fire Broadside 💥<br>
+    🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM</b> • <b>CLICK</b> or <b>SPACE</b> = Fire Broadside 💥<br>
     🎮 <b>Navigation</b>: <b>W A S D</b> or <b>Arrow Keys</b> (Solar Ether Flight &amp; Speed Thrusters)<br>
-    📱 <b>Mobile Touch</b>: Drag anywhere to steer &amp; lock-on auto fire!
+    📱 <b>Mobile Phone Controls</b>: <b>D-Pad Buttons</b> to Fly • <b>Tap Screen</b> to Shoot &amp; Aim!
   </div>
   <input id="pname" placeholder="Captain Noel" maxlength="14" value="Noël" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="btnrow">
@@ -692,7 +761,60 @@ const keys = {};
 const mouse = { x: 220, y: H * 0.5, down: false };
 const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 let touchOn = false;
-if (isTouch) document.getElementById('touchHint').style.display = 'block';
+
+// Mobile Flight D-Pad State (Up, Down, Left, Right)
+const dpadState = { up: false, down: false, left: false, right: false };
+
+function updateDpadVisibility() {
+  const dpadEl = document.getElementById('dpad');
+  const touchHintEl = document.getElementById('touchHint');
+  if (dpadEl) {
+    if (isTouch && state === 'play') {
+      dpadEl.style.display = 'flex';
+    } else {
+      dpadEl.style.display = 'none';
+    }
+  }
+  if (touchHintEl) {
+    if (isTouch && state === 'play') {
+      touchHintEl.style.display = 'block';
+    } else {
+      touchHintEl.style.display = 'none';
+    }
+  }
+}
+
+function bindDpadButton(id, dirKey) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  const press = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    initAudio();
+    dpadState[dirKey] = true;
+    el.classList.add('active');
+  };
+  const release = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dpadState[dirKey] = false;
+    el.classList.remove('active');
+  };
+
+  el.addEventListener('touchstart', press, { passive: false });
+  el.addEventListener('touchend', release, { passive: false });
+  el.addEventListener('touchcancel', release, { passive: false });
+  el.addEventListener('mousedown', press);
+  el.addEventListener('mouseup', release);
+  el.addEventListener('mouseleave', release);
+}
+
+// Bind mobile D-Pad directional controls
+bindDpadButton('btnUp', 'up');
+bindDpadButton('btnDown', 'down');
+bindDpadButton('btnLeft', 'left');
+bindDpadButton('btnRight', 'right');
 
 function advanceStory() {
   if (state !== 'intro' || storyCooldown > 0) return;
@@ -728,17 +850,37 @@ addEventListener('mouseup', e => { if (e.button === 0) mouse.down = false; });
 cv.addEventListener('touchstart', e => {
   initAudio();
   if (state === 'intro') { advanceStory(); return; }
-  touchOn = true;
-  const tc = e.touches[0];
-  mouse.x = tc.clientX; mouse.y = tc.clientY;
+  if (state === 'play') {
+    touchOn = true;
+    mouse.down = true;
+    const tc = e.touches[0];
+    mouse.x = tc.clientX; mouse.y = tc.clientY;
+  }
   e.preventDefault();
 }, { passive: false });
+
 cv.addEventListener('touchmove', e => {
-  const tc = e.touches[0];
-  mouse.x = tc.clientX; mouse.y = tc.clientY;
+  if (state === 'play') {
+    touchOn = true;
+    mouse.down = true;
+    const tc = e.touches[0];
+    mouse.x = tc.clientX; mouse.y = tc.clientY;
+  }
   e.preventDefault();
 }, { passive: false });
-cv.addEventListener('touchend', () => { touchOn = false; });
+
+cv.addEventListener('touchend', () => {
+  if (state === 'play') {
+    touchOn = false;
+    mouse.down = false;
+  }
+});
+cv.addEventListener('touchcancel', () => {
+  if (state === 'play') {
+    touchOn = false;
+    mouse.down = false;
+  }
+});
 
 // ---------- DYNAMIC ADAPTIVE SPACE AUDIO ENGINE ----------
 let ac = null, musicOn = true, masterG = null;
@@ -1937,6 +2079,7 @@ function startCombat() {
   sfx('incoming');
   addShake(18);
   addAlert('🚨 RED ALERT: ALIEN UFO BATTLEGROUP ATTACKING!', 'incoming');
+  updateDpadVisibility();
   spawnGlider();
   spawnGlider();
   spawnFort();
@@ -1995,6 +2138,7 @@ function startSolarSail(e) {
   if (pb) pb.style.display = 'block';
   initAudio();
   state = 'intro';
+  updateDpadVisibility();
 }
 window.startSolarSail = startSolarSail;
 
@@ -2005,9 +2149,11 @@ function togglePause() {
   if (state === 'play') {
     state = 'pause';
     document.getElementById('pauseoverlay').classList.remove('hidden');
+    updateDpadVisibility();
   } else if (state === 'pause') {
     state = 'play';
     document.getElementById('pauseoverlay').classList.add('hidden');
+    updateDpadVisibility();
   }
 }
 document.getElementById('pausebtn').addEventListener('click', togglePause);
@@ -2046,6 +2192,7 @@ function saveBest() {
 function lose() {
   state = 'over';
   sfx('boom');
+  updateDpadVisibility();
   const pb = saveBest();
   const bank = bankRun();
   document.getElementById('losetext').textContent =
@@ -2831,15 +2978,10 @@ function update(dt) {
   const curSpdMul = spdMul * (slowT > 0 ? 0.55 : 1.0);
   const ACC = 1450 * curSpdMul, MAX_SPD = 480 * curSpdMul;
   let ax = 0, ay = 0;
-  if (keys['KeyW'] || keys['ArrowUp']) ay -= 1;
-  if (keys['KeyS'] || keys['ArrowDown']) ay += 1;
-  if (keys['KeyA'] || keys['ArrowLeft']) ax -= 1;
-  if (keys['KeyD'] || keys['ArrowRight']) ax += 1;
-
-  if (isTouch && touchOn) {
-    ax = (mouse.x - ship.x) * 0.022;
-    ay = (mouse.y - ship.y) * 0.022;
-  }
+  if (keys['KeyW'] || keys['ArrowUp'] || dpadState.up) ay -= 1;
+  if (keys['KeyS'] || keys['ArrowDown'] || dpadState.down) ay += 1;
+  if (keys['KeyA'] || keys['ArrowLeft'] || dpadState.left) ax -= 1;
+  if (keys['KeyD'] || keys['ArrowRight'] || dpadState.right) ax += 1;
 
   ship.vx += ax * ACC * dt;
   ship.vy += ay * ACC * dt;
