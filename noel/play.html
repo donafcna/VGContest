@@ -1272,7 +1272,7 @@ for (let i = 0; i < 14; i++) {
 
 // Input Controls
 const keys = {};
-const mouse = { x: 220, y: H * 0.5, down: false };
+const mouse = { x: 220, y: H * 0.5, down: false, clicked: false };
 const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 let touchOn = false;
 
@@ -1347,6 +1347,9 @@ addEventListener('keydown', e => {
   if (e.code === 'Space' || e.code === 'Enter') {
     e.preventDefault();
     if (state === 'intro') { advanceStory(); return; }
+    if (!e.repeat) {
+      keys.spaceClicked = true;
+    }
   }
   if (e.code === 'KeyE' || e.code === 'KeyG') {
     activateGadget(e);
@@ -1365,7 +1368,7 @@ addEventListener('mousedown', e => {
   initAudio();
   if (e.button === 0) {
     if (state === 'intro') { advanceStory(); return; }
-    mouse.down = true;
+    mouse.clicked = true;
   }
 });
 addEventListener('mouseup', e => { if (e.button === 0) mouse.down = false; });
@@ -1375,7 +1378,7 @@ cv.addEventListener('touchstart', e => {
   if (state === 'intro') { advanceStory(); return; }
   if (state === 'play') {
     touchOn = true;
-    mouse.down = true;
+    mouse.clicked = true;
     const tc = e.touches[0];
     mouse.x = tc.clientX; mouse.y = tc.clientY;
   }
@@ -1385,7 +1388,6 @@ cv.addEventListener('touchstart', e => {
 cv.addEventListener('touchmove', e => {
   if (state === 'play') {
     touchOn = true;
-    mouse.down = true;
     const tc = e.touches[0];
     mouse.x = tc.clientX; mouse.y = tc.clientY;
   }
@@ -5630,10 +5632,12 @@ function update(dt) {
     });
   }
 
-  // Directed Pirate Naval Cannon Salvo (Fires directly at aim target)
+  // Directed Pirate Naval Cannon Salvo (Fires ONLY on click/tap, no holding)
   shootCool -= dt;
-  let wantShoot = mouse.down || keys['Space'] || (isTouch && touchOn);
+  let wantShoot = mouse.clicked || keys.spaceClicked;
   if (wantShoot && shootCool <= 0) {
+    mouse.clicked = false;
+    keys.spaceClicked = false;
     shootCool = hyperchargeActiveT > 0 ? baseCool * 0.35 : (rapidT > 0 ? baseCool * 0.45 : baseCool);
     ship.recoil = 1.0;
     muzzleFlash = 1.0;
