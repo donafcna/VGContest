@@ -2896,9 +2896,9 @@ function bankRun() {
 // ---------- LEADERBOARD (Reliable Persistent & Cloud Sync) ----------
 // Clean Leaderboard Reset
 try {
-  if (!localStorage.getItem('sp_lb_reset_v4')) {
+  if (localStorage.getItem('sp_lb_v7') !== '1') {
     localStorage.removeItem('sp_lb');
-    localStorage.setItem('sp_lb_reset_v4', '1');
+    localStorage.setItem('sp_lb_v7', '1');
   }
 } catch (e) {}
 
@@ -2920,6 +2920,9 @@ const LB = {
   async submit(entry) {
     entry.uid = entry.uid || SAVE.data.uid;
     entry.name = (entry.name || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || localStorage.getItem('sp_name') || 'Captain').slice(0, 14);
+    if ((entry.name || '').trim().toLowerCase() === 'louis the goat') {
+      entry.name = 'DodoDad';
+    }
     entry.ship = entry.ship || SAVE.data.sel;
     entry.skin = entry.skin || SAVE.data.skin;
     entry.ships = entry.ships || [...SAVE.data.ships];
@@ -2972,6 +2975,7 @@ const LB = {
     if (!newName) return;
     newName = newName.trim().slice(0, 14);
     if (!newName) return;
+    if (newName.toLowerCase() === 'louis the goat') newName = 'DodoDad';
     try {
       localStorage.setItem('sp_name', newName);
       playerName = newName;
@@ -3044,6 +3048,12 @@ const LB = {
       if (!rows || !Array.isArray(rows)) {
         rows = [];
       }
+      rows = rows.map(r => {
+        if ((r.name || '').trim().toLowerCase() === 'louis the goat') {
+          r.name = 'DodoDad';
+        }
+        return r;
+      });
     } catch (e) {
       rows = [];
     }
@@ -3066,12 +3076,17 @@ const LB = {
               const b = (typeof n.body === 'string') ? JSON.parse(n.body) : n.body;
               if (b && typeof b.score === 'number') {
                 b.name = (b.name || n.author || 'Captain').slice(0, 14);
+                if (b.name.trim().toLowerCase() === 'louis the goat') {
+                  b.name = 'DodoDad';
+                }
                 cloudScores.push(b);
               }
             } catch(err) {}
           }
           if (cloudScores.length > 0) {
-            const merged = this._dedupe([...local, ...cloudScores]);
+            const myUid = SAVE.data.uid;
+            const myLocal = local.filter(r => r.uid === myUid);
+            const merged = this._dedupe([...cloudScores, ...myLocal]);
             try { localStorage.setItem('sp_lb', JSON.stringify(merged)); } catch(e) {}
             return merged;
           }
@@ -3090,6 +3105,7 @@ const LB = {
     for (const r of rows) {
       if (!r || typeof r.score !== 'number') continue;
       r.name = (r.name || 'Captain').trim().slice(0, 14);
+      if (r.name.toLowerCase() === 'louis the goat') r.name = 'DodoDad';
       if (!r.name) continue;
       
       const uid = (r.uid || '').trim();
