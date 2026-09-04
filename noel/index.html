@@ -2354,7 +2354,7 @@ const SHIPS = [
     cost: 6,
     cols: ['#38bdf8', '#334155', '#0f172a'],
     hp: 9, cool: 0.28, spd: 0.95, gold: 1.15, magnet: 35, spread: [0],
-    power: '🛡️ Stealth Armor (+3 Hearts) & Quad Tachyon Concussion Blast',
+    power: '🛡️ Stealth Armor (+3 Max Hull HP) & Quad Tachyon Concussion Blast',
     gadgetName: 'Stealth Cloak & Decoys 👤',
     gadgetDesc: 'Tier 3 [Q]: 3.5s stealth + +50% spd, 2 decoy phantoms (7.0 EMP dmg + freeze)',
     superName: 'Tachyon Gravitational Singularity 🌀',
@@ -2387,7 +2387,7 @@ const SHIPS = [
 ];
 
 const UPG = {
-  hull:   { name: 'Reinforced Mahogany', icon: '🛡️', max: 10, cost: l => 40 + l * 50, desc: '+1 Max Hull Integrity Heart' },
+  hull:   { name: 'Reinforced Mahogany', icon: '🛡️', max: 10, cost: l => 40 + l * 50, desc: '+1 Max Hull Integrity HP' },
   cannon: { name: 'Heavy 32-Pounders',   icon: '💥', max: 10, cost: l => 50 + l * 60, desc: 'Faster reload & cannon cycling' },
   engine: { name: 'Solar Sails & Ether', icon: '⚙️', max: 10, cost: l => 40 + l * 45, desc: 'Enhanced cosmic wind maneuvering' },
   magnet: { name: 'Pirate Salvage Hook', icon: '🧲', max: 10, cost: l => 30 + l * 40, desc: 'Expanded gold attraction radius' },
@@ -4234,7 +4234,7 @@ function renderBossIntelModalUI() {
       <div class="boss-card-item" style="border-color:${b.col}44;box-shadow:0 4px 18px ${b.col}22">
         <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:6px">
           <span style="font-size:0.62rem;font-family:'Orbitron',sans-serif;font-weight:900;padding:3px 8px;border-radius:999px;background:${rankBg};color:${rankCol};border:1px solid ${b.col}66;white-space:nowrap">${rankLabel}</span>
-          <span style="font-size:0.75rem;color:#ffd23c;font-weight:bold;font-family:'Orbitron',sans-serif;white-space:nowrap">❤️ ${b.hp} HP</span>
+          <span style="font-size:0.75rem;color:#ffd23c;font-weight:bold;font-family:'Orbitron',sans-serif;white-space:nowrap">🛡️ ${b.hp} HP</span>
         </div>
         <div class="boss-img-wrap">${svg}</div>
         <div class="boss-name-tag" style="color:${b.col}">${b.name}</div>
@@ -4269,7 +4269,7 @@ function renderFleetIntelUI() {
       <div class="boss-card-item" style="border-color:${e.col}44;box-shadow:0 4px 18px ${e.col}22">
         <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:6px">
           <span style="font-size:0.62rem;font-family:'Orbitron',sans-serif;font-weight:900;padding:3px 8px;border-radius:999px;background:${rankBg};color:${rankCol};border:1px solid ${e.col}66;white-space:nowrap">${rankLabel}</span>
-          <span style="font-size:0.75rem;color:#38bdf8;font-weight:bold;font-family:'Orbitron',sans-serif;white-space:nowrap">❤️ ${e.hp}</span>
+          <span style="font-size:0.75rem;color:#38bdf8;font-weight:bold;font-family:'Orbitron',sans-serif;white-space:nowrap">🛡️ ${e.hp} HP</span>
         </div>
         <div class="boss-img-wrap">${svg}</div>
         <div class="boss-name-tag" style="color:${e.col}">${e.name}</div>
@@ -5501,7 +5501,7 @@ function buildShop() {
       `<div class="info"><div class="t">${s.name}</div><div class="d">${s.power}</div>` +
       `<div style="margin-top:4px;padding:4px 8px;background:rgba(16,185,129,0.12);border-radius:6px;border:1px solid rgba(16,185,129,0.3);font-size:0.72rem;color:#34d399"><b>🟢 Unique Gadget (Press Q):</b> ${s.gadgetName} — <i>${s.gadgetDesc}</i></div>` +
       `<div style="margin-top:3px;padding:4px 8px;background:rgba(234,179,8,0.12);border-radius:6px;border:1px solid rgba(234,179,8,0.3);font-size:0.72rem;color:#fde047"><b>🌟 Unique Super (Press E):</b> ${s.superName} — <i>${s.superDesc}</i></div>` +
-      `<div class="lv" style="margin-top:4px">❤️ ${s.hp} HP · ⚡ ${(1 / s.cool).toFixed(1)} rps · 🚀 ${s.spd.toFixed(2)}x Speed${s.gold > 1 ? ' · 🪙 x' + s.gold : ''}${s.magnet ? ' · 🧲' : ''}</div></div>` +
+      `<div class="lv" style="margin-top:4px">🛡️ ${s.hp} Base HP · ⚡ ${(1 / s.cool).toFixed(1)} rps · 🚀 ${s.spd.toFixed(2)}x Speed${s.gold > 1 ? ' · 🪙 x' + s.gold : ''}${s.magnet ? ' · 🧲' : ''}</div></div>` +
       btn + `</div>`;
   }
   
@@ -8453,7 +8453,7 @@ function update(dt) {
     if (dist < 52) {
       sfx('map');
       addSuperCharge(6);
-      if (p.type === 'heart') { ship.hp = Math.min(maxHp, ship.hp + 1); popup(ship.x, ship.y - 45, '+1 ❤️ HULL REPAIR', '#ff6b6b'); }
+      if (p.type === 'heart') { ship.hp = Math.min(maxHp, ship.hp + 1); popup(ship.x, ship.y - 45, '+1 🛡️ HULL REPAIRED (+1 HP)', '#00ffaa'); }
       else if (p.type === 'rapid') { rapidT = 7; popup(ship.x, ship.y - 45, 'RAPID CANNONS! ⚡', '#3fd5ff'); }
       else if (p.type === 'shield') { shieldT = 6; ship.inv = Math.max(ship.inv, 6); popup(ship.x, ship.y - 45, 'ENERGY DEFLECTOR SHIELD! 🛡️', '#00dfa2'); }
       else if (p.type === 'triple') { tripleT = 8; popup(ship.x, ship.y - 45, 'TRIPLE BROADSIDE! 🔱', '#ffd23c'); }
@@ -8694,8 +8694,8 @@ function draw() {
 
   // 3. Render Sci-Fi Pirate Powerup Supply Cargo Pods
   for (const pu of powerups) {
-    const col = pu.type === 'heart' ? '#ff3366' : pu.type === 'rapid' ? '#00e5ff' : pu.type === 'shield' ? '#00dfa2' : pu.type === 'triple' ? '#ffd23c' : '#ff0055';
-    const ic  = pu.type === 'heart' ? '❤️' : pu.type === 'rapid' ? '⚡' : pu.type === 'shield' ? '🛡️' : pu.type === 'triple' ? '🔱' : '💣';
+    const col = pu.type === 'heart' ? '#00ffaa' : pu.type === 'rapid' ? '#00e5ff' : pu.type === 'shield' ? '#00dfa2' : pu.type === 'triple' ? '#ffd23c' : '#ff0055';
+    const ic  = pu.type === 'heart' ? '🛡️' : pu.type === 'rapid' ? '⚡' : pu.type === 'shield' ? '🛡️' : pu.type === 'triple' ? '🔱' : '💣';
     
     cx.save(); cx.translate(pu.x, pu.y);
 
@@ -13085,6 +13085,26 @@ function draw() {
       cx.restore();
     }
 
+    // Overhead Ship Micro-Health Gauge
+    if (state === 'play' || state === 'pause') {
+      const pBarW = 54, pBarH = 5, pBarY = -58;
+      const pHpRatio = Math.max(0, Math.min(1, ship.hp / maxHp));
+      const pCol = pHpRatio > 0.5 ? '#00ffaa' : pHpRatio > 0.25 ? '#ffd23c' : '#ff2255';
+      cx.fillStyle = 'rgba(2, 6, 23, 0.85)';
+      cx.beginPath(); cx.roundRect(-pBarW * 0.5 - 1, pBarY - 1, pBarW + 2, pBarH + 2, 2); cx.fill();
+      cx.strokeStyle = 'rgba(255, 255, 255, 0.3)'; cx.lineWidth = 1; cx.stroke();
+      if (pHpRatio > 0) {
+        cx.fillStyle = pCol;
+        cx.shadowColor = pCol; cx.shadowBlur = pHpRatio <= 0.25 ? 8 : 4;
+        cx.beginPath(); cx.roundRect(-pBarW * 0.5, pBarY, pBarW * pHpRatio, pBarH, 1.5); cx.fill();
+        cx.shadowBlur = 0;
+      }
+      cx.font = 'bold 8px "Orbitron", sans-serif';
+      cx.fillStyle = '#ffffff';
+      cx.textAlign = 'center';
+      cx.fillText(`${Math.max(0, ship.hp)} / ${maxHp} HP`, 0, pBarY - 4);
+    }
+
     cx.restore();
   }
 
@@ -13117,26 +13137,76 @@ function draw() {
   if (state === 'play' || state === 'pause') {
     // Holographic Top Left Status Panel
     cx.save();
-    cx.fillStyle = 'rgba(6, 14, 30, 0.65)';
-    cx.strokeStyle = 'rgba(255, 210, 60, 0.35)';
+    cx.fillStyle = 'rgba(6, 14, 30, 0.75)';
+    cx.strokeStyle = 'rgba(255, 210, 60, 0.45)';
     cx.lineWidth = 1.5;
     cx.beginPath();
-    cx.roundRect(14, 14, 280, 140, 10);
+    cx.roundRect(14, 14, 290, 145, 10);
     cx.fill(); cx.stroke();
 
-    // Hull Health Hearts
-    cx.font = '24px sans-serif';
-    for (let i = 0; i < maxHp; i++) {
-      cx.fillText(i < ship.hp ? '❤️' : '🖤', 26 + (i % 6) * 30, 44 + Math.floor(i / 6) * 26);
+    // Holographic Hull Health Bar & HP Metric (Health, Not Hearts)
+    const hpRatio = Math.max(0, Math.min(1, ship.hp / maxHp));
+    const hpPct = Math.round(hpRatio * 100);
+    const hpColor = hpRatio > 0.5 ? '#00ffaa' : hpRatio > 0.25 ? '#ffd23c' : '#ff2255';
+    const hpGlow = hpRatio > 0.5 ? 'rgba(0, 255, 170, 0.6)' : hpRatio > 0.25 ? 'rgba(255, 210, 60, 0.6)' : 'rgba(255, 34, 85, 0.85)';
+
+    // Label & HP Numbers
+    cx.fillStyle = '#ffffff'; cx.font = 'bold 11px "Orbitron", sans-serif'; cx.textAlign = 'left';
+    cx.fillText('🛡️ HULL INTEGRITY', 26, 35);
+    cx.fillStyle = hpColor; cx.font = 'bold 12px "Orbitron", sans-serif'; cx.textAlign = 'right';
+    cx.fillText(`${Math.max(0, ship.hp)} / ${maxHp} HP (${hpPct}%)`, 290, 35);
+
+    // Glowing Health Bar Background & Fill
+    const barX = 26, barY = 42, barW = 264, barH = 15;
+    cx.fillStyle = 'rgba(2, 6, 23, 0.95)';
+    cx.beginPath(); cx.roundRect(barX, barY, barW, barH, 4); cx.fill();
+    cx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; cx.lineWidth = 1; cx.stroke();
+
+    // Health Fill Bar with Dynamic Hologram Gradient
+    if (hpRatio > 0) {
+      const grad = cx.createLinearGradient(barX, barY, barX + barW * hpRatio, barY);
+      if (hpRatio > 0.5) {
+        grad.addColorStop(0, '#00e5ff');
+        grad.addColorStop(1, '#00ffaa');
+      } else if (hpRatio > 0.25) {
+        grad.addColorStop(0, '#ff9d42');
+        grad.addColorStop(1, '#ffd23c');
+      } else {
+        grad.addColorStop(0, '#990022');
+        grad.addColorStop(1, '#ff2255');
+      }
+      cx.save();
+      cx.fillStyle = grad;
+      cx.shadowColor = hpGlow;
+      cx.shadowBlur = hpRatio <= 0.25 ? 12 : 6;
+      cx.beginPath();
+      cx.roundRect(barX + 1, barY + 1, (barW - 2) * hpRatio, barH - 2, 3);
+      cx.fill();
+      cx.restore();
+
+      // Segment Notches for Hull Armor Platings
+      if (maxHp <= 20) {
+        cx.strokeStyle = 'rgba(0, 0, 0, 0.45)';
+        cx.lineWidth = 1;
+        for (let i = 1; i < maxHp; i++) {
+          const notchX = barX + (barW / maxHp) * i;
+          if (notchX < barX + barW * hpRatio) {
+            cx.beginPath();
+            cx.moveTo(notchX, barY + 1);
+            cx.lineTo(notchX, barY + barH - 1);
+            cx.stroke();
+          }
+        }
+      }
     }
     
-    cx.fillStyle = '#ffd23c'; cx.font = 'bold 17px "Orbitron", sans-serif'; cx.textAlign = 'left';
-    cx.fillText(`🪙 GOLD: ${score}`, 26, 96);
+    cx.fillStyle = '#ffd23c'; cx.font = 'bold 16px "Orbitron", sans-serif'; cx.textAlign = 'left';
+    cx.fillText(`🪙 GOLD: ${score}`, 26, 82);
     cx.fillStyle = '#3fd5ff';
-    cx.fillText(`🌌 SECTOR: ${level}`, 26, 122);
+    cx.fillText(`🌌 SECTOR: ${level}`, 26, 108);
     cx.fillStyle = '#8fa6cb'; cx.font = '12px "Orbitron", sans-serif';
     const speedKnots = Math.round(Math.hypot(ship.vx, ship.vy) * 0.4);
-    cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, 26, 144);
+    cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, 26, 134);
     cx.restore();
     
     if (combo >= 2 && comboT > 0) {
