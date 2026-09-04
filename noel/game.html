@@ -925,7 +925,7 @@
   <h1>🏴‍☠️ SPACE PIRATES</h1>
   <div style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(0,229,255,0.2),rgba(126,34,206,0.3));border:1.5px solid #00e5ff;color:#00ffee;padding:5px 16px;border-radius:20px;font-size:0.82rem;font-weight:900;letter-spacing:1.5px;margin-bottom:10px;font-family:'Orbitron',sans-serif;box-shadow:0 0 16px rgba(0,229,255,0.4)">🚀 STAR WARS FLEET EDITION • ONLINE LIVE</div>
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
-  Sail through deep cosmic space and blast <b>Star Wars starfighter squadrons &amp; 8 Flagship Bosses</b> with heavy naval broadsides!</p>
+  Sail through deep cosmic space and blast <b>Star Wars starfighter squadrons &amp; 9 Flagship Bosses</b> with heavy naval broadsides!</p>
   <div class="keys">
     🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM</b> • <b>CLICK</b> to Shoot Broadside 💥<br>
     🎮 <b>PC Abilities</b>: <b>[Q]</b> = 🟢 <b>Gadget</b> (3 Charges) • <b>[E]</b> = 🌟 <b>Super &amp; Hypercharge</b> (100% Charge)<br>
@@ -1077,7 +1077,7 @@
 
     <!-- Interactive Tabs: Flagship Bosses vs Enemy Fleet -->
     <div style="display:flex;gap:10px;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.12);padding-bottom:10px">
-      <button id="tabBossIntel" onclick="switchIntelTab('bosses')" style="flex:1;background:linear-gradient(135deg,#00ffaa,#0284c7);color:#020617;font-weight:900;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem;box-shadow:0 0 14px rgba(0,255,170,0.4)">🛸 SECTOR FLAGSHIP BOSSES (8)</button>
+      <button id="tabBossIntel" onclick="switchIntelTab('bosses')" style="flex:1;background:linear-gradient(135deg,#00ffaa,#0284c7);color:#020617;font-weight:900;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem;box-shadow:0 0 14px rgba(0,255,170,0.4)">🛸 SECTOR FLAGSHIP BOSSES (9)</button>
       <button id="tabFleetIntel" onclick="switchIntelTab('fleet')" style="flex:1;background:rgba(255,255,255,0.08);color:#94a3b8;font-weight:700;border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem">🚀 ENEMY FLEET (10)</button>
     </div>
     
@@ -2030,7 +2030,7 @@ function killBoss() {
   spinsRun += 1;
   popup(W / 2, H * 0.35, `${boss.name.toUpperCase()} DESTROYED! +${bTokens} 🎟️ +1 🎡`, '#ffd23c');
   
-  const coinCount = (boss.type === 'titan' || boss.type === 'ataraxia') ? 36 : 18;
+  const coinCount = (boss.type === 'titan' || boss.type === 'ataraxia' || boss.type === 'pathogen') ? 36 : 18;
   for (let k = 0; k < coinCount; k++) {
     coins.push({
       x: boss.x + (Math.random() - 0.5) * 140,
@@ -2038,6 +2038,17 @@ function killBoss() {
       vx: -130 + (Math.random() - 0.5) * 80,
       vy: (Math.random() - 0.5) * 80
     });
+  }
+
+  // If Pathogen Prime dies, destroy all bio-clones in massive chain explosion!
+  if (boss.clones && boss.clones.length > 0) {
+    for (const c of boss.clones) {
+      explode(c.x, c.y, '#10b981', 26);
+      for (let k = 0; k < 4; k++) {
+        coins.push({ x: c.x, y: c.y, vx: -120 + (Math.random() - 0.5) * 60, vy: (Math.random() - 0.5) * 60 });
+      }
+    }
+    boss.clones.length = 0;
   }
   if (Math.random() < 0.85) powerups.push({ x: boss.x, y: boss.y, type: 'heart', vx: -85, vy: 0 });
   boss = null;
@@ -3438,6 +3449,73 @@ function getBossSvg(id) {
       <line x1="16" y1="17.5" x2="2" y2="17.5" stroke="#00ffee" stroke-width="2" filter="url(#glow_ata_${uid})"/>
       <line x1="16" y1="66.5" x2="2" y2="66.5" stroke="#00ffee" stroke-width="2" filter="url(#glow_ata_${uid})"/>
     </svg>`;
+  } else if (id === 'pathogen') {
+    // 9. OVERLORD PATHOGEN: THE IMPERIAL BIO-SPORE CARRIER (Replicating Bioweapon Frigate)
+    return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow_path_${uid}" x="-25%" y="-25%" width="150%" height="150%">
+          <feGaussianBlur stdDeviation="2.2" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+        <linearGradient id="path_hull_${uid}" x1="0" y1="0" x2="160" y2="84" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#34d399"/>
+          <stop offset="35%" stop-color="#059669"/>
+          <stop offset="70%" stop-color="#064e3b"/>
+          <stop offset="100%" stop-color="#022c22"/>
+        </linearGradient>
+        <linearGradient id="path_eng_${uid}" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#10b981"/>
+          <stop offset="50%" stop-color="#064e3b"/>
+          <stop offset="100%" stop-color="#021f18"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Rear Swept Outrigger Wing Sponsons -->
+      <polygon points="85,18 144,4 148,16 112,30" fill="url(#path_hull_${uid})" stroke="#10b981" stroke-width="1.4"/>
+      <polygon points="85,66 144,80 148,68 112,54" fill="url(#path_hull_${uid})" stroke="#10b981" stroke-width="1.4"/>
+
+      <!-- 4 Heavy Bio-Turbine Engine Nacelles with Green Exhaust Glow -->
+      <!-- Top Wing Engine -->
+      <rect x="110" y="8" width="34" height="13" rx="4" fill="url(#path_eng_${uid})" stroke="#34d399" stroke-width="1.2"/>
+      <ellipse cx="144" cy="14.5" rx="3.5" ry="6" fill="#00ffaa" filter="url(#glow_path_${uid})"/>
+      <!-- Mid-Port Flank Turbine -->
+      <rect x="58" y="10" width="38" height="15" rx="4" fill="url(#path_eng_${uid})" stroke="#34d399" stroke-width="1.4"/>
+      <ellipse cx="96" cy="17.5" rx="3.5" ry="7" fill="#84cc16" filter="url(#glow_path_${uid})"/>
+      <!-- Mid-Starboard Flank Turbine -->
+      <rect x="58" y="59" width="38" height="15" rx="4" fill="url(#path_eng_${uid})" stroke="#34d399" stroke-width="1.4"/>
+      <ellipse cx="96" cy="66.5" rx="3.5" ry="7" fill="#84cc16" filter="url(#glow_path_${uid})"/>
+      <!-- Bottom Wing Engine -->
+      <rect x="110" y="63" width="34" height="13" rx="4" fill="url(#path_eng_${uid})" stroke="#34d399" stroke-width="1.2"/>
+      <ellipse cx="144" cy="69.5" rx="3.5" ry="6" fill="#00ffaa" filter="url(#glow_path_${uid})"/>
+
+      <!-- Main Rugged Armored Bio-Gunship Fuselage -->
+      <polygon points="10,42 36,20 126,20 138,42 126,64 36,64" fill="url(#path_hull_${uid})" stroke="#34d399" stroke-width="2"/>
+
+      <!-- Forward Bevelled Nose & Chin Blaster Turrets -->
+      <polygon points="12,42 28,30 28,54" fill="#022c22" stroke="#10b981" stroke-width="1.2"/>
+      <line x1="2" y1="36" x2="16" y2="36" stroke="#00ffaa" stroke-width="2" filter="url(#glow_path_${uid})"/>
+      <line x1="2" y1="48" x2="16" y2="48" stroke="#00ffaa" stroke-width="2" filter="url(#glow_path_${uid})"/>
+
+      <!-- Bio-Hazard Slime Conduits & Cellular Greeble Trench -->
+      <rect x="42" y="32" width="62" height="20" rx="3" fill="#021f18" stroke="#059669" stroke-width="1.2"/>
+      <line x1="46" y1="38" x2="100" y2="38" stroke="#84cc16" stroke-width="1.8" filter="url(#glow_path_${uid})"/>
+      <line x1="46" y1="46" x2="100" y2="46" stroke="#84cc16" stroke-width="1.8" filter="url(#glow_path_${uid})"/>
+
+      <!-- Pulsating Spore Pod Emitter Nodes -->
+      <circle cx="58" cy="42" r="4.5" fill="#84cc16" filter="url(#glow_path_${uid})"/>
+      <circle cx="74" cy="42" r="5" fill="#00ffaa" filter="url(#glow_path_${uid})"/>
+      <circle cx="90" cy="42" r="4.5" fill="#84cc16" filter="url(#glow_path_${uid})"/>
+
+      <!-- Orbiting Mini-Bacteria Spores (Clones) -->
+      <g transform="translate(18, 6) scale(0.65)">
+        <circle cx="6" cy="6" r="6" fill="#10b981" stroke="#00ffaa" stroke-width="1.2" filter="url(#glow_path_${uid})"/>
+        <circle cx="6" cy="6" r="2.5" fill="#ffffff"/>
+      </g>
+      <g transform="translate(18, 66) scale(0.65)">
+        <circle cx="6" cy="6" r="6" fill="#10b981" stroke="#00ffaa" stroke-width="1.2" filter="url(#glow_path_${uid})"/>
+        <circle cx="6" cy="6" r="2.5" fill="#ffffff"/>
+      </g>
+    </svg>`;
   }
 }
 
@@ -3553,6 +3631,20 @@ const BOSS_INTEL = [
     ],
     loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +220 🪙 + 25 Gold Coins Cascade',
     tactic: 'Dodge the converging twin Kyber laser lances emitted from the forward longbeam cannons, and destroy the escorting Jedi Vectors!'
+  },
+  {
+    id: 'pathogen',
+    name: 'Overlord Pathogen: The Imperial Bio-Spore Carrier',
+    sector: 'Sector 9 Bioweapon Flagship · Replicating Imperial Spore Frigate',
+    col: '#10b981',
+    hp: 90,
+    powers: [
+      '🧬 Bacterial Mitosis & Hyper-Mutation (Spawns 5 sub-clones; killing clones makes survivors grow bigger & stronger!)',
+      '🦠 Micro & Macro Bacteria Bits (Variable-sized pulsating bacteria spores & massive splitting bio-blobs)',
+      '☣️ Corrosive Toxic Acid Mortars (Deploys radiating bio-chemical spore zones)'
+    ],
+    loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +240 🪙 + 36 Gold Coins Cascade',
+    tactic: 'Focus fire directly on the Original Alpha Prime Carrier! Destroying clones makes the survivors mutate and grow larger!'
   }
 ];
 
@@ -4035,7 +4127,7 @@ function switchIntelTab(tab) {
       tabBoss.style.boxShadow = '0 0 14px rgba(0,255,170,0.4)';
       tabBoss.style.border = 'none';
     }
-    if (title) title.textContent = 'SECTOR FLAGSHIP BOSSES (8)';
+    if (title) title.textContent = 'SECTOR FLAGSHIP BOSSES (9)';
     if (tip) tip.innerHTML = '💡 <b>Captain Noel\'s Tactical Pro-Tip:</b> Target boss cores with heavy 32-pounder broadsides while dodging their ultimate attack trajectories!';
     renderBossIntelModalUI();
   }
@@ -4369,6 +4461,7 @@ const BTYPES = [
   { id: 'cryo',  name: 'Admiral Sloane: Imperial Cantwell Battlecruiser', col: '#00ffaa', w: 305, h: 175, hp: 80, spd: 44, atk: 'outrigger_turbolasers' },
   { id: 'fondor', name: "Luthen Rael: Fondor Haulcraft (Armed Custom Cruiser)", col: '#38bdf8', w: 320, h: 175, hp: 88, spd: 50, atk: 'fondor_scythes' },
   { id: 'ataraxia', name: 'Master Avar Kriss: Jedi Starcruiser Ataraxia', col: '#e0e7ff', w: 330, h: 165, hp: 92, spd: 48, atk: 'ataraxia_kyber' },
+  { id: 'pathogen', name: 'Overlord Pathogen: The Imperial Bio-Spore Carrier', col: '#10b981', w: 325, h: 165, hp: 90, spd: 46, atk: 'pathogen_mitosis' },
   { id: 'titan', name: 'General Veers: Imperial AT-AT Siege Colossus', col: '#ef4444', w: 310, h: 180, hp: 95, spd: 48, atk: 'heavy_chin_blasters' },
 ];
 
@@ -4380,6 +4473,27 @@ function spawnBoss() {
   // Dynamic Boss Scaling: The further you venture, the stronger they become!
   const hp = b.hp + (level - 1) * 26;
   const bossSpd = b.spd + level * 6;
+
+  const isPathogen = b.id === 'pathogen';
+  const initialClones = [];
+  if (isPathogen) {
+    for (let i = 0; i < 5; i++) {
+      const ang = (i / 5) * Math.PI * 2;
+      initialClones.push({
+        id: i,
+        x: W + 180 + Math.cos(ang) * 140,
+        y: H * 0.5 + Math.sin(ang) * 90,
+        ang: ang,
+        rad: 130,
+        scale: 0.55,
+        hp: 12 + level * 2,
+        maxHp: 12 + level * 2,
+        shootT: 1.0 + Math.random() * 1.5,
+        col: '#10b981',
+        isClone: true
+      });
+    }
+  }
 
   boss = {
     type: b.id, name: b.name, col: b.col, w: b.w, h: b.h,
@@ -4401,7 +4515,10 @@ function spawnBoss() {
     scytheActive: 0,
     lanceActive: 0,
     forcePulseT: 0,
-    forcePulseRadius: 0
+    forcePulseRadius: 0,
+    clones: initialClones,
+    cloneSpawnT: 5.5,
+    mutationLevel: 0
   };
 
   // VAPORIZE ALL ENEMY MINIONS & CLEAR BATTLEFIELD FOR 1v1 DUEL!
@@ -5169,8 +5286,8 @@ function buildShop() {
   h += `<div class="shopitem" style="border: 1.5px solid #00e5ff; background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(168, 85, 247, 0.1));">` +
     `<div class="ic" style="font-size:2rem;display:flex;align-items:center;justify-content:center">🔬</div>` +
     `<div class="info"><div class="t" style="color:#00ffee">Tactical Flagship Boss Database</div>` +
-    `<div class="d">Inspect all 8 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Admiral Raddus, Captain Solo, Admiral Sloane, General Veers AT-AT, Luthen Rael Fondor &amp; Jedi Starcruiser Ataraxia!</div>` +
-    `<div class="lv" style="color:#c084fc">8 Sector Flagships Documented 👾</div></div>` +
+    `<div class="d">Inspect all 9 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Admiral Raddus, Captain Solo, Admiral Sloane, General Veers AT-AT, Luthen Rael Fondor, Jedi Ataraxia &amp; Overlord Pathogen!</div>` +
+    `<div class="lv" style="color:#c084fc">9 Sector Flagships Documented 👾</div></div>` +
     `<button style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;box-shadow:0 0 15px rgba(0,229,255,0.5)" onclick="openBossIntelModal(event)">🔬 INSPECT</button></div>`;
 
   // 1. COIN UPGRADES AT THE TOP
@@ -6687,6 +6804,72 @@ function update(dt) {
       if (boss.haloT <= 0) boss.haloActive = false;
     }
 
+    // Pathogen Bioweapon: Swarm Clones & Mitosis Replication
+    if (boss.type === 'pathogen' && boss.clones) {
+      // Replicate new clones if fewer than 5
+      if (boss.clones.length < 5) {
+        boss.cloneSpawnT -= dt;
+        if (boss.cloneSpawnT <= 0) {
+          boss.cloneSpawnT = Math.max(3.5, 6.5 - level * 0.35);
+          const cAng = Math.random() * Math.PI * 2;
+          boss.clones.push({
+            id: Date.now() + Math.random(),
+            x: boss.x + Math.cos(cAng) * 130,
+            y: boss.y + Math.sin(cAng) * 80,
+            ang: cAng,
+            rad: 130,
+            scale: 0.55,
+            hp: 12 + level * 2,
+            maxHp: 12 + level * 2,
+            shootT: 1.0 + Math.random() * 1.5,
+            col: '#10b981',
+            isClone: true
+          });
+          popup(boss.x, boss.y - 45, '🧬 BACTERIAL MITOSIS: CELL REPLICATED!', '#10b981');
+          sfx('incoming');
+        }
+      }
+
+      // Update active clones
+      for (let cIdx = boss.clones.length - 1; cIdx >= 0; cIdx--) {
+        const c = boss.clones[cIdx];
+        c.ang += dt * (1.1 + cIdx * 0.12);
+        const targetCX = boss.x + Math.cos(c.ang) * (c.rad * (0.8 + c.scale * 0.4));
+        const targetCY = boss.y + Math.sin(c.ang) * (c.rad * 0.65 * (0.8 + c.scale * 0.4));
+        c.x += (targetCX - c.x) * Math.min(1, dt * 5.0);
+        c.y += (targetCY - c.y) * Math.min(1, dt * 5.0);
+
+        // Clones periodically fire micro-bacteria bits
+        c.shootT -= dt;
+        if (c.shootT <= 0 && c.x < W + 20 && c.x > 50) {
+          c.shootT = Math.max(0.65, 1.8 - (c.scale - 0.55) * 1.2);
+          const cDx = ship.x - c.x, cDy = ship.y - c.y;
+          const cDist = Math.hypot(cDx, cDy) || 1;
+          eballs.push({
+            type: 'bacteria_micro',
+            col: '#00ffaa',
+            x: c.x - 22 * c.scale,
+            y: c.y,
+            vx: (cDx / cDist) * (520 + c.scale * 120) * spdBonus,
+            vy: (cDy / cDist) * (520 + c.scale * 120) * spdBonus,
+            r: 8 * c.scale
+          });
+          if (c.scale >= 1.0) {
+            // Super-mutant clone fires dual spores
+            eballs.push({
+              type: 'bacteria_micro',
+              col: '#84cc16',
+              x: c.x - 22 * c.scale,
+              y: c.y + 12 * c.scale,
+              vx: -560 * spdBonus,
+              vy: 0,
+              r: 9 * c.scale
+            });
+          }
+        }
+      }
+    }
+
     // Enrage phase transition when boss HP drops below 50%
     if (boss.hp <= boss.maxhp * 0.5 && !boss.enraged) {
       boss.enraged = true;
@@ -6919,6 +7102,61 @@ function update(dt) {
           popup(boss.x - 40, boss.y - 45, '⚡ KYBER TURBOLASERS!', '#ffd23c');
         }
 
+      } else if (boss.type === 'pathogen') {
+        // Boss 9: OVERLORD PATHOGEN: THE IMPERIAL BIO-SPORE CARRIER (REPLICATING BIOWEAPON FRIGATE)
+        if (boss.atkCycle === 2) {
+          // ULTIMATE: Colossal Macro-Amoeba Bio-Blob Eruption!
+          for (const cy of [-36, 36]) {
+            eballs.push({
+              type: 'bacteria_macro',
+              col: '#10b981',
+              x: boss.x - boss.w * 0.45,
+              y: boss.y + cy,
+              vx: -460 * spdBonus,
+              vy: (cy < 0 ? -40 : 40),
+              r: 42,
+              wobble: 0
+            });
+          }
+          addShake(28);
+          popup(boss.x - 40, boss.y - 45, '🦠 ULTIMATE: MACRO-BACTERIA SPORE ERUPTION!', '#00ffaa');
+          sfx('boom');
+        } else if (boss.atkCycle === 1) {
+          // Toxic Corrosive Bio-Acid Mortars (8 radiating spore shells)
+          for (let k = 0; k < 8; k++) {
+            const ang = (k / 8) * Math.PI * 2;
+            eballs.push({
+              type: 'spore',
+              col: '#84cc16',
+              x: boss.x - boss.w * 0.35,
+              y: boss.y,
+              vx: Math.cos(ang) * 440 * spdBonus,
+              vy: Math.sin(ang) * 440 * spdBonus,
+              r: 22,
+              spin: 0
+            });
+          }
+          popup(boss.x - 40, boss.y - 45, '☣️ TOXIC BIO-ACID MORTARS!', '#84cc16');
+          sfx('incoming');
+        } else {
+          // Micro-Bacteria Spore Stream & Twin Chin Blasters
+          for (let k = 0; k < 6; k++) {
+            const spr = ((k - 2.5) / 5) * 0.38;
+            const shootAng = Math.PI + spr;
+            eballs.push({
+              type: 'bacteria_micro',
+              col: '#00ffaa',
+              x: boss.x - boss.w * 0.48,
+              y: boss.y + (k % 2 === 0 ? -16 : 16),
+              vx: Math.cos(shootAng) * 700 * spdBonus,
+              vy: Math.sin(shootAng) * 700 * spdBonus,
+              r: 10
+            });
+          }
+          sfx('laser');
+          popup(boss.x - 40, boss.y - 45, '🧫 MICRO-BACTERIA SPORE STREAM!', '#00ffaa');
+        }
+
       } else {
         // Boss 7: GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
         if (boss.atkCycle === 2) {
@@ -6974,6 +7212,42 @@ function update(dt) {
     
     const dmg = b.dmg || (b.isHypercharge ? 8 : 1);
     let hit = false;
+
+    // 0. Pathogen Clones Collision
+    if (!hit && boss && boss.type === 'pathogen' && boss.clones && boss.clones.length > 0) {
+      for (let cIdx = boss.clones.length - 1; cIdx >= 0; cIdx--) {
+        const c = boss.clones[cIdx];
+        const hitR = 32 * c.scale;
+        if (Math.hypot(b.x - c.x, b.y - c.y) < hitR) {
+          hit = true;
+          c.hp -= dmg;
+          explode(b.x, b.y, '#10b981', 12);
+          addSuperCharge(3);
+          sfx('boom');
+          if (c.hp <= 0) {
+            // Clone killed! Trigger Bacterial Mitosis / Hyper-Mutation for all surviving clones!
+            boss.clones.splice(cIdx, 1);
+            explode(c.x, c.y, '#10b981', 28);
+            addScore(25 * level, c.x, c.y);
+            coins.push({ x: c.x, y: c.y, vx: -100 + (Math.random() - 0.5) * 60, vy: (Math.random() - 0.5) * 60 });
+            coins.push({ x: c.x, y: c.y, vx: -100 + (Math.random() - 0.5) * 60, vy: (Math.random() - 0.5) * 60 });
+            
+            // All remaining clones absorb biomass and mutate/grow!
+            if (boss.clones.length > 0) {
+              boss.clones.forEach(other => {
+                other.scale = Math.min(1.45, other.scale + 0.18);
+                other.hp = Math.min(60, other.hp + 12);
+                other.maxHp = Math.max(other.maxHp, other.hp);
+              });
+              popup(boss.x, boss.y - 45, '🧬 BACTERIAL MUTATION: CELLS GROWING LARGER & STRONGER!', '#10b981');
+              sfx('incoming');
+              addShake(16);
+            }
+          }
+          break;
+        }
+      }
+    }
     
     // 1. Boss Collision
     if (boss && Math.abs(b.x - boss.x) < boss.w * 0.5 && Math.abs(b.y - boss.y) < boss.h * 0.5) {
@@ -7421,6 +7695,25 @@ function update(dt) {
         addShake(16);
       } else if (b.type === 'spore') {
         popup(ship.x, ship.y - 30, '☣ ACID SPORE HIT!', '#d946ef');
+      } else if (b.type === 'bacteria_macro') {
+        popup(ship.x, ship.y - 30, '🦠 MACRO-BACTERIA BIO-EXPLOSION!', '#10b981');
+        explode(b.x, b.y, '#10b981', 35);
+        addShake(18);
+        for (let sb = 0; sb < 4; sb++) {
+          const sAng = (sb / 4) * Math.PI * 2;
+          eballs.push({
+            type: 'bacteria_micro',
+            col: '#00ffaa',
+            x: b.x,
+            y: b.y,
+            vx: Math.cos(sAng) * 360,
+            vy: Math.sin(sAng) * 360,
+            r: 9
+          });
+        }
+      } else if (b.type === 'bacteria_micro') {
+        popup(ship.x, ship.y - 30, '🧫 BACTERIA BIT INFESTATION!', '#00ffaa');
+        explode(b.x, b.y, '#00ffaa', 14);
       } else if (b.type === 'vortex') {
         popup(ship.x, ship.y - 30, '🌀 VOID SINGULARITY CRUSH!', '#00ffaa');
         explode(b.x, b.y, '#00ffaa', 30);
@@ -9689,6 +9982,336 @@ function draw() {
       cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.0;
       cx.strokeRect(-boss.w * 0.04, -4, 20, 8);
 
+    } else if (boss.type === 'pathogen') {
+      // BOSS 9: OVERLORD PATHOGEN: THE IMPERIAL BIO-SPORE CARRIER (REPLICATING BIOWEAPON FRIGATE)
+      
+      // 0. Toxic Mutagenic Spore Aura & Bio-Shield Wave
+      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.65);
+      bg.addColorStop(0, 'rgba(16, 185, 129, 0.45)');
+      bg.addColorStop(0.5, 'rgba(5, 150, 105, 0.20)');
+      bg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.62, boss.h * 0.58, 0, 0, Math.PI * 2); cx.fill();
+
+      // Pulsating Bio-Membrane Ring
+      cx.save();
+      cx.strokeStyle = 'rgba(52, 211, 153, 0.6)';
+      cx.lineWidth = 3;
+      cx.setLineDash([12, 8]);
+      cx.lineDashOffset = -t * 20;
+      cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.56 + Math.sin(t * 8) * 6, boss.h * 0.52 + Math.cos(t * 8) * 6, 0, 0, Math.PI * 2); cx.stroke();
+      cx.restore();
+
+      // Active Spore Shockwave Ripple
+      if (boss.sporePulseT && boss.sporePulseT > 0) {
+        const pulseR = boss.sporePulseRadius || 30;
+        cx.save();
+        cx.strokeStyle = 'rgba(132, 204, 22, 0.85)';
+        cx.lineWidth = 10;
+        cx.beginPath(); cx.arc(0, 0, pulseR, 0, Math.PI * 2); cx.stroke();
+        cx.strokeStyle = '#00ffaa';
+        cx.lineWidth = 4;
+        cx.beginPath(); cx.arc(0, 0, pulseR, 0, Math.PI * 2); cx.stroke();
+        cx.restore();
+      }
+
+      // Draw Orbiting Sub-Clones (Mitosis Replicas)
+      if (boss.clones && boss.clones.length > 0) {
+        for (const c of boss.clones) {
+          const relX = c.x - boss.x;
+          const relY = c.y - boss.y;
+          const cScale = c.scale || 0.7;
+
+          cx.save();
+          cx.translate(relX, relY);
+          cx.scale(cScale, cScale);
+
+          // Clone Bio-Membrane Glow
+          const cGrad = cx.createRadialGradient(0, 0, 10, 0, 0, 48);
+          cGrad.addColorStop(0, 'rgba(52, 211, 153, 0.5)');
+          cGrad.addColorStop(1, 'rgba(0,0,0,0)');
+          cx.fillStyle = cGrad;
+          cx.beginPath(); cx.arc(0, 0, 48, 0, Math.PI * 2); cx.fill();
+
+          // Clone Mini Engine Plumes (4 nacelles)
+          const miniNacelles = [
+            { x: 18, y: -20, w: 28, h: 10 },
+            { x: 18, y: 20, w: 28, h: 10 },
+            { x: 26, y: -9, w: 32, h: 12 },
+            { x: 26, y: 9, w: 32, h: 12 }
+          ];
+
+          for (const mn of miniNacelles) {
+            const mPlume = 22 + Math.sin(t * 30 + mn.y) * 8;
+            const mfGrad = cx.createLinearGradient(mn.x + mn.w * 0.5, mn.y, mn.x + mn.w * 0.5 + mPlume, mn.y);
+            mfGrad.addColorStop(0, '#ffffff');
+            mfGrad.addColorStop(0.3, '#34d399');
+            mfGrad.addColorStop(0.8, '#059669');
+            mfGrad.addColorStop(1, 'rgba(5, 150, 105, 0)');
+            cx.fillStyle = mfGrad;
+            cx.beginPath();
+            cx.moveTo(mn.x + mn.w * 0.5, mn.y - mn.h * 0.4);
+            cx.lineTo(mn.x + mn.w * 0.5 + mPlume, mn.y);
+            cx.lineTo(mn.x + mn.w * 0.5, mn.y + mn.h * 0.4);
+            cx.closePath(); cx.fill();
+
+            // Nacelle Pod
+            cx.fillStyle = '#064e3b';
+            cx.beginPath();
+            cx.roundRect(mn.x - mn.w * 0.5, mn.y - mn.h * 0.5, mn.w, mn.h, 4);
+            cx.fill();
+            cx.strokeStyle = '#10b981'; cx.lineWidth = 1.2; cx.stroke();
+          }
+
+          // Clone Wings
+          cx.fillStyle = '#065f46';
+          cx.beginPath();
+          cx.moveTo(-12, 0);
+          cx.lineTo(16, -26);
+          cx.lineTo(26, -22);
+          cx.lineTo(12, 0);
+          cx.lineTo(26, 22);
+          cx.lineTo(16, 26);
+          cx.closePath(); cx.fill();
+          cx.strokeStyle = '#34d399'; cx.lineWidth = 1.2; cx.stroke();
+
+          // Clone Main Fuselage
+          const chGrad = cx.createLinearGradient(30, 0, -30, 0);
+          chGrad.addColorStop(0, '#022c22');
+          chGrad.addColorStop(0.5, '#047857');
+          chGrad.addColorStop(1, '#10b981');
+          cx.fillStyle = chGrad;
+          cx.beginPath();
+          cx.moveTo(-32, 0);
+          cx.lineTo(-14, -16);
+          cx.lineTo(24, -14);
+          cx.lineTo(30, 0);
+          cx.lineTo(24, 14);
+          cx.lineTo(-14, 16);
+          cx.closePath(); cx.fill();
+          cx.strokeStyle = '#6ee7b7'; cx.lineWidth = 1.6; cx.stroke();
+
+          // Clone Cockpit / Bio-Sensor Glow
+          cx.fillStyle = '#00ffaa';
+          cx.fillRect(-22, -3, 12, 6);
+          cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.0; cx.strokeRect(-22, -3, 12, 6);
+
+          // Clone Health Bar
+          const chpRatio = Math.max(0, c.hp / c.maxhp);
+          cx.fillStyle = 'rgba(2, 6, 23, 0.85)';
+          cx.fillRect(-20, -32, 40, 5);
+          cx.fillStyle = chpRatio > 0.5 ? '#10b981' : chpRatio > 0.25 ? '#eab308' : '#ef4444';
+          cx.fillRect(-20, -32, 40 * chpRatio, 5);
+          cx.strokeStyle = '#059669'; cx.lineWidth = 0.8;
+          cx.strokeRect(-20, -32, 40, 5);
+
+          // Mutation Generation Label
+          cx.font = 'bold 8px sans-serif';
+          cx.textAlign = 'center';
+          cx.fillStyle = '#a7f3d0';
+          cx.fillText(`MUTANT G${c.gen || 1}`, 0, -36);
+
+          cx.restore();
+        }
+      }
+
+      // 1. Heavy Outrigger Wing Sponsons & Pylons
+      for (const wDir of [-1, 1]) {
+        const wy1 = wDir * (boss.h * 0.16);
+        const wy2 = wDir * (boss.h * 0.46);
+        const wy3 = wDir * (boss.h * 0.38);
+        const wy4 = wDir * (boss.h * 0.20);
+
+        const wingGrad = cx.createLinearGradient(0, wy1, 0, wy2);
+        wingGrad.addColorStop(0, '#064e3b');
+        wingGrad.addColorStop(0.5, '#047857');
+        wingGrad.addColorStop(1, '#022c22');
+        cx.fillStyle = wingGrad;
+        cx.beginPath();
+        cx.moveTo(-boss.w * 0.15, wy1);
+        cx.lineTo(boss.w * 0.22, wy2);
+        cx.lineTo(boss.w * 0.38, wy3);
+        cx.lineTo(boss.w * 0.12, wy4);
+        cx.closePath(); cx.fill();
+        cx.strokeStyle = '#10b981'; cx.lineWidth = 2.0; cx.stroke();
+
+        // Bio-Luminescing Armor Trim
+        cx.strokeStyle = '#34d399'; cx.lineWidth = 3.0;
+        cx.beginPath();
+        cx.moveTo(-boss.w * 0.10, wy1 + wDir * 3);
+        cx.lineTo(boss.w * 0.20, wy2 - wDir * 2);
+        cx.stroke();
+      }
+
+      // 2. 4 Colossal Bio-Turbine Engine Nacelles
+      const nacelles = [
+        { x: boss.w * 0.08, y: -boss.h * 0.38, w: 82, h: 28, isMid: true },
+        { x: boss.w * 0.08, y: boss.h * 0.38, w: 82, h: 28, isMid: true },
+        { x: boss.w * 0.28, y: -boss.h * 0.20, w: 92, h: 32, isMid: false },
+        { x: boss.w * 0.28, y: boss.h * 0.20, w: 92, h: 32, isMid: false }
+      ];
+
+      for (const n of nacelles) {
+        // Toxic Emerald Jet Exhaust Plume
+        const flameLen = 48 + Math.sin(t * 28 + n.y) * 15;
+        const fGrad = cx.createLinearGradient(n.x + n.w * 0.5, n.y, n.x + n.w * 0.5 + flameLen, n.y);
+        fGrad.addColorStop(0, '#ffffff');
+        fGrad.addColorStop(0.2, '#84cc16');
+        fGrad.addColorStop(0.6, '#10b981');
+        fGrad.addColorStop(1, 'rgba(5, 150, 105, 0)');
+        cx.fillStyle = fGrad;
+        cx.beginPath();
+        cx.moveTo(n.x + n.w * 0.5, n.y - n.h * 0.38);
+        cx.lineTo(n.x + n.w * 0.5 + flameLen, n.y);
+        cx.lineTo(n.x + n.w * 0.5, n.y + n.h * 0.38);
+        cx.closePath(); cx.fill();
+
+        // Nacelle Cylindrical Body
+        const nGrad = cx.createLinearGradient(0, n.y - n.h * 0.5, 0, n.y + n.h * 0.5);
+        nGrad.addColorStop(0, '#064e3b');
+        nGrad.addColorStop(0.3, '#047857');
+        nGrad.addColorStop(0.7, '#065f46');
+        nGrad.addColorStop(1, '#022c22');
+        cx.fillStyle = nGrad;
+        cx.beginPath();
+        cx.roundRect(n.x - n.w * 0.5, n.y - n.h * 0.5, n.w, n.h, 7);
+        cx.fill();
+        cx.strokeStyle = '#34d399'; cx.lineWidth = 1.8; cx.stroke();
+
+        // Mutagenic Cooling Sleeve / Vent Band
+        cx.fillStyle = '#022c22';
+        cx.fillRect(n.x - n.w * 0.15, n.y - n.h * 0.52, n.w * 0.30, n.h * 1.04);
+        cx.strokeStyle = '#84cc16'; cx.lineWidth = 2.0;
+        cx.strokeRect(n.x - n.w * 0.15, n.y - n.h * 0.52, n.w * 0.30, n.h * 1.04);
+
+        // Forward Circular Intake Cowling
+        cx.fillStyle = '#022c22';
+        cx.beginPath();
+        cx.ellipse(n.x - n.w * 0.5, n.y, 5, n.h * 0.44, 0, 0, Math.PI * 2);
+        cx.fill();
+        cx.strokeStyle = '#10b981'; cx.lineWidth = 1.6; cx.stroke();
+
+        // Glowing Core Turbine Center
+        cx.fillStyle = '#00ffaa';
+        cx.beginPath();
+        cx.ellipse(n.x - n.w * 0.5, n.y, 2, n.h * 0.25, 0, 0, Math.PI * 2);
+        cx.fill();
+      }
+
+      // 3. Main Armored Emerald Frigate Hull Fuselage
+      const hGrad = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
+      hGrad.addColorStop(0, '#022c22');
+      hGrad.addColorStop(0.25, '#064e3b');
+      hGrad.addColorStop(0.60, '#047857');
+      hGrad.addColorStop(0.85, '#059669');
+      hGrad.addColorStop(1, '#10b981');
+      cx.fillStyle = hGrad;
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.50, 0);                 // Forward prow tip
+      cx.lineTo(-boss.w * 0.30, -boss.h * 0.28);    // Forward port bevel
+      cx.lineTo(boss.w * 0.24, -boss.h * 0.26);     // Mid port flank
+      cx.lineTo(boss.w * 0.44, -boss.h * 0.16);     // Aft port engine shoulder
+      cx.lineTo(boss.w * 0.38, 0);                  // Aft center spine
+      cx.lineTo(boss.w * 0.44, boss.h * 0.16);      // Aft starboard engine shoulder
+      cx.lineTo(boss.w * 0.24, boss.h * 0.26);      // Mid starboard flank
+      cx.lineTo(-boss.w * 0.30, boss.h * 0.28);     // Forward starboard bevel
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#34d399'; cx.lineWidth = 3.2; cx.stroke();
+
+      // Armor Panel Seams & Reinforcement Ribs
+      cx.strokeStyle = '#6ee7b7'; cx.lineWidth = 1.6;
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.28, -boss.h * 0.20); cx.lineTo(boss.w * 0.15, -boss.h * 0.18);
+      cx.moveTo(-boss.w * 0.28, boss.h * 0.20); cx.lineTo(boss.w * 0.15, boss.h * 0.18);
+      cx.stroke();
+
+      // 4. Central Translucent Mutagenic Bio-Vial & Bubbling Spore Fluid
+      cx.fillStyle = '#022c22';
+      cx.beginPath();
+      cx.roundRect(-boss.w * 0.12, -boss.h * 0.14, boss.w * 0.32, boss.h * 0.28, 6);
+      cx.fill();
+      cx.strokeStyle = '#10b981'; cx.lineWidth = 2.0; cx.stroke();
+
+      // Glowing Green Liquid Canister
+      const bioGrad = cx.createLinearGradient(0, -boss.h * 0.12, 0, boss.h * 0.12);
+      bioGrad.addColorStop(0, 'rgba(52, 211, 153, 0.85)');
+      bioGrad.addColorStop(0.5, 'rgba(16, 185, 129, 0.95)');
+      bioGrad.addColorStop(1, 'rgba(4, 120, 87, 0.85)');
+      cx.fillStyle = bioGrad;
+      cx.beginPath();
+      cx.roundRect(-boss.w * 0.10, -boss.h * 0.11, boss.w * 0.28, boss.h * 0.22, 4);
+      cx.fill();
+
+      // Animated Mutagen Bubbles
+      cx.fillStyle = '#ffffff';
+      for (let bIdx = 0; bIdx < 6; bIdx++) {
+        const bubX = -boss.w * 0.08 + (bIdx * (boss.w * 0.24) / 5);
+        const bubY = Math.sin(t * 6 + bIdx * 1.5) * (boss.h * 0.06);
+        cx.beginPath(); cx.arc(bubX, bubY, 2.5 + Math.sin(t * 8 + bIdx) * 1.2, 0, Math.PI * 2); cx.fill();
+      }
+
+      // Spore Fluid Conduit Pipes to Engines & Cannons
+      cx.strokeStyle = '#84cc16'; cx.lineWidth = 2.2;
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.10, 0); cx.lineTo(-boss.w * 0.36, 0);
+      cx.moveTo(boss.w * 0.18, -boss.h * 0.06); cx.lineTo(boss.w * 0.32, -boss.h * 0.14);
+      cx.moveTo(boss.w * 0.18, boss.h * 0.06); cx.lineTo(boss.w * 0.32, boss.h * 0.14);
+      cx.stroke();
+
+      // 5. Elevated Command Bridge & Toxic Visor
+      const brGrad = cx.createLinearGradient(0, -boss.h * 0.10, 0, boss.h * 0.10);
+      brGrad.addColorStop(0, '#047857');
+      brGrad.addColorStop(0.5, '#065f46');
+      brGrad.addColorStop(1, '#022c22');
+      cx.fillStyle = brGrad;
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.18, 0);
+      cx.lineTo(-boss.w * 0.02, -boss.h * 0.12);
+      cx.lineTo(boss.w * 0.12, -boss.h * 0.09);
+      cx.lineTo(boss.w * 0.14, 0);
+      cx.lineTo(boss.w * 0.12, boss.h * 0.09);
+      cx.lineTo(-boss.w * 0.02, boss.h * 0.12);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#34d399'; cx.lineWidth = 1.8; cx.stroke();
+
+      // Command Bridge Viewport Slit (Luminescent Toxic Green)
+      cx.fillStyle = '#00ffaa';
+      cx.fillRect(-boss.w * 0.12, -4, 22, 8);
+      cx.fillStyle = '#ffffff';
+      cx.fillRect(-boss.w * 0.10, -2.5, 18, 2.5);
+      cx.strokeStyle = '#a7f3d0'; cx.lineWidth = 1.0;
+      cx.strokeRect(-boss.w * 0.12, -4, 22, 8);
+
+      // 6. Dual Heavy Chin-Mounted Blaster Turrets (Tracking player ship)
+      const aimAng = Math.atan2(ship.y - boss.y, ship.x - boss.x);
+      cx.save();
+      cx.translate(-boss.w * 0.42, 0);
+      cx.rotate(aimAng * 0.5); // Smooth swivel tracking
+
+      // Chin Turret Base Pod
+      cx.fillStyle = '#022c22';
+      cx.beginPath(); cx.arc(0, 0, 10, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#10b981'; cx.lineWidth = 1.6; cx.stroke();
+
+      // Dual Heavy Cannon Barrels
+      for (const cy of [-5, 5]) {
+        cx.fillStyle = '#064e3b';
+        cx.fillRect(-24, cy - 2.5, 24, 5);
+        cx.strokeStyle = '#34d399'; cx.lineWidth = 1.2;
+        cx.strokeRect(-24, cy - 2.5, 24, 5);
+
+        // Glowing Muzzle Tip
+        cx.fillStyle = '#84cc16';
+        cx.fillRect(-28, cy - 2, 4, 4);
+      }
+      cx.restore();
+
+      // Forward Spore Catapult Tube Blister
+      cx.fillStyle = '#022c22';
+      cx.beginPath(); cx.arc(-boss.w * 0.46, 0, 7, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1.8; cx.stroke();
+      cx.fillStyle = '#10b981';
+      cx.beginPath(); cx.arc(-boss.w * 0.46, 0, 3.5, 0, Math.PI * 2); cx.fill();
+
     } else {
       // BOSS 7: GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.60);
@@ -10016,6 +10639,40 @@ function draw() {
       cx.beginPath(); cx.arc(0, 0, eb.r + 4, 0, Math.PI * 2); cx.fill();
       cx.fillStyle = '#22c55e';
       cx.beginPath(); cx.arc(0, 0, eb.r * 0.6, 0, Math.PI * 2); cx.fill();
+
+    } else if (eb.type === 'bacteria_macro') {
+      // Colossal Wobbling Macro-Amoeba Bio-Blob
+      const wob = Math.sin(t * 18) * (eb.r * 0.15);
+      const bg = cx.createRadialGradient(0, 0, 4, 0, 0, eb.r + 6);
+      bg.addColorStop(0, '#ffffff');
+      bg.addColorStop(0.25, '#84cc16');
+      bg.addColorStop(0.65, '#10b981');
+      bg.addColorStop(0.95, '#064e3b');
+      bg.addColorStop(1, 'rgba(6, 78, 59, 0)');
+      cx.fillStyle = bg;
+      cx.beginPath();
+      cx.ellipse(0, 0, eb.r + wob, eb.r - wob * 0.8, 0, 0, Math.PI * 2);
+      cx.fill();
+      cx.strokeStyle = '#00ffaa';
+      cx.lineWidth = 2.5;
+      cx.stroke();
+      // Internal cellular nucleus
+      cx.fillStyle = '#022c22';
+      cx.beginPath(); cx.arc(-eb.r * 0.2, 0, eb.r * 0.35, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#84cc16';
+      cx.beginPath(); cx.arc(-eb.r * 0.2, 0, eb.r * 0.18, 0, Math.PI * 2); cx.fill();
+
+    } else if (eb.type === 'bacteria_micro') {
+      // Squiggling Micro-Bacteria Spore Bit
+      const microWob = Math.sin(t * 24 + (eb.r || 8)) * 2.5;
+      cx.fillStyle = 'rgba(0, 255, 170, 0.45)';
+      cx.beginPath(); cx.arc(0, 0, eb.r + 3, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = eb.col || '#00ffaa';
+      cx.beginPath();
+      cx.ellipse(0, 0, eb.r + microWob, eb.r - microWob * 0.6, 0, 0, Math.PI * 2);
+      cx.fill();
+      cx.fillStyle = '#ffffff';
+      cx.beginPath(); cx.arc(-eb.r * 0.2, 0, eb.r * 0.35, 0, Math.PI * 2); cx.fill();
 
     } else if (eb.type === 'shrapnel') {
       // Incendiary Magma Shrapnel Fireball
