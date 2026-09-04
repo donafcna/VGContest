@@ -2236,9 +2236,11 @@ function computeLoadout() {
   let cols = s.cols ? [...s.cols] : ['#c88a55', '#8c5528', '#3b1c06'];
   const sk = skinById(SAVE.data.skin);
   if (sk && sk.cols && SAVE.data.kills >= sk.kills) cols = [...sk.cols];
+  const cannonLv = Math.min(10, u.cannon || 0);
+  const cool = Math.max(0.20, (s.cool || 0.32) - cannonLv * 0.012);
   return {
     maxHp: (s.hp || 5) + (u.hull || 0),
-    baseCool: (s.cool || 0.25) * Math.pow(0.85, u.cannon || 0),
+    baseCool: cool,
     spdMul: (s.spd || 1) + (u.engine || 0) * 0.18,
     magnetBonus: (s.magnet || 0) + (u.magnet || 0) * 60,
     goldMult: s.gold || 1,
@@ -5638,7 +5640,7 @@ function update(dt) {
   if (wantShoot && shootCool <= 0) {
     mouse.clicked = false;
     keys.spaceClicked = false;
-    shootCool = hyperchargeActiveT > 0 ? baseCool * 0.35 : (rapidT > 0 ? baseCool * 0.45 : baseCool);
+    shootCool = Math.max(0.18, baseCool * (rapidT > 0 ? 0.70 : 1.0) * (hyperchargeActiveT > 0 ? 0.60 : 1.0));
     ship.recoil = 1.0;
     muzzleFlash = 1.0;
     
