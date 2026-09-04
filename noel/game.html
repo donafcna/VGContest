@@ -6532,12 +6532,16 @@ function update(dt) {
   // Space Pirate Galleon Navigation & Solar Ether Inertia
   slowT = Math.max(0, slowT - dt);
   const curSpdMul = spdMul * (hyperchargeActiveT > 0 ? 1.55 : 1.0) * (slowT > 0 ? 0.55 : 1.0);
-  const ACC = 1450 * curSpdMul, MAX_SPD = 480 * curSpdMul;
+  const isTractorLocked = boss && boss.tractorT > 0;
+  const ACC = (isTractorLocked ? 0 : 1450) * curSpdMul;
+  const MAX_SPD = (isTractorLocked ? 0 : 480) * curSpdMul;
   let ax = 0, ay = 0;
-  if (keys['KeyW'] || keys['ArrowUp'] || dpadState.up) ay -= 1;
-  if (keys['KeyS'] || keys['ArrowDown'] || dpadState.down) ay += 1;
-  if (keys['KeyA'] || keys['ArrowLeft'] || dpadState.left) ax -= 1;
-  if (keys['KeyD'] || keys['ArrowRight'] || dpadState.right) ax += 1;
+  if (!isTractorLocked) {
+    if (keys['KeyW'] || keys['ArrowUp'] || dpadState.up) ay -= 1;
+    if (keys['KeyS'] || keys['ArrowDown'] || dpadState.down) ay += 1;
+    if (keys['KeyA'] || keys['ArrowLeft'] || dpadState.left) ax -= 1;
+    if (keys['KeyD'] || keys['ArrowRight'] || dpadState.right) ax += 1;
+  }
 
   ship.vx += ax * ACC * dt;
   ship.vy += ay * ACC * dt;
@@ -6724,53 +6728,83 @@ function update(dt) {
 
     if (boss.tractorT > 0) {
       boss.tractorT -= dt;
-      // Colossal Gravitational Tractor Beam pulls player galleon directly toward the Superlaser Focus Dish
+      // Irresistible Colossal Gravitational Tractor Singularity - Inescapable Pull!
       const dishWorldX = boss.x - boss.w * 0.12;
       const dishWorldY = boss.y - boss.h * 0.15;
-      const tdx = dishWorldX - ship.x;
-      const tdy = dishWorldY - ship.y;
+      const captureX = dishWorldX - 120;
+      const captureY = dishWorldY;
+      const tdx = captureX - ship.x;
+      const tdy = captureY - ship.y;
       const tdist = Math.hypot(tdx, tdy) || 1;
 
-      // Accelerating inward gravitational pull (pulls harder as you get closer to the Death Star dish!)
-      const pullSpeed = 440 + (1 - Math.min(1, tdist / 950)) * 280;
+      // Inescapable Gravitational Suction (Rapidly accelerates and firmly locks the player galleon)
+      const pullSpeed = Math.max(720, tdist * 4.2);
       ship.x += (tdx / tdist) * pullSpeed * dt;
       ship.y += (tdy / tdist) * pullSpeed * dt;
+      ship.vx = (tdx / tdist) * pullSpeed * 0.2;
+      ship.vy = (tdy / tdist) * pullSpeed * 0.2;
 
-      // Gravitational Vortex Swirl (orbital Coriolis drag pulling ship in a vortex)
-      const perpX = -tdy / tdist;
-      const perpY = tdx / tdist;
-      ship.x += perpX * 95 * dt;
-      ship.y += perpY * 95 * dt;
+      // Violently shake and vibrate captured ship
+      ship.pitch = (Math.random() - 0.5) * 0.35;
+      addShake(4.5);
 
-      // Camera vibration & engine strain rumble
-      if (Math.random() < 0.35) {
-        addShake(3.5);
+      // Continuous Rapid-Fire Shooting while tractor beam is actively dragging/holding player!
+      boss.tractorShootT = (boss.tractorShootT || 0) - dt;
+      if (boss.tractorShootT <= 0) {
+        boss.tractorShootT = 0.26; // Rapid-fire barrage every 0.26s!
+        const aimAtShip = Math.atan2(ship.y - boss.y, ship.x - boss.x);
+        
+        // 1. Dual Turbolaser Blasts from Equatorial Trench
+        for (const cy of [-26, 26]) {
+          eballs.push({
+            type: 'laser',
+            col: '#00e5ff',
+            x: boss.x - boss.w * 0.35,
+            y: boss.y + cy,
+            vx: Math.cos(aimAtShip) * 780 * spdBonus,
+            vy: Math.sin(aimAtShip) * 780 * spdBonus,
+            r: 16
+          });
+        }
+
+        // 2. High-Energy Kyber Superlaser Core Plasma Pulse accelerated down the beam
+        eballs.push({
+          type: 'emp',
+          col: '#00ffee',
+          x: dishWorldX,
+          y: dishWorldY,
+          vx: (ship.x - dishWorldX) / (Math.hypot(ship.x - dishWorldX, ship.y - dishWorldY) || 1) * 720 * spdBonus,
+          vy: (ship.y - dishWorldY) / (Math.hypot(ship.x - dishWorldX, ship.y - dishWorldY) || 1) * 720 * spdBonus,
+          r: 22
+        });
+
+        sfx('laser');
       }
 
       // Space debris & magnetic plasma shards sucked into the singularity dish
-      if (Math.random() < 0.75) {
+      if (Math.random() < 0.8) {
         const spawnAng = Math.random() * Math.PI * 2;
-        const spawnDist = 160 + Math.random() * 260;
+        const spawnDist = 160 + Math.random() * 280;
         parts.push({
           x: dishWorldX + Math.cos(spawnAng) * spawnDist,
           y: dishWorldY + Math.sin(spawnAng) * spawnDist,
-          vx: -(Math.cos(spawnAng)) * (280 + Math.random() * 150),
-          vy: -(Math.sin(spawnAng)) * (280 + Math.random() * 150),
+          vx: -(Math.cos(spawnAng)) * (320 + Math.random() * 180),
+          vy: -(Math.sin(spawnAng)) * (320 + Math.random() * 180),
           life: 0.45,
           col: Math.random() < 0.5 ? '#00e5ff' : '#ffffff',
-          size: 3 + Math.random() * 4
+          size: 3.5 + Math.random() * 4
         });
       }
 
-      // Ship suction wake particles
+      // Ship electric arcs & suction wake particles
       parts.push({
         x: ship.x + (Math.random() - 0.5) * 45,
         y: ship.y + (Math.random() - 0.5) * 45,
-        vx: (tdx / tdist) * 260 + (Math.random() - 0.5) * 60,
-        vy: (tdy / tdist) * 260 + (Math.random() - 0.5) * 60,
+        vx: (tdx / tdist) * 280 + (Math.random() - 0.5) * 60,
+        vy: (tdy / tdist) * 280 + (Math.random() - 0.5) * 60,
         life: 0.38,
         col: '#00ffee',
-        size: 4.5
+        size: 5
       });
 
       // Singularity Event Horizon Danger Zone: Electric discharge if dragged too close to the core dish (< 145px)
