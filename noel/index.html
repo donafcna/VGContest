@@ -2378,13 +2378,105 @@ const UPG = {
 };
 
 const SKINS = [
-  { id: 'default', name: 'Classic Oak & Brass ⚓', kills: 0,    cols: null },
-  { id: 'sunset',  name: 'Molten Solar Flare 🌅', kills: 25,   cols: ['#ffedd5', '#f97316', '#7c2d12'] },
-  { id: 'toxic',   name: 'Xenon Bio-Plasma 🧪',  kills: 75,   cols: ['#dcfce7', '#22c55e', '#14532d'] },
-  { id: 'ocean',   name: 'Abyssal Deep Nebula 🌌', kills: 150, cols: ['#e0f2fe', '#0ea5e9', '#082f49'] },
-  { id: 'shadow',  name: 'Phantom Black Pearl 🌑', kills: 300, cols: ['#f1f5f9', '#334155', '#020617'] },
-  { id: 'royal',   name: 'Sovereign Royal Navy 👑', kills: 600, cols: ['#f3e8ff', '#a855f7', '#3b0764'] },
-  { id: 'legend',  name: 'Ascended Golden Legend ✨', kills: 1200, cols: ['#fef08a', '#eab308', '#713f12'] },
+  {
+    id: 'default',
+    name: 'Classic Void Mahogany & Brass ⚓',
+    kills: 0,
+    cols: null,
+    themeCol: '#f59e0b',
+    aura: '#ffd23c',
+    bulletCol: '#ffd23c',
+    desc: 'Polished interstellar mahogany timber with reinforced bronze fittings and solar sails.',
+    perk: '✨ Golden Ether Dust Wake & Solar Radiance'
+  },
+  {
+    id: 'sunset',
+    name: 'Molten Solar Supernova 🔥',
+    kills: 25,
+    cols: ['#fff1f2', '#ff4500', '#431407'],
+    themeCol: '#ff4500',
+    aura: '#ff5500',
+    bulletCol: '#ff4500',
+    desc: 'Forged within the blazing heart of a red giant star. Hull radiates intense plasma heatwaves.',
+    perk: '🔥 Blazing Magma Embers & Solar Flare Blast'
+  },
+  {
+    id: 'toxic',
+    name: 'Cyber Xenon Bio-Matrix ☣️',
+    kills: 75,
+    cols: ['#dcfce7', '#10b981', '#064e3b'],
+    themeCol: '#10b981',
+    aura: '#00ff66',
+    bulletCol: '#00ff66',
+    desc: 'Infused with volatile alien bio-luminescent xenon plasma and pulsing cybernetic matrix data lines.',
+    perk: '🧪 Toxic Acid Vapor & Matrix Data Wake'
+  },
+  {
+    id: 'ocean',
+    name: 'Abyssal Quantum Nebula 🌌',
+    kills: 150,
+    cols: ['#e0f2fe', '#00e5ff', '#0369a1'],
+    themeCol: '#00e5ff',
+    aura: '#00ffee',
+    bulletCol: '#00ffee',
+    desc: 'Carved from deep cosmic stardust crystals. Emits sparkling diamond nebula mist.',
+    perk: '🌌 Sparkling Stardust & Crystal Plasma Lasers'
+  },
+  {
+    id: 'shadow',
+    name: 'Phantom Obsidian Pearl 🌑',
+    kills: 300,
+    cols: ['#f8fafc', '#1e293b', '#020617'],
+    themeCol: '#ff003b',
+    aura: '#ff0033',
+    bulletCol: '#ff0033',
+    desc: 'Cursed dark matter phantom warship. Cloaked in shadowy void tendrils and sinister crimson runes.',
+    perk: '🌑 Cursed Dark Mist & Sith Crimson Beams'
+  },
+  {
+    id: 'cyber',
+    name: 'Neo-Tokyo Synthwave 2077 ⚡',
+    kills: 450,
+    cols: ['#fdf2f8', '#ec4899', '#3b0764'],
+    themeCol: '#ec4899',
+    aura: '#f43f5e',
+    bulletCol: '#ec4899',
+    desc: 'Futuristic 80s retro-futurism plating with glowing hot-pink neon grids and electric cyan underglow.',
+    perk: '⚡ Synthwave Neon Lasers & Grid Glitch Trail'
+  },
+  {
+    id: 'royal',
+    name: 'Astral Sovereign Sovereign Navy 👑',
+    kills: 600,
+    cols: ['#faf5ff', '#a855f7', '#3b0764'],
+    themeCol: '#a855f7',
+    aura: '#c084fc',
+    bulletCol: '#c084fc',
+    desc: 'Imperial royal fleet flagship with polished platinum armor, baroque gold filigree, and royal crown aura.',
+    perk: '👑 Imperial Crown Halo & Amethyst Plasma'
+  },
+  {
+    id: 'frost',
+    name: 'Glacial Cryo-Vortex ❄️',
+    kills: 900,
+    cols: ['#ffffff', '#38bdf8', '#0c4a6e'],
+    themeCol: '#38bdf8',
+    aura: '#7dd3fc',
+    bulletCol: '#38bdf8',
+    desc: 'Encased in unbreakable sub-zero cryo-diamond ice. Emits freezing snowflake blizzards and icicle shards.',
+    perk: '❄️ Sub-Zero Blizzard & Cryo-Ice Lasers'
+  },
+  {
+    id: 'legend',
+    name: 'Ascended Solar Seraph ✨',
+    kills: 1200,
+    cols: ['#ffffff', '#ffd700', '#78350f'],
+    themeCol: '#ffd700',
+    aura: '#fde047',
+    bulletCol: '#ffffff',
+    desc: 'Mythic celestial deity starship forged of 24K sacred solar gold and divine celestial starlight.',
+    perk: '✨ Sacred Solar Tri-Halo & God-Ray Radiance'
+  },
 ];
 
 function skinById(id) { return SKINS.find(k => k.id === id) || SKINS[0]; }
@@ -4951,13 +5043,15 @@ function buildShop() {
     const skinCols = k.cols ? k.cols : curShip.cols;
     const skinSvg = getShipSvg(curShipId, skinCols);
     let btn;
-    if (sel) btn = `<button class="sel" disabled>✔ IN SERVICE</button>`;
-    else if (unlocked) btn = `<button data-buy="skin" data-key="${k.id}">EQUIP</button>`;
-    else btn = `<button class="locked" disabled>☠️ ${k.kills}</button>`;
-    h += `<div class="shopitem"><div class="ic">${skinSvg}</div>` +
-      `<div class="info"><div class="t">${k.name}</div>` +
-      `<div class="d">${k.id === 'default' ? "Classic pirate galleon wood & solar sails" : 'Cosmic radiant timber & sails'}</div>` +
-      `<div class="lv">${unlocked ? '✔ Unlocked' : 'Requires ' + k.kills + ' UFO kills'} · Record: ${SAVE.data.kills} ☠️</div></div>` +
+    if (sel) btn = `<button class="sel" disabled style="background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 0 12px rgba(16,185,129,0.5)">✔ EQUIPPED</button>`;
+    else if (unlocked) btn = `<button data-buy="skin" data-key="${k.id}" style="background:linear-gradient(135deg,#38bdf8,#6366f1);color:#fff;box-shadow:0 0 10px rgba(56,189,248,0.4)">EQUIP</button>`;
+    else btn = `<button class="locked" disabled>☠️ ${k.kills} KILLS</button>`;
+    h += `<div class="shopitem" style="border-left: 4px solid ${k.themeCol || '#ffd23c'};background:linear-gradient(135deg,rgba(15,23,42,0.85),rgba(30,41,59,0.8));">` +
+      `<div class="ic">${skinSvg}</div>` +
+      `<div class="info"><div class="t" style="color:${k.themeCol || '#ffd23c'};font-weight:900">${k.name}</div>` +
+      `<div class="d">${k.desc || 'Cosmic radiant timber & sails'}</div>` +
+      `<div style="margin-top:3px;font-size:0.75rem;color:#e2e8f0;background:rgba(255,255,255,0.06);padding:3px 7px;border-radius:5px;display:inline-block"><b>Special FX:</b> ${k.perk || 'Custom Aura'}</div>` +
+      `<div class="lv" style="margin-top:3px">${unlocked ? '✔ Unlocked' : 'Requires ' + k.kills + ' UFO kills'} · Record: ${SAVE.data.kills} ☠️</div></div>` +
       btn + `</div>`;
   }
   document.getElementById('shopBody').innerHTML = h;
@@ -6143,34 +6237,40 @@ function update(dt) {
   // Glowing Solar Wake & Signature Skin Aura Particles
   const activeSkin = (SAVE.data.skin && SAVE.data.kills >= (skinById(SAVE.data.skin).kills || 0)) ? SAVE.data.skin : 'default';
 
-  if (Math.random() < 0.90) {
-    let auraCol = '#ffd23c', auraSize = 5 + Math.random() * 5;
+  if (Math.random() < 0.95) {
+    let auraCol = '#ffd23c', auraSize = 6 + Math.random() * 5;
     if (activeSkin === 'sunset') {
-      auraCol = Math.random() < 0.6 ? '#ff5500' : '#ffd23c';
-      auraSize = 6 + Math.random() * 6;
+      auraCol = Math.random() < 0.7 ? '#ff3b30' : '#ff9500';
+      auraSize = 8 + Math.random() * 7;
     } else if (activeSkin === 'toxic') {
-      auraCol = Math.random() < 0.7 ? '#7ed957' : '#00ff66';
-      auraSize = 4 + Math.random() * 6;
+      auraCol = Math.random() < 0.6 ? '#00ff66' : '#10b981';
+      auraSize = 5 + Math.random() * 7;
     } else if (activeSkin === 'ocean') {
-      auraCol = Math.random() < 0.6 ? '#2f9be6' : '#a9e0ff';
-      auraSize = 5 + Math.random() * 5;
+      auraCol = Math.random() < 0.6 ? '#00ffee' : '#38bdf8';
+      auraSize = 6 + Math.random() * 6;
     } else if (activeSkin === 'shadow') {
-      auraCol = Math.random() < 0.7 ? '#111316' : '#ff0044';
-      auraSize = 6 + Math.random() * 7;
+      auraCol = Math.random() < 0.7 ? '#ff003b' : '#0f172a';
+      auraSize = 7 + Math.random() * 8;
+    } else if (activeSkin === 'cyber') {
+      auraCol = Math.random() < 0.5 ? '#ec4899' : '#00ffee';
+      auraSize = 6 + Math.random() * 6;
     } else if (activeSkin === 'royal') {
-      auraCol = Math.random() < 0.5 ? '#b06bff' : '#ffd700';
+      auraCol = Math.random() < 0.6 ? '#c084fc' : '#ffd700';
+      auraSize = 6 + Math.random() * 7;
+    } else if (activeSkin === 'frost') {
+      auraCol = Math.random() < 0.7 ? '#bae6fd' : '#ffffff';
       auraSize = 5 + Math.random() * 6;
     } else if (activeSkin === 'legend') {
       auraCol = Math.random() < 0.5 ? '#ffffff' : '#ffd700';
-      auraSize = 7 + Math.random() * 6;
+      auraSize = 9 + Math.random() * 8;
     }
 
     parts.push({
-      x: ship.x - 52 + (Math.random() - 0.5) * 12,
+      x: ship.x - 52 + (Math.random() - 0.5) * 14,
       y: ship.y + 14 + (Math.random() - 0.5) * 14,
-      vx: -240 - Math.random() * 90,
-      vy: (Math.random() - 0.5) * 35,
-      life: 0.45,
+      vx: -260 - Math.random() * 110,
+      vy: (Math.random() - 0.5) * 40,
+      life: 0.50,
       col: auraCol,
       size: auraSize
     });
@@ -6216,11 +6316,13 @@ function update(dt) {
       });
       
       let mCol = shipModel === 'runner' ? '#00ffee' : shipModel === 'storm' ? '#c084fc' : shipModel === 'hind' ? '#ffd700' : '#ffd23c';
-      if (activeSkin === 'toxic') mCol = '#7ed957';
-      else if (activeSkin === 'sunset') mCol = '#ff5500';
-      else if (activeSkin === 'ocean') mCol = '#2f9be6';
-      else if (activeSkin === 'shadow') mCol = '#ff0044';
-      else if (activeSkin === 'royal') mCol = '#b06bff';
+      if (activeSkin === 'sunset') mCol = '#ff3b30';
+      else if (activeSkin === 'toxic') mCol = '#00ff66';
+      else if (activeSkin === 'ocean') mCol = '#00ffee';
+      else if (activeSkin === 'shadow') mCol = '#ff003b';
+      else if (activeSkin === 'cyber') mCol = '#ec4899';
+      else if (activeSkin === 'royal') mCol = '#c084fc';
+      else if (activeSkin === 'frost') mCol = '#38bdf8';
       else if (activeSkin === 'legend') mCol = '#ffffff';
 
       for (let k = 0; k < 6; k++) {
@@ -10182,11 +10284,13 @@ function draw() {
     const activeSkin = (SAVE.data.skin && SAVE.data.kills >= (skinById(SAVE.data.skin).kills || 0)) ? SAVE.data.skin : 'default';
 
     let flagBg = '#111', flagSym = '☠', flagSymCol = '#fff';
-    if (activeSkin === 'sunset') { flagBg = '#ff5500'; flagSym = '☀️'; flagSymCol = '#fff'; }
-    else if (activeSkin === 'toxic') { flagBg = '#1a330e'; flagSym = '☣'; flagSymCol = '#7ed957'; }
-    else if (activeSkin === 'ocean') { flagBg = '#0a192f'; flagSym = '🌌'; flagSymCol = '#64ffda'; }
-    else if (activeSkin === 'shadow') { flagBg = '#05070a'; flagSym = '☠️'; flagSymCol = '#ff0033'; }
+    if (activeSkin === 'sunset') { flagBg = '#ff3b30'; flagSym = '☀️'; flagSymCol = '#fff'; }
+    else if (activeSkin === 'toxic') { flagBg = '#064e3b'; flagSym = '☣'; flagSymCol = '#00ff66'; }
+    else if (activeSkin === 'ocean') { flagBg = '#0369a1'; flagSym = '🌌'; flagSymCol = '#00ffee'; }
+    else if (activeSkin === 'shadow') { flagBg = '#020617'; flagSym = '☠️'; flagSymCol = '#ff003b'; }
+    else if (activeSkin === 'cyber') { flagBg = '#ec4899'; flagSym = '⚡'; flagSymCol = '#00ffee'; }
     else if (activeSkin === 'royal') { flagBg = '#3b0764'; flagSym = '👑'; flagSymCol = '#ffd700'; }
+    else if (activeSkin === 'frost') { flagBg = '#0c4a6e'; flagSym = '❄️'; flagSymCol = '#bae6fd'; }
     else if (activeSkin === 'legend') { flagBg = '#ffd700'; flagSym = '⭐'; flagSymCol = '#ffffff'; }
 
     cx.fillStyle = flagBg;
@@ -10199,41 +10303,99 @@ function draw() {
     cx.fillStyle = flagSymCol; cx.font = 'bold 11px serif'; cx.textAlign = 'center';
     cx.fillText(flagSym, -30, -42);
 
-    // Skin-Specific Prow Ornaments & Hull Sculptures
+    // Skin-Specific Prow Ornaments, Hull Sculptures & Animated Floating Auras
     if (activeSkin === 'sunset') {
-      // Solar Flare Sunburst Prow Crest
-      cx.fillStyle = '#ff6a00';
-      cx.beginPath(); cx.arc(48, 14, 5, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.5; cx.stroke();
+      // 1. Solar Flare Sunburst Prow Crest & Magma Veins
+      cx.fillStyle = '#ff4500';
+      cx.beginPath(); cx.arc(48, 14, 6, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2; cx.stroke();
+      // Magma crackle lines
+      cx.strokeStyle = 'rgba(255, 69, 0, 0.8)'; cx.lineWidth = 2;
+      cx.beginPath(); cx.moveTo(-20, 18); cx.lineTo(10, 22); cx.lineTo(40, 16); cx.stroke();
     } else if (activeSkin === 'toxic') {
-      // Alien Plasma Spines & Bioluminescent Hull Veins
-      cx.strokeStyle = '#7ed957'; cx.lineWidth = 2.5;
-      cx.beginPath(); cx.moveTo(42, 14); cx.lineTo(54, 8); cx.lineTo(48, 22); cx.stroke();
-      cx.strokeStyle = '#00ff66'; cx.lineWidth = 1.8;
-      cx.beginPath(); cx.moveTo(-34, 20); cx.lineTo(0, 22); cx.lineTo(36, 18); cx.stroke();
+      // 2. Alien Plasma Spines & Bioluminescent Matrix Veins
+      cx.strokeStyle = '#00ff66'; cx.lineWidth = 2.5;
+      cx.beginPath(); cx.moveTo(42, 14); cx.lineTo(56, 8); cx.lineTo(50, 22); cx.stroke();
+      cx.strokeStyle = 'rgba(0, 255, 102, 0.7)'; cx.lineWidth = 1.8;
+      cx.beginPath(); cx.moveTo(-34, 20); cx.lineTo(-10, 24); cx.lineTo(15, 20); cx.lineTo(36, 18); cx.stroke();
     } else if (activeSkin === 'ocean') {
-      // Celestial Crystal Trident Prow
-      cx.fillStyle = '#64ffda';
-      cx.fillRect(48, 12, 10, 2.5);
-      cx.fillRect(56, 7, 2.5, 12);
+      // 3. Celestial Crystal Trident Prow & Diamond Star Glimmer
+      cx.fillStyle = '#00ffee';
+      cx.fillRect(48, 12, 12, 3);
+      cx.fillRect(58, 6, 3, 15);
+      cx.fillStyle = '#ffffff';
+      for (const [sx, sy] of [[-15, 18], [5, 24], [25, 16]]) {
+        if (Math.floor(t * 12 + sx) % 2 === 0) {
+          cx.beginPath(); cx.arc(sx, sy, 2, 0, Math.PI * 2); cx.fill();
+        }
+      }
     } else if (activeSkin === 'shadow') {
-      // Cursed Phantom Crimson Eyes on Prow
-      cx.fillStyle = '#ff0033';
-      cx.beginPath(); cx.arc(46, 17, 2, 0, Math.PI * 2); cx.fill();
-      cx.beginPath(); cx.arc(50, 17, 2, 0, Math.PI * 2); cx.fill();
+      // 4. Cursed Phantom Sith Crimson Runes & Glowing Red Eyes
+      cx.fillStyle = '#ff003b';
+      cx.beginPath(); cx.arc(46, 16, 2.5, 0, Math.PI * 2); cx.fill();
+      cx.beginPath(); cx.arc(52, 16, 2.5, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = 'rgba(255, 0, 59, 0.6)'; cx.lineWidth = 1.8;
+      cx.beginPath(); cx.moveTo(-25, 18); cx.lineTo(-5, 22); cx.lineTo(20, 18); cx.stroke();
+    } else if (activeSkin === 'cyber') {
+      // 5. Neo-Tokyo Synthwave Neon Chassis & Equalizer Grid
+      cx.strokeStyle = '#ec4899'; cx.lineWidth = 2.5;
+      cx.beginPath(); cx.moveTo(-38, 24); cx.lineTo(44, 24); cx.stroke();
+      cx.strokeStyle = '#00ffee'; cx.lineWidth = 2;
+      cx.beginPath(); cx.moveTo(-30, 16); cx.lineTo(35, 16); cx.stroke();
+      // Equalizer bars
+      for (let bx = -20; bx <= 20; bx += 8) {
+        const barH = 4 + Math.abs(Math.sin(t * 12 + bx)) * 8;
+        cx.fillStyle = bx % 16 === 0 ? '#ec4899' : '#00ffee';
+        cx.fillRect(bx, 10 - barH, 4, barH);
+      }
     } else if (activeSkin === 'royal') {
-      // Gilded Royal Filigree Railing
+      // 6. Gilded Royal Baroque Filigree & Floating Amethyst Crown
       cx.fillStyle = '#ffd700';
       cx.fillRect(-38, 13, 76, 2.5);
       for (let rx = -34; rx <= 34; rx += 10) {
         cx.beginPath(); cx.arc(rx, 14, 2, 0, Math.PI * 2); cx.fill();
       }
+      // Floating Crown above canopy
+      cx.save(); cx.translate(6, -64 + Math.sin(t * 4) * 3);
+      cx.fillStyle = '#ffd700';
+      cx.beginPath();
+      cx.moveTo(-10, 0); cx.lineTo(-12, -8); cx.lineTo(-6, -4); cx.lineTo(0, -10); cx.lineTo(6, -4); cx.lineTo(12, -8); cx.lineTo(10, 0);
+      cx.closePath(); cx.fill();
+      cx.fillStyle = '#c084fc'; cx.beginPath(); cx.arc(0, -5, 2, 0, Math.PI * 2); cx.fill();
+      cx.restore();
+    } else if (activeSkin === 'frost') {
+      // 7. Glacial Cryo-Ice Spikes & Freezing Snowflake Aura
+      cx.fillStyle = 'rgba(186, 230, 253, 0.75)';
+      cx.beginPath();
+      cx.moveTo(40, 10); cx.lineTo(58, 14); cx.lineTo(40, 18);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.5; cx.stroke();
+      // Orbiting ice crystals
+      for (let ic = 0; ic < 3; ic++) {
+        const icAng = t * 3 + ic * (Math.PI * 2 / 3);
+        const ix = Math.cos(icAng) * 32, iy = 14 + Math.sin(icAng) * 16;
+        cx.fillStyle = '#ffffff';
+        cx.beginPath(); cx.arc(ix, iy, 2.5, 0, Math.PI * 2); cx.fill();
+      }
     } else if (activeSkin === 'legend') {
-      // Divine Floating Halo Ring above Mast!
-      cx.save(); cx.translate(12, -68);
-      cx.strokeStyle = '#ffd700'; cx.lineWidth = 2;
-      cx.beginPath(); cx.ellipse(0, 0, 12, 4, 0, 0, Math.PI * 2); cx.stroke();
-      cx.fillStyle = 'rgba(255, 215, 0, 0.45)'; cx.fill();
+      // 8. Sacred Rotating Divine Solar Halo & Celestial God-Rays
+      cx.save(); cx.translate(10, -68 + Math.sin(t * 3) * 3);
+      // Radiating divine rays
+      cx.strokeStyle = 'rgba(255, 215, 0, 0.55)';
+      cx.lineWidth = 1.5;
+      for (let r = 0; r < 8; r++) {
+        const rayAng = t * 2 + (r / 8) * Math.PI * 2;
+        cx.beginPath();
+        cx.moveTo(Math.cos(rayAng) * 12, Math.sin(rayAng) * 5);
+        cx.lineTo(Math.cos(rayAng) * 24, Math.sin(rayAng) * 10);
+        cx.stroke();
+      }
+      // Dual golden halo rings
+      cx.strokeStyle = '#ffd700'; cx.lineWidth = 2.5;
+      cx.beginPath(); cx.ellipse(0, 0, 14, 5, 0, 0, Math.PI * 2); cx.stroke();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.ellipse(0, 0, 8, 3, 0, 0, Math.PI * 2); cx.stroke();
+      cx.fillStyle = 'rgba(255, 215, 0, 0.5)'; cx.fill();
       cx.restore();
     }
 
