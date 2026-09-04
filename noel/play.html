@@ -1592,7 +1592,10 @@ function addAlert(text, snd) {
   if (snd) sfx(snd);
 }
 function addShake(a) { shake = Math.min(26, Math.max(shake, a)); }
-function popup(x, y, text, col) { popups.push({ x, y, text, life: 0.9, col: col || '#ffd23c' }); }
+function popup(x, y, text, col) {
+  if (popups.length >= 12) popups.shift();
+  popups.push({ x, y, text, life: 0.85, col: col || '#ffd23c' });
+}
 
 function addScore(base, x, y) {
   killsRun++;
@@ -4831,7 +4834,8 @@ function update(dt) {
         // Surprise 4-round amethyst burst on uncloak!
         for (let k = 0; k < 4; k++) {
           const spr = ((k - 1.5) / 3) * 0.35;
-          eballs.push({ type: 'laser', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y, vx: -720 * spdBonus * Math.cos(spr), vy: 720 * spdBonus * Math.sin(spr), r: 18 });
+            const shootAng = Math.PI + spr;
+            eballs.push({ type: 'laser', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y, vx: Math.cos(shootAng) * 720 * spdBonus, vy: Math.sin(shootAng) * 720 * spdBonus, r: 18 });
         }
       }
     }
@@ -4882,7 +4886,8 @@ function update(dt) {
         } else {
           // Orbital Turbolaser 5-Round Salvo
           for (const ang of [-0.28, -0.14, 0, 0.14, 0.28]) {
-            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.42, y: boss.y, vx: -640 * spdBonus * Math.cos(ang), vy: 640 * spdBonus * Math.sin(ang), r: 18 });
+            const shootAng = Math.PI + ang;
+            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.42, y: boss.y, vx: Math.cos(shootAng) * 640 * spdBonus, vy: Math.sin(shootAng) * 640 * spdBonus, r: 18 });
           }
           sfx('laser');
           popup(boss.x - 40, boss.y - 45, 'TACHYON BEAM BARRAGE!', '#00ffaa');
@@ -4917,7 +4922,8 @@ function update(dt) {
           // ULTIMATE: Ventral Spire Heavy Ion Ray (Piercing azure beam + screen shake)!
           for (let k = 0; k < 8; k++) {
             const spr = ((k - 3.5) / 7) * 0.44;
-            eballs.push({ type: 'laser', col: '#00e5ff', x: boss.x - boss.w * 0.35, y: boss.y + 25, vx: -720 * spdBonus * Math.cos(spr), vy: 720 * spdBonus * Math.sin(spr), r: 20 });
+            const shootAng = Math.PI + spr;
+            eballs.push({ type: 'laser', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y, vx: Math.cos(shootAng) * 720 * spdBonus, vy: Math.sin(shootAng) * 720 * spdBonus, r: 18 });
           }
           addShake(28);
           popup(boss.x - 40, boss.y - 45, '🌊 ULTIMATE: VENTRAL ION CANNON RAY!', '#00e5ff');
@@ -4932,7 +4938,8 @@ function update(dt) {
         } else {
           // Mon Calamari 8-Gun Broadside Turbolaser Salvo
           for (const ang of [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36]) {
-            eballs.push({ type: 'laser', col: '#00ffee', x: boss.x - boss.w * 0.40, y: boss.y - 12, vx: -660 * spdBonus * Math.cos(ang), vy: 660 * spdBonus * Math.sin(ang), r: 18 });
+            const shootAng = Math.PI + ang;
+            eballs.push({ type: 'laser', col: '#00ffee', x: boss.x - boss.w * 0.40, y: boss.y - 12, vx: Math.cos(shootAng) * 660 * spdBonus, vy: Math.sin(shootAng) * 660 * spdBonus, r: 18 });
           }
           sfx('laser');
           popup(boss.x - 40, boss.y - 45, '💥 MON CALAMARI BROADSIDE!', '#00ffee');
@@ -4961,7 +4968,8 @@ function update(dt) {
           // 360° Rotating Dorsal Quad-Laser 6-Round Blaster Strafe!
           for (let k = 0; k < 6; k++) {
             const spr = ((k - 2.5) / 5) * 0.38;
-            eballs.push({ type: 'laser', col: '#ff0033', x: boss.x - boss.w * 0.35, y: boss.y, vx: -700 * spdBonus * Math.cos(spr), vy: 700 * spdBonus * Math.sin(spr), r: 18 });
+            const shootAng = Math.PI + spr;
+            eballs.push({ type: 'laser', col: '#ff0033', x: boss.x - boss.w * 0.35, y: boss.y, vx: Math.cos(shootAng) * 700 * spdBonus, vy: Math.sin(shootAng) * 700 * spdBonus, r: 18 });
           }
           sfx('laser');
           popup(boss.x - 40, boss.y - 45, '🔥 DORSAL QUAD-LASER STRAFE!', '#ff0033');
@@ -4986,7 +4994,8 @@ function update(dt) {
           // Dual Broadside Emerald & Ruby Laser Lances
           for (const ang of [-0.35, -0.15, 0.15, 0.35]) {
             const isGrn = Math.abs(ang) < 0.25;
-            eballs.push({ type: 'laser', col: isGrn ? '#00ffaa' : '#ff0033', x: boss.x - boss.w * 0.42, y: boss.y, vx: -680 * spdBonus * Math.cos(ang), vy: 680 * spdBonus * Math.sin(ang), r: 20 });
+            const shootAng = Math.PI + ang;
+            eballs.push({ type: 'laser', col: isGrn ? '#00ffaa' : '#ff0033', x: boss.x - boss.w * 0.42, y: boss.y, vx: Math.cos(shootAng) * 680 * spdBonus, vy: Math.sin(shootAng) * 680 * spdBonus, r: 20 });
           }
           popup(boss.x - 40, boss.y - 45, '💥 BROADSIDE TURBOLASERS!', '#00ffaa');
           sfx('laser');
@@ -5002,7 +5011,8 @@ function update(dt) {
         if (boss.atkCycle === 2) {
           // ULTIMATE: Maximum Firepower MS-1 Heavy Turbolaser Bombardment + Stomp Shockwaves!
           for (const ang of [-0.42, -0.32, -0.22, -0.11, 0, 0.11, 0.22, 0.32, 0.42]) {
-            eballs.push({ type: 'laser', col: '#ff0033', x: boss.x - boss.w * 0.48, y: boss.y - 15, vx: -720 * spdBonus * Math.cos(ang), vy: 720 * spdBonus * Math.sin(ang), r: 20 });
+            const shootAng = Math.PI + ang;
+            eballs.push({ type: 'laser', col: '#ff0033', x: boss.x - boss.w * 0.48, y: boss.y - 15, vx: Math.cos(shootAng) * 720 * spdBonus, vy: Math.sin(shootAng) * 720 * spdBonus, r: 20 });
           }
           for (const cy of [-35, 35]) {
             eballs.push({ type: 'magma', col: '#ff5500', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: (dx / dist) * 640 * spdBonus, vy: (dy / dist) * 640 * spdBonus, r: 30, spin: 0 });
@@ -5014,7 +5024,8 @@ function update(dt) {
           // Temple Repeating Blaster Sweeping Flurry (Rapid 8-shot suppressive fire!)
           for (let k = 0; k < 8; k++) {
             const spr = ((k - 3.5) / 7) * 0.48;
-            eballs.push({ type: 'laser', col: '#ef4444', x: boss.x - boss.w * 0.45, y: boss.y - 8, vx: -680 * spdBonus * Math.cos(spr), vy: 680 * spdBonus * Math.sin(spr), r: 16 });
+            const shootAng = Math.PI + spr;
+            eballs.push({ type: 'laser', col: '#ef4444', x: boss.x - boss.w * 0.45, y: boss.y - 8, vx: Math.cos(shootAng) * 680 * spdBonus, vy: Math.sin(shootAng) * 680 * spdBonus, r: 16 });
           }
           popup(boss.x - 40, boss.y - 45, '⚡ TEMPLE REPEATING CANNONS!', '#ef4444');
           sfx('laser');
@@ -5284,7 +5295,8 @@ function update(dt) {
               type: 'laser',
               col: '#ffd23c',
               x: f.x - f.w * 0.20, y: f.y - 16,
-              vx: -560 * spdBonus * Math.cos(spr), vy: 560 * spdBonus * Math.sin(spr),
+            const shootAng = Math.PI + spr;
+            eballs.push({ type: 'laser', col: '#ffd23c', x: f.x - f.w * 0.20, y: f.y - 16, vx: Math.cos(shootAng) * 560 * spdBonus, vy: Math.sin(shootAng) * 560 * spdBonus, r: 12 });
               r: 12
             });
           }
@@ -5321,7 +5333,8 @@ function update(dt) {
             type: 'laser',
             col: '#ef4444',
             x: f.x - f.w * 0.40, y: f.y,
-            vx: -620 * spdBonus * Math.cos(spr), vy: 620 * spdBonus * Math.sin(spr),
+            const shootAng = Math.PI + spr;
+            eballs.push({ type: 'laser', col: '#ef4444', x: f.x - f.w * 0.40, y: f.y, vx: Math.cos(shootAng) * 620 * spdBonus, vy: Math.sin(shootAng) * 620 * spdBonus, r: 13 });
             r: 13
           });
         }
@@ -5340,7 +5353,8 @@ function update(dt) {
               type: 'laser',
               col: '#ffd23c',
               x: f.x, y: f.y,
-              vx: -500 * spdBonus * Math.cos(spr), vy: 500 * spdBonus * Math.sin(spr),
+            const shootAng = Math.PI + spr;
+            eballs.push({ type: 'laser', col: '#ffd23c', x: f.x, y: f.y, vx: Math.cos(shootAng) * 500 * spdBonus, vy: Math.sin(shootAng) * 500 * spdBonus, r: 11 });
               r: 11
             });
           }
@@ -5449,7 +5463,8 @@ function update(dt) {
             type: 'emp',
             col: '#00ffee',
             x: g.x - 22, y: g.y,
-            vx: -600 * spdBonus * Math.cos(spr), vy: 600 * spdBonus * Math.sin(spr),
+          const shootAng = Math.PI + spr;
+          eballs.push({ type: 'emp', col: '#00ffee', x: g.x - 22, y: g.y, vx: Math.cos(shootAng) * 600 * spdBonus, vy: Math.sin(shootAng) * 600 * spdBonus, r: 12 });
             r: 12
           });
         }
@@ -5469,7 +5484,8 @@ function update(dt) {
             type: 'laser',
             col: '#c084fc',
             x: g.x - 22, y: g.y,
-            vx: (dx / dist) * 600 * spdBonus * Math.cos(spr), vy: (dy / dist) * 600 * spdBonus * Math.sin(spr),
+          const baseAng = Math.atan2(dy, dx) + spr;
+          eballs.push({ type: 'laser', col: '#c084fc', x: g.x - 22, y: g.y, vx: Math.cos(baseAng) * 600 * spdBonus, vy: Math.sin(baseAng) * 600 * spdBonus, r: 11 });
             r: 11
           });
         }
@@ -7717,57 +7733,85 @@ function draw() {
     }
     cx.restore();
   }
-  // Enemy Projectiles (EMP Shockwave Rings, Bio-Acid Spores, Incendiary Shrapnel, Turbo-Lasers)
+  // Enemy Projectiles (Authentic Star Wars Turbolasers, Concussion Torpedoes, EMP Waves)
   for (const eb of eballs) {
-    cx.save(); cx.translate(eb.x, eb.y);
+    cx.save();
+    cx.translate(eb.x, eb.y);
+    const flightAngle = Math.atan2(eb.vy, eb.vx);
+    cx.rotate(flightAngle);
 
     if (eb.type === 'emp') {
-      // Expanding Cobalt EMP Shockwave Ring
-      cx.fillStyle = 'rgba(0, 229, 255, 0.25)';
-      cx.beginPath(); cx.arc(0, 0, eb.r + 6, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2;
-      cx.beginPath(); cx.arc(0, 0, eb.r, t * 10, t * 10 + Math.PI); cx.stroke();
+      // High-Tech Cobalt EMP Shockwave Ring
+      const col = eb.col || '#00e5ff';
+      cx.fillStyle = col + '33';
+      cx.beginPath(); cx.arc(0, 0, eb.r, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.8;
+      cx.beginPath(); cx.arc(0, 0, eb.r * 0.65, 0, Math.PI * 2); cx.stroke();
+      cx.strokeStyle = col; cx.lineWidth = 2.4;
+      cx.beginPath(); cx.arc(0, 0, eb.r, t * 12, t * 12 + Math.PI * 1.5); cx.stroke();
 
     } else if (eb.type === 'vortex') {
       // Dark Matter Singularity
-      cx.fillStyle = 'rgba(0, 255, 170, 0.25)';
-      cx.beginPath(); cx.arc(0, 0, eb.r + 8, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = 'rgba(0, 255, 170, 0.30)';
+      cx.beginPath(); cx.arc(0, 0, eb.r + 6, 0, Math.PI * 2); cx.fill();
       cx.fillStyle = '#020617';
-      cx.beginPath(); cx.arc(0, 0, eb.r * 0.45, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1.5; cx.stroke();
+      cx.beginPath(); cx.arc(0, 0, eb.r * 0.48, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1.6; cx.stroke();
 
     } else if (eb.type === 'magma') {
-      // Molten Solar Magma Torpedo
-      cx.fillStyle = 'rgba(255, 85, 0, 0.35)';
-      cx.beginPath(); cx.arc(0, 0, eb.r + 6, 0, Math.PI * 2); cx.fill();
-      cx.fillStyle = '#ffd23c';
-      cx.beginPath(); cx.arc(0, 0, eb.r * 0.6, 0, Math.PI * 2); cx.fill();
+      // Concussion Proton Torpedo (Sleek aerodynamic glowing warhead with plasma exhaust)
+      const col = eb.col || '#ff5500';
+      const tg = cx.createLinearGradient(eb.r * 0.8, 0, -eb.r * 1.5, 0);
+      tg.addColorStop(0, '#ffffff');
+      tg.addColorStop(0.35, col);
+      tg.addColorStop(1, 'rgba(255,85,0,0)');
+      cx.fillStyle = tg;
+      cx.beginPath();
+      cx.ellipse(-eb.r * 0.2, 0, eb.r * 1.2, eb.r * 0.55, 0, 0, Math.PI * 2);
+      cx.fill();
+      cx.fillStyle = '#ffffff';
+      cx.beginPath(); cx.arc(eb.r * 0.25, 0, eb.r * 0.35, 0, Math.PI * 2); cx.fill();
 
     } else if (eb.type === 'spore') {
-      // Biohazard Acid Spore Glob
+      // Biohazard Acid Plasma Spore
       cx.fillStyle = 'rgba(34, 197, 94, 0.35)';
-      cx.beginPath(); cx.arc(0, 0, eb.r + 5, 0, Math.PI * 2); cx.fill();
+      cx.beginPath(); cx.arc(0, 0, eb.r + 4, 0, Math.PI * 2); cx.fill();
       cx.fillStyle = '#22c55e';
       cx.beginPath(); cx.arc(0, 0, eb.r * 0.6, 0, Math.PI * 2); cx.fill();
 
     } else if (eb.type === 'shrapnel') {
       // Incendiary Magma Shrapnel Fireball
-      cx.fillStyle = 'rgba(255, 170, 0, 0.4)';
-      cx.beginPath(); cx.arc(0, 0, eb.r + 4, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = 'rgba(255, 170, 0, 0.45)';
+      cx.beginPath(); cx.arc(0, 0, eb.r + 3, 0, Math.PI * 2); cx.fill();
       cx.fillStyle = '#ff3300';
-      cx.beginPath(); cx.arc(0, 0, eb.r * 0.6, 0, Math.PI * 2); cx.fill();
+      cx.beginPath(); cx.arc(0, 0, eb.r * 0.55, 0, Math.PI * 2); cx.fill();
 
     } else {
-      // Star Wars Turbo-Laser Bolt (Red or Green with vibrant core and plasma aura)
-      const laserCol = eb.col || '#00ff66';
-      cx.fillStyle = laserCol === '#ff0033' ? 'rgba(255,0,50,0.35)' : 'rgba(0,255,100,0.35)';
-      cx.beginPath(); cx.arc(0, 0, eb.r + 5, 0, Math.PI * 2); cx.fill();
-      
+      // Authentic Star Wars Turbolaser Bolt (Aerodynamic plasma capsule, aligned to trajectory)
+      const laserCol = eb.col || '#ff0033';
+      const boltLen = Math.max(22, (eb.r || 12) * 1.9);
+      const boltThick = Math.max(5, (eb.r || 12) * 0.52);
+
+      // Outer Plasma Energy Bloom
+      cx.fillStyle = laserCol;
+      cx.globalAlpha = 0.40;
+      cx.beginPath();
+      cx.ellipse(0, 0, boltLen * 0.65, boltThick * 1.6, 0, 0, Math.PI * 2);
+      cx.fill();
+
+      // Colored Laser Beam Body
+      cx.globalAlpha = 0.95;
+      cx.fillStyle = laserCol;
+      cx.beginPath();
+      cx.roundRect(-boltLen * 0.5, -boltThick * 0.5, boltLen, boltThick, boltThick * 0.5);
+      cx.fill();
+
+      // Searing Ultra-Bright White Energy Core
       cx.fillStyle = '#ffffff';
-      cx.fillRect(-12, -3, 24, 6);
-      cx.strokeStyle = laserCol;
-      cx.lineWidth = 1.8;
-      cx.strokeRect(-12, -3, 24, 6);
+      cx.globalAlpha = 1.0;
+      cx.beginPath();
+      cx.roundRect(-boltLen * 0.38, -boltThick * 0.25, boltLen * 0.76, boltThick * 0.5, boltThick * 0.25);
+      cx.fill();
     }
     cx.restore();
   }
