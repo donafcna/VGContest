@@ -2722,7 +2722,7 @@ function getShipSvg(shipId, cols) {
       <linearGradient id="armor_${uid}" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="${c0}"/>
         <stop offset="50%" stop-color="${c1}"/>
-        <stop offset="100%" stop-color="#090d16"/>
+        <stop offset="100%" stop-color="${c2}"/>
       </linearGradient>
     </defs>
   `;
@@ -2732,36 +2732,36 @@ function getShipSvg(shipId, cols) {
     return `<svg viewBox="0 0 110 65" width="105" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${filterBlock}
       <!-- 4 Quad Sub-Light Ion Thruster Plumes -->
-      <polygon points="12,20 0,21.5 12,23" fill="#ff4400" filter="url(#glow_${uid})"/>
-      <polygon points="12,27 0,28.5 12,30" fill="#00ffee" filter="url(#glow_${uid})"/>
-      <polygon points="12,35 0,36.5 12,38" fill="#00ffee" filter="url(#glow_${uid})"/>
-      <polygon points="12,42 0,43.5 12,45" fill="#ff4400" filter="url(#glow_${uid})"/>
+      <polygon points="12,20 0,21.5 12,23" fill="${c0}" filter="url(#glow_${uid})"/>
+      <polygon points="12,27 0,28.5 12,30" fill="#ffffff" filter="url(#glow_${uid})"/>
+      <polygon points="12,35 0,36.5 12,38" fill="#ffffff" filter="url(#glow_${uid})"/>
+      <polygon points="12,42 0,43.5 12,45" fill="${c0}" filter="url(#glow_${uid})"/>
 
       <!-- 4 Deployed S-Foil Attack Wings (X-Formation) -->
       <!-- Top-Left Wing & Long Laser Cannon -->
-      <polygon points="24,26 62,26 80,10 42,10" fill="#1e293b" stroke="#38bdf8" stroke-width="1.4"/>
-      <line x1="38" y1="10" x2="98" y2="10" stroke="#94a3b8" stroke-width="2"/>
-      <rect x="94" y="8" width="6" height="4" fill="#ff0033" filter="url(#glow_${uid})"/>
+      <polygon points="24,26 62,26 80,10 42,10" fill="url(#armor_${uid})" stroke="${c0}" stroke-width="1.4"/>
+      <line x1="38" y1="10" x2="98" y2="10" stroke="${c0}" stroke-width="2"/>
+      <rect x="94" y="8" width="6" height="4" fill="${c0}" filter="url(#glow_${uid})"/>
 
       <!-- Bottom-Left Wing & Long Laser Cannon -->
-      <polygon points="24,38 62,38 80,54 42,54" fill="#1e293b" stroke="#38bdf8" stroke-width="1.4"/>
-      <line x1="38" y1="54" x2="98" y2="54" stroke="#94a3b8" stroke-width="2"/>
-      <rect x="94" y="52" width="6" height="4" fill="#ff0033" filter="url(#glow_${uid})"/>
+      <polygon points="24,38 62,38 80,54 42,54" fill="url(#armor_${uid})" stroke="${c0}" stroke-width="1.4"/>
+      <line x1="38" y1="54" x2="98" y2="54" stroke="${c0}" stroke-width="2"/>
+      <rect x="94" y="52" width="6" height="4" fill="${c0}" filter="url(#glow_${uid})"/>
 
       <!-- Main Long Needle Fuselage -->
-      <polygon points="12,28 66,28 100,32 66,36 12,36" fill="url(#metal_${uid})" stroke="#38bdf8" stroke-width="2"/>
-      <polygon points="76,30 96,32 76,34" fill="#ff0033"/>
+      <polygon points="12,28 66,28 100,32 66,36 12,36" fill="url(#metal_${uid})" stroke="${c0}" stroke-width="2"/>
+      <polygon points="76,30 96,32 76,34" fill="${c0}"/>
 
-      <!-- Rebel Squadron Red Racing Stripes -->
-      <line x1="28" y1="30" x2="68" y2="30" stroke="#ef4444" stroke-width="1.4"/>
-      <line x1="28" y1="34" x2="68" y2="34" stroke="#ef4444" stroke-width="1.4"/>
+      <!-- Tactical Squadron Racing Stripes -->
+      <line x1="28" y1="30" x2="68" y2="30" stroke="${c0}" stroke-width="1.4"/>
+      <line x1="28" y1="34" x2="68" y2="34" stroke="${c0}" stroke-width="1.4"/>
 
       <!-- Pilot Canopy Cockpit -->
-      <rect x="52" y="30" width="16" height="4.5" fill="#0284c7" stroke="#ffffff" stroke-width="1" rx="1.2"/>
+      <rect x="52" y="30" width="16" height="4.5" fill="${c1}" stroke="#ffffff" stroke-width="1" rx="1.2"/>
 
       <!-- Astromech Droid Dome (R2-D2) -->
-      <circle cx="44" cy="32" r="3.5" fill="#ffffff" stroke="#0284c7" stroke-width="1"/>
-      <circle cx="44" cy="32" r="1.5" fill="#00ffee" filter="url(#glow_${uid})"/>
+      <circle cx="44" cy="32" r="3.5" fill="#ffffff" stroke="${c0}" stroke-width="1"/>
+      <circle cx="44" cy="32" r="1.5" fill="${c0}" filter="url(#glow_${uid})"/>
     </svg>`;
   }
 
@@ -2770,38 +2770,38 @@ function getShipSvg(shipId, cols) {
     return `<svg viewBox="0 0 110 65" width="105" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${filterBlock}
       <!-- Triple Sublight Ion Engine Stealth Plumes -->
-      <polygon points="12,28 0,30 12,32" fill="#38bdf8" filter="url(#glow_${uid})"/>
+      <polygon points="12,28 0,30 12,32" fill="${c0}" filter="url(#glow_${uid})"/>
       <polygon points="10,34 0,36 10,38" fill="#ffffff" filter="url(#glow_${uid})"/>
-      <polygon points="12,40 0,42 12,44" fill="#38bdf8" filter="url(#glow_${uid})"/>
+      <polygon points="12,40 0,42 12,44" fill="${c0}" filter="url(#glow_${uid})"/>
 
       <!-- Upper Dorsal TIE Solar Radiator Wing & Pylon Assembly -->
-      <polygon points="34,22 44,7 76,5 68,22" fill="#0f172a" stroke="#64748b" stroke-width="1.4"/>
-      <line x1="44" y1="7" x2="68" y2="22" stroke="#38bdf8" stroke-width="1" opacity="0.6"/>
-      <line x1="55" y1="6" x2="51" y2="22" stroke="#64748b" stroke-width="1"/>
-      <line x1="65" y1="6" x2="61" y2="22" stroke="#64748b" stroke-width="1"/>
-      <polygon points="32,22 48,22 44,28 28,28" fill="#1e293b" stroke="#475569" stroke-width="1.1"/>
+      <polygon points="34,22 44,7 76,5 68,22" fill="${c2}" stroke="${c0}" stroke-width="1.4"/>
+      <line x1="44" y1="7" x2="68" y2="22" stroke="${c0}" stroke-width="1" opacity="0.6"/>
+      <line x1="55" y1="6" x2="51" y2="22" stroke="${c1}" stroke-width="1"/>
+      <line x1="65" y1="6" x2="61" y2="22" stroke="${c1}" stroke-width="1"/>
+      <polygon points="32,22 48,22 44,28 28,28" fill="url(#armor_${uid})" stroke="${c1}" stroke-width="1.1"/>
 
       <!-- Stern Sublight Engine Module Block -->
-      <rect x="10" y="27" width="14" height="18" rx="2" fill="#0f172a" stroke="#475569" stroke-width="1.5"/>
-      <circle cx="12" cy="30" r="2.5" fill="#38bdf8"/>
+      <rect x="10" y="27" width="14" height="18" rx="2" fill="${c2}" stroke="${c0}" stroke-width="1.5"/>
+      <circle cx="12" cy="30" r="2.5" fill="${c0}"/>
       <circle cx="11" cy="36" r="3" fill="#ffffff"/>
-      <circle cx="12" cy="42" r="2.5" fill="#38bdf8"/>
+      <circle cx="12" cy="42" r="2.5" fill="${c0}"/>
 
       <!-- Main Stealth Asymmetric Fuselage Dagger -->
-      <path d="M22 24 L68 22 L98 33 L92 36 L104 38 L94 42 L66 46 L22 44 Z" fill="url(#metal_${uid})" stroke="#64748b" stroke-width="1.8"/>
+      <path d="M22 24 L68 22 L98 33 L92 36 L104 38 L94 42 L66 46 L22 44 Z" fill="url(#metal_${uid})" stroke="${c0}" stroke-width="1.8"/>
 
       <!-- Stealth Power Conduits & Telemetry -->
-      <path d="M26 31 L64 30 L88 35" stroke="#38bdf8" stroke-width="1.5" filter="url(#glow_${uid})"/>
-      <path d="M28 39 L62 40 L86 38" stroke="#00ffee" stroke-width="1.2" opacity="0.8"/>
+      <path d="M26 31 L64 30 L88 35" stroke="${c0}" stroke-width="1.5" filter="url(#glow_${uid})"/>
+      <path d="M28 39 L62 40 L86 38" stroke="${c0}" stroke-width="1.2" opacity="0.8"/>
 
       <!-- Spherical Command Cockpit Dome -->
-      <circle cx="56" cy="32" r="6.5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
-      <circle cx="56" cy="32" r="4" fill="#0284c7" opacity="0.85"/>
+      <circle cx="56" cy="32" r="6.5" fill="${c2}" stroke="${c0}" stroke-width="1.5"/>
+      <circle cx="56" cy="32" r="4" fill="${c1}" opacity="0.85"/>
       <circle cx="57" cy="31" r="2" fill="#ffffff"/>
 
       <!-- Lower Stabilizer Fin & Tachyon Blaster Pod -->
-      <polygon points="34,44 58,45 64,54 42,52" fill="#1e293b" stroke="#334155" stroke-width="1.2"/>
-      <line x1="64" y1="54" x2="74" y2="53" stroke="#38bdf8" stroke-width="1.5"/>
+      <polygon points="34,44 58,45 64,54 42,52" fill="url(#armor_${uid})" stroke="${c0}" stroke-width="1.2"/>
+      <line x1="64" y1="54" x2="74" y2="53" stroke="${c0}" stroke-width="1.5"/>
     </svg>`;
   }
 
@@ -2810,51 +2810,51 @@ function getShipSvg(shipId, cols) {
     return `<svg viewBox="0 0 110 65" width="105" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${filterBlock}
       <!-- Quad Sublight Ion Engine Exhaust Plumes -->
-      <polygon points="14,16 2,17 14,18" fill="#38bdf8" filter="url(#glow_${uid})"/>
+      <polygon points="14,16 2,17 14,18" fill="${c0}" filter="url(#glow_${uid})"/>
       <polygon points="14,26 2,27 14,28" fill="#ffffff" filter="url(#glow_${uid})"/>
       <polygon points="14,38 2,39 14,40" fill="#ffffff" filter="url(#glow_${uid})"/>
-      <polygon points="14,48 2,49 14,50" fill="#38bdf8" filter="url(#glow_${uid})"/>
+      <polygon points="14,48 2,49 14,50" fill="${c0}" filter="url(#glow_${uid})"/>
 
-      <!-- Quad Cylindrical Engine Nacelles with Republic Red Bands -->
+      <!-- Quad Cylindrical Engine Nacelles with Identification Bands -->
       <!-- Upper Outrigger Engine -->
-      <rect x="14" y="11" width="22" height="10" rx="3" fill="#1e293b" stroke="#e2e8f0" stroke-width="1.2"/>
-      <rect x="20" y="11" width="8" height="10" fill="#ef4444"/>
-      <circle cx="16" cy="16" r="3" fill="#38bdf8"/>
+      <rect x="14" y="11" width="22" height="10" rx="3" fill="url(#armor_${uid})" stroke="${c0}" stroke-width="1.2"/>
+      <rect x="20" y="11" width="8" height="10" fill="${c0}"/>
+      <circle cx="16" cy="16" r="3" fill="${c0}"/>
       <!-- Lower Outrigger Engine -->
-      <rect x="14" y="44" width="22" height="10" rx="3" fill="#1e293b" stroke="#e2e8f0" stroke-width="1.2"/>
-      <rect x="20" y="44" width="8" height="10" fill="#ef4444"/>
-      <circle cx="16" cy="49" r="3" fill="#38bdf8"/>
+      <rect x="14" y="44" width="22" height="10" rx="3" fill="url(#armor_${uid})" stroke="${c0}" stroke-width="1.2"/>
+      <rect x="20" y="44" width="8" height="10" fill="${c0}"/>
+      <circle cx="16" cy="49" r="3" fill="${c0}"/>
       <!-- Mid Engine Mount Pylons -->
-      <polygon points="24,18 36,25 36,40 24,47" fill="#334155" stroke="#64748b" stroke-width="1"/>
+      <polygon points="24,18 36,25 36,40 24,47" fill="${c2}" stroke="${c1}" stroke-width="1"/>
 
       <!-- Main Armored Cylindrical Fuselage Spine -->
-      <rect x="34" y="24" width="46" height="17" rx="3" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
-      <!-- Red Dorsal Spine Cowling & Gold Trim -->
-      <rect x="36" y="25" width="42" height="5" rx="1.5" fill="#ef4444"/>
-      <line x1="36" y1="36" x2="78" y2="36" stroke="#f59e0b" stroke-width="1.5"/>
+      <rect x="34" y="24" width="46" height="17" rx="3" fill="url(#metal_${uid})" stroke="${c0}" stroke-width="1.5"/>
+      <!-- Dorsal Spine Cowling & Trim -->
+      <rect x="36" y="25" width="42" height="5" rx="1.5" fill="${c0}"/>
+      <line x1="36" y1="36" x2="78" y2="36" stroke="${c0}" stroke-width="1.5"/>
       <!-- Dark Keel Greebles & Radiators -->
-      <rect x="38" y="38" width="38" height="3" fill="#0f172a"/>
+      <rect x="38" y="38" width="38" height="3" fill="${c2}"/>
 
       <!-- Dorsal Sensor / Comm Tower -->
-      <polygon points="48,24 54,17 60,24" fill="#ef4444" stroke="#e2e8f0" stroke-width="1"/>
+      <polygon points="48,24 54,17 60,24" fill="${c0}" stroke="#ffffff" stroke-width="1"/>
 
       <!-- Iconic Vertical Hammerhead Bow / Bridge Section -->
       <!-- Upper Hammerhead Fin -->
-      <polygon points="80,24 88,8 96,10 92,24" fill="#f8fafc" stroke="#dc2626" stroke-width="1.5"/>
-      <polygon points="86,10 94,11 91,20 84,20" fill="#ef4444"/>
+      <polygon points="80,24 88,8 96,10 92,24" fill="url(#metal_${uid})" stroke="${c0}" stroke-width="1.5"/>
+      <polygon points="86,10 94,11 91,20 84,20" fill="${c0}"/>
       <!-- Lower Hammerhead Fin -->
-      <polygon points="80,41 88,57 96,55 92,41" fill="#f8fafc" stroke="#dc2626" stroke-width="1.5"/>
-      <polygon points="86,55 94,54 91,45 84,45" fill="#ef4444"/>
+      <polygon points="80,41 88,57 96,55 92,41" fill="url(#metal_${uid})" stroke="${c0}" stroke-width="1.5"/>
+      <polygon points="86,55 94,54 91,45 84,45" fill="${c0}"/>
       <!-- Central Hammerhead Bridge Face -->
-      <polygon points="84,21 102,23 104,32.5 102,42 84,44 80,32.5" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.8"/>
-      <polygon points="86,23 100,25 101,32.5 100,40 86,42 84,32.5" fill="#ef4444"/>
+      <polygon points="84,21 102,23 104,32.5 102,42 84,44 80,32.5" fill="url(#metal_${uid})" stroke="${c0}" stroke-width="1.8"/>
+      <polygon points="86,23 100,25 101,32.5 100,40 86,42 84,32.5" fill="${c0}"/>
       <!-- Bridge Viewport Slit -->
-      <rect x="94" y="30.5" width="8" height="4" rx="1" fill="#0284c7" stroke="#ffffff" stroke-width="0.8" filter="url(#glow_${uid})"/>
+      <rect x="94" y="30.5" width="8" height="4" rx="1" fill="${c1}" stroke="#ffffff" stroke-width="0.8" filter="url(#glow_${uid})"/>
 
       <!-- Lateral Circular Swivel Turret & Heavy Cannons -->
-      <circle cx="84" cy="32.5" r="5" fill="#1e293b" stroke="#e2e8f0" stroke-width="1.2"/>
-      <line x1="84" y1="31" x2="98" y2="31" stroke="#334155" stroke-width="1.6"/>
-      <line x1="84" y1="34" x2="98" y2="34" stroke="#334155" stroke-width="1.6"/>
+      <circle cx="84" cy="32.5" r="5" fill="${c2}" stroke="${c0}" stroke-width="1.2"/>
+      <line x1="84" y1="31" x2="98" y2="31" stroke="${c0}" stroke-width="1.6"/>
+      <line x1="84" y1="34" x2="98" y2="34" stroke="${c0}" stroke-width="1.6"/>
     </svg>`;
   }
 
@@ -2863,76 +2863,76 @@ function getShipSvg(shipId, cols) {
     return `<svg viewBox="0 0 110 65" width="105" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${filterBlock}
       <!-- Quad Articulated Turbine Ion Plumes -->
-      <polygon points="12,12 0,13 12,14" fill="#38bdf8" filter="url(#glow_${uid})"/>
-      <polygon points="12,24 2,25 12,26" fill="#6366f1" filter="url(#glow_${uid})"/>
-      <polygon points="12,38 2,39 12,40" fill="#6366f1" filter="url(#glow_${uid})"/>
-      <polygon points="12,50 0,51 12,52" fill="#38bdf8" filter="url(#glow_${uid})"/>
+      <polygon points="12,12 0,13 12,14" fill="${c0}" filter="url(#glow_${uid})"/>
+      <polygon points="12,24 2,25 12,26" fill="#ffffff" filter="url(#glow_${uid})"/>
+      <polygon points="12,38 2,39 12,40" fill="#ffffff" filter="url(#glow_${uid})"/>
+      <polygon points="12,50 0,51 12,52" fill="${c0}" filter="url(#glow_${uid})"/>
 
       <!-- Outboard Cantilever Wing Pylons -->
-      <polygon points="28,14 46,20 46,44 28,50 22,46 22,18" fill="#1e293b" stroke="#64748b" stroke-width="1.2"/>
+      <polygon points="28,14 46,20 46,44 28,50 22,46 22,18" fill="url(#armor_${uid})" stroke="${c0}" stroke-width="1.2"/>
 
       <!-- Rear Outrigger Turbines (Port & Starboard) -->
-      <rect x="12" y="8" width="22" height="9" rx="2.5" fill="#334155" stroke="#94a3b8" stroke-width="1"/>
-      <circle cx="14" cy="12.5" r="2.5" fill="#38bdf8"/>
-      <rect x="12" y="47" width="22" height="9" rx="2.5" fill="#334155" stroke="#94a3b8" stroke-width="1"/>
-      <circle cx="14" cy="51.5" r="2.5" fill="#38bdf8"/>
+      <rect x="12" y="8" width="22" height="9" rx="2.5" fill="${c2}" stroke="${c0}" stroke-width="1"/>
+      <circle cx="14" cy="12.5" r="2.5" fill="${c0}"/>
+      <rect x="12" y="47" width="22" height="9" rx="2.5" fill="${c2}" stroke="${c0}" stroke-width="1"/>
+      <circle cx="14" cy="51.5" r="2.5" fill="${c0}"/>
 
       <!-- Main Rugged Slab Armored Hull -->
-      <polygon points="22,20 72,20 86,28 86,36 72,44 22,44 16,33" fill="url(#metal_${uid})" stroke="#94a3b8" stroke-width="1.8"/>
+      <polygon points="22,20 72,20 86,28 86,36 72,44 22,44 16,33" fill="url(#metal_${uid})" stroke="${c0}" stroke-width="1.8"/>
 
-      <!-- Off-White Identification Striping Decals -->
-      <line x1="44" y1="21" x2="38" y2="43" stroke="#f1f5f9" stroke-width="2.5" stroke-dasharray="4 2"/>
-      <line x1="56" y1="21" x2="50" y2="43" stroke="#f1f5f9" stroke-width="2"/>
+      <!-- Identification Striping Decals -->
+      <line x1="44" y1="21" x2="38" y2="43" stroke="${c0}" stroke-width="2.5" stroke-dasharray="4 2"/>
+      <line x1="56" y1="21" x2="50" y2="43" stroke="${c0}" stroke-width="2"/>
 
       <!-- Mid-Flank Articulated Heavy Turbines -->
-      <rect x="42" y="14" width="24" height="8" rx="2.5" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.2"/>
-      <circle cx="64" cy="18" r="3.5" fill="#334155" stroke="#38bdf8" stroke-width="0.8"/>
-      <rect x="42" y="42" width="24" height="8" rx="2.5" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.2"/>
-      <circle cx="64" cy="46" r="3.5" fill="#334155" stroke="#38bdf8" stroke-width="0.8"/>
+      <rect x="42" y="14" width="24" height="8" rx="2.5" fill="url(#armor_${uid})" stroke="${c0}" stroke-width="1.2"/>
+      <circle cx="64" cy="18" r="3.5" fill="${c2}" stroke="${c0}" stroke-width="0.8"/>
+      <rect x="42" y="42" width="24" height="8" rx="2.5" fill="url(#armor_${uid})" stroke="${c0}" stroke-width="1.2"/>
+      <circle cx="64" cy="46" r="3.5" fill="${c2}" stroke="${c0}" stroke-width="0.8"/>
 
       <!-- Dorsal Defense Turret -->
-      <circle cx="48" cy="27" r="3.5" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
-      <line x1="48" y1="27" x2="58" y2="24" stroke="#ffd23c" stroke-width="1.2"/>
+      <circle cx="48" cy="27" r="3.5" fill="${c2}" stroke="${c0}" stroke-width="1"/>
+      <line x1="48" y1="27" x2="58" y2="24" stroke="${c0}" stroke-width="1.2"/>
 
       <!-- Recessed Multi-Panel Cockpit Visor Canopy -->
-      <polygon points="68,29 82,31 82,34 68,36" fill="#0f172a" stroke="#6366f1" stroke-width="1.2"/>
-      <circle cx="75" cy="32.5" r="2.5" fill="#38bdf8" filter="url(#glow_${uid})"/>
+      <polygon points="68,29 82,31 82,34 68,36" fill="${c2}" stroke="${c0}" stroke-width="1.2"/>
+      <circle cx="75" cy="32.5" r="2.5" fill="${c0}" filter="url(#glow_${uid})"/>
 
       <!-- Forward Long-Range Heavy Kinetic Blaster Cannons -->
-      <line x1="84" y1="28" x2="102" y2="28" stroke="#334155" stroke-width="1.8"/>
-      <line x1="84" y1="36" x2="102" y2="36" stroke="#334155" stroke-width="1.8"/>
-      <rect x="98" y="27" width="5" height="2" fill="#ffd23c"/>
-      <rect x="98" y="35" width="5" height="2" fill="#ffd23c"/>
+      <line x1="84" y1="28" x2="102" y2="28" stroke="${c0}" stroke-width="1.8"/>
+      <line x1="84" y1="36" x2="102" y2="36" stroke="${c0}" stroke-width="1.8"/>
+      <rect x="98" y="27" width="5" height="2" fill="${c0}"/>
+      <rect x="98" y="35" width="5" height="2" fill="${c0}"/>
     </svg>`;
   }
 
   // 5. THE MILLENNIUM FALCON (YT-1300 LIGHT FREIGHTER): Saucer Hull, Cargo Mandibles, Offset Starboard Cockpit
   return `<svg viewBox="0 0 110 65" width="105" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
     ${filterBlock}
-    <!-- Glowing Cyan Sub-Light Ion Engine Strip across Stern -->
-    <path d="M12 24 Q6 33 12 42" stroke="#00ffee" stroke-width="4.5" fill="none" filter="url(#glow_${uid})"/>
+    <!-- Glowing Sub-Light Ion Engine Strip across Stern -->
+    <path d="M12 24 Q6 33 12 42" stroke="${c0}" stroke-width="4.5" fill="none" filter="url(#glow_${uid})"/>
     <path d="M12 24 Q6 33 12 42" stroke="#ffffff" stroke-width="1.8" fill="none"/>
 
     <!-- Main Circular Saucer Hull -->
-    <ellipse cx="44" cy="33" rx="32" ry="24" fill="url(#metal_${uid})" stroke="#94a3b8" stroke-width="2.5"/>
+    <ellipse cx="44" cy="33" rx="32" ry="24" fill="url(#metal_${uid})" stroke="${c0}" stroke-width="2.5"/>
     
     <!-- Forward Cargo Docking Mandibles -->
-    <polygon points="62,21 98,21 96,28 66,28" fill="#1e293b" stroke="#94a3b8" stroke-width="1.8"/>
-    <polygon points="62,45 98,45 96,38 66,38" fill="#1e293b" stroke="#94a3b8" stroke-width="1.8"/>
+    <polygon points="62,21 98,21 96,28 66,28" fill="url(#armor_${uid})" stroke="${c0}" stroke-width="1.8"/>
+    <polygon points="62,45 98,45 96,38 66,38" fill="url(#armor_${uid})" stroke="${c0}" stroke-width="1.8"/>
     <!-- Mandible Notched Center Bay -->
-    <polygon points="66,28 78,33 66,38" fill="#0f172a"/>
+    <polygon points="66,28 78,33 66,38" fill="${c2}"/>
 
     <!-- Offset Starboard Cockpit Corridor & Conical Viewport -->
-    <rect x="46" y="10" width="22" height="7" fill="#334155" stroke="#94a3b8" stroke-width="1.4"/>
-    <polygon points="68,8 86,12 86,16 68,18" fill="#0f172a" stroke="#38bdf8" stroke-width="1.6"/>
-    <circle cx="78" cy="13" r="2.5" fill="#00ffee" filter="url(#glow_${uid})"/>
+    <rect x="46" y="10" width="22" height="7" fill="url(#armor_${uid})" stroke="${c0}" stroke-width="1.4"/>
+    <polygon points="68,8 86,12 86,16 68,18" fill="${c2}" stroke="${c0}" stroke-width="1.6"/>
+    <circle cx="78" cy="13" r="2.5" fill="${c0}" filter="url(#glow_${uid})"/>
 
     <!-- Dorsal Quad-Laser Blaster Turret -->
-    <circle cx="44" cy="33" r="8" fill="#0f172a" stroke="#ffd23c" stroke-width="1.6"/>
-    <line x1="44" y1="33" x2="58" y2="33" stroke="#ff0033" stroke-width="2.2" filter="url(#glow_${uid})"/>
+    <circle cx="44" cy="33" r="8" fill="${c2}" stroke="${c0}" stroke-width="1.6"/>
+    <line x1="44" y1="33" x2="58" y2="33" stroke="${c0}" stroke-width="2.2" filter="url(#glow_${uid})"/>
 
     <!-- Round Sensor Radar Dish -->
-    <circle cx="34" cy="18" r="5" fill="#475569" stroke="#94a3b8" stroke-width="1.2"/>
+    <circle cx="34" cy="18" r="5" fill="${c1}" stroke="${c0}" stroke-width="1.2"/>
     <line x1="34" y1="18" x2="30" y2="14" stroke="#ffffff" stroke-width="1.5"/>
   </svg>`;
 }
@@ -9691,25 +9691,32 @@ function draw() {
     const col1 = (shipCols && shipCols[1]) || '#8c5528';
     const col2 = (shipCols && shipCols[2]) || '#3b1c06';
 
-    // Ambient Glowing Solar Energy Field
-    const shipAura = cx.createRadialGradient(0, 16, 8, 0, 16, 75);
-    shipAura.addColorStop(0, col0 + '25');
-    shipAura.addColorStop(0.5, col1 + '10');
+    const activeSkin = (SAVE.data.skin && SAVE.data.kills >= (skinById(SAVE.data.skin).kills || 0)) ? SAVE.data.skin : 'default';
+    const sk = skinById(activeSkin);
+    const accentCol = sk.bulletCol || sk.themeCol || '#ffd23c';
+    const auraCol = sk.aura || sk.themeCol || '#ffd23c';
+
+    // Ambient Glowing Solar Energy Field (Harmonized with Active Skin)
+    const shipAura = cx.createRadialGradient(0, 16, 8, 0, 16, 80);
+    shipAura.addColorStop(0, col0 + '33');
+    shipAura.addColorStop(0.4, auraCol + '20');
+    shipAura.addColorStop(0.7, col1 + '10');
     shipAura.addColorStop(1, 'rgba(0,0,0,0)');
     cx.fillStyle = shipAura;
-    cx.beginPath(); cx.ellipse(0, 16, 75, 48, 0, 0, Math.PI * 2); cx.fill();
+    cx.beginPath(); cx.ellipse(0, 16, 80, 52, 0, 0, Math.PI * 2); cx.fill();
 
     // -------------------------------------------------------------
     // SHAPE 1: T-65B X-WING STARFIGHTER (runner)
     // -------------------------------------------------------------
     if (curShip === 'runner') {
-      // 4 Quad Sub-Light Ion Thruster Plumes
+      // 4 Quad Sub-Light Ion Thruster Plumes with Mach Shock Diamonds
       for (const ey of [-18, -8, 8, 18]) {
-        const jg = cx.createLinearGradient(-42, ey, -72, ey);
+        // Ion flame gradient
+        const jg = cx.createLinearGradient(-42, ey, -76, ey);
         jg.addColorStop(0, '#ffffff');
-        jg.addColorStop(0.25, '#ff4400');
-        jg.addColorStop(0.65, '#00ffee');
-        jg.addColorStop(1, 'rgba(0,255,238,0)');
+        jg.addColorStop(0.2, auraCol);
+        jg.addColorStop(0.65, accentCol);
+        jg.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = jg;
         cx.beginPath();
         cx.moveTo(-42, ey - 3.5);
@@ -9717,29 +9724,102 @@ function draw() {
         cx.lineTo(-42, ey + 3.5);
         cx.closePath();
         cx.fill();
-        cx.fillStyle = '#0f172a'; cx.fillRect(-44, ey - 4, 6, 8);
+
+        // Supersonic Mach Shock Diamonds
+        cx.fillStyle = '#ffffff';
+        cx.beginPath();
+        cx.ellipse(-52, ey, 3.2, 1.2, 0, 0, Math.PI * 2);
+        cx.fill();
+
+        // Engine Nacelle Cylindrical Housing
+        const engGrad = cx.createLinearGradient(-44, ey - 4, -44, ey + 4);
+        engGrad.addColorStop(0, col1);
+        engGrad.addColorStop(0.5, col0);
+        engGrad.addColorStop(1, col2);
+        cx.fillStyle = engGrad;
+        cx.fillRect(-44, ey - 4, 8, 8);
+        cx.strokeStyle = col0; cx.lineWidth = 1.2;
+        cx.strokeRect(-44, ey - 4, 8, 8);
+        // Glowing Exhaust Nozzle Ring
+        cx.fillStyle = accentCol;
+        cx.fillRect(-44, ey - 3, 2, 6);
       }
 
       // 4 Deployed S-Foil Attack Wings (X-Formation) with Long Blaster Barrels
-      for (const [wy, wAng, tipY] of [[-16, -0.22, -34], [16, 0.22, 34]]) {
+      for (const [wy, wAng, isUpper] of [[-16, -0.22, true], [16, 0.22, false]]) {
         cx.save(); cx.translate(-6, wy); cx.rotate(wAng);
-        // Wing Armor Plate
-        cx.fillStyle = '#1e293b'; cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2;
-        cx.beginPath();
-        cx.moveTo(-28, 0); cx.lineTo(24, 0); cx.lineTo(12, wy > 0 ? 18 : -18); cx.lineTo(-24, wy > 0 ? 18 : -18);
-        cx.closePath(); cx.fill(); cx.stroke();
         
-        // Wingtip Long Laser Cannon Barrel & Emitter
-        cx.fillStyle = '#475569'; cx.fillRect(-18, wy > 0 ? 16 : -20, 72, 3.5);
-        cx.fillStyle = '#ff0033'; cx.fillRect(52, wy > 0 ? 15 : -21, 6, 5.5);
+        // Wing Root Hydraulic Hinge
+        cx.fillStyle = col2;
+        cx.fillRect(-22, isUpper ? -3 : 0, 10, 3);
+        cx.strokeStyle = col0; cx.lineWidth = 1;
+        cx.strokeRect(-22, isUpper ? -3 : 0, 10, 3);
+
+        // Main Wing Armor Plate with Specular Metallic Bevel
+        const wGrad = cx.createLinearGradient(-28, 0, 12, isUpper ? -18 : 18);
+        wGrad.addColorStop(0, col1);
+        wGrad.addColorStop(0.4, col0);
+        wGrad.addColorStop(0.8, col1);
+        wGrad.addColorStop(1, col2);
+        cx.fillStyle = wGrad;
+        cx.strokeStyle = col0; cx.lineWidth = 1.8;
+        cx.beginPath();
+        cx.moveTo(-28, 0); cx.lineTo(24, 0); cx.lineTo(12, isUpper ? -18 : 18); cx.lineTo(-24, isUpper ? -18 : 18);
+        cx.closePath();
+        cx.fill(); cx.stroke();
+
+        // Wing Micro-Panel Lines & S-Foil Bevel Seam
+        cx.strokeStyle = 'rgba(0, 0, 0, 0.4)'; cx.lineWidth = 1;
+        cx.beginPath();
+        cx.moveTo(-8, 0); cx.lineTo(-2, isUpper ? -18 : 18);
+        cx.moveTo(10, 0); cx.lineTo(6, isUpper ? -18 : 18);
+        cx.stroke();
+        cx.strokeStyle = 'rgba(255, 255, 255, 0.35)'; cx.lineWidth = 1;
+        cx.beginPath();
+        cx.moveTo(-7, 0); cx.lineTo(-1, isUpper ? -18 : 18);
+        cx.stroke();
+
+        // Wing Leading-Edge Armor Sponson
+        cx.fillStyle = col2;
+        cx.beginPath();
+        cx.moveTo(12, isUpper ? -18 : 18);
+        cx.lineTo(24, 0);
+        cx.lineTo(18, 0);
+        cx.lineTo(8, isUpper ? -18 : 18);
+        cx.closePath();
+        cx.fill();
+
+        // Wingtip Long Laser Cannon Barrel & Cooling Sleeve
+        const bGrad = cx.createLinearGradient(-18, 0, 54, 0);
+        bGrad.addColorStop(0, col2);
+        bGrad.addColorStop(0.5, '#475569');
+        bGrad.addColorStop(1, col1);
+        cx.fillStyle = bGrad;
+        cx.fillRect(-18, isUpper ? -20 : 16, 72, 3.5);
+        cx.strokeStyle = col0; cx.lineWidth = 0.8;
+        cx.strokeRect(-18, isUpper ? -20 : 16, 72, 3.5);
+
+        // Laser Cannon Muzzle Emitter & Magnetic Field Focus Diode
+        cx.fillStyle = accentCol;
+        cx.fillRect(52, isUpper ? -21 : 15, 6, 5.5);
+        cx.strokeStyle = '#ffffff'; cx.lineWidth = 1;
+        cx.strokeRect(52, isUpper ? -21 : 15, 6, 5.5);
+
+        // Blaster Energy Conduit Wire
+        cx.strokeStyle = accentCol; cx.lineWidth = 1.2;
+        cx.beginPath();
+        cx.moveTo(-18, isUpper ? -18 : 18);
+        cx.lineTo(-6, isUpper ? -8 : 8);
+        cx.stroke();
+
         cx.restore();
       }
 
-      // Main Long Needle Fuselage
-      const hGrad = cx.createLinearGradient(0, -8, 0, 8);
-      hGrad.addColorStop(0, '#f8fafc');
-      hGrad.addColorStop(0.35, '#e2e8f0');
-      hGrad.addColorStop(0.7, col0);
+      // Main Long Needle Fuselage (Specular Multi-Stop Alloy Hull)
+      const hGrad = cx.createLinearGradient(0, -9, 0, 9);
+      hGrad.addColorStop(0, '#ffffff');
+      hGrad.addColorStop(0.2, col0);
+      hGrad.addColorStop(0.65, col1);
       hGrad.addColorStop(1, col2);
       cx.fillStyle = hGrad;
       cx.beginPath();
@@ -9750,41 +9830,77 @@ function draw() {
       cx.lineTo(-42, 8);
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.4; cx.stroke();
+      cx.strokeStyle = col0; cx.lineWidth = 2.2; cx.stroke();
 
-      // Rebel Squadron Red Racing Stripes
-      cx.fillStyle = '#ef4444';
-      cx.fillRect(-12, -7, 28, 2.5);
-      cx.fillRect(-12, 4.5, 28, 2.5);
-      cx.beginPath(); cx.moveTo(34, -4); cx.lineTo(52, 0); cx.lineTo(34, 4); cx.closePath(); cx.fill();
+      // Fuselage Center Spine Chine Highlight Line
+      cx.strokeStyle = 'rgba(255, 255, 255, 0.6)'; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.moveTo(-40, 0); cx.lineTo(56, 0); cx.stroke();
 
-      // Astromech Droid Dome (R2-D2)
-      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-8, 0, 4.5, 0, Math.PI * 2); cx.fill();
-      cx.fillStyle = '#0284c7'; cx.fillRect(-10, -2, 4, 4);
-      cx.fillStyle = '#00ffee'; cx.beginPath(); cx.arc(-8, 0, 1.8, 0, Math.PI * 2); cx.fill();
+      // Tactical Squadron Identification Stripes in Skin Accent Color
+      cx.fillStyle = accentCol;
+      cx.fillRect(-14, -7, 28, 2.5);
+      cx.fillRect(-14, 4.5, 28, 2.5);
+      cx.beginPath();
+      cx.moveTo(32, -4); cx.lineTo(52, 0); cx.lineTo(32, 4);
+      cx.closePath(); cx.fill();
 
-      // Pilot Cockpit Canopy with Blue Telemetry
-      cx.fillStyle = '#0284c7'; cx.beginPath(); cx.roundRect(4, -5, 18, 10, 3); cx.fill();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.2; cx.strokeRect(4, -5, 18, 10);
+      // Recessed Mechanical Greeble Trench behind Cockpit
+      cx.fillStyle = col2;
+      cx.fillRect(-28, -6, 12, 12);
+      cx.strokeStyle = col0; cx.lineWidth = 1;
+      cx.strokeRect(-28, -6, 12, 12);
+      cx.fillStyle = accentCol;
+      cx.fillRect(-26, -4, 3, 8);
+
+      // Astromech Droid Dome (R2 Unit)
+      const droidGrad = cx.createRadialGradient(-8, -1, 1, -8, -1, 5);
+      droidGrad.addColorStop(0, '#ffffff');
+      droidGrad.addColorStop(0.4, col0);
+      droidGrad.addColorStop(1, col2);
+      cx.fillStyle = droidGrad;
+      cx.beginPath(); cx.arc(-8, 0, 4.5, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = col0; cx.lineWidth = 1; cx.stroke();
+      // Droid Eye Optical Sensor
+      cx.fillStyle = accentCol;
+      cx.beginPath(); cx.arc(-7, 0, 2, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffffff';
+      cx.beginPath(); cx.arc(-6.5, -0.5, 0.8, 0, Math.PI * 2); cx.fill();
+
+      // Pilot Cockpit Canopy with Photorealistic Glass & Telemetry HUD
+      const canGrad = cx.createLinearGradient(4, -5, 22, 5);
+      canGrad.addColorStop(0, '#020617');
+      canGrad.addColorStop(0.5, col2);
+      canGrad.addColorStop(1, '#090d16');
+      cx.fillStyle = canGrad;
+      cx.beginPath(); cx.roundRect(4, -5, 18, 10, 3); cx.fill();
+      cx.strokeStyle = col0; cx.lineWidth = 1.4; cx.stroke();
+
+      // Canopy Glass Fresnel Glare
+      cx.strokeStyle = 'rgba(255, 255, 255, 0.75)'; cx.lineWidth = 1.2;
+      cx.beginPath(); cx.moveTo(6, 3); cx.lineTo(16, -4); cx.stroke();
+
+      // Cockpit Internal Holographic HUD Glow
+      cx.fillStyle = accentCol;
+      cx.beginPath(); cx.arc(14, 0, 2.5, 0, Math.PI * 2); cx.fill();
 
     // -------------------------------------------------------------
     // SHAPE 2: THE ROGUE SHADOW (galleon) - Stealth Transport
     // -------------------------------------------------------------
     } else if (curShip === 'galleon') {
-      // Triple Sublight Ion Plumes
+      // Triple Sublight Ion Plumes with Mach Glow
       const ionY = [-8, 0, 8];
       for (let i = 0; i < ionY.length; i++) {
         const ey = ionY[i];
-        const jg = cx.createLinearGradient(-42, ey, -72, ey);
+        const jg = cx.createLinearGradient(-42, ey, -76, ey);
         jg.addColorStop(0, '#ffffff');
-        jg.addColorStop(0.3, '#38bdf8');
-        jg.addColorStop(0.7, '#0284c7');
-        jg.addColorStop(1, 'rgba(2, 132, 199, 0)');
+        jg.addColorStop(0.25, auraCol);
+        jg.addColorStop(0.7, accentCol);
+        jg.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = jg;
         cx.beginPath();
-        cx.moveTo(-42, ey - (i === 1 ? 4 : 3));
-        cx.lineTo(-62 - Math.random() * 16, ey);
-        cx.lineTo(-42, ey + (i === 1 ? 4 : 3));
+        cx.moveTo(-42, ey - (i === 1 ? 4.5 : 3.5));
+        cx.lineTo(-66 - Math.random() * 16, ey);
+        cx.lineTo(-42, ey + (i === 1 ? 4.5 : 3.5));
         cx.closePath();
         cx.fill();
       }
@@ -9792,37 +9908,31 @@ function draw() {
       // Upper TIE-Style Solar Array Wing (Starboard/Dorsal)
       cx.save();
       // Wing Pylon Strut
-      cx.fillStyle = '#1e293b';
-      cx.strokeStyle = '#475569';
-      cx.lineWidth = 1.8;
+      const pylGrad = cx.createLinearGradient(-18, -10, 2, -22);
+      pylGrad.addColorStop(0, col2);
+      pylGrad.addColorStop(0.5, col1);
+      pylGrad.addColorStop(1, col0);
+      cx.fillStyle = pylGrad;
+      cx.strokeStyle = col0;
+      cx.lineWidth = 1.6;
       cx.beginPath();
-      cx.moveTo(-18, -10);
-      cx.lineTo(8, -10);
-      cx.lineTo(2, -22);
-      cx.lineTo(-14, -22);
-      cx.closePath();
-      cx.fill();
-      cx.stroke();
+      cx.moveTo(-18, -10); cx.lineTo(8, -10); cx.lineTo(2, -22); cx.lineTo(-14, -22);
+      cx.closePath(); cx.fill(); cx.stroke();
 
-      // Main Solar Radiator Panel
+      // Main Solar Radiator Panel (Photovoltaic Array)
       const sGrad = cx.createLinearGradient(-25, -34, 25, -18);
-      sGrad.addColorStop(0, '#090d16');
-      sGrad.addColorStop(0.5, '#0f172a');
-      sGrad.addColorStop(1, '#1e293b');
+      sGrad.addColorStop(0, '#06080e');
+      sGrad.addColorStop(0.35, col2);
+      sGrad.addColorStop(0.75, col1);
+      sGrad.addColorStop(1, col0);
       cx.fillStyle = sGrad;
       cx.beginPath();
-      cx.moveTo(-24, -20);
-      cx.lineTo(-10, -35);
-      cx.lineTo(34, -33);
-      cx.lineTo(20, -18);
-      cx.closePath();
-      cx.fill();
-      cx.strokeStyle = '#64748b';
-      cx.lineWidth = 2;
-      cx.stroke();
+      cx.moveTo(-24, -20); cx.lineTo(-10, -35); cx.lineTo(34, -33); cx.lineTo(20, -18);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = col0; cx.lineWidth = 2; cx.stroke();
 
-      // Solar Panel Cells / Grid Struts
-      cx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+      // Photovoltaic Solar Cells & Active Energy Grid Conduits
+      cx.strokeStyle = accentCol;
       cx.lineWidth = 1.2;
       cx.beginPath();
       cx.moveTo(-10, -35); cx.lineTo(20, -18);
@@ -9831,18 +9941,21 @@ function draw() {
       cx.stroke();
       cx.restore();
 
-      // Aft Sublight Thruster Housing
-      cx.fillStyle = '#0f172a';
+      // Aft Sublight Thruster Housing Block
+      const aftGrad = cx.createLinearGradient(-44, -12, -28, 12);
+      aftGrad.addColorStop(0, col2);
+      aftGrad.addColorStop(0.5, col1);
+      aftGrad.addColorStop(1, col2);
+      cx.fillStyle = aftGrad;
       cx.fillRect(-44, -12, 16, 24);
-      cx.strokeStyle = '#475569';
-      cx.lineWidth = 2;
+      cx.strokeStyle = col0; cx.lineWidth = 2;
       cx.strokeRect(-44, -12, 16, 24);
 
-      // Main Stealth Fuselage (Asymmetrical Angular Wedge)
+      // Main Stealth Fuselage (Asymmetrical Multi-Faceted Dagger)
       const hGrad = cx.createLinearGradient(0, -16, 0, 16);
-      hGrad.addColorStop(0, '#334155');
-      hGrad.addColorStop(0.35, '#1e293b');
-      hGrad.addColorStop(0.7, col1);
+      hGrad.addColorStop(0, '#ffffff');
+      hGrad.addColorStop(0.2, col0);
+      hGrad.addColorStop(0.65, col1);
       hGrad.addColorStop(1, col2);
       cx.fillStyle = hGrad;
       cx.beginPath();
@@ -9856,61 +9969,55 @@ function draw() {
       cx.lineTo(-32, 14);
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#64748b';
-      cx.lineWidth = 2.4;
+      cx.strokeStyle = col0; cx.lineWidth = 2.4; cx.stroke();
+
+      // Faceted Stealth Chine Ridge Highlight
+      cx.strokeStyle = 'rgba(255, 255, 255, 0.65)'; cx.lineWidth = 1.4;
+      cx.beginPath();
+      cx.moveTo(-30, 0); cx.lineTo(38, 0); cx.lineTo(52, 4);
       cx.stroke();
 
-      // Stealth Power Conduits (Cyan / Bright Blue glowing lines)
-      cx.strokeStyle = '#38bdf8';
-      cx.lineWidth = 1.8;
+      // Glowing Tachyon Power Conduits
+      cx.strokeStyle = accentCol; cx.lineWidth = 2;
       cx.beginPath();
-      cx.moveTo(-26, -4);
-      cx.lineTo(12, -5);
-      cx.lineTo(34, 0);
-      cx.moveTo(-24, 6);
-      cx.lineTo(10, 7);
-      cx.lineTo(32, 4);
+      cx.moveTo(-26, -5); cx.lineTo(12, -6); cx.lineTo(34, -1);
+      cx.moveTo(-24, 7); cx.lineTo(10, 8); cx.lineTo(32, 5);
       cx.stroke();
 
       // Lower Ventral Stabilizer & Tachyon Turret Pod
-      cx.fillStyle = '#1e293b';
+      const ventGrad = cx.createLinearGradient(-12, 14, 26, 26);
+      ventGrad.addColorStop(0, col2); ventGrad.addColorStop(0.5, col1); ventGrad.addColorStop(1, col0);
+      cx.fillStyle = ventGrad;
       cx.beginPath();
-      cx.moveTo(-12, 14);
-      cx.lineTo(18, 15);
-      cx.lineTo(26, 26);
-      cx.lineTo(2, 23);
-      cx.closePath();
-      cx.fill();
-      cx.strokeStyle = '#334155';
-      cx.lineWidth = 1.5;
-      cx.stroke();
+      cx.moveTo(-12, 14); cx.lineTo(18, 15); cx.lineTo(26, 26); cx.lineTo(2, 23);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = col0; cx.lineWidth = 1.5; cx.stroke();
 
-      // Tachyon Concussion Cannon Barrels
-      cx.strokeStyle = '#38bdf8';
-      cx.lineWidth = 2;
-      cx.beginPath();
-      cx.moveTo(26, 26);
-      cx.lineTo(38, 25);
-      cx.stroke();
+      // Tachyon Concussion Cannon Barrels & Emitters
+      cx.strokeStyle = col0; cx.lineWidth = 2.2;
+      cx.beginPath(); cx.moveTo(26, 26); cx.lineTo(38, 25); cx.stroke();
+      cx.fillStyle = accentCol; cx.fillRect(36, 24, 4, 3);
 
-      // Spherical Command Cockpit Dome (Glowing cyan glass with frame)
-      cx.fillStyle = '#0f172a';
-      cx.beginPath();
-      cx.arc(8, -2, 8.5, 0, Math.PI * 2);
-      cx.fill();
-      cx.strokeStyle = '#38bdf8';
-      cx.lineWidth = 1.8;
-      cx.stroke();
+      // Spherical Command Cockpit Dome (Glowing Telemetry Viewport)
+      const podGrad = cx.createRadialGradient(8, -2, 2, 8, -2, 9);
+      podGrad.addColorStop(0, '#ffffff');
+      podGrad.addColorStop(0.3, col0);
+      podGrad.addColorStop(0.8, col1);
+      podGrad.addColorStop(1, col2);
+      cx.fillStyle = podGrad;
+      cx.beginPath(); cx.arc(8, -2, 8.5, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = col0; cx.lineWidth = 1.8; cx.stroke();
 
-      // Cockpit Viewport Glow
-      const cGlow = cx.createRadialGradient(8, -2, 1, 8, -2, 7);
+      // Cockpit Viewport Lens Glow
+      const cGlow = cx.createRadialGradient(8, -2, 1, 8, -2, 6);
       cGlow.addColorStop(0, '#ffffff');
-      cGlow.addColorStop(0.5, '#38bdf8');
-      cGlow.addColorStop(1, '#0284c7');
+      cGlow.addColorStop(0.5, accentCol);
+      cGlow.addColorStop(1, col2);
       cx.fillStyle = cGlow;
-      cx.beginPath();
-      cx.arc(8, -2, 5.5, 0, Math.PI * 2);
-      cx.fill();
+      cx.beginPath(); cx.arc(8, -2, 5.5, 0, Math.PI * 2); cx.fill();
+      // Fresnel Glare
+      cx.strokeStyle = 'rgba(255, 255, 255, 0.8)'; cx.lineWidth = 1;
+      cx.beginPath(); cx.arc(7, -3, 3, -Math.PI * 0.6, -Math.PI * 0.1); cx.stroke();
 
     // -------------------------------------------------------------
     // SHAPE 3: REPUBLIC HAMMERHEAD CORVETTE (hind)
@@ -9920,172 +10027,163 @@ function draw() {
       const ionEnginesY = [-20, -7, 7, 20];
       for (let i = 0; i < ionEnginesY.length; i++) {
         const ey = ionEnginesY[i];
-        const jg = cx.createLinearGradient(-46, ey, -76, ey);
+        const jg = cx.createLinearGradient(-46, ey, -78, ey);
         jg.addColorStop(0, '#ffffff');
-        jg.addColorStop(0.35, '#38bdf8');
-        jg.addColorStop(0.75, '#0284c7');
-        jg.addColorStop(1, 'rgba(2, 132, 199, 0)');
+        jg.addColorStop(0.25, auraCol);
+        jg.addColorStop(0.75, accentCol);
+        jg.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = jg;
         cx.beginPath();
-        cx.moveTo(-46, ey - (Math.abs(ey) > 15 ? 4 : 3));
-        cx.lineTo(-66 - Math.random() * 16, ey);
-        cx.lineTo(-46, ey + (Math.abs(ey) > 15 ? 4 : 3));
+        cx.moveTo(-46, ey - (Math.abs(ey) > 15 ? 4.5 : 3.5));
+        cx.lineTo(-68 - Math.random() * 16, ey);
+        cx.lineTo(-46, ey + (Math.abs(ey) > 15 ? 4.5 : 3.5));
         cx.closePath();
         cx.fill();
       }
 
-      // Symmetrical Quad Engine Pylons & Mounts
-      cx.fillStyle = '#1e293b';
+      // Symmetrical Quad Engine Pylons & Hydraulic Mounts
+      const pylGrad = cx.createLinearGradient(-44, -22, -14, 22);
+      pylGrad.addColorStop(0, col2); pylGrad.addColorStop(0.5, col1); pylGrad.addColorStop(1, col2);
+      cx.fillStyle = pylGrad;
       cx.beginPath();
-      cx.moveTo(-34, -22);
-      cx.lineTo(-14, -8);
-      cx.lineTo(-14, 8);
-      cx.lineTo(-34, 22);
-      cx.lineTo(-44, 18);
-      cx.lineTo(-30, 0);
-      cx.lineTo(-44, -18);
-      cx.closePath();
-      cx.fill();
-      cx.strokeStyle = '#64748b';
-      cx.lineWidth = 1.6;
-      cx.stroke();
+      cx.moveTo(-34, -22); cx.lineTo(-14, -8); cx.lineTo(-14, 8); cx.lineTo(-34, 22);
+      cx.lineTo(-44, 18); cx.lineTo(-30, 0); cx.lineTo(-44, -18);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = col0; cx.lineWidth = 1.8; cx.stroke();
 
-      // Quad Cylindrical Sublight Engine Pods
+      // Quad Cylindrical Sublight Engine Pods with Identification Cowlings
       for (const ey of [-20, 20]) {
-        // Outer Engine Pods
-        cx.fillStyle = '#0f172a';
+        // Outer Engine Pod Body
+        const nacGrad = cx.createLinearGradient(-48, ey - 5, -48, ey + 5);
+        nacGrad.addColorStop(0, col1); nacGrad.addColorStop(0.5, col0); nacGrad.addColorStop(1, col2);
+        cx.fillStyle = nacGrad;
         cx.fillRect(-48, ey - 5, 24, 10);
-        cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 1.4;
+        cx.strokeStyle = col0; cx.lineWidth = 1.4;
         cx.strokeRect(-48, ey - 5, 24, 10);
-        // Republic Crimson Engine Band
-        cx.fillStyle = '#ef4444';
+
+        // Identification Cowling Band
+        cx.fillStyle = accentCol;
         cx.fillRect(-40, ey - 5, 8, 10);
-        // Blue Ion Thruster Ring
-        cx.fillStyle = '#38bdf8';
+        cx.strokeStyle = '#ffffff'; cx.lineWidth = 0.8;
+        cx.strokeRect(-40, ey - 5, 8, 10);
+
+        // Ion Thruster Intake Ring
+        cx.fillStyle = accentCol;
         cx.beginPath(); cx.arc(-48, ey, 3, 0, Math.PI * 2); cx.fill();
       }
 
-      // Main Armored Cylindrical Spine Fuselage
+      // Main Armored Cylindrical Spine Fuselage (Heavy Sectional Battleplate)
       const hGrad = cx.createLinearGradient(0, -12, 0, 12);
       hGrad.addColorStop(0, '#ffffff');
-      hGrad.addColorStop(0.3, '#f1f5f9');
-      hGrad.addColorStop(0.7, '#e2e8f0');
-      hGrad.addColorStop(1, '#94a3b8');
+      hGrad.addColorStop(0.2, col0);
+      hGrad.addColorStop(0.65, col1);
+      hGrad.addColorStop(1, col2);
       cx.fillStyle = hGrad;
       cx.fillRect(-28, -10, 52, 20);
-      cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 2;
+      cx.strokeStyle = col0; cx.lineWidth = 2.2;
       cx.strokeRect(-28, -10, 52, 20);
 
-      // Red Dorsal Spine Cowling & Republic Markings
-      cx.fillStyle = '#ef4444';
+      // Panel Line Seams along the Fuselage Spine
+      cx.strokeStyle = 'rgba(0, 0, 0, 0.35)'; cx.lineWidth = 1;
+      cx.beginPath();
+      cx.moveTo(-12, -10); cx.lineTo(-12, 10);
+      cx.moveTo(6, -10); cx.lineTo(6, 10);
+      cx.stroke();
+
+      // Dorsal Spine Identification Racing Stripe
+      cx.fillStyle = accentCol;
       cx.fillRect(-26, -10, 48, 5);
+
       // Gold Trim Accent Line
-      cx.fillStyle = '#f59e0b';
+      cx.fillStyle = col0;
       cx.fillRect(-24, 3, 44, 2.5);
 
-      // Mechanical Underside Keel Greebles & Conduits
-      cx.fillStyle = '#0f172a';
+      // Mechanical Keel Radiator Greebles
+      cx.fillStyle = col2;
       cx.fillRect(-22, 6, 40, 4);
-      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1;
+      cx.strokeStyle = accentCol; cx.lineWidth = 1;
       cx.strokeRect(-22, 6, 40, 4);
 
-      // Dorsal Communications / Sensor Tower
-      cx.fillStyle = '#ef4444';
+      // Dorsal Sensor & Communications Tower
+      const towGrad = cx.createLinearGradient(-6, -18, 10, -10);
+      towGrad.addColorStop(0, accentCol); towGrad.addColorStop(1, col1);
+      cx.fillStyle = towGrad;
       cx.beginPath();
-      cx.moveTo(-6, -10);
-      cx.lineTo(2, -18);
-      cx.lineTo(10, -10);
-      cx.closePath();
-      cx.fill();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.2; cx.stroke();
+      cx.moveTo(-6, -10); cx.lineTo(2, -18); cx.lineTo(10, -10);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = col0; cx.lineWidth = 1.2; cx.stroke();
+      // Sensor Tip Diode
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(2, -18, 1.5, 0, Math.PI * 2); cx.fill();
 
-      // Iconic Vertical Hammerhead Bow / Bridge Structure
+      // Iconic Vertical Hammerhead Bow Structure (Upper and Lower Fins)
       // Upper Vertical Hammerhead Fin
-      cx.fillStyle = '#f8fafc';
+      const upFinGrad = cx.createLinearGradient(22, -10, 44, -32);
+      upFinGrad.addColorStop(0, col1); upFinGrad.addColorStop(0.5, col0); upFinGrad.addColorStop(1, col2);
+      cx.fillStyle = upFinGrad;
       cx.beginPath();
-      cx.moveTo(22, -10);
-      cx.lineTo(32, -32);
-      cx.lineTo(44, -28);
-      cx.lineTo(38, -10);
-      cx.closePath();
-      cx.fill();
-      cx.strokeStyle = '#dc2626'; cx.lineWidth = 1.8; cx.stroke();
+      cx.moveTo(22, -10); cx.lineTo(32, -32); cx.lineTo(44, -28); cx.lineTo(38, -10);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = col0; cx.lineWidth = 1.8; cx.stroke();
 
-      // Upper Fin Republic Red Armor Face
-      cx.fillStyle = '#ef4444';
+      // Upper Fin Strike Armor Face in Accent Color
+      cx.fillStyle = accentCol;
       cx.beginPath();
-      cx.moveTo(28, -12);
-      cx.lineTo(34, -28);
-      cx.lineTo(42, -26);
-      cx.lineTo(36, -12);
-      cx.closePath();
-      cx.fill();
+      cx.moveTo(28, -12); cx.lineTo(34, -28); cx.lineTo(42, -26); cx.lineTo(36, -12);
+      cx.closePath(); cx.fill();
 
       // Lower Vertical Hammerhead Fin
-      cx.fillStyle = '#f8fafc';
+      const lowFinGrad = cx.createLinearGradient(22, 10, 44, 32);
+      lowFinGrad.addColorStop(0, col1); lowFinGrad.addColorStop(0.5, col0); lowFinGrad.addColorStop(1, col2);
+      cx.fillStyle = lowFinGrad;
       cx.beginPath();
-      cx.moveTo(22, 10);
-      cx.lineTo(32, 32);
-      cx.lineTo(44, 28);
-      cx.lineTo(38, 10);
-      cx.closePath();
-      cx.fill();
-      cx.strokeStyle = '#dc2626'; cx.lineWidth = 1.8; cx.stroke();
+      cx.moveTo(22, 10); cx.lineTo(32, 32); cx.lineTo(44, 28); cx.lineTo(38, 10);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = col0; cx.lineWidth = 1.8; cx.stroke();
 
-      // Lower Fin Republic Red Armor Face
-      cx.fillStyle = '#ef4444';
+      // Lower Fin Strike Armor Face in Accent Color
+      cx.fillStyle = accentCol;
       cx.beginPath();
-      cx.moveTo(28, 12);
-      cx.lineTo(34, 28);
-      cx.lineTo(42, 26);
-      cx.lineTo(36, 12);
-      cx.closePath();
-      cx.fill();
+      cx.moveTo(28, 12); cx.lineTo(34, 28); cx.lineTo(42, 26); cx.lineTo(36, 12);
+      cx.closePath(); cx.fill();
 
-      // Central Hammerhead Prow & Bridge Head
-      cx.fillStyle = '#f8fafc';
+      // Central Hammerhead Prow & Armored Bridge Head
+      const prowGrad = cx.createLinearGradient(24, 0, 54, 0);
+      prowGrad.addColorStop(0, col1); prowGrad.addColorStop(0.4, col0); prowGrad.addColorStop(1, col2);
+      cx.fillStyle = prowGrad;
       cx.beginPath();
-      cx.moveTo(24, -14);
-      cx.lineTo(48, -12);
-      cx.lineTo(54, 0);
-      cx.lineTo(48, 12);
-      cx.lineTo(24, 14);
-      cx.closePath();
-      cx.fill();
-      cx.strokeStyle = '#64748b'; cx.lineWidth = 2.2; cx.stroke();
+      cx.moveTo(24, -14); cx.lineTo(48, -12); cx.lineTo(54, 0); cx.lineTo(48, 12); cx.lineTo(24, 14);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = col0; cx.lineWidth = 2.2; cx.stroke();
 
-      // Republic Crimson Bow Sponson
-      cx.fillStyle = '#ef4444';
+      // Forward Armor Ramming Sponson in Accent Color
+      cx.fillStyle = accentCol;
       cx.beginPath();
-      cx.moveTo(28, -11);
-      cx.lineTo(46, -9);
-      cx.lineTo(50, 0);
-      cx.lineTo(46, 9);
-      cx.lineTo(28, 11);
-      cx.closePath();
-      cx.fill();
+      cx.moveTo(28, -11); cx.lineTo(46, -9); cx.lineTo(50, 0); cx.lineTo(46, 9); cx.lineTo(28, 11);
+      cx.closePath(); cx.fill();
 
-      // Horizontal Viewport Visor Glow
-      const bGlow = cx.createLinearGradient(42, 0, 52, 0);
+      // Horizontal Command Bridge Viewport Visor Glow
+      const bGlow = cx.createLinearGradient(44, 0, 52, 0);
       bGlow.addColorStop(0, '#ffffff');
-      bGlow.addColorStop(0.5, '#38bdf8');
-      bGlow.addColorStop(1, '#0284c7');
+      bGlow.addColorStop(0.5, accentCol);
+      bGlow.addColorStop(1, col2);
       cx.fillStyle = bGlow;
       cx.fillRect(44, -3, 8, 6);
       cx.strokeStyle = '#ffffff'; cx.lineWidth = 1; cx.strokeRect(44, -3, 8, 6);
 
       // Lateral Circular Swivel Turrets with Twin Turbolasers
-      cx.fillStyle = '#1e293b';
+      const turrGrad = cx.createRadialGradient(28, 0, 1, 28, 0, 7);
+      turrGrad.addColorStop(0, col0); turrGrad.addColorStop(0.7, col1); turrGrad.addColorStop(1, col2);
+      cx.fillStyle = turrGrad;
       cx.beginPath(); cx.arc(28, 0, 6.5, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 1.4; cx.stroke();
+      cx.strokeStyle = col0; cx.lineWidth = 1.4; cx.stroke();
 
-      // Twin Turbolaser Cannons
-      cx.strokeStyle = '#f8fafc'; cx.lineWidth = 2.2;
+      // Twin Turbolaser Cannon Barrels & Muzzle Emitters
+      cx.strokeStyle = col0; cx.lineWidth = 2.2;
       cx.beginPath();
       cx.moveTo(28, -2.5); cx.lineTo(46, -2.5);
       cx.moveTo(28, 2.5); cx.lineTo(46, 2.5);
       cx.stroke();
-      cx.fillStyle = '#ffd23c';
+      cx.fillStyle = accentCol;
       cx.fillRect(44, -3.5, 3, 2);
       cx.fillRect(44, 1.5, 3, 2);
 
@@ -10097,11 +10195,11 @@ function draw() {
       const ionEnginesY = [-26, -12, 12, 26];
       for (let i = 0; i < ionEnginesY.length; i++) {
         const ey = ionEnginesY[i];
-        const jg = cx.createLinearGradient(-44, ey, -74, ey);
+        const jg = cx.createLinearGradient(-44, ey, -76, ey);
         jg.addColorStop(0, '#ffffff');
-        jg.addColorStop(0.35, '#38bdf8');
-        jg.addColorStop(0.75, '#6366f1');
-        jg.addColorStop(1, 'rgba(99, 102, 241, 0)');
+        jg.addColorStop(0.3, auraCol);
+        jg.addColorStop(0.75, accentCol);
+        jg.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = jg;
         cx.beginPath();
         cx.moveTo(-44, ey - 4);
@@ -10111,43 +10209,47 @@ function draw() {
         cx.fill();
       }
 
-      // Outboard Cantilever Wing Pylons (Housing Plasma Scythe Emitters)
-      cx.fillStyle = '#1e293b';
-      cx.beginPath();
-      cx.moveTo(-28, -14);
-      cx.lineTo(-10, -28);
-      cx.lineTo(8, -28);
-      cx.lineTo(0, -14);
-      cx.closePath();
-      cx.fill();
-      cx.strokeStyle = '#64748b'; cx.lineWidth = 1.8; cx.stroke();
+      // Outboard Cantilever Wing Pylons (Housing Plasma Scythe Projectors)
+      const pylonGrad = cx.createLinearGradient(-28, -28, 8, 28);
+      pylonGrad.addColorStop(0, col2); pylonGrad.addColorStop(0.5, col1); pylonGrad.addColorStop(1, col0);
+      cx.fillStyle = pylonGrad;
+      cx.strokeStyle = col0; cx.lineWidth = 1.8;
 
       cx.beginPath();
-      cx.moveTo(-28, 14);
-      cx.lineTo(-10, 28);
-      cx.lineTo(8, 28);
-      cx.lineTo(0, 14);
-      cx.closePath();
-      cx.fill();
+      cx.moveTo(-28, -14); cx.lineTo(-10, -28); cx.lineTo(8, -28); cx.lineTo(0, -14);
+      cx.closePath(); cx.fill(); cx.stroke();
+
+      cx.beginPath();
+      cx.moveTo(-28, 14); cx.lineTo(-10, 28); cx.lineTo(8, 28); cx.lineTo(0, 14);
+      cx.closePath(); cx.fill(); cx.stroke();
+
+      // Plasma Scythe Emitter Conduits on Wingtips
+      cx.strokeStyle = accentCol; cx.lineWidth = 1.5;
+      cx.beginPath();
+      cx.moveTo(-10, -27); cx.lineTo(7, -27);
+      cx.moveTo(-10, 27); cx.lineTo(7, 27);
       cx.stroke();
 
       // Rear Outrigger Turbine Engine Pods (Port & Starboard Wings)
       for (const ey of [-26, 26]) {
-        cx.fillStyle = '#0f172a';
+        const outTurbGrad = cx.createLinearGradient(-42, ey - 6, -16, ey + 6);
+        outTurbGrad.addColorStop(0, col2); outTurbGrad.addColorStop(0.5, col1); outTurbGrad.addColorStop(1, col0);
+        cx.fillStyle = outTurbGrad;
         cx.beginPath(); cx.roundRect(-42, ey - 6, 26, 12, 3); cx.fill();
-        cx.strokeStyle = '#94a3b8'; cx.lineWidth = 1.4; cx.stroke();
+        cx.strokeStyle = col0; cx.lineWidth = 1.4; cx.stroke();
+
         // Articulated Turbine Intake Ring
-        cx.fillStyle = '#334155';
+        cx.fillStyle = col2;
         cx.beginPath(); cx.arc(-18, ey, 4.5, 0, Math.PI * 2); cx.fill();
-        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1; cx.stroke();
+        cx.strokeStyle = accentCol; cx.lineWidth = 1.2; cx.stroke();
       }
 
       // Main Slab Armored Industrial Fuselage
       const hGrad = cx.createLinearGradient(0, -16, 0, 16);
-      hGrad.addColorStop(0, '#64748b');
-      hGrad.addColorStop(0.35, '#475569');
-      hGrad.addColorStop(0.7, '#334155');
-      hGrad.addColorStop(1, '#1e293b');
+      hGrad.addColorStop(0, '#ffffff');
+      hGrad.addColorStop(0.2, col0);
+      hGrad.addColorStop(0.65, col1);
+      hGrad.addColorStop(1, col2);
       cx.fillStyle = hGrad;
       cx.beginPath();
       cx.moveTo(-36, -16);
@@ -10160,10 +10262,10 @@ function draw() {
       cx.lineTo(-44, 0); // Slanted Aft Ramp
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 2.4; cx.stroke();
+      cx.strokeStyle = col0; cx.lineWidth = 2.4; cx.stroke();
 
-      // Off-White Identification Racing / Chevron Striping Decals
-      cx.strokeStyle = '#f1f5f9';
+      // Identification Chevron Decals in Accent Color
+      cx.strokeStyle = accentCol;
       cx.lineWidth = 2.5;
       cx.beginPath();
       cx.moveTo(-16, -14); cx.lineTo(-24, 14);
@@ -10172,47 +10274,55 @@ function draw() {
 
       // Mid-Flank Articulated Heavy Turbines (Direct Hull Sponsons)
       for (const ey of [-12, 12]) {
-        cx.fillStyle = '#0f172a';
+        const midTurbGrad = cx.createLinearGradient(-4, ey - 5, 24, ey + 5);
+        midTurbGrad.addColorStop(0, col2); midTurbGrad.addColorStop(0.5, col1); midTurbGrad.addColorStop(1, col0);
+        cx.fillStyle = midTurbGrad;
         cx.beginPath(); cx.roundRect(-4, ey - 5, 28, 10, 3); cx.fill();
-        cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 1.4; cx.stroke();
-        // Red Safety Indicator Lights
-        cx.fillStyle = '#ef4444';
+        cx.strokeStyle = col0; cx.lineWidth = 1.4; cx.stroke();
+
+        // Safety Indicator Lights
+        cx.fillStyle = accentCol;
         cx.fillRect(8, ey - 4, 3, 2);
+
         // Turbine Fan Hub
-        cx.fillStyle = '#334155';
+        cx.fillStyle = col2;
         cx.beginPath(); cx.arc(22, ey, 3.5, 0, Math.PI * 2); cx.fill();
-        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1; cx.stroke();
+        cx.strokeStyle = accentCol; cx.lineWidth = 1; cx.stroke();
       }
 
       // Dorsal 360° Defense Turret & Sensor Mast
-      cx.fillStyle = '#0f172a';
+      const turrGrad = cx.createRadialGradient(-2, -6, 1, -2, -6, 6);
+      turrGrad.addColorStop(0, col0); turrGrad.addColorStop(1, col2);
+      cx.fillStyle = turrGrad;
       cx.beginPath(); cx.arc(-2, -6, 5, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#64748b'; cx.lineWidth = 1.2; cx.stroke();
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.6;
+      cx.strokeStyle = col0; cx.lineWidth = 1.2; cx.stroke();
+      cx.strokeStyle = accentCol; cx.lineWidth = 1.6;
       cx.beginPath(); cx.moveTo(-2, -6); cx.lineTo(10, -9); cx.stroke();
 
       // Recessed Multi-Faceted Cockpit Viewport Canopy
-      cx.fillStyle = '#0f172a';
+      cx.fillStyle = col2;
       cx.beginPath();
       cx.moveTo(18, -6); cx.lineTo(38, -4); cx.lineTo(38, 4); cx.lineTo(18, 6);
       cx.closePath(); cx.fill();
-      cx.strokeStyle = '#6366f1'; cx.lineWidth = 1.4; cx.stroke();
+      cx.strokeStyle = col0; cx.lineWidth = 1.4; cx.stroke();
 
-      // Glowing Cockpit Glass Viewport
+      // Glowing Cockpit Glass Viewport & HUD
       const cGlow = cx.createLinearGradient(20, 0, 36, 0);
       cGlow.addColorStop(0, '#ffffff');
-      cGlow.addColorStop(0.5, '#38bdf8');
-      cGlow.addColorStop(1, '#6366f1');
+      cGlow.addColorStop(0.4, accentCol);
+      cGlow.addColorStop(1, col2);
       cx.fillStyle = cGlow;
       cx.fillRect(22, -2.5, 14, 5);
+      cx.strokeStyle = 'rgba(255, 255, 255, 0.7)'; cx.lineWidth = 1;
+      cx.strokeRect(22, -2.5, 14, 5);
 
-      // Forward Long-Range Heavy Kinetic Blaster Cannons
-      cx.strokeStyle = '#334155'; cx.lineWidth = 2.4;
+      // Forward Long-Range Kinetic Blaster Cannons
+      cx.strokeStyle = col0; cx.lineWidth = 2.4;
       cx.beginPath();
       cx.moveTo(42, -5); cx.lineTo(58, -5);
       cx.moveTo(42, 5); cx.lineTo(58, 5);
       cx.stroke();
-      cx.fillStyle = '#ffd23c';
+      cx.fillStyle = accentCol;
       cx.fillRect(54, -6.5, 4, 3);
       cx.fillRect(54, 3.5, 4, 3);
 
@@ -10220,12 +10330,12 @@ function draw() {
     // SHAPE 5: THE MILLENNIUM FALCON YT-1300 (cutter)
     // -------------------------------------------------------------
     } else {
-      // Glowing Cyan Sub-Light Ion Engine Strip across Stern
-      const jg = cx.createLinearGradient(-44, 0, -72, 0);
+      // Glowing Continuous Sub-Light Ion Engine Strip across Stern
+      const jg = cx.createLinearGradient(-44, 0, -76, 0);
       jg.addColorStop(0, '#ffffff');
-      jg.addColorStop(0.3, '#00ffee');
-      jg.addColorStop(0.75, '#0284c7');
-      jg.addColorStop(1, 'rgba(0, 229, 255, 0)');
+      jg.addColorStop(0.25, auraCol);
+      jg.addColorStop(0.7, accentCol);
+      jg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = jg;
       cx.beginPath();
       cx.moveTo(-44, -16);
@@ -10234,55 +10344,102 @@ function draw() {
       cx.closePath();
       cx.fill();
 
-      // Main Circular Saucer Hull in Light Industrial Plating
-      const hGrad = cx.createLinearGradient(0, -26, 0, 26);
-      hGrad.addColorStop(0, '#f8fafc');
-      hGrad.addColorStop(0.35, col0);
+      // Stern Exhaust Grill Housing
+      cx.fillStyle = col2;
+      cx.fillRect(-45, -16, 4, 32);
+      cx.strokeStyle = col0; cx.lineWidth = 1.2;
+      cx.strokeRect(-45, -16, 4, 32);
+
+      // Main Circular Saucer Hull in Specular Brushed Alloy
+      const hGrad = cx.createRadialGradient(-4, 0, 4, -4, 0, 38);
+      hGrad.addColorStop(0, '#ffffff');
+      hGrad.addColorStop(0.25, col0);
       hGrad.addColorStop(0.7, col1);
       hGrad.addColorStop(1, col2);
       cx.fillStyle = hGrad;
       cx.beginPath();
       cx.ellipse(-4, 0, 38, 28, 0, 0, Math.PI * 2);
       cx.fill();
-      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 2.8; cx.stroke();
+      cx.strokeStyle = col0; cx.lineWidth = 2.8; cx.stroke();
+
+      // Radial Hull Panel Line Seams & Sector Grooves
+      cx.strokeStyle = 'rgba(0, 0, 0, 0.35)'; cx.lineWidth = 1;
+      cx.beginPath();
+      for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+        cx.moveTo(-4 + Math.cos(a) * 12, Math.sin(a) * 9);
+        cx.lineTo(-4 + Math.cos(a) * 36, Math.sin(a) * 26);
+      }
+      cx.stroke();
+
+      // 6 Circular Thermal Exhaust Grilles
+      for (const [gx, gy] of [[-24, -12], [-18, -12], [-12, -12], [-24, 12], [-18, 12], [-12, 12]]) {
+        cx.fillStyle = col2;
+        cx.beginPath(); cx.arc(gx, gy, 3, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = col0; cx.lineWidth = 0.8; cx.stroke();
+      }
 
       // Forward Cargo Docking Mandibles
-      cx.fillStyle = '#1e293b';
+      const mandGrad = cx.createLinearGradient(16, -18, 52, 18);
+      mandGrad.addColorStop(0, col1); mandGrad.addColorStop(0.5, col0); mandGrad.addColorStop(1, col2);
+      cx.fillStyle = mandGrad;
       cx.fillRect(16, -18, 36, 10);
       cx.fillRect(16, 8, 36, 10);
-      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 2;
+      cx.strokeStyle = col0; cx.lineWidth = 2;
       cx.strokeRect(16, -18, 36, 10);
       cx.strokeRect(16, 8, 36, 10);
 
+      // Mandible Notched Center Freight Greebles
+      cx.fillStyle = col2;
+      cx.fillRect(16, -8, 12, 16);
+      cx.fillStyle = accentCol;
+      cx.fillRect(48, -16, 3, 6);
+      cx.fillRect(48, 10, 3, 6);
+
       // Offset Starboard Cockpit Corridor & Conical Viewport
-      cx.fillStyle = '#334155';
+      const tubeGrad = cx.createLinearGradient(2, -26, 28, -18);
+      tubeGrad.addColorStop(0, col1); tubeGrad.addColorStop(0.5, col0); tubeGrad.addColorStop(1, col2);
+      cx.fillStyle = tubeGrad;
       cx.fillRect(2, -26, 26, 8);
-      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 1.5;
+      cx.strokeStyle = col0; cx.lineWidth = 1.5;
       cx.strokeRect(2, -26, 26, 8);
 
-      cx.fillStyle = '#0f172a';
+      // Conical Starboard Cockpit Pod
+      cx.fillStyle = col2;
       cx.beginPath();
       cx.moveTo(28, -27); cx.lineTo(44, -24); cx.lineTo(44, -20); cx.lineTo(28, -17);
       cx.closePath(); cx.fill();
-      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.4; cx.stroke();
-      cx.fillStyle = '#00ffee'; cx.beginPath(); cx.arc(36, -22, 2.5, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = col0; cx.lineWidth = 1.4; cx.stroke();
+
+      // Multi-Pane Cockpit Greenhouse Glass
+      const cGlow = cx.createRadialGradient(36, -22, 1, 36, -22, 4);
+      cGlow.addColorStop(0, '#ffffff'); cGlow.addColorStop(0.5, accentCol); cGlow.addColorStop(1, col2);
+      cx.fillStyle = cGlow;
+      cx.beginPath(); cx.arc(36, -22, 2.5, 0, Math.PI * 2); cx.fill();
 
       // Dorsal Quad-Laser Blaster Turret
-      cx.fillStyle = '#0f172a';
+      const turrGrad = cx.createRadialGradient(-4, 0, 1, -4, 0, 9);
+      turrGrad.addColorStop(0, col0); turrGrad.addColorStop(0.6, col1); turrGrad.addColorStop(1, col2);
+      cx.fillStyle = turrGrad;
       cx.beginPath(); cx.arc(-4, 0, 9, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2; cx.stroke();
-      cx.strokeStyle = '#ff0033'; cx.lineWidth = 2.5;
-      cx.beginPath(); cx.moveTo(-4, 0); cx.lineTo(16, 0); cx.stroke();
+      cx.strokeStyle = col0; cx.lineWidth = 2; cx.stroke();
 
-      // Round Sensor Radar Dish
-      cx.fillStyle = '#475569';
+      // Twin Heavy Quad-Turret Barrels & Muzzles
+      cx.strokeStyle = col0; cx.lineWidth = 2.5;
+      cx.beginPath(); cx.moveTo(-4, -1.5); cx.lineTo(16, -1.5); cx.moveTo(-4, 1.5); cx.lineTo(16, 1.5); cx.stroke();
+      cx.fillStyle = accentCol;
+      cx.fillRect(14, -2.5, 3, 2); cx.fillRect(14, 0.5, 3, 2);
+
+      // Articulated Round Sensor Radar Dish
+      const dishGrad = cx.createRadialGradient(-16, -12, 1, -16, -12, 6);
+      dishGrad.addColorStop(0, col0); dishGrad.addColorStop(1, col2);
+      cx.fillStyle = dishGrad;
       cx.beginPath(); cx.arc(-16, -12, 6, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 1.4; cx.stroke();
+      cx.strokeStyle = col0; cx.lineWidth = 1.4; cx.stroke();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.2;
+      cx.beginPath(); cx.moveTo(-16, -12); cx.lineTo(-20, -16); cx.stroke();
     }
 
     // Dynamic Themed Pirate Flag for each Unlocked Skin!
-    const activeSkin = (SAVE.data.skin && SAVE.data.kills >= (skinById(SAVE.data.skin).kills || 0)) ? SAVE.data.skin : 'default';
-
     let flagBg = '#111', flagSym = '☠', flagSymCol = '#fff';
     if (activeSkin === 'sunset') { flagBg = '#ff3b30'; flagSym = '☀️'; flagSymCol = '#fff'; }
     else if (activeSkin === 'toxic') { flagBg = '#064e3b'; flagSym = '☣'; flagSymCol = '#00ff66'; }
@@ -10303,48 +10460,55 @@ function draw() {
     cx.fillStyle = flagSymCol; cx.font = 'bold 11px serif'; cx.textAlign = 'center';
     cx.fillText(flagSym, -30, -42);
 
-    // Skin-Specific Prow Ornaments, Hull Sculptures & Animated Floating Auras
+    // Skin-Specific Prow Ornaments, Hull Sculptures & Animated Floating Shaders
     if (activeSkin === 'sunset') {
-      // 1. Solar Flare Sunburst Prow Crest & Magma Veins
+      // 1. Solar Flare Sunburst Prow Crest & Branching Magma Fissures
       cx.fillStyle = '#ff4500';
       cx.beginPath(); cx.arc(48, 14, 6, 0, Math.PI * 2); cx.fill();
       cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2; cx.stroke();
-      // Magma crackle lines
-      cx.strokeStyle = 'rgba(255, 69, 0, 0.8)'; cx.lineWidth = 2;
-      cx.beginPath(); cx.moveTo(-20, 18); cx.lineTo(10, 22); cx.lineTo(40, 16); cx.stroke();
+      // Animated Magma fissures
+      cx.strokeStyle = 'rgba(255, 69, 0, ' + (0.6 + Math.sin(t * 10) * 0.3) + ')'; cx.lineWidth = 2.2;
+      cx.beginPath(); cx.moveTo(-24, 6); cx.lineTo(-6, 12); cx.lineTo(14, 8); cx.lineTo(44, 14); cx.stroke();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.2;
+      cx.beginPath(); cx.moveTo(-18, 7); cx.lineTo(-4, 11); cx.lineTo(12, 9); cx.stroke();
     } else if (activeSkin === 'toxic') {
-      // 2. Alien Plasma Spines & Bioluminescent Matrix Veins
+      // 2. Alien Plasma Spines & Bioluminescent Xenon Matrix Circuit Traces
       cx.strokeStyle = '#00ff66'; cx.lineWidth = 2.5;
       cx.beginPath(); cx.moveTo(42, 14); cx.lineTo(56, 8); cx.lineTo(50, 22); cx.stroke();
-      cx.strokeStyle = 'rgba(0, 255, 102, 0.7)'; cx.lineWidth = 1.8;
-      cx.beginPath(); cx.moveTo(-34, 20); cx.lineTo(-10, 24); cx.lineTo(15, 20); cx.lineTo(36, 18); cx.stroke();
+      // Matrix circuit lines
+      cx.strokeStyle = 'rgba(0, 255, 102, ' + (0.55 + Math.sin(t * 12) * 0.3) + ')'; cx.lineWidth = 1.8;
+      cx.beginPath(); cx.moveTo(-34, -6); cx.lineTo(-14, -6); cx.lineTo(-8, 6); cx.lineTo(24, 6); cx.lineTo(38, 14); cx.stroke();
+      cx.fillStyle = '#00ff66';
+      cx.beginPath(); cx.arc(-8, 6, 2.5, 0, Math.PI * 2); cx.fill();
+      cx.beginPath(); cx.arc(24, 6, 2.5, 0, Math.PI * 2); cx.fill();
     } else if (activeSkin === 'ocean') {
-      // 3. Celestial Crystal Trident Prow & Diamond Star Glimmer
+      // 3. Celestial Crystal Trident Prow & Pulsing Stardust Diamonds
       cx.fillStyle = '#00ffee';
       cx.fillRect(48, 12, 12, 3);
       cx.fillRect(58, 6, 3, 15);
       cx.fillStyle = '#ffffff';
-      for (const [sx, sy] of [[-15, 18], [5, 24], [25, 16]]) {
-        if (Math.floor(t * 12 + sx) % 2 === 0) {
-          cx.beginPath(); cx.arc(sx, sy, 2, 0, Math.PI * 2); cx.fill();
+      for (const [sx, sy] of [[-18, 8], [-4, -8], [12, 12], [28, -6]]) {
+        const starP = Math.sin(t * 8 + sx * 2);
+        if (starP > 0.2) {
+          cx.beginPath(); cx.arc(sx, sy, 1.5 + starP * 1.5, 0, Math.PI * 2); cx.fill();
         }
       }
     } else if (activeSkin === 'shadow') {
       // 4. Cursed Phantom Sith Crimson Runes & Glowing Red Eyes
       cx.fillStyle = '#ff003b';
-      cx.beginPath(); cx.arc(46, 16, 2.5, 0, Math.PI * 2); cx.fill();
-      cx.beginPath(); cx.arc(52, 16, 2.5, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = 'rgba(255, 0, 59, 0.6)'; cx.lineWidth = 1.8;
-      cx.beginPath(); cx.moveTo(-25, 18); cx.lineTo(-5, 22); cx.lineTo(20, 18); cx.stroke();
+      cx.beginPath(); cx.arc(46, 16, 2.8, 0, Math.PI * 2); cx.fill();
+      cx.beginPath(); cx.arc(52, 16, 2.8, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = 'rgba(255, 0, 59, ' + (0.6 + Math.sin(t * 9) * 0.3) + ')'; cx.lineWidth = 2;
+      cx.beginPath(); cx.moveTo(-28, 6); cx.lineTo(-12, 10); cx.lineTo(16, 6); cx.lineTo(36, 14); cx.stroke();
     } else if (activeSkin === 'cyber') {
-      // 5. Neo-Tokyo Synthwave Neon Chassis & Equalizer Grid
+      // 5. Neo-Tokyo Synthwave Neon Chassis & Animated Equalizer
       cx.strokeStyle = '#ec4899'; cx.lineWidth = 2.5;
-      cx.beginPath(); cx.moveTo(-38, 24); cx.lineTo(44, 24); cx.stroke();
+      cx.beginPath(); cx.moveTo(-38, 20); cx.lineTo(44, 20); cx.stroke();
       cx.strokeStyle = '#00ffee'; cx.lineWidth = 2;
-      cx.beginPath(); cx.moveTo(-30, 16); cx.lineTo(35, 16); cx.stroke();
-      // Equalizer bars
+      cx.beginPath(); cx.moveTo(-30, 14); cx.lineTo(35, 14); cx.stroke();
+      // Animated audio equalizer bars
       for (let bx = -20; bx <= 20; bx += 8) {
-        const barH = 4 + Math.abs(Math.sin(t * 12 + bx)) * 8;
+        const barH = 3 + Math.abs(Math.sin(t * 14 + bx)) * 8;
         cx.fillStyle = bx % 16 === 0 ? '#ec4899' : '#00ffee';
         cx.fillRect(bx, 10 - barH, 4, barH);
       }
@@ -10361,7 +10525,7 @@ function draw() {
       cx.beginPath();
       cx.moveTo(-10, 0); cx.lineTo(-12, -8); cx.lineTo(-6, -4); cx.lineTo(0, -10); cx.lineTo(6, -4); cx.lineTo(12, -8); cx.lineTo(10, 0);
       cx.closePath(); cx.fill();
-      cx.fillStyle = '#c084fc'; cx.beginPath(); cx.arc(0, -5, 2, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#c084fc'; cx.beginPath(); cx.arc(0, -5, 2.5, 0, Math.PI * 2); cx.fill();
       cx.restore();
     } else if (activeSkin === 'frost') {
       // 7. Glacial Cryo-Ice Spikes & Freezing Snowflake Aura
@@ -10370,10 +10534,10 @@ function draw() {
       cx.moveTo(40, 10); cx.lineTo(58, 14); cx.lineTo(40, 18);
       cx.closePath(); cx.fill();
       cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.5; cx.stroke();
-      // Orbiting ice crystals
-      for (let ic = 0; ic < 3; ic++) {
-        const icAng = t * 3 + ic * (Math.PI * 2 / 3);
-        const ix = Math.cos(icAng) * 32, iy = 14 + Math.sin(icAng) * 16;
+      // Orbiting sub-zero ice crystals
+      for (let ic = 0; ic < 4; ic++) {
+        const icAng = t * 3 + ic * (Math.PI * 2 / 4);
+        const ix = Math.cos(icAng) * 36, iy = 14 + Math.sin(icAng) * 18;
         cx.fillStyle = '#ffffff';
         cx.beginPath(); cx.arc(ix, iy, 2.5, 0, Math.PI * 2); cx.fill();
       }
@@ -10381,7 +10545,7 @@ function draw() {
       // 8. Sacred Rotating Divine Solar Halo & Celestial God-Rays
       cx.save(); cx.translate(10, -68 + Math.sin(t * 3) * 3);
       // Radiating divine rays
-      cx.strokeStyle = 'rgba(255, 215, 0, 0.55)';
+      cx.strokeStyle = 'rgba(255, 215, 0, 0.6)';
       cx.lineWidth = 1.5;
       for (let r = 0; r < 8; r++) {
         const rayAng = t * 2 + (r / 8) * Math.PI * 2;
@@ -10399,18 +10563,18 @@ function draw() {
       cx.restore();
     }
 
-    // Captain's Stained Glass Stern Windows (Lit Warmly)
-    cx.fillStyle = '#ffd23c';
-    cx.beginPath(); cx.roundRect(-38, 16, 12, 10, 2); cx.fill();
-    cx.fillStyle = 'rgba(255, 210, 60, 0.45)';
-    cx.beginPath(); cx.arc(-32, 21, 9, 0, Math.PI * 2); cx.fill();
+    // Aft Sublight Core Power Conduits & Navigation Beacons
+    cx.fillStyle = accentCol;
+    cx.beginPath(); cx.roundRect(-38, 16, 12, 8, 2); cx.fill();
+    cx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    cx.beginPath(); cx.arc(-32, 20, 4, 0, Math.PI * 2); cx.fill();
 
-    // Port & Starboard Navigation Lanterns
+    // Port & Starboard Navigation Lantern Beacons
     cx.fillStyle = '#33ee66'; cx.beginPath(); cx.arc(46, 16, 3.5, 0, Math.PI * 2); cx.fill();
     cx.fillStyle = '#ff3344'; cx.beginPath(); cx.arc(-42, 16, 3.5, 0, Math.PI * 2); cx.fill();
 
     // -------------------------------------------------------------
-    // DYNAMIC SWIVEL DECK CANNON (Visually Evolves with Cannon Upgrades 0-3!)
+    // DYNAMIC SWIVEL DECK CANNON (Harmonized Metallic Upgrades 0-3)
     // -------------------------------------------------------------
     const localAim = (ship.aimAngle || 0) - ship.pitch;
     const recoilDist = ship.recoil * (6 + cLv);
@@ -10420,46 +10584,46 @@ function draw() {
     cx.rotate(localAim);
 
     if (cLv === 0) {
-      // Level 0: Standard Cast-Iron 18-Pdr
+      // Level 0: Standard Kinetic Cannon
       const cgrad = cx.createLinearGradient(0, -4, 0, 4);
-      cgrad.addColorStop(0, '#64748b'); cgrad.addColorStop(0.5, '#1e293b'); cgrad.addColorStop(1, '#0f172a');
+      cgrad.addColorStop(0, col0); cgrad.addColorStop(0.5, col1); cgrad.addColorStop(1, col2);
       cx.fillStyle = cgrad;
       cx.beginPath(); cx.roundRect(-6 - recoilDist, -3.5, 24, 7, 2); cx.fill();
-      cx.strokeStyle = '#f59e0b'; cx.lineWidth = 1; cx.stroke();
-      cx.fillStyle = '#f59e0b'; cx.fillRect(15 - recoilDist, -4, 3, 8);
+      cx.strokeStyle = col0; cx.lineWidth = 1; cx.stroke();
+      cx.fillStyle = accentCol; cx.fillRect(15 - recoilDist, -4, 3, 8);
     } else if (cLv === 1) {
-      // Level 1: Lengthened Rifled 24-Pdr with Reinforced Brass Bands
+      // Level 1: Lengthened Rifled Turret with Reinforced Bands
       const cgrad = cx.createLinearGradient(0, -5, 0, 5);
-      cgrad.addColorStop(0, '#94a3b8'); cgrad.addColorStop(0.5, '#334155'); cgrad.addColorStop(1, '#0f172a');
+      cgrad.addColorStop(0, '#ffffff'); cgrad.addColorStop(0.3, col0); cgrad.addColorStop(0.7, col1); cgrad.addColorStop(1, col2);
       cx.fillStyle = cgrad;
       cx.beginPath(); cx.roundRect(-8 - recoilDist, -4.5, 30, 9, 2); cx.fill();
-      cx.strokeStyle = '#fbbf24'; cx.lineWidth = 1.2; cx.stroke();
-      cx.fillStyle = '#fbbf24';
+      cx.strokeStyle = col0; cx.lineWidth = 1.2; cx.stroke();
+      cx.fillStyle = accentCol;
       cx.fillRect(19 - recoilDist, -5, 3.5, 10);
       cx.fillRect(5 - recoilDist, -5, 2.5, 10);
     } else if (cLv === 2) {
-      // Level 2: Heavy 32-Pdr Siege Cannon with Glowing Heat Vents
+      // Level 2: Heavy Siege Cannon with Glowing Heat Vents
       const cgrad = cx.createLinearGradient(0, -6, 0, 6);
-      cgrad.addColorStop(0, '#cbd5e1'); cgrad.addColorStop(0.5, '#475569'); cgrad.addColorStop(1, '#020617');
+      cgrad.addColorStop(0, '#ffffff'); cgrad.addColorStop(0.35, col0); cgrad.addColorStop(0.7, col1); cgrad.addColorStop(1, col2);
       cx.fillStyle = cgrad;
       cx.beginPath(); cx.roundRect(-10 - recoilDist, -5.5, 34, 11, 3); cx.fill();
-      cx.strokeStyle = '#f59e0b'; cx.lineWidth = 1.5; cx.stroke();
-      cx.fillStyle = '#ff3b30';
+      cx.strokeStyle = col0; cx.lineWidth = 1.5; cx.stroke();
+      cx.fillStyle = accentCol;
       cx.fillRect(2 - recoilDist, -3, 14, 2);
       cx.fillRect(2 - recoilDist, 1, 14, 2);
-      cx.fillStyle = '#fbbf24'; cx.fillRect(21 - recoilDist, -6.5, 4, 13);
+      cx.fillStyle = col0; cx.fillRect(21 - recoilDist, -6.5, 4, 13);
     } else {
       // Level 3: Mastercrafted Triple Rotary Gatling Cannon
-      cx.fillStyle = '#1e293b';
+      cx.fillStyle = col2;
       cx.beginPath(); cx.roundRect(-10 - recoilDist, -6, 16, 12, 2); cx.fill();
       for (const by of [-4, 0, 4]) {
         const bg = cx.createLinearGradient(0, by - 2, 0, by + 2);
-        bg.addColorStop(0, '#e2e8f0'); bg.addColorStop(0.5, '#64748b'); bg.addColorStop(1, '#0f172a');
+        bg.addColorStop(0, '#ffffff'); bg.addColorStop(0.4, col0); bg.addColorStop(0.8, col1); bg.addColorStop(1, col2);
         cx.fillStyle = bg;
         cx.fillRect(4 - recoilDist, by - 1.8, 28, 3.6);
-        cx.fillStyle = '#f59e0b'; cx.fillRect(29 - recoilDist, by - 2.2, 3, 4.4);
+        cx.fillStyle = accentCol; cx.fillRect(29 - recoilDist, by - 2.2, 3, 4.4);
       }
-      cx.fillStyle = '#00ffee'; cx.beginPath(); cx.arc(8 - recoilDist, -6, 2, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = accentCol; cx.beginPath(); cx.arc(8 - recoilDist, -6, 2, 0, Math.PI * 2); cx.fill();
     }
     cx.restore();
 
@@ -10469,11 +10633,11 @@ function draw() {
       cx.translate(18, 24);
       cx.rotate(localAim);
       const cgrad = cx.createLinearGradient(0, -4, 0, 4);
-      cgrad.addColorStop(0, '#c084fc'); cgrad.addColorStop(0.5, '#581c87'); cgrad.addColorStop(1, '#0f051d');
+      cgrad.addColorStop(0, col0); cgrad.addColorStop(0.5, col1); cgrad.addColorStop(1, col2);
       cx.fillStyle = cgrad;
       cx.beginPath(); cx.roundRect(-6 - recoilDist, -3.5, 24, 7, 2); cx.fill();
-      cx.strokeStyle = '#e879f9'; cx.lineWidth = 1.2; cx.stroke();
-      cx.fillStyle = '#e879f9'; cx.fillRect(15 - recoilDist, -4, 3, 8);
+      cx.strokeStyle = col0; cx.lineWidth = 1.2; cx.stroke();
+      cx.fillStyle = accentCol; cx.fillRect(15 - recoilDist, -4, 3, 8);
       cx.restore();
     }
 
