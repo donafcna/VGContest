@@ -925,7 +925,7 @@
   <h1>🏴‍☠️ SPACE PIRATES</h1>
   <div style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(0,229,255,0.2),rgba(126,34,206,0.3));border:1.5px solid #00e5ff;color:#00ffee;padding:5px 16px;border-radius:20px;font-size:0.82rem;font-weight:900;letter-spacing:1.5px;margin-bottom:10px;font-family:'Orbitron',sans-serif;box-shadow:0 0 16px rgba(0,229,255,0.4)">🚀 STAR WARS FLEET EDITION • ONLINE LIVE</div>
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
-  Sail through deep cosmic space and blast <b>Star Wars starfighter squadrons &amp; 6 Flagship Bosses</b> with heavy naval broadsides!</p>
+  Sail through deep cosmic space and blast <b>Star Wars starfighter squadrons &amp; 7 Flagship Bosses</b> with heavy naval broadsides!</p>
   <div class="keys">
     🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM</b> • <b>CLICK</b> to Shoot Broadside 💥<br>
     🎮 <b>PC Abilities</b>: <b>[Q]</b> = 🟢 <b>Gadget</b> (3 Charges) • <b>[E]</b> = 🌟 <b>Super &amp; Hypercharge</b> (100% Charge)<br>
@@ -1077,7 +1077,7 @@
 
     <!-- Interactive Tabs: Flagship Bosses vs Enemy Fleet -->
     <div style="display:flex;gap:10px;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.12);padding-bottom:10px">
-      <button id="tabBossIntel" onclick="switchIntelTab('bosses')" style="flex:1;background:linear-gradient(135deg,#00ffaa,#0284c7);color:#020617;font-weight:900;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem;box-shadow:0 0 14px rgba(0,255,170,0.4)">🛸 SECTOR FLAGSHIP BOSSES (6)</button>
+      <button id="tabBossIntel" onclick="switchIntelTab('bosses')" style="flex:1;background:linear-gradient(135deg,#00ffaa,#0284c7);color:#020617;font-weight:900;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem;box-shadow:0 0 14px rgba(0,255,170,0.4)">🛸 SECTOR FLAGSHIP BOSSES (7)</button>
       <button id="tabFleetIntel" onclick="switchIntelTab('fleet')" style="flex:1;background:rgba(255,255,255,0.08);color:#94a3b8;font-weight:700;border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem">🚀 ENEMY FLEET (10)</button>
     </div>
     
@@ -3224,7 +3224,7 @@ function getBossSvg(id) {
       <circle cx="146" cy="54" r="5" fill="#00ffaa" filter="url(#glow_cant_${uid})"/>
       <circle cx="146" cy="54" r="2.5" fill="#ffffff"/>
     </svg>`;
-  } else {
+  } else if (id === 'atat' || id === 'titan') {
     // 6. GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
     return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -3290,6 +3290,80 @@ function getBossSvg(id) {
       <!-- Temple Repeating Blaster Pod -->
       <circle cx="28" cy="18" r="3.5" fill="#0f172a" stroke="#ffd23c" stroke-width="1"/>
       <line x1="28" y1="18" x2="20" y2="15" stroke="#ffd23c" stroke-width="1.8"/>
+    </svg>`;
+  } else if (id === 'fondor') {
+    // 7. LUTHEN RAEL: THE FONDOR HAULCRAFT (Armed Custom Haulcraft Cruiser)
+    return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow_fond_${uid}" x="-25%" y="-25%" width="150%" height="150%">
+          <feGaussianBlur stdDeviation="2.2" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+        <linearGradient id="fond_hull_${uid}" x1="0" y1="0" x2="160" y2="84" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#94a3b8"/>
+          <stop offset="30%" stop-color="#64748b"/>
+          <stop offset="70%" stop-color="#334155"/>
+          <stop offset="100%" stop-color="#0f172a"/>
+        </linearGradient>
+        <linearGradient id="fond_eng_${uid}" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#475569"/>
+          <stop offset="50%" stop-color="#1e293b"/>
+          <stop offset="100%" stop-color="#020617"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Swept-Back Heavy Armored Wings -->
+      <polygon points="70,14 142,2 148,16 112,30" fill="url(#fond_hull_${uid})" stroke="#94a3b8" stroke-width="1.2"/>
+      <polygon points="70,70 142,82 148,68 112,54" fill="url(#fond_hull_${uid})" stroke="#94a3b8" stroke-width="1.2"/>
+
+      <!-- 4 Cylindrical Heavy Sublight Turbine Engine Nacelles -->
+      <!-- Top Engine Nacelle -->
+      <rect x="100" y="8" width="34" height="12" rx="4" fill="url(#fond_eng_${uid})" stroke="#38bdf8" stroke-width="1.4"/>
+      <ellipse cx="100" cy="14" rx="3.5" ry="6" fill="#0f172a" stroke="#cbd5e1" stroke-width="1"/>
+      <ellipse cx="134" cy="14" rx="3" ry="5.5" fill="#00ffee" filter="url(#glow_fond_${uid})"/>
+
+      <!-- Mid-Port Engine Nacelle -->
+      <rect x="110" y="24" width="36" height="13" rx="4" fill="url(#fond_eng_${uid})" stroke="#38bdf8" stroke-width="1.4"/>
+      <ellipse cx="110" cy="30.5" rx="3.5" ry="6.5" fill="#0f172a" stroke="#cbd5e1" stroke-width="1"/>
+      <ellipse cx="146" cy="30.5" rx="3" ry="6" fill="#00ffee" filter="url(#glow_fond_${uid})"/>
+
+      <!-- Mid-Starboard Engine Nacelle -->
+      <rect x="110" y="47" width="36" height="13" rx="4" fill="url(#fond_eng_${uid})" stroke="#38bdf8" stroke-width="1.4"/>
+      <ellipse cx="110" cy="53.5" rx="3.5" ry="6.5" fill="#0f172a" stroke="#cbd5e1" stroke-width="1"/>
+      <ellipse cx="146" cy="53.5" rx="3" ry="6" fill="#00ffee" filter="url(#glow_fond_${uid})"/>
+
+      <!-- Bottom Engine Nacelle -->
+      <rect x="100" y="64" width="34" height="12" rx="4" fill="url(#fond_eng_${uid})" stroke="#38bdf8" stroke-width="1.4"/>
+      <ellipse cx="100" cy="70" rx="3.5" ry="6" fill="#0f172a" stroke="#cbd5e1" stroke-width="1"/>
+      <ellipse cx="134" cy="70" rx="3" ry="5.5" fill="#00ffee" filter="url(#glow_fond_${uid})"/>
+
+      <!-- Main Heavy Titanium Wedge Fuselage -->
+      <polygon points="10,42 38,20 120,20 128,42 120,64 38,64" fill="url(#fond_hull_${uid})" stroke="#cbd5e1" stroke-width="1.8"/>
+
+      <!-- Forward Recessed Cargo / Tractor Beam Grille -->
+      <polygon points="14,42 32,28 32,56" fill="#020617" stroke="#38bdf8" stroke-width="1.2"/>
+      <line x1="20" y1="34" x2="20" y2="50" stroke="#38bdf8" stroke-width="1"/>
+      <line x1="24" y1="32" x2="24" y2="52" stroke="#38bdf8" stroke-width="1"/>
+      <line x1="28" y1="30" x2="28" y2="54" stroke="#38bdf8" stroke-width="1"/>
+
+      <!-- Recessed Dorsal Machinery Trench & Greeble Deck -->
+      <rect x="56" y="32" width="38" height="20" rx="2" fill="#090d16" stroke="#475569" stroke-width="1"/>
+      <line x1="62" y1="36" x2="88" y2="36" stroke="#64748b" stroke-width="1.2"/>
+      <line x1="62" y1="48" x2="88" y2="48" stroke="#64748b" stroke-width="1.2"/>
+
+      <!-- Swivel Turret Dome & Twin Heavy Turbolaser Cannons -->
+      <circle cx="50" cy="42" r="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+      <circle cx="50" cy="42" r="3" fill="#00ffee" filter="url(#glow_fond_${uid})"/>
+      <line x1="50" y1="39" x2="36" y2="38" stroke="#38bdf8" stroke-width="1.8"/>
+      <line x1="50" y1="45" x2="36" y2="46" stroke="#38bdf8" stroke-width="1.8"/>
+
+      <!-- Side Ball Turrets (Port & Starboard) -->
+      <circle cx="76" cy="22" r="4.5" fill="#0f172a" stroke="#ffd23c" stroke-width="1"/>
+      <circle cx="76" cy="62" r="4.5" fill="#0f172a" stroke="#ffd23c" stroke-width="1"/>
+
+      <!-- Lateral Plasma Scythe Emitter Nodes -->
+      <line x1="84" y1="20" x2="84" y2="4" stroke="#00ffee" stroke-width="2.5" filter="url(#glow_fond_${uid})"/>
+      <line x1="84" y1="64" x2="84" y2="80" stroke="#00ffee" stroke-width="2.5" filter="url(#glow_fond_${uid})"/>
     </svg>`;
   }
 }
@@ -3366,9 +3440,23 @@ const BOSS_INTEL = [
     tactic: 'Weave between the 4 swept outrigger stabilizer wings to target the central bridge superstructure with concentrated cannon broadsides!'
   },
   {
+    id: 'fondor',
+    name: 'Luthen Rael: The Fondor Haulcraft',
+    sector: 'Sector 6 Commander · Heavily Modified Armed Haulcraft Cruiser',
+    col: '#38bdf8',
+    hp: 88,
+    powers: [
+      '⚔️ Twin Lateral Plasma Scythes (Colossal vertical laser blade arcs slicing flight lanes)',
+      '💥 Heavy Droid Flak Countermeasure Barrage (Deploys 12 radiating explosive flak pods)',
+      '⚡ Dorsal Swivel Turbolaser & Void Torpedo Salvos (High-velocity ionized plasma tracking fire)'
+    ],
+    loot: '+4 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +190 🪙',
+    tactic: 'Stay clear of the vertical flight lane when the lateral plasma scythes ignite, and shoot down incoming flak pods with cannon broadsides!'
+  },
+  {
     id: 'titan',
     name: 'General Veers: Imperial AT-AT Siege Colossus',
-    sector: 'Sector 6 Final Commander · Heavy Armored All-Terrain Siege Titan',
+    sector: 'Sector 7 Final Commander · Heavy Armored All-Terrain Siege Titan',
     col: '#ef4444',
     hp: 95,
     powers: [
@@ -3860,7 +3948,7 @@ function switchIntelTab(tab) {
       tabBoss.style.boxShadow = '0 0 14px rgba(0,255,170,0.4)';
       tabBoss.style.border = 'none';
     }
-    if (title) title.textContent = 'STAR WARS SECTOR FLAGSHIP BOSSES (6)';
+    if (title) title.textContent = 'SECTOR FLAGSHIP BOSSES (7)';
     if (tip) tip.innerHTML = '💡 <b>Captain Noel\'s Tactical Pro-Tip:</b> Target boss cores with heavy 32-pounder broadsides while dodging their ultimate attack trajectories!';
     renderBossIntelModalUI();
   }
@@ -4192,6 +4280,7 @@ const BTYPES = [
   { id: 'ram',   name: 'Admiral Raddus: Mon Calamari MC85 Star Cruiser', col: '#38bdf8', w: 305, h: 185, hp: 70, spd: 46, atk: 'mon_cal_broadside' },
   { id: 'void',  name: 'Captain Solo: The Rogue Millennium Falcon (YT-1300)', col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52, atk: 'quad_laser_barrage' },
   { id: 'cryo',  name: 'Admiral Sloane: Imperial Cantwell Battlecruiser', col: '#00ffaa', w: 305, h: 175, hp: 80, spd: 44, atk: 'outrigger_turbolasers' },
+  { id: 'fondor', name: "Luthen Rael: Fondor Haulcraft (Armed Custom Cruiser)", col: '#38bdf8', w: 320, h: 175, hp: 88, spd: 50, atk: 'fondor_scythes' },
   { id: 'titan', name: 'General Veers: Imperial AT-AT Siege Colossus', col: '#ef4444', w: 310, h: 180, hp: 95, spd: 48, atk: 'heavy_chin_blasters' },
 ];
 
@@ -4988,8 +5077,8 @@ function buildShop() {
   h += `<div class="shopitem" style="border: 1.5px solid #00e5ff; background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(168, 85, 247, 0.1));">` +
     `<div class="ic" style="font-size:2rem;display:flex;align-items:center;justify-content:center">🔬</div>` +
     `<div class="info"><div class="t" style="color:#00ffee">Tactical Flagship Boss Database</div>` +
-    `<div class="d">Inspect all 6 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Admiral Raddus, Captain Solo, Admiral Sloane &amp; General Veers AT-AT!</div>` +
-    `<div class="lv" style="color:#c084fc">6 Sector Flagships Documented 👾</div></div>` +
+    `<div class="d">Inspect all 7 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Admiral Raddus, Captain Solo, Admiral Sloane, General Veers AT-AT &amp; Luthen Rael Fondor Haulcraft!</div>` +
+    `<div class="lv" style="color:#c084fc">7 Sector Flagships Documented 👾</div></div>` +
     `<button style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;box-shadow:0 0 15px rgba(0,229,255,0.5)" onclick="openBossIntelModal(event)">🔬 INSPECT</button></div>`;
 
   // 1. COIN UPGRADES AT THE TOP
@@ -6462,6 +6551,19 @@ function update(dt) {
       }
     }
 
+    if (boss.scytheActive && boss.scytheActive > 0) {
+      boss.scytheActive -= dt;
+      // Twin Lateral Plasma Scythes deal damage if player touches the vertical blade plane
+      if (Math.abs(ship.x - boss.x) < 45 && Math.abs(ship.y - boss.y) < 420) {
+        if (ship.inv <= 0) {
+          damageShip();
+          popup(ship.x, ship.y - 25, '⚔️ PLASMA SCYTHE HIT!', '#00ffee');
+          explode(ship.x, ship.y, '#00ffee', 16);
+          addShake(12);
+        }
+      }
+    }
+
     if (boss.haloActive) {
       boss.haloT -= dt;
       if (boss.haloT <= 0) boss.haloActive = false;
@@ -6628,8 +6730,39 @@ function update(dt) {
           sfx('incoming');
         }
 
+      } else if (boss.type === 'fondor') {
+        // Boss 6: LUTHEN RAEL: FONDOR HAULCRAFT (ARMED CUSTOM CRUISER)
+        if (boss.atkCycle === 2) {
+          // ULTIMATE: Twin Lateral Plasma Scythes & Smart Droid Flak Salvo!
+          boss.scytheActive = 3.0;
+          addShake(28);
+          popup(boss.x - 40, boss.y - 45, '⚔️ ULTIMATE: TWIN PLASMA SCYTHES!', '#00ffee');
+          sfx('laser');
+          // Launch 4 Droid Flak countermeasure pods into flight lane
+          for (let k = 0; k < 4; k++) {
+            const ang = Math.PI + (k - 1.5) * 0.45;
+            eballs.push({ type: 'emp', col: '#00ffee', x: boss.x - boss.w * 0.35, y: boss.y + (k - 1.5) * 35, vx: Math.cos(ang) * 520 * spdBonus, vy: Math.sin(ang) * 520 * spdBonus, r: 24 });
+          }
+        } else if (boss.atkCycle === 1) {
+          // Heavy Droid Flak Countermeasure Barrage (8 radiating explosive pods)
+          for (let k = 0; k < 8; k++) {
+            const ang = (k / 8) * Math.PI * 2;
+            eballs.push({ type: 'magma', col: '#38bdf8', x: boss.x - boss.w * 0.3, y: boss.y, vx: Math.cos(ang) * 440 * spdBonus, vy: Math.sin(ang) * 440 * spdBonus, r: 20, spin: 0 });
+          }
+          popup(boss.x - 40, boss.y - 45, '💥 DROID FLAK BARRAGE!', '#38bdf8');
+          sfx('incoming');
+        } else {
+          // Swivel Turret Dual Turbolaser Salvo + Void Torpedo
+          for (const cy of [-24, 24]) {
+            eballs.push({ type: 'laser', col: '#38bdf8', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 700 * spdBonus, vy: (dy / dist) * 700 * spdBonus, r: 18 });
+          }
+          eballs.push({ type: 'emp', col: '#ffd23c', x: boss.x - boss.w * 0.45, y: boss.y, vx: -620 * spdBonus, vy: 0, r: 26 });
+          sfx('laser');
+          popup(boss.x - 40, boss.y - 45, '⚡ SWIVEL TURBOLASER SALVO!', '#38bdf8');
+        }
+
       } else {
-        // Boss 6: GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
+        // Boss 7: GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
         if (boss.atkCycle === 2) {
           // ULTIMATE: Maximum Firepower MS-1 Heavy Turbolaser Bombardment + Stomp Shockwaves!
           for (const ang of [-0.42, -0.32, -0.22, -0.11, 0, 0.11, 0.22, 0.32, 0.42]) {
@@ -9006,8 +9139,192 @@ function draw() {
         cx.strokeStyle = '#ffffff'; cx.lineWidth = 2; cx.stroke();
       }
 
+    } else if (boss.type === 'fondor') {
+      // BOSS 6: LUTHEN RAEL: THE FONDOR HAULCRAFT (ARMED CUSTOM CRUISER)
+      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
+      bg.addColorStop(0, 'rgba(56, 189, 248, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.54, 0, Math.PI * 2); cx.fill();
+
+      // Swept Back Armored Wings (Upper & Lower)
+      const wg = cx.createLinearGradient(0, -boss.h * 0.5, 0, boss.h * 0.5);
+      wg.addColorStop(0, '#475569'); wg.addColorStop(0.5, '#1e293b'); wg.addColorStop(1, '#0f172a');
+      cx.fillStyle = wg;
+      // Upper Wing
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.12, -boss.h * 0.18);
+      cx.lineTo(boss.w * 0.38, -boss.h * 0.48);
+      cx.lineTo(boss.w * 0.48, -boss.h * 0.42);
+      cx.lineTo(boss.w * 0.22, -boss.h * 0.12);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 1.8; cx.stroke();
+
+      // Lower Wing
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.12, boss.h * 0.18);
+      cx.lineTo(boss.w * 0.38, boss.h * 0.48);
+      cx.lineTo(boss.w * 0.48, boss.h * 0.42);
+      cx.lineTo(boss.w * 0.22, boss.h * 0.12);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 1.8; cx.stroke();
+
+      // 4 Cylindrical Sublight Turbine Engine Nacelles with Animated Blue Thruster Flames
+      const nacelles = [
+        { x: boss.w * 0.18, y: -boss.h * 0.36, w: 72, h: 26, isRaised: true },
+        { x: boss.w * 0.26, y: -boss.h * 0.14, w: 76, h: 28, isRaised: false },
+        { x: boss.w * 0.26, y: boss.h * 0.14, w: 76, h: 28, isRaised: false },
+        { x: boss.w * 0.18, y: boss.h * 0.36, w: 72, h: 26, isRaised: true }
+      ];
+
+      for (const n of nacelles) {
+        // Thruster plume cone
+        const flameLen = 45 + Math.sin(t * 30 + n.y) * 12;
+        const fGrad = cx.createRadialGradient(n.x + n.w * 0.5, n.y, 2, n.x + n.w * 0.5 + flameLen, n.y, n.h * 0.6);
+        fGrad.addColorStop(0, '#ffffff');
+        fGrad.addColorStop(0.3, '#00ffee');
+        fGrad.addColorStop(0.7, '#0284c7');
+        fGrad.addColorStop(1, 'rgba(2, 132, 199, 0)');
+        cx.fillStyle = fGrad;
+        cx.beginPath();
+        cx.moveTo(n.x + n.w * 0.5, n.y - n.h * 0.4);
+        cx.lineTo(n.x + n.w * 0.5 + flameLen, n.y);
+        cx.lineTo(n.x + n.w * 0.5, n.y + n.h * 0.4);
+        cx.closePath(); cx.fill();
+
+        // Nacelle body cylinder
+        const nGrad = cx.createLinearGradient(n.x - n.w * 0.5, n.y - n.h * 0.5, n.x - n.w * 0.5, n.y + n.h * 0.5);
+        nGrad.addColorStop(0, '#64748b');
+        nGrad.addColorStop(0.4, '#1e293b');
+        nGrad.addColorStop(0.8, '#0f172a');
+        nGrad.addColorStop(1, '#020617');
+        cx.fillStyle = nGrad;
+        cx.beginPath();
+        cx.roundRect(n.x - n.w * 0.5, n.y - n.h * 0.5, n.w, n.h, 6);
+        cx.fill();
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.6; cx.stroke();
+
+        // Forward circular intake lip ring
+        cx.fillStyle = '#0f172a';
+        cx.beginPath();
+        cx.ellipse(n.x - n.w * 0.5, n.y, 4, n.h * 0.45, 0, 0, Math.PI * 2);
+        cx.fill();
+        cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 1.4; cx.stroke();
+      }
+
+      // Main Brushed Titanium Wedge Hull Fuselage
+      const hGrad = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
+      hGrad.addColorStop(0, '#0f172a');
+      hGrad.addColorStop(0.25, '#1e293b');
+      hGrad.addColorStop(0.65, '#475569');
+      hGrad.addColorStop(0.90, '#94a3b8');
+      hGrad.addColorStop(1, '#cbd5e1');
+      cx.fillStyle = hGrad;
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.50, 0);                 // Forward prow tip
+      cx.lineTo(-boss.w * 0.32, -boss.h * 0.28);    // Forward port bevel
+      cx.lineTo(boss.w * 0.25, -boss.h * 0.26);     // Mid port flank
+      cx.lineTo(boss.w * 0.42, -boss.h * 0.16);     // Aft port engine shoulder
+      cx.lineTo(boss.w * 0.36, 0);                  // Aft center spine
+      cx.lineTo(boss.w * 0.42, boss.h * 0.16);      // Aft starboard engine shoulder
+      cx.lineTo(boss.w * 0.25, boss.h * 0.26);      // Mid starboard flank
+      cx.lineTo(-boss.w * 0.32, boss.h * 0.28);     // Forward starboard bevel
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 3.2; cx.stroke();
+
+      // Forward Recessed Cargo Bay / Tractor Beam Grille (Dark with Cyan Emitting Slats)
+      cx.fillStyle = '#020617';
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.48, 0);
+      cx.lineTo(-boss.w * 0.36, -boss.h * 0.14);
+      cx.lineTo(-boss.w * 0.28, -boss.h * 0.14);
+      cx.lineTo(-boss.w * 0.28, boss.h * 0.14);
+      cx.lineTo(-boss.w * 0.36, boss.h * 0.14);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.4; cx.stroke();
+
+      for (let s = -boss.w * 0.44; s <= -boss.w * 0.30; s += 7) {
+        cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.2;
+        cx.beginPath(); cx.moveTo(s, -boss.h * 0.10); cx.lineTo(s, boss.h * 0.10); cx.stroke();
+      }
+
+      // Recessed Mechanical Dorsal Greeble Machinery Trench
+      cx.fillStyle = '#090d16';
+      cx.beginPath();
+      cx.roundRect(-boss.w * 0.10, -boss.h * 0.14, boss.w * 0.32, boss.h * 0.28, 4);
+      cx.fill();
+      cx.strokeStyle = '#64748b'; cx.lineWidth = 1.4; cx.stroke();
+
+      // Greeble conduit piping
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.2;
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.06, -boss.h * 0.08); cx.lineTo(boss.w * 0.18, -boss.h * 0.08);
+      cx.moveTo(-boss.w * 0.06, boss.h * 0.08); cx.lineTo(boss.w * 0.18, boss.h * 0.08);
+      cx.stroke();
+
+      // Swivel Turret Dome & Dual Heavy Turbolaser Cannons
+      cx.fillStyle = '#1e293b';
+      cx.beginPath(); cx.arc(-boss.w * 0.16, 0, 12, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2; cx.stroke();
+      cx.fillStyle = '#00ffee';
+      cx.beginPath(); cx.arc(-boss.w * 0.16, 0, 5, 0, Math.PI * 2); cx.fill();
+      // Turret Barrels aimed towards player ship
+      const tAng = Math.atan2(ship.y - boss.y, ship.x - boss.x);
+      cx.save();
+      cx.translate(-boss.w * 0.16, 0);
+      cx.rotate(tAng);
+      cx.fillStyle = '#64748b';
+      cx.fillRect(0, -4, 22, 3);
+      cx.fillRect(0, 1, 22, 3);
+      cx.fillStyle = '#00ffee';
+      cx.fillRect(20, -4, 4, 3);
+      cx.fillRect(20, 1, 4, 3);
+      cx.restore();
+
+      // Lateral Ball Turrets (Port & Starboard)
+      for (const by of [-boss.h * 0.22, boss.h * 0.22]) {
+        cx.fillStyle = '#0f172a';
+        cx.beginPath(); cx.arc(0, by, 7.5, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.5; cx.stroke();
+        cx.fillStyle = '#ffd23c';
+        cx.beginPath(); cx.arc(0, by, 3, 0, Math.PI * 2); cx.fill();
+      }
+
+      // ACTIVE ULTIMATE: Colossal Twin Lateral Plasma Scythes FX!
+      if (boss.scytheActive && boss.scytheActive > 0) {
+        for (const sDir of [-1, 1]) {
+          const topY = (sDir === -1 ? -420 : 20);
+          const botY = (sDir === -1 ? -20 : 420);
+
+          // Outer diffuse cyan glow
+          cx.strokeStyle = 'rgba(0, 255, 238, 0.45)';
+          cx.lineWidth = 36 + Math.sin(t * 30) * 8;
+          cx.lineCap = 'round';
+          cx.beginPath(); cx.moveTo(0, topY); cx.lineTo(0, botY); cx.stroke();
+
+          // Mid laser blade
+          cx.strokeStyle = '#00ffee';
+          cx.lineWidth = 18 + Math.cos(t * 35) * 4;
+          cx.beginPath(); cx.moveTo(0, topY); cx.lineTo(0, botY); cx.stroke();
+
+          // White-hot core
+          cx.strokeStyle = '#ffffff';
+          cx.lineWidth = 6;
+          cx.beginPath(); cx.moveTo(0, topY); cx.lineTo(0, botY); cx.stroke();
+
+          // Crackling electric arcs along the blade
+          cx.strokeStyle = '#ffd23c';
+          cx.lineWidth = 3;
+          cx.beginPath();
+          for (let y = topY; y <= botY; y += 40) {
+            const sx = Math.sin(y * 0.1 + t * 25) * 14;
+            if (y === topY) cx.moveTo(sx, y);
+            else cx.lineTo(sx, y);
+          }
+          cx.stroke();
+        }
+      }
+
     } else {
-      // BOSS 6: GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
+      // BOSS 7: GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.60);
       bg.addColorStop(0, 'rgba(239, 68, 68, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.58, boss.h * 0.54, 0, 0, Math.PI * 2); cx.fill();
