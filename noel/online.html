@@ -7596,7 +7596,7 @@ function update(dt) {
           popup(boss.x - 40, boss.y - 45, '🧫 MICRO-BACTERIA SPORE STREAM!', '#00ffaa');
         }
 
-      } else {
+      } else if (boss.type === 'titan') {
         // Boss 7: GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
         if (boss.atkCycle === 2) {
           // ULTIMATE: Maximum Firepower MS-1 Heavy Turbolaser Bombardment + Stomp Shockwaves (Aimed at player)
