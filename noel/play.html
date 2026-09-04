@@ -1586,10 +1586,14 @@ function sfx(type) {
   } catch (e) {}
 }
 
+let lastMusicToggleTime = 0;
 function toggleMusic(e) {
   if (e) {
     try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
   }
+  const now = performance.now();
+  if (now - lastMusicToggleTime < 180) return;
+  lastMusicToggleTime = now;
   initAudio();
   musicOn = !musicOn;
   const mb = document.getElementById('musicbtn');
@@ -3463,10 +3467,15 @@ function updatePauseBtnVisibility() {
 window.updatePauseBtnVisibility = updatePauseBtnVisibility;
 
 let prePauseState = 'play';
+let lastPauseToggleTime = 0;
 function togglePause(e) {
   if (e) {
     try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
   }
+  const now = performance.now();
+  if (now - lastPauseToggleTime < 180) return;
+  lastPauseToggleTime = now;
+  
   initAudio();
   const po = document.getElementById('pauseoverlay');
   if (state === 'pause') {
@@ -3493,17 +3502,6 @@ function restartGame(e) {
   startSolarSail(e);
 }
 window.restartGame = restartGame;
-
-const pauseBtnEl = document.getElementById('pausebtn');
-if (pauseBtnEl) {
-  pauseBtnEl.addEventListener('click', togglePause);
-  pauseBtnEl.addEventListener('touchend', (e) => { e.preventDefault(); togglePause(e); }, { passive: false });
-}
-const resumeBtnEl = document.getElementById('resumebtn');
-if (resumeBtnEl) {
-  resumeBtnEl.addEventListener('click', togglePause);
-  resumeBtnEl.addEventListener('touchend', (e) => { e.preventDefault(); togglePause(e); }, { passive: false });
-}
 
 async function endGame(cid) {
   if (!scoreSubmitted) {
