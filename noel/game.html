@@ -757,9 +757,9 @@
   <p>Solar sails reefed, Captain Noel…</p>
   <div class="btnrow">
     <button id="resumebtn" onclick="togglePause(event)">▶ RESUME BATTLE</button>
-    <button onclick="restartGame(event)">↻ RESTART</button>
+    <button id="restartbtn" onclick="returnToMenu(event)" style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff">↻ RESTART TO MAIN MENU</button>
   </div>
-  <a class="exitlink" href="../">🚪 MAIN MENU — VG Contest</a>
+  <a class="exitlink" href="../">🚪 EXIT TO CONTEST</a>
 </div>
 
 <div id="menu" class="overlay">
@@ -789,7 +789,10 @@
   <h1>💥 GALLEON SHIPWRECKED!</h1>
   <p id="losetext">Your space pirate galleon was blasted into cosmic stardust…</p>
   <div class="lb" id="lbLose"></div>
-  <button onclick="location.reload()">↻ RE-ENGAGE</button>
+  <div class="btnrow" style="margin-top:0.8rem">
+    <button onclick="startSolarSail(event)">↻ SET SAIL AGAIN</button>
+    <button onclick="returnToMenu(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff">🏴‍☠️ MAIN MENU</button>
+  </div>
   <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">← Back to Contest</a></p>
 </div>
 
@@ -797,7 +800,10 @@
   <h1>🌌 GALAXY PIRATE KING!</h1>
   <p id="wintext">All alien UFO fleets vanquished across the stars!</p>
   <div class="lb" id="lbWin"></div>
-  <button onclick="location.reload()">↻ PLAY AGAIN</button>
+  <div class="btnrow" style="margin-top:0.8rem">
+    <button onclick="startSolarSail(event)">↻ PLAY AGAIN</button>
+    <button onclick="returnToMenu(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff">🏴‍☠️ MAIN MENU</button>
+  </div>
   <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">← Back to Contest</a></p>
 </div>
 
@@ -3493,15 +3499,34 @@ function togglePause(e) {
 }
 window.togglePause = togglePause;
 
-function restartGame(e) {
+function returnToMenu(e) {
   if (e) {
     try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
   }
-  const po = document.getElementById('pauseoverlay');
-  if (po) po.classList.add('hidden');
-  startSolarSail(e);
+  state = 'menu';
+  
+  // Hide all modals & overlays except #menu
+  const overlays = ['pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal'];
+  overlays.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+  
+  const menuEl = document.getElementById('menu');
+  if (menuEl) menuEl.classList.remove('hidden');
+  
+  // Reset active combat entities
+  balls = []; eballs = []; forts = []; gliders = []; mines = []; coins = []; powerups = []; parts = [];
+  boss = null; bossT = 26; score = 0; coinsN = 0; level = 1; t = 0;
+  storyStage = 0; storySectorAnnounced = 1;
+  
+  updatePauseBtnVisibility();
+  updateDpadVisibility();
+  renderWallet();
+  renderLeaderboard('lbMenu', -1, null);
 }
-window.restartGame = restartGame;
+window.returnToMenu = returnToMenu;
+window.restartGame = returnToMenu;
 
 async function endGame(cid) {
   if (!scoreSubmitted) {
@@ -4219,7 +4244,8 @@ window.repairDailyStreak = repairDailyStreak;
 window.resetDailyStreak = resetDailyStreak;
 window.togglePause = togglePause;
 window.toggleMusic = toggleMusic;
-window.restartGame = restartGame;
+window.restartGame = returnToMenu;
+window.returnToMenu = returnToMenu;
 window.advanceStory = advanceStory;
 
 function bindActionButtons() {
@@ -4242,6 +4268,7 @@ function bindActionButtons() {
   bind('pausebtn', togglePause);
   bind('musicbtn', toggleMusic);
   bind('resumebtn', togglePause);
+  bind('restartbtn', returnToMenu);
   bind('dosCloseBtn', () => {
     const m = document.getElementById('dossierModal');
     if (m) m.classList.add('hidden');
