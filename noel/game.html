@@ -1733,7 +1733,7 @@ const SHIPS = [
   { id: 'runner',  name: 'T-65B X-Wing Starfighter ⚡',     cost: 5,  cols: ['#00ffee', '#0284c7', '#082f49'], hp: 6, cool: 0.14, spd: 1.50, gold: 1.30, magnet: 90, spread: [0], power: '⚡ S-Foil Attack Wings, +50% Speed & Proton Laser Barrage' },
   { id: 'galleon', name: 'The Rogue Shadow (Stealth Transport) 🛡️',cost: 6,  cols: ['#38bdf8', '#334155', '#0f172a'], hp: 9, cool: 0.28, spd: 0.95, gold: 1.15, magnet: 35, spread: [0], power: '🛡️ Stealth Armor (+3 Hearts) & Quad Tachyon Concussion Blast' },
   { id: 'hind',    name: 'Republic Hammerhead Corvette 🚀',   cost: 8,  cols: ['#ef4444', '#f8fafc', '#0f172a'], hp: 7, cool: 0.20, spd: 1.25, gold: 2.00, magnet: 180, spread: [0], power: '🚀 Dual Swivel Turbolasers & Quad Sublight Engine Surge (+100% Dubloons)' },
-  { id: 'storm',   name: 'Razor Crest Assault Gunship 🌌',  cost: 10, cols: ['#e9d5ff', '#a855f7', '#1e1035'], hp: 7, cool: 0.25, spd: 1.15, gold: 1.40, magnet: 65, spread: [-0.15, 0.15], power: '🌀 Twin Singularity Void Torpedoes with Gravity Implosion' },
+  { id: 'storm',   name: 'Fondor Haulcraft (Luthen\'s Starship) 🌌',cost: 10, cols: ['#38bdf8', '#64748b', '#0f172a'], hp: 8, cool: 0.22, spd: 1.20, gold: 1.50, magnet: 75, spread: [-0.15, 0.15], power: '🌀 Twin Plasma Scythes, Quad Articulated Turbines & Void Torpedoes' },
 ];
 
 const UPG = {
@@ -2131,31 +2131,50 @@ function getShipSvg(shipId, cols) {
   }
 
   if (shipId === 'storm') {
-    // 4. THE RAZOR CREST (ST-70 ASSAULT GUNSHIP): Twin Giant Flank Turbines, Heavy Chin Cannons
+    // 4. FONDOR HAULCRAFT (Luthen Rael's Mobile Command Starship): Rugged Hull, Quad Articulated Turbines, Plasma Scythes
     return `<svg viewBox="0 0 110 65" width="105" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${filterBlock}
-      <!-- Twin Massive Flank Ion Engine Turbines & Plumes -->
-      <polygon points="10,18 0,19 10,20" fill="#c084fc" filter="url(#glow_${uid})"/>
-      <polygon points="10,46 0,47 10,48" fill="#c084fc" filter="url(#glow_${uid})"/>
+      <!-- Quad Articulated Turbine Ion Plumes -->
+      <polygon points="12,12 0,13 12,14" fill="#38bdf8" filter="url(#glow_${uid})"/>
+      <polygon points="12,24 2,25 12,26" fill="#6366f1" filter="url(#glow_${uid})"/>
+      <polygon points="12,38 2,39 12,40" fill="#6366f1" filter="url(#glow_${uid})"/>
+      <polygon points="12,50 0,51 12,52" fill="#38bdf8" filter="url(#glow_${uid})"/>
 
-      <!-- Port Cylindrical Turbine Engine -->
-      <rect x="12" y="12" width="46" height="14" fill="#1e1035" stroke="#c084fc" stroke-width="1.8" rx="3"/>
-      <circle cx="14" cy="19" r="5" fill="#c084fc"/>
+      <!-- Outboard Cantilever Wing Pylons -->
+      <polygon points="28,14 46,20 46,44 28,50 22,46 22,18" fill="#1e293b" stroke="#64748b" stroke-width="1.2"/>
 
-      <!-- Starboard Cylindrical Turbine Engine -->
-      <rect x="12" y="40" width="46" height="14" fill="#1e1035" stroke="#c084fc" stroke-width="1.8" rx="3"/>
-      <circle cx="14" cy="47" r="5" fill="#c084fc"/>
+      <!-- Rear Outrigger Turbines (Port & Starboard) -->
+      <rect x="12" y="8" width="22" height="9" rx="2.5" fill="#334155" stroke="#94a3b8" stroke-width="1"/>
+      <circle cx="14" cy="12.5" r="2.5" fill="#38bdf8"/>
+      <rect x="12" y="47" width="22" height="9" rx="2.5" fill="#334155" stroke="#94a3b8" stroke-width="1"/>
+      <circle cx="14" cy="51.5" r="2.5" fill="#38bdf8"/>
 
-      <!-- Heavy Beskar Armor Fuselage -->
-      <polygon points="16,24 64,24 94,30 102,33 94,36 64,42 16,42" fill="url(#armor_${uid})" stroke="#e9d5ff" stroke-width="2.4"/>
-      
-      <!-- Angled Cockpit Viewport Canopy -->
-      <polygon points="70,29 88,31 88,35 70,37" fill="#0f051d" stroke="#c084fc" stroke-width="1.4"/>
-      <circle cx="78" cy="33" r="2.5" fill="#ffffff"/>
+      <!-- Main Rugged Slab Armored Hull -->
+      <polygon points="22,20 72,20 86,28 86,36 72,44 22,44 16,33" fill="url(#metal_${uid})" stroke="#94a3b8" stroke-width="1.8"/>
 
-      <!-- Twin Heavy Chin Laser Cannons -->
-      <rect x="92" y="27" width="10" height="3" fill="#ffd23c"/>
-      <rect x="92" y="36" width="10" height="3" fill="#ffd23c"/>
+      <!-- Off-White Identification Striping Decals -->
+      <line x1="44" y1="21" x2="38" y2="43" stroke="#f1f5f9" stroke-width="2.5" stroke-dasharray="4 2"/>
+      <line x1="56" y1="21" x2="50" y2="43" stroke="#f1f5f9" stroke-width="2"/>
+
+      <!-- Mid-Flank Articulated Heavy Turbines -->
+      <rect x="42" y="14" width="24" height="8" rx="2.5" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.2"/>
+      <circle cx="64" cy="18" r="3.5" fill="#334155" stroke="#38bdf8" stroke-width="0.8"/>
+      <rect x="42" y="42" width="24" height="8" rx="2.5" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.2"/>
+      <circle cx="64" cy="46" r="3.5" fill="#334155" stroke="#38bdf8" stroke-width="0.8"/>
+
+      <!-- Dorsal Defense Turret -->
+      <circle cx="48" cy="27" r="3.5" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+      <line x1="48" y1="27" x2="58" y2="24" stroke="#ffd23c" stroke-width="1.2"/>
+
+      <!-- Recessed Multi-Panel Cockpit Visor Canopy -->
+      <polygon points="68,29 82,31 82,34 68,36" fill="#0f172a" stroke="#6366f1" stroke-width="1.2"/>
+      <circle cx="75" cy="32.5" r="2.5" fill="#38bdf8" filter="url(#glow_${uid})"/>
+
+      <!-- Forward Long-Range Heavy Kinetic Blaster Cannons -->
+      <line x1="84" y1="28" x2="102" y2="28" stroke="#334155" stroke-width="1.8"/>
+      <line x1="84" y1="36" x2="102" y2="36" stroke="#334155" stroke-width="1.8"/>
+      <rect x="98" y="27" width="5" height="2" fill="#ffd23c"/>
+      <rect x="98" y="35" width="5" height="2" fill="#ffd23c"/>
     </svg>`;
   }
 
@@ -8487,61 +8506,131 @@ function draw() {
       cx.fillRect(44, 1.5, 3, 2);
 
     // -------------------------------------------------------------
-    // SHAPE 4: THE RAZOR CREST ST-70 GUNSHIP (storm)
+    // SHAPE 4: FONDOR HAULCRAFT (storm) - Luthen Rael's Command Ship
     // -------------------------------------------------------------
     } else if (curShip === 'storm') {
-      // Twin Massive Flank Ion Engine Turbines & Plumes
-      for (const ey of [-22, 22]) {
-        const jg = cx.createLinearGradient(-38, ey, -72, ey);
+      // Quad Articulated Sublight Turbine Ion Plumes
+      const ionEnginesY = [-26, -12, 12, 26];
+      for (let i = 0; i < ionEnginesY.length; i++) {
+        const ey = ionEnginesY[i];
+        const jg = cx.createLinearGradient(-44, ey, -74, ey);
         jg.addColorStop(0, '#ffffff');
-        jg.addColorStop(0.35, '#c084fc');
-        jg.addColorStop(0.8, '#581c87');
-        jg.addColorStop(1, 'rgba(88, 28, 135, 0)');
+        jg.addColorStop(0.35, '#38bdf8');
+        jg.addColorStop(0.75, '#6366f1');
+        jg.addColorStop(1, 'rgba(99, 102, 241, 0)');
         cx.fillStyle = jg;
         cx.beginPath();
-        cx.moveTo(-38, ey - 5);
-        cx.lineTo(-68 - Math.random() * 14, ey);
-        cx.lineTo(-38, ey + 5);
+        cx.moveTo(-44, ey - 4);
+        cx.lineTo(-66 - Math.random() * 16, ey);
+        cx.lineTo(-44, ey + 4);
         cx.closePath();
         cx.fill();
-
-        // Heavy Cylindrical Flank Turbine Module
-        cx.fillStyle = '#1e1035';
-        cx.beginPath(); cx.roundRect(-38, ey - 8, 48, 16, 4); cx.fill();
-        cx.strokeStyle = '#c084fc'; cx.lineWidth = 2.2; cx.stroke();
-        cx.fillStyle = '#c084fc'; cx.fillRect(-36, ey - 6, 6, 12);
       }
 
-      // Heavy Beskar Armor Fuselage
-      const hGrad = cx.createLinearGradient(0, -14, 0, 14);
-      hGrad.addColorStop(0, '#e9d5ff');
-      hGrad.addColorStop(0.35, col0);
-      hGrad.addColorStop(0.7, col1);
-      hGrad.addColorStop(1, col2);
-      cx.fillStyle = hGrad;
+      // Outboard Cantilever Wing Pylons (Housing Plasma Scythe Emitters)
+      cx.fillStyle = '#1e293b';
       cx.beginPath();
-      cx.moveTo(-42, -14);
-      cx.lineTo(16, -14);
-      cx.lineTo(48, -6);
-      cx.lineTo(54, 0); // Armored Gunship Nose
-      cx.lineTo(48, 6);
-      cx.lineTo(16, 14);
-      cx.lineTo(-42, 14);
+      cx.moveTo(-28, -14);
+      cx.lineTo(-10, -28);
+      cx.lineTo(8, -28);
+      cx.lineTo(0, -14);
       cx.closePath();
       cx.fill();
-      cx.strokeStyle = '#c084fc'; cx.lineWidth = 2.8; cx.stroke();
+      cx.strokeStyle = '#64748b'; cx.lineWidth = 1.8; cx.stroke();
 
-      // Angled Cockpit Viewport Canopy
-      cx.fillStyle = '#0f051d';
+      cx.beginPath();
+      cx.moveTo(-28, 14);
+      cx.lineTo(-10, 28);
+      cx.lineTo(8, 28);
+      cx.lineTo(0, 14);
+      cx.closePath();
+      cx.fill();
+      cx.stroke();
+
+      // Rear Outrigger Turbine Engine Pods (Port & Starboard Wings)
+      for (const ey of [-26, 26]) {
+        cx.fillStyle = '#0f172a';
+        cx.beginPath(); cx.roundRect(-42, ey - 6, 26, 12, 3); cx.fill();
+        cx.strokeStyle = '#94a3b8'; cx.lineWidth = 1.4; cx.stroke();
+        // Articulated Turbine Intake Ring
+        cx.fillStyle = '#334155';
+        cx.beginPath(); cx.arc(-18, ey, 4.5, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1; cx.stroke();
+      }
+
+      // Main Slab Armored Industrial Fuselage
+      const hGrad = cx.createLinearGradient(0, -16, 0, 16);
+      hGrad.addColorStop(0, '#64748b');
+      hGrad.addColorStop(0.35, '#475569');
+      hGrad.addColorStop(0.7, '#334155');
+      hGrad.addColorStop(1, '#1e293b');
+      cx.fillStyle = hGrad;
+      cx.beginPath();
+      cx.moveTo(-36, -16);
+      cx.lineTo(18, -16);
+      cx.lineTo(44, -8);
+      cx.lineTo(50, 0); // Armored Prow
+      cx.lineTo(44, 8);
+      cx.lineTo(18, 16);
+      cx.lineTo(-36, 16);
+      cx.lineTo(-44, 0); // Slanted Aft Ramp
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 2.4; cx.stroke();
+
+      // Off-White Identification Racing / Chevron Striping Decals
+      cx.strokeStyle = '#f1f5f9';
+      cx.lineWidth = 2.5;
+      cx.beginPath();
+      cx.moveTo(-16, -14); cx.lineTo(-24, 14);
+      cx.moveTo(4, -14); cx.lineTo(-4, 14);
+      cx.stroke();
+
+      // Mid-Flank Articulated Heavy Turbines (Direct Hull Sponsons)
+      for (const ey of [-12, 12]) {
+        cx.fillStyle = '#0f172a';
+        cx.beginPath(); cx.roundRect(-4, ey - 5, 28, 10, 3); cx.fill();
+        cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 1.4; cx.stroke();
+        // Red Safety Indicator Lights
+        cx.fillStyle = '#ef4444';
+        cx.fillRect(8, ey - 4, 3, 2);
+        // Turbine Fan Hub
+        cx.fillStyle = '#334155';
+        cx.beginPath(); cx.arc(22, ey, 3.5, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1; cx.stroke();
+      }
+
+      // Dorsal 360° Defense Turret & Sensor Mast
+      cx.fillStyle = '#0f172a';
+      cx.beginPath(); cx.arc(-2, -6, 5, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#64748b'; cx.lineWidth = 1.2; cx.stroke();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.6;
+      cx.beginPath(); cx.moveTo(-2, -6); cx.lineTo(10, -9); cx.stroke();
+
+      // Recessed Multi-Faceted Cockpit Viewport Canopy
+      cx.fillStyle = '#0f172a';
       cx.beginPath();
       cx.moveTo(18, -6); cx.lineTo(38, -4); cx.lineTo(38, 4); cx.lineTo(18, 6);
       cx.closePath(); cx.fill();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.4; cx.stroke();
+      cx.strokeStyle = '#6366f1'; cx.lineWidth = 1.4; cx.stroke();
 
-      // Twin Heavy Chin Laser Blaster Cannons
+      // Glowing Cockpit Glass Viewport
+      const cGlow = cx.createLinearGradient(20, 0, 36, 0);
+      cGlow.addColorStop(0, '#ffffff');
+      cGlow.addColorStop(0.5, '#38bdf8');
+      cGlow.addColorStop(1, '#6366f1');
+      cx.fillStyle = cGlow;
+      cx.fillRect(22, -2.5, 14, 5);
+
+      // Forward Long-Range Heavy Kinetic Blaster Cannons
+      cx.strokeStyle = '#334155'; cx.lineWidth = 2.4;
+      cx.beginPath();
+      cx.moveTo(42, -5); cx.lineTo(58, -5);
+      cx.moveTo(42, 5); cx.lineTo(58, 5);
+      cx.stroke();
       cx.fillStyle = '#ffd23c';
-      cx.fillRect(44, -7, 12, 3);
-      cx.fillRect(44, 4, 12, 3);
+      cx.fillRect(54, -6.5, 4, 3);
+      cx.fillRect(54, 3.5, 4, 3);
 
     // -------------------------------------------------------------
     // SHAPE 5: THE MILLENNIUM FALCON YT-1300 (cutter)
