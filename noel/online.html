@@ -2603,29 +2603,49 @@ const ALL_SHIP_IDS = ['cutter', 'galleon', 'runner', 'hind', 'storm'];
 
 let activeUpgradeShip = 'cutter';
 
-function getShipUpg(shipId) {
-  const sid = shipId || (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
-  if (!SAVE || !SAVE.data) return { hull: 10, cannon: 10, engine: 10, magnet: 10 };
-  if (!SAVE.data.shipUpg) SAVE.data.shipUpg = {};
-  if (!SAVE.data.shipUpg[sid]) {
-    SAVE.data.shipUpg[sid] = {
-      hull: (SAVE.data.upg && typeof SAVE.data.upg.hull === 'number') ? SAVE.data.upg.hull : 10,
-      cannon: (SAVE.data.upg && typeof SAVE.data.upg.cannon === 'number') ? SAVE.data.upg.cannon : 10,
-      engine: (SAVE.data.upg && typeof SAVE.data.upg.engine === 'number') ? SAVE.data.upg.engine : 10,
-      magnet: (SAVE.data.upg && typeof SAVE.data.upg.magnet === 'number') ? SAVE.data.upg.magnet : 10,
-    };
-  }
-  return SAVE.data.shipUpg[sid];
+function isCreator() {
+  const nm = (playerName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || localStorage.getItem('sp_name') || '').trim().toLowerCase();
+  return (
+    nm === 'noel' ||
+    nm === 'noël' ||
+    nm === 'noelthegoat' ||
+    nm === 'noel the goat' ||
+    nm === 'captain noel' ||
+    nm === 'captain noël' ||
+    nm.startsWith('noel') ||
+    nm.startsWith('noël')
+  );
 }
 
-const SAVE = {
-  data: {
-    uid: '',
+function getFreshRegularSave() {
+  return {
+    uid: localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36)),
+    coins: 150,
+    tokens: 0,
+    kills: 0,
+    spins: 1,
+    skin: 'default',
+    upg: { hull: 0, cannon: 0, engine: 0, magnet: 0 },
+    shipUpg: {
+      cutter: { hull: 0, cannon: 0, engine: 0, magnet: 0 },
+      runner: { hull: 0, cannon: 0, engine: 0, magnet: 0 },
+      galleon: { hull: 0, cannon: 0, engine: 0, magnet: 0 },
+      hind: { hull: 0, cannon: 0, engine: 0, magnet: 0 },
+      storm: { hull: 0, cannon: 0, engine: 0, magnet: 0 },
+    },
+    ships: ['cutter'],
+    sel: 'cutter'
+  };
+}
+
+function getCreatorSave() {
+  return {
+    uid: localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36)),
     coins: 99999,
     tokens: 999,
     kills: 2500,
     spins: 99,
-    skin: 'default',
+    skin: 'legend',
     upg: { hull: 10, cannon: 10, engine: 10, magnet: 10 },
     shipUpg: {
       cutter: { hull: 10, cannon: 10, engine: 10, magnet: 10 },
@@ -2636,33 +2656,66 @@ const SAVE = {
     },
     ships: ['cutter', 'galleon', 'runner', 'hind', 'storm'],
     sel: 'cutter'
-  },
+  };
+}
+
+function getShipUpg(shipId) {
+  const sid = shipId || (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
+  if (!SAVE || !SAVE.data) return { hull: 0, cannon: 0, engine: 0, magnet: 0 };
+  if (!SAVE.data.shipUpg) SAVE.data.shipUpg = {};
+  if (!SAVE.data.shipUpg[sid]) {
+    SAVE.data.shipUpg[sid] = {
+      hull: (SAVE.data.upg && typeof SAVE.data.upg.hull === 'number') ? SAVE.data.upg.hull : 0,
+      cannon: (SAVE.data.upg && typeof SAVE.data.upg.cannon === 'number') ? SAVE.data.upg.cannon : 0,
+      engine: (SAVE.data.upg && typeof SAVE.data.upg.engine === 'number') ? SAVE.data.upg.engine : 0,
+      magnet: (SAVE.data.upg && typeof SAVE.data.upg.magnet === 'number') ? SAVE.data.upg.magnet : 0,
+    };
+  }
+  return SAVE.data.shipUpg[sid];
+}
+
+const SAVE = {
+  data: getFreshRegularSave(),
   load() {
     try {
-      const d = JSON.parse(localStorage.getItem('sp_save') || 'null');
-      if (d) {
-        this.data = Object.assign(this.data, d);
-        this.data.upg = Object.assign({ hull: 10, cannon: 10, engine: 10, magnet: 10 }, d.upg || {});
+      if (isCreator()) {
+        const d = JSON.parse(localStorage.getItem('sp_creator_save') || 'null');
+        this.data = Object.assign(getCreatorSave(), d || {});
+        this.data.coins = Math.max(this.data.coins, 99999);
+        this.data.tokens = Math.max(this.data.tokens, 999);
+        this.data.spins = Math.max(this.data.spins, 99);
+        this.data.kills = Math.max(this.data.kills, 2500);
+        this.data.ships = ['cutter', 'galleon', 'runner', 'hind', 'storm'];
         this.data.shipUpg = this.data.shipUpg || {};
         for (const sid of ALL_SHIP_IDS) {
-          if (!this.data.shipUpg[sid]) {
-            this.data.shipUpg[sid] = {
-              hull: (d.shipUpg && d.shipUpg[sid] && typeof d.shipUpg[sid].hull === 'number') ? d.shipUpg[sid].hull : (this.data.upg.hull || 10),
-              cannon: (d.shipUpg && d.shipUpg[sid] && typeof d.shipUpg[sid].cannon === 'number') ? d.shipUpg[sid].cannon : (this.data.upg.cannon || 10),
-              engine: (d.shipUpg && d.shipUpg[sid] && typeof d.shipUpg[sid].engine === 'number') ? d.shipUpg[sid].engine : (this.data.upg.engine || 10),
-              magnet: (d.shipUpg && d.shipUpg[sid] && typeof d.shipUpg[sid].magnet === 'number') ? d.shipUpg[sid].magnet : (this.data.upg.magnet || 10),
-            };
-          }
-          if (!this.data.ships.includes(sid)) this.data.ships.push(sid);
+          this.data.shipUpg[sid] = { hull: 10, cannon: 10, engine: 10, magnet: 10 };
         }
-        if (this.data.coins < 99999) this.data.coins = 99999;
-        if (this.data.tokens < 999) this.data.tokens = 999;
-        if (this.data.spins < 99) this.data.spins = 99;
-        if (this.data.kills < 2500) this.data.kills = 2500;
-        this.data.upg.hull = Math.max(10, this.data.upg.hull || 0);
-        this.data.upg.cannon = Math.max(10, this.data.upg.cannon || 0);
-        this.data.upg.engine = Math.max(10, this.data.upg.engine || 0);
-        this.data.upg.magnet = Math.max(10, this.data.upg.magnet || 0);
+        this.data.upg = { hull: 10, cannon: 10, engine: 10, magnet: 10 };
+      } else {
+        const d = JSON.parse(localStorage.getItem('sp_player_save') || localStorage.getItem('sp_save') || 'null');
+        if (d) {
+          this.data = Object.assign(getFreshRegularSave(), d);
+          // If this regular player profile previously had the creator test numbers forced on it, reset to clean player stats
+          if (this.data.coins >= 99999 && this.data.tokens >= 999 && this.data.kills >= 2500) {
+            this.data = getFreshRegularSave();
+          }
+          this.data.shipUpg = this.data.shipUpg || {};
+          for (const sid of ALL_SHIP_IDS) {
+            if (!this.data.shipUpg[sid]) {
+              this.data.shipUpg[sid] = {
+                hull: (d.shipUpg && d.shipUpg[sid] && typeof d.shipUpg[sid].hull === 'number') ? d.shipUpg[sid].hull : 0,
+                cannon: (d.shipUpg && d.shipUpg[sid] && typeof d.shipUpg[sid].cannon === 'number') ? d.shipUpg[sid].cannon : 0,
+                engine: (d.shipUpg && d.shipUpg[sid] && typeof d.shipUpg[sid].engine === 'number') ? d.shipUpg[sid].engine : 0,
+                magnet: (d.shipUpg && d.shipUpg[sid] && typeof d.shipUpg[sid].magnet === 'number') ? d.shipUpg[sid].magnet : 0,
+              };
+            }
+          }
+          if (!Array.isArray(this.data.ships) || !this.data.ships.length) {
+            this.data.ships = ['cutter'];
+          }
+        } else {
+          this.data = getFreshRegularSave();
+        }
       }
       if (!this.data.uid) {
         this.data.uid = localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36));
@@ -2672,7 +2725,16 @@ const SAVE = {
       this.save();
     } catch (e) {}
   },
-  save() { try { localStorage.setItem('sp_save', JSON.stringify(this.data)); } catch (e) {} }
+  save() {
+    try {
+      if (isCreator()) {
+        localStorage.setItem('sp_creator_save', JSON.stringify(this.data));
+      } else {
+        localStorage.setItem('sp_player_save', JSON.stringify(this.data));
+      }
+      localStorage.setItem('sp_save', JSON.stringify(this.data));
+    } catch (e) {}
+  }
 };
 SAVE.load();
 
@@ -5931,10 +5993,12 @@ function buildShop() {
   renderWallet();
   let h = '';
   
-  // VIP Creator Banner
-  h += `<div style="background:linear-gradient(135deg,rgba(255,210,60,0.22),rgba(168,85,247,0.18));border:2px solid #ffd23c;border-radius:14px;padding:12px 16px;margin-bottom:16px;text-align:center;box-shadow:0 0 20px rgba(255,210,60,0.3)">` +
-    `<div style="color:#ffd23c;font-weight:900;font-size:1.1rem;font-family:'Orbitron',sans-serif;letter-spacing:1px">👑 GAME CREATOR VIP PASS ACTIVE 👑</div>` +
-    `<div style="color:#cfe4ff;font-size:0.86rem;margin-top:4px">Welcome Captain Noel! All 5 Fleet Ships, 7 Skins &amp; Max Galleon Upgrades Unlocked!</div></div>`;
+  // VIP Creator Banner — ONLY shown for Noel (The Game Creator)
+  if (isCreator()) {
+    h += `<div style="background:linear-gradient(135deg,rgba(255,210,60,0.22),rgba(168,85,247,0.18));border:2px solid #ffd23c;border-radius:14px;padding:12px 16px;margin-bottom:16px;text-align:center;box-shadow:0 0 20px rgba(255,210,60,0.3)">` +
+      `<div style="color:#ffd23c;font-weight:900;font-size:1.1rem;font-family:'Orbitron',sans-serif;letter-spacing:1px">👑 GAME CREATOR VIP PASS ACTIVE 👑</div>` +
+      `<div style="color:#cfe4ff;font-size:0.86rem;margin-top:4px">Welcome Captain Noel! All 5 Fleet Ships, 7 Skins &amp; Max Galleon Upgrades Unlocked!</div></div>`;
+  }
 
   // 0. DAILY REWARDS VOYAGE SHORTCUT
   const dailyStatus = getDailyRewardStatus();
@@ -6289,6 +6353,9 @@ if (shopCloseEl) shopCloseEl.addEventListener('click', closeShop);
         if (val) {
           localStorage.setItem('sp_name', val);
           playerName = val;
+          SAVE.load();
+          applyLoadout();
+          renderWallet();
           if (immediate) {
             LB.updateName(val);
             renderLeaderboard('lbMenu', -1, playerName);
