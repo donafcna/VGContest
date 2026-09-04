@@ -1694,7 +1694,7 @@ const SAVE = {
     kills: 2500,
     spins: 99,
     skin: 'default',
-    upg: { hull: 3, cannon: 3, engine: 3, magnet: 3 },
+    upg: { hull: 10, cannon: 10, engine: 10, magnet: 10 },
     ships: ['cutter', 'galleon', 'runner', 'hind', 'storm'],
     sel: 'cutter'
   },
@@ -1703,7 +1703,7 @@ const SAVE = {
       const d = JSON.parse(localStorage.getItem('sp_save') || 'null');
       if (d) {
         this.data = Object.assign(this.data, d);
-        this.data.upg = Object.assign({ hull: 3, cannon: 3, engine: 3, magnet: 3 }, d.upg || {});
+        this.data.upg = Object.assign({ hull: 10, cannon: 10, engine: 10, magnet: 10 }, d.upg || {});
         // Ensure Creator Vault has all ships, skins & max currency
         for (const sid of ALL_SHIP_IDS) {
           if (!this.data.ships.includes(sid)) this.data.ships.push(sid);
@@ -1712,10 +1712,10 @@ const SAVE = {
         if (this.data.tokens < 999) this.data.tokens = 999;
         if (this.data.spins < 99) this.data.spins = 99;
         if (this.data.kills < 2500) this.data.kills = 2500;
-        this.data.upg.hull = Math.max(3, this.data.upg.hull || 0);
-        this.data.upg.cannon = Math.max(3, this.data.upg.cannon || 0);
-        this.data.upg.engine = Math.max(3, this.data.upg.engine || 0);
-        this.data.upg.magnet = Math.max(3, this.data.upg.magnet || 0);
+        this.data.upg.hull = Math.max(10, this.data.upg.hull || 0);
+        this.data.upg.cannon = Math.max(10, this.data.upg.cannon || 0);
+        this.data.upg.engine = Math.max(10, this.data.upg.engine || 0);
+        this.data.upg.magnet = Math.max(10, this.data.upg.magnet || 0);
       }
       if (!this.data.uid) {
         this.data.uid = localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36));
@@ -1737,10 +1737,10 @@ const SHIPS = [
 ];
 
 const UPG = {
-  hull:   { name: 'Reinforced Mahogany', icon: '🛡️', max: 3, cost: l => 40 + l * 50, desc: '+1 Max Hull Integrity Heart' },
-  cannon: { name: 'Heavy 32-Pounders',   icon: '💥', max: 3, cost: l => 50 + l * 60, desc: 'Faster reload & cannon cycling' },
-  engine: { name: 'Solar Sails & Ether', icon: '⚙️', max: 3, cost: l => 40 + l * 45, desc: 'Enhanced cosmic wind maneuvering' },
-  magnet: { name: 'Pirate Salvage Hook', icon: '🧲', max: 3, cost: l => 30 + l * 40, desc: 'Expanded gold attraction radius' },
+  hull:   { name: 'Reinforced Mahogany', icon: '🛡️', max: 10, cost: l => 40 + l * 50, desc: '+1 Max Hull Integrity Heart' },
+  cannon: { name: 'Heavy 32-Pounders',   icon: '💥', max: 10, cost: l => 50 + l * 60, desc: 'Faster reload & cannon cycling' },
+  engine: { name: 'Solar Sails & Ether', icon: '⚙️', max: 10, cost: l => 40 + l * 45, desc: 'Enhanced cosmic wind maneuvering' },
+  magnet: { name: 'Pirate Salvage Hook', icon: '🧲', max: 10, cost: l => 30 + l * 40, desc: 'Expanded gold attraction radius' },
 };
 
 const SKINS = [
@@ -3263,10 +3263,10 @@ function openDossier(pilotIndex) {
   if (upgGrid) {
     const u = p.upg || {};
     upgGrid.innerHTML = `
-      <div class="dos-upg-item"><span>🛡️ Hull Strength</span><strong style="color:#3eed87">Lv ${u.hull || 0}/3</strong></div>
-      <div class="dos-upg-item"><span>💥 32-Pounders</span><strong style="color:#ff5277">Lv ${u.cannon || 0}/3</strong></div>
-      <div class="dos-upg-item"><span>⚙️ Solar Engines</span><strong style="color:#3fd5ff">Lv ${u.engine || 0}/3</strong></div>
-      <div class="dos-upg-item"><span>🧲 Salvage Hook</span><strong style="color:#ffd23c">Lv ${u.magnet || 0}/3</strong></div>
+      <div class="dos-upg-item"><span>🛡️ Hull Strength</span><strong style="color:#3eed87">Lv ${u.hull || 0}/10</strong></div>
+      <div class="dos-upg-item"><span>💥 32-Pounders</span><strong style="color:#ff5277">Lv ${u.cannon || 0}/10</strong></div>
+      <div class="dos-upg-item"><span>⚙️ Solar Engines</span><strong style="color:#3fd5ff">Lv ${u.engine || 0}/10</strong></div>
+      <div class="dos-upg-item"><span>🧲 Salvage Hook</span><strong style="color:#ffd23c">Lv ${u.magnet || 0}/10</strong></div>
     `;
   }
 
