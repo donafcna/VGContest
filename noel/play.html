@@ -883,18 +883,18 @@
 <!-- Brawl Stars Style Gadget & Super Action Controls -->
 <div id="brawlControls" style="display:none;">
   <!-- Green Gadget Button (Level 8+) -->
-  <button id="gadgetBtn" onclick="activateGadget(event)" aria-label="Activate Gadget (Q)" class="brawl-btn brawl-gadget">
+  <button id="gadgetBtn" onclick="activateGadget(event)" aria-label="Activate Gadget (Press Q)" class="brawl-btn brawl-gadget">
     <div class="brawl-icon">🟢</div>
     <div class="brawl-badge">GADGET</div>
     <div class="brawl-charges" id="gadgetCharges">3/3</div>
     <div class="brawl-key">[Q]</div>
   </button>
 
-  <!-- Yellow Special Attack Button (Level 10 Max) with Circular Charge Meter -->
-  <button id="superBtn" onclick="activateSuper(event)" aria-label="Activate Special Attack (E)" class="brawl-btn brawl-super">
+  <!-- Yellow Super Button (Level 10 Max) with Circular Charge Meter -->
+  <button id="superBtn" onclick="activateSuper(event)" aria-label="Activate Super (Press E)" class="brawl-btn brawl-super">
     <div class="super-ring-fill" id="superFill"></div>
     <div class="brawl-icon super-icon" id="superIcon">💀</div>
-    <div class="brawl-badge super-badge" id="superBadge">SPECIAL ATTACK</div>
+    <div class="brawl-badge super-badge" id="superBadge">SUPER</div>
     <div class="brawl-charges" id="superPercent">0%</div>
     <div class="brawl-key">[E]</div>
   </button>
@@ -927,9 +927,9 @@
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
   Sail through deep cosmic space and blast <b>Star Wars starfighter squadrons &amp; 6 Flagship Bosses</b> with heavy naval broadsides!</p>
   <div class="keys">
-    🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM</b> • <b>CLICK</b> or <b>SPACE</b> = Fire Broadside 💥<br>
-    🎮 <b>Navigation</b>: <b>W A S D</b> or <b>Arrow Keys</b> (Solar Ether Flight &amp; Speed Thrusters)<br>
-    📱 <b>Mobile Phone Controls</b>: <b>D-Pad Buttons</b> to Fly • <b>Tap Screen</b> to Shoot &amp; Aim!
+    🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM</b> • <b>CLICK</b> to Shoot Broadside 💥<br>
+    🎮 <b>PC Abilities</b>: <b>[Q]</b> = 🟢 <b>Gadget</b> (3 Charges) • <b>[E]</b> = 🌟 <b>Super &amp; Hypercharge</b> (100% Charge)<br>
+    🚀 <b>Flight Movement</b>: <b>W A S D</b> or <b>Arrow Keys</b> • 📱 <b>Mobile</b>: D-Pad &amp; On-Screen Buttons
   </div>
   <input id="pname" placeholder="Captain Noel" maxlength="14" value="Noël" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="btnrow">
@@ -1920,9 +1920,9 @@ function addSuperCharge(amt) {
     sfx('map');
     const curShipId = (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
     const curShip = shipById(curShipId);
-    const sName = (curShip && curShip.superName) || 'SPECIAL ATTACK';
-    addAlert(`⚡ ${sName.toUpperCase()} READY! 🟡`, 'map');
-    popup(ship.x, ship.y - 40, `⚡ SPECIAL ATTACK READY!`, '#ffd23c');
+    const sName = (curShip && curShip.superName) || 'SUPER';
+    addAlert(`⚡ ${sName.toUpperCase()} READY! Press [E] 🟡`, 'map');
+    popup(ship.x, ship.y - 40, `⚡ SUPER READY! [E]`, '#ffd23c');
   }
   updateBrawlControlsVisibility();
 }
@@ -1940,7 +1940,7 @@ function updateBrawlControlsVisibility() {
     if (gBtn) {
       gBtn.style.display = hasGadget() ? 'flex' : 'none';
       if (curShip && curShip.gadgetName) {
-        gBtn.title = `[Q] ${curShip.gadgetName}: ${curShip.gadgetDesc || ''} (Press Q on PC)`;
+        gBtn.title = `[Q] GADGET: ${curShip.gadgetName} — ${curShip.gadgetDesc || ''} (Press Q to activate)`;
       }
       const gCh = document.getElementById('gadgetCharges');
       if (gCh) gCh.textContent = `${gadgetCharges}/3`;
@@ -1953,7 +1953,7 @@ function updateBrawlControlsVisibility() {
     if (sBtn) {
       sBtn.style.display = hasSuper() ? 'flex' : 'none';
       if (curShip && curShip.superName) {
-        sBtn.title = `[E] ${curShip.superName}: ${curShip.superDesc || ''} (Press E on PC)`;
+        sBtn.title = `[E] SUPER: ${curShip.superName} — ${curShip.superDesc || ''} (Press E to activate)`;
       }
       const sPct = document.getElementById('superPercent');
       const sFill = document.getElementById('superFill');
@@ -2203,8 +2203,8 @@ function activateSuper(e) {
 
   const curShipId = (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
   const curShip = shipById(curShipId);
-  const sName = (curShip && curShip.superName) || 'SPECIAL ATTACK';
-  addAlert(`🌟 SPECIAL ATTACK: ${sName.toUpperCase()}! ⚡`, 'super');
+  const sName = (curShip && curShip.superName) || 'HYPERCHARGE SUPER';
+  addAlert(`🌟 HYPERCHARGE SUPER: ${sName.toUpperCase()}! ⚡`, 'super');
   popup(ship.x, ship.y - 55, `🌟 ${sName}!`, '#ffd23c');
 
   if (curShipId === 'cutter') {
@@ -5000,11 +5000,11 @@ function buildShop() {
     const can = !maxed && SAVE.data.coins >= cost;
     let brawlBadge = '';
     if (lv >= 10) {
-      brawlBadge = `<div style="color:#fde047;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(253,224,71,0.5)">🌟 SPECIAL ATTACK UNLOCKED! [E/F] ⚡</div>`;
+      brawlBadge = `<div style="color:#fde047;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(253,224,71,0.5)">🌟 SUPER &amp; HYPERCHARGE UNLOCKED! Press [E] ⚡</div>`;
     } else if (lv >= 8) {
-      brawlBadge = `<div style="color:#34d399;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(52,211,153,0.5)">🟢 GADGET UNLOCKED! [Q/G] (3/3 Charges)</div>`;
+      brawlBadge = `<div style="color:#34d399;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(52,211,153,0.5)">🟢 GADGET UNLOCKED! Press [Q] (3/3 Charges)</div>`;
     } else {
-      brawlBadge = `<div style="color:#8fa6cb;font-size:0.70rem;margin-top:2px">Reach Lv 8 for 🟢 Gadget • Lv 10 for 🌟 Special Attack</div>`;
+      brawlBadge = `<div style="color:#8fa6cb;font-size:0.70rem;margin-top:2px">Reach Lv 8 for 🟢 Gadget [Q] • Lv 10 for 🌟 Super [E]</div>`;
     }
 
     h += `<div class="shopitem"><div class="ic">${u.icon}</div>` +
@@ -5034,8 +5034,8 @@ function buildShop() {
     const shipSvg = getShipSvg(s.id, s.cols);
     h += `<div class="shopitem" style="border-left: 3px solid ${s.cols[0] || '#ffd23c'};"><div class="ic">${shipSvg}</div>` +
       `<div class="info"><div class="t">${s.name}</div><div class="d">${s.power}</div>` +
-      `<div style="margin-top:4px;padding:4px 8px;background:rgba(16,185,129,0.12);border-radius:6px;border:1px solid rgba(16,185,129,0.3);font-size:0.72rem;color:#34d399"><b>🟢 Unique Gadget:</b> ${s.gadgetName} — <i>${s.gadgetDesc}</i></div>` +
-      `<div style="margin-top:3px;padding:4px 8px;background:rgba(234,179,8,0.12);border-radius:6px;border:1px solid rgba(234,179,8,0.3);font-size:0.72rem;color:#fde047"><b>🌟 Unique Special Attack:</b> ${s.superName} — <i>${s.superDesc}</i></div>` +
+      `<div style="margin-top:4px;padding:4px 8px;background:rgba(16,185,129,0.12);border-radius:6px;border:1px solid rgba(16,185,129,0.3);font-size:0.72rem;color:#34d399"><b>🟢 Unique Gadget (Press Q):</b> ${s.gadgetName} — <i>${s.gadgetDesc}</i></div>` +
+      `<div style="margin-top:3px;padding:4px 8px;background:rgba(234,179,8,0.12);border-radius:6px;border:1px solid rgba(234,179,8,0.3);font-size:0.72rem;color:#fde047"><b>🌟 Unique Super (Press E):</b> ${s.superName} — <i>${s.superDesc}</i></div>` +
       `<div class="lv" style="margin-top:4px">❤️ ${s.hp} HP · ⚡ ${(1 / s.cool).toFixed(1)} rps · 🚀 ${s.spd.toFixed(2)}x Speed${s.gold > 1 ? ' · 🪙 x' + s.gold : ''}${s.magnet ? ' · 🧲' : ''}</div></div>` +
       btn + `</div>`;
   }
