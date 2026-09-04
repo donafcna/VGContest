@@ -6724,18 +6724,62 @@ function update(dt) {
 
     if (boss.tractorT > 0) {
       boss.tractorT -= dt;
-      // Gravitational Tractor beam pulls player ship towards the station
-      const pullStr = 0.55 * dt;
-      ship.x += (boss.x - 220 - ship.x) * pullStr;
-      ship.y += (boss.y - ship.y) * pullStr;
-      if (Math.random() < 0.4) {
+      // Colossal Gravitational Tractor Beam pulls player galleon directly toward the Superlaser Focus Dish
+      const dishWorldX = boss.x - boss.w * 0.12;
+      const dishWorldY = boss.y - boss.h * 0.15;
+      const tdx = dishWorldX - ship.x;
+      const tdy = dishWorldY - ship.y;
+      const tdist = Math.hypot(tdx, tdy) || 1;
+
+      // Accelerating inward gravitational pull (pulls harder as you get closer to the Death Star dish!)
+      const pullSpeed = 440 + (1 - Math.min(1, tdist / 950)) * 280;
+      ship.x += (tdx / tdist) * pullSpeed * dt;
+      ship.y += (tdy / tdist) * pullSpeed * dt;
+
+      // Gravitational Vortex Swirl (orbital Coriolis drag pulling ship in a vortex)
+      const perpX = -tdy / tdist;
+      const perpY = tdx / tdist;
+      ship.x += perpX * 95 * dt;
+      ship.y += perpY * 95 * dt;
+
+      // Camera vibration & engine strain rumble
+      if (Math.random() < 0.35) {
+        addShake(3.5);
+      }
+
+      // Space debris & magnetic plasma shards sucked into the singularity dish
+      if (Math.random() < 0.75) {
+        const spawnAng = Math.random() * Math.PI * 2;
+        const spawnDist = 160 + Math.random() * 260;
         parts.push({
-          x: ship.x + (Math.random() - 0.5) * 40,
-          y: ship.y + (Math.random() - 0.5) * 40,
-          vx: 180 + Math.random() * 80,
-          vy: (boss.y - ship.y) * 0.8,
-          life: 0.35, col: '#00e5ff', size: 4
+          x: dishWorldX + Math.cos(spawnAng) * spawnDist,
+          y: dishWorldY + Math.sin(spawnAng) * spawnDist,
+          vx: -(Math.cos(spawnAng)) * (280 + Math.random() * 150),
+          vy: -(Math.sin(spawnAng)) * (280 + Math.random() * 150),
+          life: 0.45,
+          col: Math.random() < 0.5 ? '#00e5ff' : '#ffffff',
+          size: 3 + Math.random() * 4
         });
+      }
+
+      // Ship suction wake particles
+      parts.push({
+        x: ship.x + (Math.random() - 0.5) * 45,
+        y: ship.y + (Math.random() - 0.5) * 45,
+        vx: (tdx / tdist) * 260 + (Math.random() - 0.5) * 60,
+        vy: (tdy / tdist) * 260 + (Math.random() - 0.5) * 60,
+        life: 0.38,
+        col: '#00ffee',
+        size: 4.5
+      });
+
+      // Singularity Event Horizon Danger Zone: Electric discharge if dragged too close to the core dish (< 145px)
+      if (tdist < 145 && ship.inv <= 0) {
+        damageShip();
+        popup(ship.x, ship.y - 25, '⚡ SINGULARITY DISCHARGE!', '#00e5ff');
+        explode(ship.x, ship.y, '#00e5ff', 16);
+        addShake(18);
+        sfx('laser');
       }
     }
 
@@ -6950,9 +6994,11 @@ function update(dt) {
           popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: 360° EQUATORIAL TRENCH BURST!', '#00e5ff');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          // Gravitational Magnetic Tractor Beam
-          boss.tractorT = 2.6;
-          popup(boss.x - 40, boss.y - 45, '🧲 GRAVITATIONAL TRACTOR BEAM!', '#00e5ff');
+          // Gravitational Magnetic Tractor Beam (Powerful Event Horizon Singularity)
+          boss.tractorT = 3.2;
+          popup(boss.x - 40, boss.y - 45, '🧲 GRAVITATIONAL TRACTOR BEAM ACTIVATED!', '#00e5ff');
+          addAlert('⚠️ [EVENT HORIZON] OVERLORD CHRONOS HAS ENGAGED GRAVITATIONAL TRACTOR BEAM!', 'incoming');
+          addShake(20);
           sfx('incoming');
         } else {
           // 8-Beam Kyber Dish Superlaser Convergence (Aimed directly at player!)
@@ -9318,17 +9364,84 @@ function draw() {
       // Active Gravitational Tractor Beam Stream to Player Galleon
       if (boss.tractorT > 0) {
         cx.save();
+        const dishX = -boss.w * 0.12, dishY = -boss.h * 0.15;
         const tx = ship.x - boss.x, ty = ship.y - boss.y;
-        cx.strokeStyle = 'rgba(0, 229, 255, 0.45)'; cx.lineWidth = 18;
-        cx.beginPath(); cx.moveTo(-boss.w * 0.12, -boss.h * 0.15); cx.lineTo(tx, ty); cx.stroke();
-        cx.strokeStyle = '#ffffff'; cx.lineWidth = 4;
-        cx.beginPath(); cx.moveTo(-boss.w * 0.12, -boss.h * 0.15); cx.lineTo(tx, ty); cx.stroke();
-        // Pulsing tractor rings
-        for (let p = 0.2; p < 0.9; p += 0.2) {
-          const rx = -boss.w * 0.12 + tx * p, ry = -boss.h * 0.15 + ty * p;
-          cx.strokeStyle = '#00ffee'; cx.lineWidth = 2;
-          cx.beginPath(); cx.arc(rx, ry, 14 * p, 0, Math.PI * 2); cx.stroke();
+        const beamDist = Math.hypot(tx - dishX, ty - dishY) || 1;
+        const beamAng = Math.atan2(ty - dishY, tx - dishX);
+
+        // 1. Wide Gravitational Lensing / Atmospheric Suction Funnel
+        const coneGrad = cx.createRadialGradient(dishX, dishY, 20, dishX, dishY, beamDist);
+        coneGrad.addColorStop(0, 'rgba(0, 229, 255, 0.45)');
+        coneGrad.addColorStop(0.5, 'rgba(2, 132, 199, 0.25)');
+        coneGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        cx.fillStyle = coneGrad;
+        cx.beginPath();
+        cx.moveTo(dishX, dishY);
+        cx.lineTo(tx + Math.cos(beamAng + Math.PI * 0.5) * 65, ty + Math.sin(beamAng + Math.PI * 0.5) * 65);
+        cx.lineTo(tx + Math.cos(beamAng - Math.PI * 0.5) * 65, ty + Math.sin(beamAng - Math.PI * 0.5) * 65);
+        cx.closePath();
+        cx.fill();
+
+        // 2. Multi-Strand High-Energy Tractor Beams (Outer cyan aura & inner white laser)
+        cx.strokeStyle = 'rgba(0, 229, 255, 0.6)';
+        cx.lineWidth = 26 + Math.sin(t * 30) * 8;
+        cx.beginPath(); cx.moveTo(dishX, dishY); cx.lineTo(tx, ty); cx.stroke();
+
+        cx.strokeStyle = '#00ffee';
+        cx.lineWidth = 12 + Math.cos(t * 35) * 4;
+        cx.beginPath(); cx.moveTo(dishX, dishY); cx.lineTo(tx, ty); cx.stroke();
+
+        cx.strokeStyle = '#ffffff';
+        cx.lineWidth = 4;
+        cx.beginPath(); cx.moveTo(dishX, dishY); cx.lineTo(tx, ty); cx.stroke();
+
+        // 3. Spiraling Helical Magnetic Energy Coils wrapping the beam
+        cx.strokeStyle = '#38bdf8';
+        cx.lineWidth = 2.5;
+        cx.beginPath();
+        const steps = 30;
+        for (let s = 0; s <= steps; s++) {
+          const u = s / steps;
+          const lx = dishX + (tx - dishX) * u;
+          const ly = dishY + (ty - dishY) * u;
+          const coilOffset = Math.sin(u * 22 - t * 35) * (18 * (1 - u * 0.5));
+          const px = lx + Math.cos(beamAng + Math.PI * 0.5) * coilOffset;
+          const py = ly + Math.sin(beamAng + Math.PI * 0.5) * coilOffset;
+          if (s === 0) cx.moveTo(px, py);
+          else cx.lineTo(px, py);
         }
+        cx.stroke();
+
+        // 4. Inward-Sliding Concentric Gravitational Wave Distortion Rings
+        for (let rIdx = 0; rIdx < 6; rIdx++) {
+          const p = (rIdx / 6 + (t * 1.8)) % 1.0;
+          const ringX = tx + (dishX - tx) * p; // moving from ship to dish!
+          const ringY = ty + (dishY - ty) * p;
+          const ringRadius = 12 + p * 24;
+          cx.strokeStyle = `rgba(0, 255, 238, ${0.9 - p * 0.5})`;
+          cx.lineWidth = 3.0;
+          cx.beginPath(); cx.ellipse(ringX, ringY, ringRadius, ringRadius * 0.55, beamAng, 0, Math.PI * 2); cx.stroke();
+        }
+
+        // 5. Magnetic Lightning Tendrils branching from Dish onto Ship
+        cx.strokeStyle = '#ffffff';
+        cx.lineWidth = 1.8;
+        for (let lt = 0; lt < 3; lt++) {
+          const lSeed = lt * 1.3 + Math.floor(t * 15);
+          cx.beginPath();
+          let curX = dishX, curY = dishY;
+          cx.moveTo(curX, curY);
+          for (let seg = 1; seg <= 5; seg++) {
+            const segU = seg / 5;
+            const targetSegX = dishX + (tx - dishX) * segU;
+            const targetSegY = dishY + (ty - dishY) * segU;
+            curX = targetSegX + (Math.sin(lSeed * 7 + seg) * 16);
+            curY = targetSegY + (Math.cos(lSeed * 5 + seg) * 16);
+            cx.lineTo(curX, curY);
+          }
+          cx.stroke();
+        }
+
         cx.restore();
       }
 
