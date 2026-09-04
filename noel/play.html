@@ -786,19 +786,20 @@
   }
 
   #touchHint {
-    position: fixed; bottom: 20px; right: 20px;
-    color: rgba(255,255,255,0.9); font-size: 0.84rem; pointer-events: none;
-    background: rgba(6, 14, 30, 0.85); border: 1px solid rgba(255, 210, 60, 0.4);
-    padding: 6px 14px; border-radius: 99px; backdrop-filter: blur(6px);
-    font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;
-    z-index: 40; box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+    color: #ffd23c; font-size: 0.82rem; pointer-events: none;
+    background: rgba(6, 14, 30, 0.90); border: 1.5px solid rgba(255, 210, 60, 0.6);
+    padding: 6px 16px; border-radius: 99px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px; font-weight: 700;
+    z-index: 60; box-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 15px rgba(255, 210, 60, 0.35);
+    white-space: nowrap; transition: opacity 0.4s ease;
   }
 
   /* On-Screen Mobile Flight D-Pad */
   #dpad {
     position: fixed;
-    bottom: 22px;
-    left: 22px;
+    bottom: 20px;
+    left: 20px;
     z-index: 45;
     display: flex;
     flex-direction: column;
@@ -854,8 +855,8 @@
   /* Brawl Stars Action Controls Container */
   #brawlControls {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    bottom: 20px;
+    right: 20px;
     z-index: 55;
     display: flex;
     align-items: center;
@@ -988,6 +989,104 @@
     border-radius: 6px;
     z-index: 3;
     box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  }
+
+  /* Responsive Mobile Media Queries for Phones & Tablets */
+  @media (max-width: 768px), (max-height: 520px) {
+    .overlay {
+      padding: 14px 10px 40px;
+    }
+    .overlay h1 {
+      font-size: clamp(1.5rem, 5.5vw, 2.4rem);
+    }
+    .overlay p {
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+    .overlay .keys {
+      font-size: 0.74rem;
+      padding: 0.6rem 0.8rem;
+      line-height: 1.4;
+    }
+    .overlay button {
+      font-size: 0.95rem;
+      padding: 11px 20px;
+    }
+    #musicbtn, #pausebtn {
+      top: 10px;
+      min-width: 44px;
+      min-height: 42px;
+      padding: 4px 10px;
+      font-size: 1.15rem;
+    }
+    #musicbtn { right: 10px; }
+    #pausebtn { right: 58px; }
+
+    #dpad {
+      bottom: 12px;
+      left: 12px;
+      gap: 4px;
+    }
+    .dpad-btn {
+      width: 46px;
+      height: 46px;
+      font-size: 1.10rem;
+      border-radius: 12px;
+    }
+    .dpad-center {
+      width: 36px;
+      height: 36px;
+    }
+    #brawlControls {
+      bottom: 12px;
+      right: 12px;
+      gap: 10px;
+    }
+    .brawl-gadget {
+      width: 58px;
+      height: 58px;
+    }
+    .brawl-super {
+      width: 66px;
+      height: 66px;
+    }
+    .brawl-icon { font-size: 1.20rem; }
+    .brawl-super .brawl-icon { font-size: 1.50rem; }
+    .brawl-key { display: none; } /* Hide PC keyboard shortcuts on phone */
+
+    .fleet-upg-tab {
+      min-width: 120px;
+      padding: 7px 5px;
+    }
+    .fleet-upg-tab .tab-svg {
+      width: 48px;
+      height: 30px;
+    }
+    .fleet-stat-badge {
+      font-size: 0.68rem;
+      padding: 3px 6px;
+    }
+    .shopitem {
+      flex-wrap: wrap;
+      padding: 0.55rem 0.65rem;
+      gap: 0.5rem;
+    }
+    .shopitem .ic {
+      width: 64px;
+      height: 46px;
+    }
+    .shopitem .info .t {
+      font-size: 0.88rem;
+    }
+    .shopitem .info .d {
+      font-size: 0.74rem;
+    }
+    .boss-card-item {
+      padding: 10px !important;
+    }
+    .boss-img-wrap {
+      height: 70px !important;
+    }
   }
 </style>
 </head>
@@ -1398,12 +1497,19 @@ const mouse = { x: 220, y: H * 0.5, down: false, clicked: false };
 const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 let touchOn = false;
 
-// Mobile Flight D-Pad State (Up, Down, Left, Right)
+// Mobile Flight Controller & Multi-Touch State
 const dpadState = { up: false, down: false, left: false, right: false };
+let moveTouchId = null;
+let aimTouchId = null;
+let moveTouchStart = { x: 0, y: 0 };
+let touchStick = { ax: 0, ay: 0, active: false };
+let touchHintTimer = null;
 
 function updateDpadVisibility() {
   const dpadEl = document.getElementById('dpad');
   const touchHintEl = document.getElementById('touchHint');
+  const brawlEl = document.getElementById('brawlControls');
+
   if (dpadEl) {
     if (isTouch && state === 'play') {
       dpadEl.style.display = 'flex';
@@ -1411,13 +1517,37 @@ function updateDpadVisibility() {
       dpadEl.style.display = 'none';
     }
   }
+  if (brawlEl) {
+    if (state === 'play' || state === 'pause') {
+      brawlEl.style.display = 'flex';
+    } else {
+      brawlEl.style.display = 'none';
+    }
+  }
   if (touchHintEl) {
     if (isTouch && state === 'play') {
       touchHintEl.style.display = 'block';
+      touchHintEl.style.opacity = '1';
+      if (touchHintTimer) clearTimeout(touchHintTimer);
+      touchHintTimer = setTimeout(() => {
+        touchHintEl.style.opacity = '0';
+        setTimeout(() => { if (state === 'play') touchHintEl.style.display = 'none'; }, 500);
+      }, 5500);
     } else {
       touchHintEl.style.display = 'none';
     }
   }
+}
+
+function updateDpadVisuals() {
+  const upEl = document.getElementById('btnUp');
+  const downEl = document.getElementById('btnDown');
+  const leftEl = document.getElementById('btnLeft');
+  const rightEl = document.getElementById('btnRight');
+  if (upEl) upEl.classList.toggle('active', !!dpadState.up);
+  if (downEl) downEl.classList.toggle('active', !!dpadState.down);
+  if (leftEl) leftEl.classList.toggle('active', !!dpadState.left);
+  if (rightEl) rightEl.classList.toggle('active', !!dpadState.right);
 }
 
 function bindDpadButton(id, dirKey) {
@@ -1429,21 +1559,19 @@ function bindDpadButton(id, dirKey) {
     e.stopPropagation();
     initAudio();
     dpadState[dirKey] = true;
-    el.classList.add('active');
+    updateDpadVisuals();
   };
   const release = (e) => {
     e.preventDefault();
     e.stopPropagation();
     dpadState[dirKey] = false;
-    el.classList.remove('active');
+    updateDpadVisuals();
   };
 
-  el.addEventListener('touchstart', press, { passive: false });
-  el.addEventListener('touchend', release, { passive: false });
-  el.addEventListener('touchcancel', release, { passive: false });
-  el.addEventListener('mousedown', press);
-  el.addEventListener('mouseup', release);
-  el.addEventListener('mouseleave', release);
+  el.addEventListener('pointerdown', press);
+  el.addEventListener('pointerup', release);
+  el.addEventListener('pointercancel', release);
+  el.addEventListener('pointerleave', release);
 }
 
 // Bind mobile D-Pad directional controls
@@ -1454,7 +1582,7 @@ bindDpadButton('btnRight', 'right');
 
 function advanceStory() {
   if (state !== 'intro' || storyCooldown > 0) return;
-  storyCooldown = 0.35;
+  storyCooldown = 0.25;
   sfx('pew');
   storyStage++;
   if (storyStage >= 3) {
@@ -1482,7 +1610,12 @@ addEventListener('keydown', e => {
   if (e.code === 'Escape' || e.code === 'KeyP') togglePause(e);
 });
 addEventListener('keyup', e => keys[e.code] = false);
-addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+addEventListener('mousemove', e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+
 addEventListener('mousedown', e => {
   if (e.target && e.target.closest && e.target.closest('button, .overlay, #dpad, #brawlControls, #musicbtn, #pausebtn, a, input, select')) {
     return;
@@ -1491,43 +1624,113 @@ addEventListener('mousedown', e => {
   if (e.button === 0) {
     if (state === 'intro') { advanceStory(); return; }
     mouse.clicked = true;
+    mouse.down = true;
   }
 });
-addEventListener('mouseup', e => { if (e.button === 0) mouse.down = false; });
+addEventListener('mouseup', e => {
+  if (e.button === 0) mouse.down = false;
+});
 
-cv.addEventListener('touchstart', e => {
+// Advanced Multi-Touch Engine for Phones & Tablets
+function onGameTouchStart(e) {
   initAudio();
-  if (state === 'intro') { advanceStory(); return; }
-  if (state === 'play') {
-    touchOn = true;
-    mouse.clicked = true;
-    const tc = e.touches[0];
-    mouse.x = tc.clientX; mouse.y = tc.clientY;
+  if (state === 'intro') {
+    advanceStory();
+    e.preventDefault();
+    return;
+  }
+  if (state !== 'play') return;
+
+  for (let i = 0; i < e.changedTouches.length; i++) {
+    const t = e.changedTouches[i];
+    const el = document.elementFromPoint(t.clientX, t.clientY);
+    if (el && el.closest('#brawlControls, #musicbtn, #pausebtn, .overlay, button')) {
+      continue;
+    }
+
+    if (t.clientX < W * 0.48) {
+      // Left Zone: Virtual Flight Joystick Touch
+      if (moveTouchId === null) {
+        moveTouchId = t.identifier;
+        moveTouchStart.x = t.clientX;
+        moveTouchStart.y = t.clientY;
+        touchStick.active = true;
+        touchStick.ax = 0;
+        touchStick.ay = 0;
+      }
+    } else {
+      // Right Zone: Direct Aiming Reticle & Broadside Salvo
+      aimTouchId = t.identifier;
+      mouse.x = t.clientX;
+      mouse.y = t.clientY;
+      mouse.down = true;
+      mouse.clicked = true;
+      touchOn = true;
+    }
   }
   e.preventDefault();
-}, { passive: false });
+}
 
-cv.addEventListener('touchmove', e => {
-  if (state === 'play') {
-    touchOn = true;
-    const tc = e.touches[0];
-    mouse.x = tc.clientX; mouse.y = tc.clientY;
+function onGameTouchMove(e) {
+  if (state !== 'play') return;
+
+  for (let i = 0; i < e.changedTouches.length; i++) {
+    const t = e.changedTouches[i];
+    if (t.identifier === moveTouchId) {
+      const dx = t.clientX - moveTouchStart.x;
+      const dy = t.clientY - moveTouchStart.y;
+      const dist = Math.hypot(dx, dy);
+      const maxR = 45;
+      if (dist > 8) {
+        const norm = Math.min(1, dist / maxR);
+        touchStick.ax = (dx / dist) * norm;
+        touchStick.ay = (dy / dist) * norm;
+      } else {
+        touchStick.ax = 0;
+        touchStick.ay = 0;
+      }
+
+      dpadState.up = touchStick.ay < -0.25;
+      dpadState.down = touchStick.ay > 0.25;
+      dpadState.left = touchStick.ax < -0.25;
+      dpadState.right = touchStick.ax > 0.25;
+      updateDpadVisuals();
+    } else if (t.identifier === aimTouchId) {
+      mouse.x = t.clientX;
+      mouse.y = t.clientY;
+      mouse.down = true;
+      touchOn = true;
+    }
   }
   e.preventDefault();
-}, { passive: false });
+}
 
-cv.addEventListener('touchend', () => {
-  if (state === 'play') {
-    touchOn = false;
-    mouse.down = false;
+function onGameTouchEnd(e) {
+  for (let i = 0; i < e.changedTouches.length; i++) {
+    const t = e.changedTouches[i];
+    if (t.identifier === moveTouchId) {
+      moveTouchId = null;
+      touchStick.active = false;
+      touchStick.ax = 0;
+      touchStick.ay = 0;
+      dpadState.up = false;
+      dpadState.down = false;
+      dpadState.left = false;
+      dpadState.right = false;
+      updateDpadVisuals();
+    } else if (t.identifier === aimTouchId) {
+      aimTouchId = null;
+      mouse.down = false;
+      touchOn = false;
+    }
   }
-});
-cv.addEventListener('touchcancel', () => {
-  if (state === 'play') {
-    touchOn = false;
-    mouse.down = false;
-  }
-});
+}
+
+cv.addEventListener('touchstart', onGameTouchStart, { passive: false });
+cv.addEventListener('touchmove', onGameTouchMove, { passive: false });
+cv.addEventListener('touchend', onGameTouchEnd, { passive: false });
+cv.addEventListener('touchcancel', onGameTouchEnd, { passive: false });
+window.addEventListener('touchcancel', onGameTouchEnd, { passive: false });
 
 // ---------- DYNAMIC ADAPTIVE SPACE AUDIO ENGINE ----------
 let ac = null, musicOn = true, masterG = null;
@@ -6996,6 +7199,17 @@ function update(dt) {
     if (keys['KeyS'] || keys['ArrowDown'] || dpadState.down) ay += 1;
     if (keys['KeyA'] || keys['ArrowLeft'] || dpadState.left) ax -= 1;
     if (keys['KeyD'] || keys['ArrowRight'] || dpadState.right) ax += 1;
+
+    if (touchStick.active) {
+      ax += touchStick.ax;
+      ay += touchStick.ay;
+    }
+  }
+
+  const inputMag = Math.hypot(ax, ay);
+  if (inputMag > 1) {
+    ax /= inputMag;
+    ay /= inputMag;
   }
 
   ship.vx += ax * ACC * dt;
@@ -7072,13 +7286,13 @@ function update(dt) {
     });
   }
 
-  // Directed Pirate Naval Cannon Salvo (Fires ONLY on click/tap, no holding)
+  // Directed Pirate Naval Cannon Salvo (Supports both rapid tapping & continuous touch/mouse hold)
   shootCool -= dt;
-  let wantShoot = mouse.clicked || keys.spaceClicked;
+  const wantShoot = mouse.clicked || keys.spaceClicked || mouse.down;
   if (wantShoot && shootCool <= 0) {
     mouse.clicked = false;
     keys.spaceClicked = false;
-    shootCool = Math.max(0.18, baseCool * (rapidT > 0 ? 0.70 : 1.0) * (hyperchargeActiveT > 0 ? 0.60 : 1.0));
+    shootCool = Math.max(0.12, baseCool * (rapidT > 0 ? 0.70 : 1.0) * (hyperchargeActiveT > 0 ? 0.60 : 1.0));
     ship.recoil = 1.0;
     muzzleFlash = 1.0;
     
@@ -13388,13 +13602,23 @@ function draw() {
 
   // 11. Flight HUD (Sci-Fi Holographic Cockpit Telemetry)
   if (state === 'play' || state === 'pause') {
-    // Holographic Top Left Status Panel
+    // Responsive HUD Dimensions
+    const isMobileScreen = W < 800 || H < 520;
+    const hudX = isMobileScreen ? 10 : 14;
+    const hudY = isMobileScreen ? 10 : 14;
+    const hudW = isMobileScreen ? 230 : 280;
+    const hudH = isMobileScreen ? 108 : 138;
+    const barX = hudX + 10;
+    const barY = hudY + (isMobileScreen ? 22 : 28);
+    const barW = hudW - 20;
+    const barH = isMobileScreen ? 11 : 14;
+
     cx.save();
-    cx.fillStyle = 'rgba(6, 14, 30, 0.75)';
+    cx.fillStyle = 'rgba(6, 14, 30, 0.80)';
     cx.strokeStyle = 'rgba(255, 210, 60, 0.45)';
     cx.lineWidth = 1.5;
     cx.beginPath();
-    cx.roundRect(14, 14, 290, 145, 10);
+    cx.roundRect(hudX, hudY, hudW, hudH, 10);
     cx.fill(); cx.stroke();
 
     // Holographic Hull Health Bar & HP Metric (Health, Not Hearts)
@@ -13404,13 +13628,12 @@ function draw() {
     const hpGlow = hpRatio > 0.5 ? 'rgba(0, 255, 170, 0.6)' : hpRatio > 0.25 ? 'rgba(255, 210, 60, 0.6)' : 'rgba(255, 34, 85, 0.85)';
 
     // Label & HP Numbers
-    cx.fillStyle = '#ffffff'; cx.font = 'bold 11px "Orbitron", sans-serif'; cx.textAlign = 'left';
-    cx.fillText('🛡️ HULL INTEGRITY', 26, 35);
-    cx.fillStyle = hpColor; cx.font = 'bold 12px "Orbitron", sans-serif'; cx.textAlign = 'right';
-    cx.fillText(`${Math.max(0, ship.hp)} / ${maxHp} HP (${hpPct}%)`, 290, 35);
+    cx.fillStyle = '#ffffff'; cx.font = isMobileScreen ? 'bold 9px "Orbitron", sans-serif' : 'bold 11px "Orbitron", sans-serif'; cx.textAlign = 'left';
+    cx.fillText('🛡️ HULL INTEGRITY', barX, barY - 6);
+    cx.fillStyle = hpColor; cx.font = isMobileScreen ? 'bold 10px "Orbitron", sans-serif' : 'bold 12px "Orbitron", sans-serif'; cx.textAlign = 'right';
+    cx.fillText(`${Math.max(0, ship.hp)} / ${maxHp} HP (${hpPct}%)`, barX + barW, barY - 6);
 
     // Glowing Health Bar Background & Fill
-    const barX = 26, barY = 42, barW = 264, barH = 15;
     cx.fillStyle = 'rgba(2, 6, 23, 0.95)';
     cx.beginPath(); cx.roundRect(barX, barY, barW, barH, 4); cx.fill();
     cx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; cx.lineWidth = 1; cx.stroke();
@@ -13453,13 +13676,17 @@ function draw() {
       }
     }
     
-    cx.fillStyle = '#ffd23c'; cx.font = 'bold 16px "Orbitron", sans-serif'; cx.textAlign = 'left';
-    cx.fillText(`🪙 GOLD: ${score}`, 26, 82);
+    const statY1 = barY + barH + (isMobileScreen ? 16 : 22);
+    const statY2 = statY1 + (isMobileScreen ? 18 : 24);
+    const statY3 = statY2 + (isMobileScreen ? 16 : 22);
+
+    cx.fillStyle = '#ffd23c'; cx.font = isMobileScreen ? 'bold 13px "Orbitron", sans-serif' : 'bold 15px "Orbitron", sans-serif'; cx.textAlign = 'left';
+    cx.fillText(`🪙 GOLD: ${score}`, barX, statY1);
     cx.fillStyle = '#3fd5ff';
-    cx.fillText(`🌌 SECTOR: ${level}`, 26, 108);
-    cx.fillStyle = '#8fa6cb'; cx.font = '12px "Orbitron", sans-serif';
+    cx.fillText(`🌌 SECTOR: ${level}`, barX, statY2);
+    cx.fillStyle = '#8fa6cb'; cx.font = isMobileScreen ? '10px "Orbitron", sans-serif' : '11px "Orbitron", sans-serif';
     const speedKnots = Math.round(Math.hypot(ship.vx, ship.vy) * 0.4);
-    cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, 26, 134);
+    cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, barX, statY3);
     cx.restore();
     
     if (combo >= 2 && comboT > 0) {
