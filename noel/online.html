@@ -1936,6 +1936,106 @@ function updateBrawlControlsVisibility() {
   }
 }
 
+function killGlider(idx, g) {
+  if (idx < 0 || idx >= gliders.length) return;
+  addSuperCharge(8);
+  explode(g.x, g.y, g.col || '#00ff66', 24);
+  sfx('boom');
+  addScore(5 + Math.floor(level * 1.5), g.x, g.y);
+  addShake(5);
+  if (Math.random() < 0.65) coins.push({ x: g.x, y: g.y, vx: -95, vy: 0 });
+  gliders.splice(idx, 1);
+}
+
+function killFort(idx, f) {
+  if (idx < 0 || idx >= forts.length) return;
+  addSuperCharge(10);
+  explode(f.x, f.y, f.col || '#ef4444', 45);
+  sfx('boom');
+  addScore(10, f.x, f.y);
+  addShake(9);
+  coins.push({ x: f.x, y: f.y, vx: -120, vy: -30 });
+
+  if (f.variant === 'brood') {
+    popup(f.x, f.y - 30, '💥 SUPERNOVA CORE DETONATION!', '#ff4400');
+    explode(f.x, f.y, '#ff4400', 65);
+    addShake(18);
+    for (let k = 0; k < 6; k++) {
+      const ang = (k / 6) * Math.PI * 2;
+      parts.push({
+        type: 'fireball',
+        x: f.x, y: f.y,
+        vx: Math.cos(ang) * 180, vy: Math.sin(ang) * 180,
+        life: 0.35, maxLife: 0.35, r: 8, maxR: 24, col: '#ff5500'
+      });
+    }
+  }
+  
+  const roll = Math.random();
+  if (roll < 0.08) powerups.push({ x: f.x, y: f.y, type: 'heart', vx: -95, vy: 0 });
+  else if (roll < 0.18) powerups.push({ x: f.x, y: f.y, type: 'rapid', vx: -95, vy: 0 });
+  else if (roll < 0.26) powerups.push({ x: f.x, y: f.y, type: 'shield', vx: -95, vy: 0 });
+  else if (roll < 0.34) powerups.push({ x: f.x, y: f.y, type: 'triple', vx: -95, vy: 0 });
+  else if (roll < 0.40) powerups.push({ x: f.x, y: f.y, type: 'bomb', vx: -95, vy: 0 });
+  
+  forts.splice(idx, 1);
+}
+
+function killBoss() {
+  if (!boss) return;
+  addSuperCharge(100);
+  explode(boss.x, boss.y, boss.col, 95);
+  sfx('boom');
+  addShake(26);
+  const bLevel = boss.sectorLevel || level;
+  const bTokens = 2 + Math.floor((bLevel - 1) * 0.5);
+  const bScore = 50 + bLevel * 25;
+  addScore(bScore, boss.x, boss.y);
+  tokensRun += bTokens;
+  spinsRun += 1;
+  popup(W / 2, H * 0.35, `${boss.name.toUpperCase()} DESTROYED! +${bTokens} 🎟️ +1 🎡`, '#ffd23c');
+  
+  const coinCount = boss.type === 'titan' ? 36 : 18;
+  for (let k = 0; k < coinCount; k++) {
+    coins.push({
+      x: boss.x + (Math.random() - 0.5) * 140,
+      y: boss.y + (Math.random() - 0.5) * 100,
+      vx: -130 + (Math.random() - 0.5) * 80,
+      vy: (Math.random() - 0.5) * 80
+    });
+  }
+  if (Math.random() < 0.85) powerups.push({ x: boss.x, y: boss.y, type: 'heart', vx: -85, vy: 0 });
+  boss = null;
+  bossT = 28 + Math.random() * 8;
+  fortT = 3.5; gliderT = 2.4; mineT = 4.5;
+}
+
+function killMine(idx, m) {
+  if (idx < 0 || idx >= mines.length) return;
+  addSuperCharge(5);
+  explode(m.x, m.y, m.col || '#00e5ff', 28);
+  sfx('boom');
+  addScore(8, m.x, m.y);
+  addShake(7);
+
+  if (m.variant === 'cluster') {
+    popup(m.x, m.y - 20, 'CLUSTER SHRAPNEL!', '#ff5500');
+    for (let k = 0; k < 4; k++) {
+      const a = (k / 4) * Math.PI * 2 + 0.35;
+      eballs.push({
+        type: 'shrapnel',
+        col: '#ff5500',
+        x: m.x, y: m.y,
+        vx: Math.cos(a) * 360, vy: Math.sin(a) * 360,
+        r: 10
+      });
+    }
+  }
+
+  if (Math.random() < 0.4) coins.push({ x: m.x, y: m.y, vx: -95, vy: 0 });
+  mines.splice(idx, 1);
+}
+
 function activateGadget(e) {
   if (e) {
     try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
@@ -1956,14 +2056,16 @@ function activateGadget(e) {
     ship.hp = Math.min(maxHp, ship.hp + 3);
     shieldT = Math.max(shieldT, 4.5);
     explode(ship.x, ship.y, '#10b981', 65);
-    for (const g of gliders) {
+    for (let gi = gliders.length - 1; gi >= 0; gi--) {
+      const g = gliders[gi];
       const d = Math.hypot(g.x - ship.x, g.y - ship.y);
       if (d < 500) {
         const ang = Math.atan2(g.y - ship.y, g.x - ship.x);
         g.x += Math.cos(ang) * 260;
         g.y += Math.sin(ang) * 260;
-        g.hp -= 90;
+        g.hp -= 20;
         explode(g.x, g.y, '#10b981', 25);
+        if (g.hp <= 0) killGlider(gi, g);
       }
     }
   }
@@ -1980,7 +2082,9 @@ function activateGadget(e) {
         r: 14,
         shipModel: 'runner',
         skinId: 'toxic',
-        cannonLevel: 10
+        cannonLevel: 10,
+        isGadget: true,
+        dmg: 5
       });
     }
   }
@@ -5302,36 +5406,82 @@ function update(dt) {
     const bCos = Math.cos(beamAngle), bSin = Math.sin(beamAngle);
     const startX = ship.x + 36 * bCos, startY = ship.y + 36 * bSin;
 
-    for (const g of gliders) {
+    // 1. Vaporize Gliders in Beam
+    for (let gi = gliders.length - 1; gi >= 0; gi--) {
+      const g = gliders[gi];
       const dx = g.x - startX, dy = g.y - startY;
       const proj = dx * bCos + dy * bSin;
-      if (proj > 0 && proj < 2200) {
+      if (proj > 0 && proj < 2400) {
         const perp = Math.abs(-dx * bSin + dy * bCos);
-        if (perp < (g.w * 0.5 || 24) + 42) {
-          g.hp -= 280 * dt;
+        if (perp < (g.w * 0.5 || 24) + 48) {
+          g.hp -= 35 * dt;
+          g.shield = 0;
           explode(g.x, g.y, '#ffd23c', 12);
+          if (g.hp <= 0) {
+            killGlider(gi, g);
+          }
         }
       }
     }
-    for (const f of forts) {
+
+    // 2. Melt Forts in Beam
+    for (let fi = forts.length - 1; fi >= 0; fi--) {
+      const f = forts[fi];
       const dx = f.x - startX, dy = f.y - startY;
       const proj = dx * bCos + dy * bSin;
-      if (proj > 0 && proj < 2200) {
+      if (proj > 0 && proj < 2400) {
         const perp = Math.abs(-dx * bSin + dy * bCos);
-        if (perp < (f.w * 0.5 || 32) + 42) {
-          f.hp -= 320 * dt;
+        if (perp < (f.w * 0.5 || 32) + 48) {
+          f.hp -= 40 * dt;
+          if (f.shield) f.shield = Math.max(0, f.shield - 15 * dt);
           explode(f.x, f.y, '#c084fc', 14);
+          if (f.hp <= 0) {
+            killFort(fi, f);
+          }
         }
       }
     }
+
+    // 3. Detonate Mines in Beam
+    for (let mi = mines.length - 1; mi >= 0; mi--) {
+      const m = mines[mi];
+      const dx = m.x - startX, dy = m.y - startY;
+      const proj = dx * bCos + dy * bSin;
+      if (proj > 0 && proj < 2400) {
+        const perp = Math.abs(-dx * bSin + dy * bCos);
+        if (perp < (m.r || 28) + 48) {
+          killMine(mi, m);
+        }
+      }
+    }
+
+    // 4. Disintegrate Enemy Bullets in Beam
+    for (let bi = eballs.length - 1; bi >= 0; bi--) {
+      const eb = eballs[bi];
+      const dx = eb.x - startX, dy = eb.y - startY;
+      const proj = dx * bCos + dy * bSin;
+      if (proj > 0 && proj < 2400) {
+        const perp = Math.abs(-dx * bSin + dy * bCos);
+        if (perp < 52) {
+          explode(eb.x, eb.y, '#ffd23c', 8);
+          eballs.splice(bi, 1);
+        }
+      }
+    }
+
+    // 5. Blast Boss in Beam
     if (boss) {
       const dx = boss.x - startX, dy = boss.y - startY;
       const proj = dx * bCos + dy * bSin;
-      if (proj > 0 && proj < 2200) {
+      if (proj > 0 && proj < 2400) {
         const perp = Math.abs(-dx * bSin + dy * bCos);
-        if (perp < (boss.w * 0.5) + 42) {
-          boss.hp -= 360 * dt;
-          explode(boss.x + (Math.random() - 0.5) * boss.w, boss.y + (Math.random() - 0.5) * boss.h, '#ffd23c', 18);
+        if (perp < (boss.w * 0.5) + 48) {
+          boss.hp -= 45 * dt;
+          if (boss.iceShards > 0) boss.iceShards = Math.max(0, boss.iceShards - 15 * dt);
+          explode(boss.x + (Math.random() - 0.5) * boss.w * 0.8, boss.y + (Math.random() - 0.5) * boss.h * 0.8, '#ffd23c', 16);
+          if (boss.hp <= 0) {
+            killBoss();
+          }
         }
       }
     }
@@ -5352,22 +5502,50 @@ function update(dt) {
       size: 10 + Math.random() * 6
     });
     if (met.y >= met.targetY) {
-      explode(met.x, met.targetY, '#ffd23c', 75);
-      explode(met.x, met.targetY, '#c084fc', 55);
+      explode(met.x, met.targetY, '#ffd23c', 85);
+      explode(met.x, met.targetY, '#c084fc', 65);
       addShake(24);
       sfx('boom');
-      for (const g of gliders) {
-        if (Math.hypot(g.x - met.x, g.y - met.targetY) < 200) {
-          g.hp -= 260;
+      popup(met.x, met.targetY - 25, '💥 300 ORBITAL DMG', '#ffd23c');
+
+      // Detonate Gliders
+      for (let gi = gliders.length - 1; gi >= 0; gi--) {
+        const g = gliders[gi];
+        if (Math.hypot(g.x - met.x, g.y - met.targetY) < 220) {
+          g.hp -= 20;
+          if (g.hp <= 0) killGlider(gi, g);
         }
       }
-      for (const f of forts) {
-        if (Math.hypot(f.x - met.x, f.y - met.targetY) < 220) {
-          f.hp -= 300;
+
+      // Detonate Forts
+      for (let fi = forts.length - 1; fi >= 0; fi--) {
+        const f = forts[fi];
+        if (Math.hypot(f.x - met.x, f.y - met.targetY) < 240) {
+          f.hp -= 25;
+          if (f.hp <= 0) killFort(fi, f);
         }
       }
-      if (boss && Math.hypot(boss.x - met.x, boss.y - met.targetY) < 240) {
-        boss.hp -= 380;
+
+      // Detonate Mines
+      for (let mi = mines.length - 1; mi >= 0; mi--) {
+        const m = mines[mi];
+        if (Math.hypot(m.x - met.x, m.y - met.targetY) < 220) {
+          killMine(mi, m);
+        }
+      }
+
+      // Disintegrate Enemy Bullets
+      for (let bi = eballs.length - 1; bi >= 0; bi--) {
+        const eb = eballs[bi];
+        if (Math.hypot(eb.x - met.x, eb.y - met.targetY) < 220) {
+          eballs.splice(bi, 1);
+        }
+      }
+
+      // Damage Boss
+      if (boss && Math.hypot(boss.x - met.x, boss.y - met.targetY) < 260) {
+        boss.hp -= 35;
+        if (boss.hp <= 0) killBoss();
       }
       meteorStrikes.splice(i, 1);
     }
@@ -5481,10 +5659,12 @@ function update(dt) {
         y: muzzleY,
         vx: Math.cos(ang) * spd,
         vy: Math.sin(ang) * spd,
-        r: bRadius,
+        r: hyperchargeActiveT > 0 ? bRadius * 1.6 : bRadius,
         shipModel: shipModel,
         skinId: activeSkin,
-        cannonLevel: cannonLevel
+        cannonLevel: cannonLevel,
+        isHypercharge: hyperchargeActiveT > 0,
+        dmg: hyperchargeActiveT > 0 ? 8 : 1
       });
       
       let mCol = shipModel === 'runner' ? '#00ffee' : shipModel === 'storm' ? '#c084fc' : shipModel === 'hind' ? '#ffd700' : '#ffd23c';
@@ -5815,14 +5995,22 @@ function update(dt) {
     b.x += b.vx * dt; b.y += b.vy * dt;
     
     if (Math.random() < 0.75) {
-      parts.push({ x: b.x, y: b.y, vx: -70, vy: (Math.random()-0.5)*15, life: 0.25, col: '#ff9d3c', size: 5 });
+      parts.push({
+        x: b.x, y: b.y,
+        vx: -70, vy: (Math.random() - 0.5) * 15,
+        life: 0.25,
+        col: b.isHypercharge ? '#ffd23c' : '#ff9d3c',
+        size: b.isHypercharge ? 9 : 5
+      });
     }
     
     if (b.x > W + 50) { balls.splice(i, 1); continue; }
     
+    const dmg = b.dmg || (b.isHypercharge ? 8 : 1);
     let hit = false;
+    
+    // 1. Boss Collision
     if (boss && Math.abs(b.x - boss.x) < boss.w * 0.5 && Math.abs(b.y - boss.y) < boss.h * 0.5) {
-      // 1. Captain Solo: Kessel Run Hyperdrive Overdrive (High-speed hyperspace dodge!)
       if (boss.isCloaked) {
         popup(b.x, b.y, '⚡ HYPERDRIVE DODGE!', '#00ffee');
         explode(b.x, b.y, '#00ffee', 8);
@@ -5830,52 +6018,34 @@ function update(dt) {
         continue;
       }
 
-      // 2. Admiral Sloane Outrigger Deflector Barrier: Outrigger wings absorb initial hits!
       if (boss.type === 'cryo' && boss.iceShards > 0) {
-        boss.iceShards--;
+        boss.iceShards = Math.max(0, boss.iceShards - dmg);
         hit = true;
         explode(b.x, b.y, '#00ffaa', 18);
-        popup(boss.x, boss.y - 35, `🛡️ OUTRIGGER DEFLECTOR SHATTERED! (${boss.iceShards} REMAINING)`, '#00ffaa');
+        popup(boss.x, boss.y - 35, `🛡️ OUTRIGGER SHATTERED!`, '#00ffaa');
         sfx('metal');
         addShake(6);
       } else {
-        boss.hp--; hit = true;
+        boss.hp -= dmg; hit = true;
         addSuperCharge(5);
-        explode(b.x, b.y, '#ffd23c', 8);
+        explode(b.x, b.y, '#ffd23c', b.isHypercharge ? 24 : 8);
+        if (b.isHypercharge) {
+          popup(boss.x, boss.y - 30, '⚡ CRIT -' + (dmg * 10), '#ffd23c');
+          addShake(8);
+        }
         if (boss.hp <= 0) {
-          addSuperCharge(100);
-          explode(boss.x, boss.y, boss.col, 95); sfx('boom'); addShake(26);
-          const bLevel = boss.sectorLevel || level;
-          const bTokens = 2 + Math.floor((bLevel - 1) * 0.5);
-          const bScore = 50 + bLevel * 25;
-          addScore(bScore, boss.x, boss.y);
-          tokensRun += bTokens; spinsRun += 1;
-          popup(W / 2, H * 0.35, `${boss.name.toUpperCase()} DESTROYED! +${bTokens} 🎟️ +1 🎡`, '#ffd23c');
-          
-          // General Veers AT-AT Colossus drops a massive gold coin cascade on destruction!
-          const coinCount = boss.type === 'titan' ? 36 : 18;
-          for (let k = 0; k < coinCount; k++) {
-            coins.push({
-              x: boss.x + (Math.random() - 0.5) * 140,
-              y: boss.y + (Math.random() - 0.5) * 100,
-              vx: -130 + (Math.random() - 0.5) * 80,
-              vy: (Math.random() - 0.5) * 80
-            });
-          }
-          if (Math.random() < 0.85) powerups.push({ x: boss.x, y: boss.y, type: 'heart', vx: -85, vy: 0 });
-          boss = null; bossT = 28 + Math.random() * 8;
-          fortT = 3.5; gliderT = 2.4; mineT = 4.5;
+          killBoss();
         }
       }
     }
     
+    // 2. Fort Collision
     if (!hit) {
       for (let j = forts.length - 1; j >= 0; j--) {
         const f = forts[j];
         if (Math.abs(b.x - f.x) < f.w * 0.5 && Math.abs(b.y - f.y) < f.h * 0.5) {
-          // Deflector Shield / Crystalline Ice Shield Absorption
           if (f.shield && f.shield > 0) {
-            f.shield--;
+            f.shield = Math.max(0, f.shield - dmg);
             hit = true;
             addSuperCharge(3);
             const sCol = f.variant === 'cryo_gunship' ? '#38bdf8' : '#00ffee';
@@ -5885,51 +6055,26 @@ function update(dt) {
             break;
           }
 
-          f.hp--; hit = true;
+          f.hp -= dmg; hit = true;
           addSuperCharge(4);
-          explode(b.x, b.y, '#ffd23c', 8);
+          explode(b.x, b.y, '#ffd23c', b.isHypercharge ? 24 : 8);
+          if (b.isHypercharge) {
+            popup(f.x, f.y - 25, '⚡ HYPER BLAST -' + dmg, '#ffd23c');
+            addShake(7);
+          }
           if (f.hp <= 0) {
-            addSuperCharge(10);
-            explode(f.x, f.y, f.col, 40); sfx('boom');
-            addScore(10, f.x, f.y); addShake(8);
-            coins.push({ x: f.x, y: f.y, vx: -120, vy: -30 });
-
-            // Solar Juggernaut Special Death Power: Supernova Thermal Core Explosion!
-            if (f.variant === 'brood') {
-              popup(f.x, f.y - 30, '💥 SUPERNOVA CORE DETONATION!', '#ff4400');
-              explode(f.x, f.y, '#ff4400', 65);
-              addShake(18);
-              // Radial molten shrapnel bursts
-              for (let k = 0; k < 6; k++) {
-                const ang = (k / 6) * Math.PI * 2;
-                parts.push({
-                  type: 'fireball',
-                  x: f.x, y: f.y,
-                  vx: Math.cos(ang) * 180, vy: Math.sin(ang) * 180,
-                  life: 0.35, maxLife: 0.35, r: 8, maxR: 24, col: '#ff5500'
-                });
-              }
-            }
-            
-            const roll = Math.random();
-            if (roll < 0.08) powerups.push({ x: f.x, y: f.y, type: 'heart', vx: -95, vy: 0 });
-            else if (roll < 0.18) powerups.push({ x: f.x, y: f.y, type: 'rapid', vx: -95, vy: 0 });
-            else if (roll < 0.26) powerups.push({ x: f.x, y: f.y, type: 'shield', vx: -95, vy: 0 });
-            else if (roll < 0.34) powerups.push({ x: f.x, y: f.y, type: 'triple', vx: -95, vy: 0 });
-            else if (roll < 0.40) powerups.push({ x: f.x, y: f.y, type: 'bomb', vx: -95, vy: 0 });
-            
-            forts.splice(j, 1);
+            killFort(j, f);
           }
           break;
         }
       }
     }
     
+    // 3. Glider Collision
     if (!hit) {
       for (let j = gliders.length - 1; j >= 0; j--) {
         const g = gliders[j];
         
-        // Separatist Tri-Fighter: Quantum Phase Teleport Dodge
         if (g.variant === 'phantom' && !g.phaseDodged && Math.hypot(b.x - g.x, b.y - g.y) < 110) {
           g.phaseDodged = true;
           g.y = Math.max(70, Math.min(H - 90, g.y + (Math.random() < 0.5 ? -100 : 100)));
@@ -5939,7 +6084,6 @@ function update(dt) {
           continue;
         }
 
-        // Quantum Phase Stalker: 50% chance to Quantum Blink evade if shot from far!
         if (g.variant === 'stalker' && Math.hypot(b.x - g.x, b.y - g.y) < 110 && g.blinkT <= 0.8) {
           g.blinkT = 2.0;
           g.y = Math.max(70, Math.min(H - 90, g.y + (Math.random() < 0.5 ? -110 : 110)));
@@ -5948,10 +6092,9 @@ function update(dt) {
           continue;
         }
 
-        if (Math.hypot(b.x - g.x, b.y - g.y) < g.w * 0.5 + 12) {
-          // TIE Defender Ion Shield Absorption
+        if (Math.hypot(b.x - g.x, b.y - g.y) < g.w * 0.5 + 14) {
           if (g.shield && g.shield > 0) {
-            g.shield--;
+            g.shield = Math.max(0, g.shield - dmg);
             hit = true;
             addSuperCharge(3);
             explode(b.x, b.y, '#00ffee', 12);
@@ -5960,47 +6103,25 @@ function update(dt) {
             break;
           }
 
-          g.hp = (g.hp || 1) - 1;
+          g.hp = (g.hp || 1) - dmg;
           hit = true;
           addSuperCharge(3);
-          explode(b.x, b.y, '#ffd23c', 8);
+          explode(b.x, b.y, '#ffd23c', b.isHypercharge ? 20 : 8);
           if (g.hp <= 0) {
-            addSuperCharge(8);
-            explode(g.x, g.y, g.col || '#00ff66', 20); sfx('boom');
-            addScore(5 + Math.floor(level * 1.5), g.x, g.y); addShake(5);
-            if (Math.random() < 0.55) coins.push({ x: g.x, y: g.y, vx: -95, vy: 0 });
-            gliders.splice(j, 1);
+            killGlider(j, g);
           }
           break;
         }
       }
     }
     
+    // 4. Mine Collision
     if (!hit) {
       for (let j = mines.length - 1; j >= 0; j--) {
         const m = mines[j];
-        if (Math.hypot(b.x - m.x, b.y - m.y) < m.r + 12) {
-          addSuperCharge(5);
-          explode(m.x, m.y, m.col || '#00e5ff', 28); sfx('boom');
-          addScore(8, m.x, m.y); addShake(7); hit = true;
-
-          // Incendiary Cluster Mine Special Power: Spawns 4 Fiery Shrapnel Orbs!
-          if (m.variant === 'cluster') {
-            popup(m.x, m.y - 20, 'CLUSTER SHRAPNEL!', '#ff5500');
-            for (let k = 0; k < 4; k++) {
-              const a = (k / 4) * Math.PI * 2 + 0.35;
-              eballs.push({
-                type: 'shrapnel',
-                col: '#ff5500',
-                x: m.x, y: m.y,
-                vx: Math.cos(a) * 360, vy: Math.sin(a) * 360,
-                r: 10
-              });
-            }
-          }
-
-          if (Math.random() < 0.4) coins.push({ x: m.x, y: m.y, vx: -95, vy: 0 });
-          mines.splice(j, 1);
+        if (Math.hypot(b.x - m.x, b.y - m.y) < m.r + 14) {
+          killMine(j, m);
+          hit = true;
           break;
         }
       }
@@ -6008,6 +6129,18 @@ function update(dt) {
     
     if (hit) {
       if (b.shipModel === 'runner') triggerChainLightning(b.x, b.y);
+      if (b.isHypercharge) {
+        // Hypercharge AOE Shockwave Explosion
+        explode(b.x, b.y, '#ffd23c', 45);
+        explode(b.x, b.y, '#c084fc', 35);
+        for (let gj = gliders.length - 1; gj >= 0; gj--) {
+          const eg = gliders[gj];
+          if (Math.hypot(eg.x - b.x, eg.y - b.y) < 95) {
+            eg.hp -= 5;
+            if (eg.hp <= 0) killGlider(gj, eg);
+          }
+        }
+      }
       balls.splice(i, 1);
     }
   }
