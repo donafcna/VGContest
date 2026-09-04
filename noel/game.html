@@ -3612,6 +3612,7 @@ const BOSS_INTEL = [
     col: '#ef4444',
     hp: 95,
     powers: [
+      '🦶 Colossal Hydraulic Blitz Stomp (Locks onto player galleon; giant AT-AT footpad slams down to crush hull and erupts 360° seismic magma shockwaves!)',
       '💥 Heavy Chin MS-1 Turbolaser Barrage (Dual piercing heavy red laser cannons)',
       '⚡ Temple Repeating Blaster Sweeping Flurry (Rapid 8-shot suppressive fire)',
       '💣 Orbital Seismic Artillery Bombardment & Stomp Shockwaves (Massive gold rain upon defeat)'
@@ -7254,6 +7255,73 @@ function update(dt) {
       if (boss.haloT <= 0) boss.haloActive = false;
     }
 
+    // General Veers AT-AT: Colossal Hydraulic Blitz Stomp & Seismic Shockwave
+    if (boss.stompActive && boss.stompActive > 0) {
+      boss.stompActive -= dt;
+      // Stomp Telegraph Warning Phase: Target shadow & glowing reticle tracks player until 1.1s before impact
+      if (boss.stompActive > 1.1) {
+        boss.stompTargetX = (boss.stompTargetX !== undefined ? boss.stompTargetX : ship.x) + (ship.x - (boss.stompTargetX !== undefined ? boss.stompTargetX : ship.x)) * Math.min(1.0, dt * 5.0);
+        boss.stompTargetY = (boss.stompTargetY !== undefined ? boss.stompTargetY : ship.y) + (ship.y - (boss.stompTargetY !== undefined ? boss.stompTargetY : ship.y)) * Math.min(1.0, dt * 5.0);
+        if (Math.random() < 0.6) {
+          parts.push({
+            type: 'spark',
+            x: boss.x - boss.w * 0.25,
+            y: boss.y - boss.h * 0.15,
+            vx: -90 - Math.random() * 80,
+            vy: (Math.random() - 0.5) * 60,
+            life: 0.3, maxLife: 0.3,
+            col: '#ef4444',
+            size: 4
+          });
+        }
+      } else if (!boss.stompImpactDone) {
+        // IMPACT MOMENT: Colossal Walker Footpad Slams Down!
+        boss.stompImpactDone = true;
+        const tx = boss.stompTargetX !== undefined ? boss.stompTargetX : ship.x;
+        const ty = boss.stompTargetY !== undefined ? boss.stompTargetY : ship.y;
+        
+        // Direct Crush Hit check against player galleon
+        const crushDist = Math.hypot(ship.x - tx, ship.y - ty);
+        if (crushDist < 75 && ship.inv <= 0) {
+          damageShip();
+          ship.pitch = 0.5; // violent tilt
+          ship.vy = 260;    // slammed downward
+          slowT = 2.4;      // heavy hydraulic crush penalty
+          popup(ship.x, ship.y - 30, '💥 CRUSHED UNDER AT-AT HYDRAULIC FOOTPAD!', '#ef4444');
+          explode(ship.x, ship.y, '#ef4444', 40);
+        }
+
+        // Seismic shockwave impact FX
+        addShake(45);
+        sfx('boom');
+        explode(tx, ty, '#ef4444', 70);
+        explode(tx, ty, '#ffd23c', 50);
+        popup(tx, ty - 35, '💥 SEISMIC STOMP SHOCKWAVE!', '#ef4444');
+
+        // Shockwave concentric expanding plasma rings
+        parts.push({ type: 'ring', x: tx, y: ty, r: 8, maxR: 190, life: 0.55, maxLife: 0.55, col: '#ef4444', lw: 6 });
+        parts.push({ type: 'ring', x: tx, y: ty, r: 4, maxR: 140, life: 0.45, maxLife: 0.45, col: '#ffd23c', lw: 4 });
+
+        // Erupt 8 Radial Seismic Magma Shockwave Shells bursting outward
+        for (let k = 0; k < 8; k++) {
+          const sAng = (k / 8) * Math.PI * 2;
+          eballs.push({
+            type: 'magma',
+            isLava: true,
+            col: '#ff4400',
+            x: tx,
+            y: ty,
+            vx: Math.cos(sAng) * 480 * spdBonus,
+            vy: Math.sin(sAng) * 480 * spdBonus,
+            r: 20,
+            spin: 0
+          });
+        }
+      }
+    } else {
+      boss.stompImpactDone = false;
+    }
+
     // Pathogen Bioweapon: Swarm Clones & Mitosis Mutation Mechanics
     if (boss.type === 'pathogen') {
       if (!boss.isOriginalActive && boss.clones && boss.clones.length > 0) {
@@ -7339,7 +7407,8 @@ function update(dt) {
       // Attacks fire faster in higher sectors and during Enrage!
       const baseCd = boss.enraged ? (1.6 - level * 0.12) : (2.4 - level * 0.15);
       boss.atkT = Math.max(0.75, baseCd);
-      boss.atkCycle = ((boss.atkCycle || 0) + 1) % 3;
+      const numCycles = (boss.type === 'titan' || (boss.type === 'trio' && boss.isMerged)) ? 4 : 3;
+      boss.atkCycle = ((boss.atkCycle || 0) + 1) % numCycles;
 
       if (boss.type === 'dread') {
         // Boss 1: GRAND ADMIRAL VEX: OMEGA DREADNOUGHT
@@ -7629,7 +7698,17 @@ function update(dt) {
 
       } else if (boss.type === 'titan') {
         // Boss 7: GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
-        if (boss.atkCycle === 2) {
+        if (boss.atkCycle === 3) {
+          // SIGNATURE POWER: COLOSSAL HYDRAULIC BLITZ STOMP & SEISMIC SHOCKWAVE!
+          boss.stompActive = 2.6;
+          boss.stompTargetX = ship.x;
+          boss.stompTargetY = ship.y;
+          boss.stompImpactDone = false;
+          boss.atkT = 2.8;
+          addAlert('🚨 [SEISMIC HAZARD] GENERAL VEERS INITIATES HYDRAULIC BLITZ STOMP!', 'incoming');
+          popup(boss.x - 40, boss.y - 45, '🦶 HYDRAULIC BLITZ STOMP TARGETED!', '#ef4444');
+          sfx('incoming');
+        } else if (boss.atkCycle === 2) {
           // ULTIMATE: Maximum Firepower MS-1 Heavy Turbolaser Bombardment + Stomp Shockwaves (Aimed at player)
           for (const ang of [-0.42, -0.32, -0.22, -0.11, 0, 0.11, 0.22, 0.32, 0.42]) {
             const shootAng = aimAng + ang;
@@ -11208,6 +11287,52 @@ function draw() {
       bg.addColorStop(0, 'rgba(239, 68, 68, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.58, boss.h * 0.54, 0, 0, Math.PI * 2); cx.fill();
 
+      // HYDRAULIC BLITZ STOMP: TARGETING RETICLE & CRUSH ZONE VISUAL
+      if (boss.stompActive && boss.stompActive > 0) {
+        const stX = (boss.stompTargetX !== undefined ? boss.stompTargetX : ship.x) - boss.x;
+        const stY = (boss.stompTargetY !== undefined ? boss.stompTargetY : ship.y) - boss.y;
+        
+        cx.save();
+        if (boss.stompActive > 1.1) {
+          // Warning & Lock-On Crosshairs
+          const pulseR = 40 + Math.sin(t * 22) * 10;
+          cx.shadowColor = '#ef4444'; cx.shadowBlur = 18;
+          cx.strokeStyle = '#ef4444'; cx.lineWidth = 2.8;
+          cx.beginPath(); cx.arc(stX, stY, pulseR, 0, Math.PI * 2); cx.stroke();
+          cx.beginPath(); cx.arc(stX, stY, 16, 0, Math.PI * 2); cx.stroke();
+          
+          cx.beginPath();
+          cx.moveTo(stX - pulseR - 15, stY); cx.lineTo(stX + pulseR + 15, stY);
+          cx.moveTo(stX, stY - pulseR - 15); cx.lineTo(stX, stY + pulseR + 15);
+          cx.stroke();
+
+          cx.font = 'bold 12px "Space Grotesk", monospace';
+          cx.fillStyle = '#ef4444';
+          cx.textAlign = 'center';
+          cx.fillText('⚠️ [CRUSH ZONE - STOMP LOCK]', stX, stY - pulseR - 8);
+        } else {
+          // Slamming Impact Crater & Fissures
+          cx.shadowColor = '#ff4400'; cx.shadowBlur = 25;
+          cx.strokeStyle = '#ff4400'; cx.lineWidth = 4;
+          cx.beginPath(); cx.arc(stX, stY, 65, 0, Math.PI * 2); cx.stroke();
+          cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2;
+          cx.beginPath(); cx.arc(stX, stY, 35, 0, Math.PI * 2); cx.stroke();
+
+          // Colossal Slanted Armored Stomp Footpad
+          cx.fillStyle = '#0f172a';
+          cx.beginPath(); cx.roundRect(stX - 35, stY - 18, 70, 36, 8); cx.fill();
+          cx.strokeStyle = '#ef4444'; cx.lineWidth = 3.5;
+          cx.strokeRect(stX - 35, stY - 18, 70, 36);
+
+          // Hydraulic Piston Cylinder connecting footpad upward
+          cx.strokeStyle = '#94a3b8'; cx.lineWidth = 14;
+          cx.beginPath(); cx.moveTo(stX, stY - 18); cx.lineTo(stX + 45, stY - 110); cx.stroke();
+          cx.strokeStyle = '#ef4444'; cx.lineWidth = 3;
+          cx.beginPath(); cx.moveTo(stX, stY - 18); cx.lineTo(stX + 45, stY - 110); cx.stroke();
+        }
+        cx.restore();
+      }
+
       // Animated Mechanical Stomping Cycle for 4 Giant Hydraulic Walker Legs
       const stompPhase = t * 6;
       const legs = [
@@ -11218,16 +11343,24 @@ function draw() {
       ];
 
       for (const leg of legs) {
-        const footLift = Math.max(0, Math.sin(stompPhase + leg.phaseOff)) * 14;
-        const kneeBend = Math.sin(stompPhase + leg.phaseOff) * 8;
-        const hipY = -boss.h * 0.05;
-        const kneeX = leg.bx + kneeBend;
-        const kneeY = boss.h * 0.24 - footLift * 0.5;
-        const footX = leg.bx + (leg.isFront ? -6 : 6);
-        const footY = boss.h * 0.48 - footLift;
+        let footLift = Math.max(0, Math.sin(stompPhase + leg.phaseOff)) * 14;
+        let kneeBend = Math.sin(stompPhase + leg.phaseOff) * 8;
+        let hipY = -boss.h * 0.05;
+        let kneeX = leg.bx + kneeBend;
+        let kneeY = boss.h * 0.24 - footLift * 0.5;
+        let footX = leg.bx + (leg.isFront ? -6 : 6);
+        let footY = boss.h * 0.48 - footLift;
+
+        // Special Stomp Windup Posing for Front Leg
+        if (leg.isFront && boss.stompActive && boss.stompActive > 1.1) {
+          kneeY = -boss.h * 0.22;
+          kneeX = leg.bx - 28;
+          footY = -boss.h * 0.08;
+          footX = leg.bx - 48;
+        }
 
         // Upper Thigh Strut
-        cx.strokeStyle = leg.isPort ? '#334155' : '#1e293b';
+        cx.strokeStyle = (leg.isFront && boss.stompActive > 0) ? '#ff0033' : (leg.isPort ? '#334155' : '#1e293b');
         cx.lineWidth = leg.isPort ? 9 : 11;
         cx.beginPath(); cx.moveTo(leg.bx, hipY); cx.lineTo(kneeX, kneeY); cx.stroke();
 
@@ -11237,7 +11370,7 @@ function draw() {
         cx.strokeStyle = '#ef4444'; cx.lineWidth = 1.6; cx.stroke();
 
         // Lower Calf Strut & Hydraulic Piston
-        cx.strokeStyle = leg.isPort ? '#475569' : '#334155';
+        cx.strokeStyle = (leg.isFront && boss.stompActive > 0) ? '#ffd23c' : (leg.isPort ? '#475569' : '#334155');
         cx.lineWidth = leg.isPort ? 7 : 9;
         cx.beginPath(); cx.moveTo(kneeX, kneeY); cx.lineTo(footX, footY); cx.stroke();
 

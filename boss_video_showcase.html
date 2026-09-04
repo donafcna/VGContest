@@ -193,11 +193,12 @@
         desc: 'All-Terrain Heavy Armored Siege Colossus with swiveling cockpit chin turbolasers tracking the player, hydraulic stomping legs, and seismic artillery.',
         tactic: 'Weave between the heavy chin blaster barrels and target the mechanical neck swivel joint!',
         loot: '👑 +5 Plasma Cores · +2 Wheel Spins · +250 🪙 + 36 Coin Cascade',
-        specialName: 'Dual Heavy Chin MS-1 Turbolasers',
+        specialName: 'Colossal Hydraulic Blitz Stomp & Seismic Shockwave',
         moves: [
-          { name: 'Chin MS-1 Turbolaser Tracking', key: 'chin_lasers' },
-          { name: 'Temple Repeating Blaster Flurry', key: 'temple' },
-          { name: 'Orbital Seismic Artillery', key: 'artillery' }
+          { name: '🦶 Hydraulic Blitz Stomp', key: 'titan_stomp' },
+          { name: '💥 Chin MS-1 Turbolaser Tracking', key: 'chin_lasers' },
+          { name: '⚡ Temple Repeating Blaster Flurry', key: 'temple' },
+          { name: '💣 Orbital Seismic Artillery', key: 'artillery' }
         ]
       },
       {
@@ -572,6 +573,12 @@
             });
           }, i * 60);
         }
+      } else if (key === 'titan_stomp') {
+        boss.stompActive = 2.6;
+        boss.stompTargetX = ship.x;
+        boss.stompTargetY = ship.y;
+        boss.stompImpactDone = false;
+        popupText(boss.x, boss.y - 40, '💥 HYDRAULIC BLITZ STOMP!', '#ef4444');
       } else if (key === 'beam' || key === 'dish') {
         boss.beamActive = 2.5;
       } else if (key === 'scythes') {
@@ -867,6 +874,32 @@
         if (boss.forcePulseT > 0) {
           boss.forcePulseT -= dt;
           boss.forcePulseRadius += dt * 140;
+        }
+
+        if (boss.stompActive > 0) {
+          boss.stompActive -= dt;
+          if (boss.stompActive > 1.1) {
+            boss.stompTargetX = (boss.stompTargetX !== undefined ? boss.stompTargetX : ship.x) + (ship.x - (boss.stompTargetX !== undefined ? boss.stompTargetX : ship.x)) * Math.min(1.0, dt * 5.0);
+            boss.stompTargetY = (boss.stompTargetY !== undefined ? boss.stompTargetY : ship.y) + (ship.y - (boss.stompTargetY !== undefined ? boss.stompTargetY : ship.y)) * Math.min(1.0, dt * 5.0);
+          } else if (!boss.stompImpactDone) {
+            boss.stompImpactDone = true;
+            screenShake = 35;
+            popupText(boss.stompTargetX, boss.stompTargetY - 30, '💥 SEISMIC STOMP IMPACT!', '#ef4444');
+            for (let k = 0; k < 8; k++) {
+              const sAng = (k / 8) * Math.PI * 2;
+              enemyBullets.push({
+                x: boss.stompTargetX,
+                y: boss.stompTargetY,
+                vx: Math.cos(sAng) * 440,
+                vy: Math.sin(sAng) * 440,
+                r: 12,
+                type: 'magma_mortar',
+                col: '#ff4400'
+              });
+            }
+          }
+        } else {
+          boss.stompImpactDone = false;
         }
 
         // Handle Trio Updates & Merging Singularity
@@ -2564,6 +2597,52 @@
       bg.addColorStop(0, 'rgba(239, 68, 68, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.58, boss.h * 0.54, 0, 0, Math.PI * 2); cx.fill();
 
+      // HYDRAULIC BLITZ STOMP: TARGETING RETICLE & CRUSH ZONE VISUAL
+      if (boss.stompActive && boss.stompActive > 0) {
+        const stX = (boss.stompTargetX !== undefined ? boss.stompTargetX : ship.x) - boss.x;
+        const stY = (boss.stompTargetY !== undefined ? boss.stompTargetY : ship.y) - boss.y;
+        
+        cx.save();
+        if (boss.stompActive > 1.1) {
+          // Warning & Lock-On Crosshairs
+          const pulseR = 40 + Math.sin(t * 22) * 10;
+          cx.shadowColor = '#ef4444'; cx.shadowBlur = 18;
+          cx.strokeStyle = '#ef4444'; cx.lineWidth = 2.8;
+          cx.beginPath(); cx.arc(stX, stY, pulseR, 0, Math.PI * 2); cx.stroke();
+          cx.beginPath(); cx.arc(stX, stY, 16, 0, Math.PI * 2); cx.stroke();
+          
+          cx.beginPath();
+          cx.moveTo(stX - pulseR - 15, stY); cx.lineTo(stX + pulseR + 15, stY);
+          cx.moveTo(stX, stY - pulseR - 15); cx.lineTo(stX, stY + pulseR + 15);
+          cx.stroke();
+
+          cx.font = 'bold 12px "Space Grotesk", monospace';
+          cx.fillStyle = '#ef4444';
+          cx.textAlign = 'center';
+          cx.fillText('⚠️ [CRUSH ZONE - STOMP LOCK]', stX, stY - pulseR - 8);
+        } else {
+          // Slamming Impact Crater & Fissures
+          cx.shadowColor = '#ff4400'; cx.shadowBlur = 25;
+          cx.strokeStyle = '#ff4400'; cx.lineWidth = 4;
+          cx.beginPath(); cx.arc(stX, stY, 65, 0, Math.PI * 2); cx.stroke();
+          cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2;
+          cx.beginPath(); cx.arc(stX, stY, 35, 0, Math.PI * 2); cx.stroke();
+
+          // Colossal Slanted Armored Stomp Footpad
+          cx.fillStyle = '#0f172a';
+          cx.beginPath(); cx.roundRect(stX - 35, stY - 18, 70, 36, 8); cx.fill();
+          cx.strokeStyle = '#ef4444'; cx.lineWidth = 3.5;
+          cx.strokeRect(stX - 35, stY - 18, 70, 36);
+
+          // Hydraulic Piston Cylinder connecting footpad upward
+          cx.strokeStyle = '#94a3b8'; cx.lineWidth = 14;
+          cx.beginPath(); cx.moveTo(stX, stY - 18); cx.lineTo(stX + 45, stY - 110); cx.stroke();
+          cx.strokeStyle = '#ef4444'; cx.lineWidth = 3;
+          cx.beginPath(); cx.moveTo(stX, stY - 18); cx.lineTo(stX + 45, stY - 110); cx.stroke();
+        }
+        cx.restore();
+      }
+
       // Animated Mechanical Stomping Cycle for 4 Giant Hydraulic Walker Legs
       const stompPhase = t * 6;
       const legs = [
@@ -2574,16 +2653,24 @@
       ];
 
       for (const leg of legs) {
-        const footLift = Math.max(0, Math.sin(stompPhase + leg.phaseOff)) * 14;
-        const kneeBend = Math.sin(stompPhase + leg.phaseOff) * 8;
-        const hipY = -boss.h * 0.05;
-        const kneeX = leg.bx + kneeBend;
-        const kneeY = boss.h * 0.24 - footLift * 0.5;
-        const footX = leg.bx + (leg.isFront ? -6 : 6);
-        const footY = boss.h * 0.48 - footLift;
+        let footLift = Math.max(0, Math.sin(stompPhase + leg.phaseOff)) * 14;
+        let kneeBend = Math.sin(stompPhase + leg.phaseOff) * 8;
+        let hipY = -boss.h * 0.05;
+        let kneeX = leg.bx + kneeBend;
+        let kneeY = boss.h * 0.24 - footLift * 0.5;
+        let footX = leg.bx + (leg.isFront ? -6 : 6);
+        let footY = boss.h * 0.48 - footLift;
+
+        // Special Stomp Windup Posing for Front Leg
+        if (leg.isFront && boss.stompActive && boss.stompActive > 1.1) {
+          kneeY = -boss.h * 0.22;
+          kneeX = leg.bx - 28;
+          footY = -boss.h * 0.08;
+          footX = leg.bx - 48;
+        }
 
         // Upper Thigh Strut
-        cx.strokeStyle = leg.isPort ? '#334155' : '#1e293b';
+        cx.strokeStyle = (leg.isFront && boss.stompActive > 0) ? '#ff0033' : (leg.isPort ? '#334155' : '#1e293b');
         cx.lineWidth = leg.isPort ? 9 : 11;
         cx.beginPath(); cx.moveTo(leg.bx, hipY); cx.lineTo(kneeX, kneeY); cx.stroke();
 
@@ -2593,7 +2680,7 @@
         cx.strokeStyle = '#ef4444'; cx.lineWidth = 1.6; cx.stroke();
 
         // Lower Calf Strut & Hydraulic Piston
-        cx.strokeStyle = leg.isPort ? '#475569' : '#334155';
+        cx.strokeStyle = (leg.isFront && boss.stompActive > 0) ? '#ffd23c' : (leg.isPort ? '#475569' : '#334155');
         cx.lineWidth = leg.isPort ? 7 : 9;
         cx.beginPath(); cx.moveTo(kneeX, kneeY); cx.lineTo(footX, footY); cx.stroke();
 
