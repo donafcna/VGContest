@@ -925,7 +925,7 @@
   <h1>🏴‍☠️ SPACE PIRATES</h1>
   <div style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(0,229,255,0.2),rgba(126,34,206,0.3));border:1.5px solid #00e5ff;color:#00ffee;padding:5px 16px;border-radius:20px;font-size:0.82rem;font-weight:900;letter-spacing:1.5px;margin-bottom:10px;font-family:'Orbitron',sans-serif;box-shadow:0 0 16px rgba(0,229,255,0.4)">🚀 STAR WARS FLEET EDITION • ONLINE LIVE</div>
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
-  Sail through deep cosmic space and blast <b>Star Wars starfighter squadrons &amp; 7 Flagship Bosses</b> with heavy naval broadsides!</p>
+  Sail through deep cosmic space and blast <b>Star Wars starfighter squadrons &amp; 8 Flagship Bosses</b> with heavy naval broadsides!</p>
   <div class="keys">
     🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM</b> • <b>CLICK</b> to Shoot Broadside 💥<br>
     🎮 <b>PC Abilities</b>: <b>[Q]</b> = 🟢 <b>Gadget</b> (3 Charges) • <b>[E]</b> = 🌟 <b>Super &amp; Hypercharge</b> (100% Charge)<br>
@@ -1077,7 +1077,7 @@
 
     <!-- Interactive Tabs: Flagship Bosses vs Enemy Fleet -->
     <div style="display:flex;gap:10px;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.12);padding-bottom:10px">
-      <button id="tabBossIntel" onclick="switchIntelTab('bosses')" style="flex:1;background:linear-gradient(135deg,#00ffaa,#0284c7);color:#020617;font-weight:900;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem;box-shadow:0 0 14px rgba(0,255,170,0.4)">🛸 SECTOR FLAGSHIP BOSSES (7)</button>
+      <button id="tabBossIntel" onclick="switchIntelTab('bosses')" style="flex:1;background:linear-gradient(135deg,#00ffaa,#0284c7);color:#020617;font-weight:900;border:none;border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem;box-shadow:0 0 14px rgba(0,255,170,0.4)">🛸 SECTOR FLAGSHIP BOSSES (8)</button>
       <button id="tabFleetIntel" onclick="switchIntelTab('fleet')" style="flex:1;background:rgba(255,255,255,0.08);color:#94a3b8;font-weight:700;border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem">🚀 ENEMY FLEET (10)</button>
     </div>
     
@@ -2030,7 +2030,7 @@ function killBoss() {
   spinsRun += 1;
   popup(W / 2, H * 0.35, `${boss.name.toUpperCase()} DESTROYED! +${bTokens} 🎟️ +1 🎡`, '#ffd23c');
   
-  const coinCount = boss.type === 'titan' ? 36 : 18;
+  const coinCount = (boss.type === 'titan' || boss.type === 'ataraxia') ? 36 : 18;
   for (let k = 0; k < coinCount; k++) {
     coins.push({
       x: boss.x + (Math.random() - 0.5) * 140,
@@ -3365,6 +3365,79 @@ function getBossSvg(id) {
       <line x1="84" y1="20" x2="84" y2="4" stroke="#00ffee" stroke-width="2.5" filter="url(#glow_fond_${uid})"/>
       <line x1="84" y1="64" x2="84" y2="80" stroke="#00ffee" stroke-width="2.5" filter="url(#glow_fond_${uid})"/>
     </svg>`;
+  } else if (id === 'ataraxia') {
+    // 8. MASTER AVAR KRISS: JEDI STARCRUISER ATARAXIA (High Republic Jedi Star Cruiser)
+    return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow_ata_${uid}" x="-25%" y="-25%" width="150%" height="150%">
+          <feGaussianBlur stdDeviation="2.2" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+        <linearGradient id="ata_hull_${uid}" x1="0" y1="0" x2="160" y2="84" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="35%" stop-color="#e2e8f0"/>
+          <stop offset="70%" stop-color="#94a3b8"/>
+          <stop offset="100%" stop-color="#475569"/>
+        </linearGradient>
+        <linearGradient id="ata_red_${uid}" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#ef4444"/>
+          <stop offset="100%" stop-color="#991b1b"/>
+        </linearGradient>
+        <linearGradient id="ata_eng_${uid}" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#e2e8f0"/>
+          <stop offset="40%" stop-color="#64748b"/>
+          <stop offset="100%" stop-color="#1e293b"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Stepped Outrigger Wing Sponsons -->
+      <polygon points="55,16 115,4 135,16 95,26" fill="url(#ata_hull_${uid})" stroke="#cbd5e1" stroke-width="1.2"/>
+      <polygon points="55,68 115,80 135,68 95,58" fill="url(#ata_hull_${uid})" stroke="#cbd5e1" stroke-width="1.2"/>
+      <!-- Sponson Crimson Trim -->
+      <line x1="60" y1="15" x2="110" y2="6" stroke="#ef4444" stroke-width="2"/>
+      <line x1="60" y1="69" x2="110" y2="78" stroke="#ef4444" stroke-width="2"/>
+
+      <!-- Twin Massive Cylindrical Turbine Engine Nacelles -->
+      <!-- Port Nacelle -->
+      <rect x="70" y="10" width="55" height="15" rx="5" fill="url(#ata_eng_${uid})" stroke="#e2e8f0" stroke-width="1.4"/>
+      <rect x="85" y="9" width="10" height="17" rx="2" fill="#334155" stroke="#ef4444" stroke-width="1.2"/>
+      <ellipse cx="70" cy="17.5" rx="4" ry="7.5" fill="#0f172a" stroke="#cbd5e1" stroke-width="1.2"/>
+      <ellipse cx="125" cy="17.5" rx="3.5" ry="7" fill="#00ffee" filter="url(#glow_ata_${uid})"/>
+      <!-- Port Longbeam Forward Heavy Cannon Barrel -->
+      <rect x="18" y="15.5" width="55" height="4" rx="1.5" fill="#94a3b8" stroke="#0f172a" stroke-width="1"/>
+      <circle cx="18" cy="17.5" r="2.5" fill="#00ffee" filter="url(#glow_ata_${uid})"/>
+
+      <!-- Starboard Nacelle -->
+      <rect x="70" y="59" width="55" height="15" rx="5" fill="url(#ata_eng_${uid})" stroke="#e2e8f0" stroke-width="1.4"/>
+      <rect x="85" y="58" width="10" height="17" rx="2" fill="#334155" stroke="#ef4444" stroke-width="1.2"/>
+      <ellipse cx="70" cy="66.5" rx="4" ry="7.5" fill="#0f172a" stroke="#cbd5e1" stroke-width="1.2"/>
+      <ellipse cx="125" cy="66.5" rx="3.5" ry="7" fill="#00ffee" filter="url(#glow_ata_${uid})"/>
+      <!-- Starboard Longbeam Forward Heavy Cannon Barrel -->
+      <rect x="18" y="64.5" width="55" height="4" rx="1.5" fill="#94a3b8" stroke="#0f172a" stroke-width="1"/>
+      <circle cx="18" cy="66.5" r="2.5" fill="#00ffee" filter="url(#glow_ata_${uid})"/>
+
+      <!-- Main High Republic Pearl-White Aerodynamic Cruiser Fuselage -->
+      <polygon points="10,42 42,18 126,20 144,42 126,64 42,66" fill="url(#ata_hull_${uid})" stroke="#ffffff" stroke-width="2"/>
+
+      <!-- Central Dorsal Crimson & Gold Royal Accent Stripes -->
+      <polygon points="18,42 46,24 122,25 122,30 48,29 24,42" fill="url(#ata_red_${uid})" stroke="#ffd23c" stroke-width="0.8"/>
+      <polygon points="18,42 46,60 122,59 122,54 48,55 24,42" fill="url(#ata_red_${uid})" stroke="#ffd23c" stroke-width="0.8"/>
+      <line x1="28" y1="42" x2="128" y2="42" stroke="#ffd23c" stroke-width="1.5"/>
+
+      <!-- Elevated Command Bridge Structure & Cyan Viewport Visor -->
+      <polygon points="50,34 78,32 82,42 78,52 50,50" fill="#1e293b" stroke="#e2e8f0" stroke-width="1.4"/>
+      <rect x="56" y="39" width="18" height="6" rx="1.5" fill="#00ffee" stroke="#ffffff" stroke-width="0.8" filter="url(#glow_ata_${uid})"/>
+
+      <!-- Accompanying High Republic Jedi Vector Escort Fighter -->
+      <g transform="translate(18, 2) scale(0.65)">
+        <polygon points="0,8 14,0 10,8 14,16" fill="#ffd23c" stroke="#ffffff" stroke-width="1"/>
+        <circle cx="6" cy="8" r="2" fill="#00ffee" filter="url(#glow_ata_${uid})"/>
+      </g>
+
+      <!-- Twin Kyber Laser Convergence Lance Beams -->
+      <line x1="16" y1="17.5" x2="2" y2="17.5" stroke="#00ffee" stroke-width="2" filter="url(#glow_ata_${uid})"/>
+      <line x1="16" y1="66.5" x2="2" y2="66.5" stroke="#00ffee" stroke-width="2" filter="url(#glow_ata_${uid})"/>
+    </svg>`;
   }
 }
 
@@ -3466,6 +3539,20 @@ const BOSS_INTEL = [
     ],
     loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +200 🪙 + 36 Gold Coins Cascade',
     tactic: 'Weave between the heavy chin blaster barrels and target the mechanical neck swivel joint with heavy broadsides!'
+  },
+  {
+    id: 'ataraxia',
+    name: 'Master Avar Kriss: Jedi Starcruiser Ataraxia',
+    sector: 'Sector 8 Grand Flagship · High Republic Jedi Star Cruiser',
+    col: '#e0e7ff',
+    hp: 92,
+    powers: [
+      '⚡ Twin Kyber Convergence Lances & Radiant Force Pulse (Colossal piercing Kyber lances + deflecting Force ring)',
+      '💫 High Republic Longbeam Precision Barrage (6 hyper-accelerated azure plasma bolts with radiant trails)',
+      '🛸 Jedi Vector Starfighter Escort Sortie (Deploys twin High Republic Jedi Vectors)'
+    ],
+    loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +220 🪙 + 25 Gold Coins Cascade',
+    tactic: 'Dodge the converging twin Kyber laser lances emitted from the forward longbeam cannons, and destroy the escorting Jedi Vectors!'
   }
 ];
 
@@ -3948,7 +4035,7 @@ function switchIntelTab(tab) {
       tabBoss.style.boxShadow = '0 0 14px rgba(0,255,170,0.4)';
       tabBoss.style.border = 'none';
     }
-    if (title) title.textContent = 'SECTOR FLAGSHIP BOSSES (7)';
+    if (title) title.textContent = 'SECTOR FLAGSHIP BOSSES (8)';
     if (tip) tip.innerHTML = '💡 <b>Captain Noel\'s Tactical Pro-Tip:</b> Target boss cores with heavy 32-pounder broadsides while dodging their ultimate attack trajectories!';
     renderBossIntelModalUI();
   }
@@ -4281,6 +4368,7 @@ const BTYPES = [
   { id: 'void',  name: 'Captain Solo: The Rogue Millennium Falcon (YT-1300)', col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52, atk: 'quad_laser_barrage' },
   { id: 'cryo',  name: 'Admiral Sloane: Imperial Cantwell Battlecruiser', col: '#00ffaa', w: 305, h: 175, hp: 80, spd: 44, atk: 'outrigger_turbolasers' },
   { id: 'fondor', name: "Luthen Rael: Fondor Haulcraft (Armed Custom Cruiser)", col: '#38bdf8', w: 320, h: 175, hp: 88, spd: 50, atk: 'fondor_scythes' },
+  { id: 'ataraxia', name: 'Master Avar Kriss: Jedi Starcruiser Ataraxia', col: '#e0e7ff', w: 330, h: 165, hp: 92, spd: 48, atk: 'ataraxia_kyber' },
   { id: 'titan', name: 'General Veers: Imperial AT-AT Siege Colossus', col: '#ef4444', w: 310, h: 180, hp: 95, spd: 48, atk: 'heavy_chin_blasters' },
 ];
 
@@ -4309,7 +4397,11 @@ function spawnBoss() {
     isRamming: false, ramChargeT: 0, ramStartX: 0,
     isCloaked: false, cloakT: 0,
     iceShards: b.id === 'cryo' ? 6 : 0, maxIceShards: 6,
-    haloActive: false, haloT: 0
+    haloActive: false, haloT: 0,
+    scytheActive: 0,
+    lanceActive: 0,
+    forcePulseT: 0,
+    forcePulseRadius: 0
   };
 
   // VAPORIZE ALL ENEMY MINIONS & CLEAR BATTLEFIELD FOR 1v1 DUEL!
@@ -5077,8 +5169,8 @@ function buildShop() {
   h += `<div class="shopitem" style="border: 1.5px solid #00e5ff; background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(168, 85, 247, 0.1));">` +
     `<div class="ic" style="font-size:2rem;display:flex;align-items:center;justify-content:center">🔬</div>` +
     `<div class="info"><div class="t" style="color:#00ffee">Tactical Flagship Boss Database</div>` +
-    `<div class="d">Inspect all 7 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Admiral Raddus, Captain Solo, Admiral Sloane, General Veers AT-AT &amp; Luthen Rael Fondor Haulcraft!</div>` +
-    `<div class="lv" style="color:#c084fc">7 Sector Flagships Documented 👾</div></div>` +
+    `<div class="d">Inspect all 8 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Admiral Raddus, Captain Solo, Admiral Sloane, General Veers AT-AT, Luthen Rael Fondor &amp; Jedi Starcruiser Ataraxia!</div>` +
+    `<div class="lv" style="color:#c084fc">8 Sector Flagships Documented 👾</div></div>` +
     `<button style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;box-shadow:0 0 15px rgba(0,229,255,0.5)" onclick="openBossIntelModal(event)">🔬 INSPECT</button></div>`;
 
   // 1. COIN UPGRADES AT THE TOP
@@ -6564,6 +6656,32 @@ function update(dt) {
       }
     }
 
+    if (boss.lanceActive && boss.lanceActive > 0) {
+      boss.lanceActive -= dt;
+      // Twin Kyber Convergence Lances deal heavy piercing damage across top and bottom lanes
+      const portLanceY = boss.y - boss.h * 0.32;
+      const stbdLanceY = boss.y + boss.h * 0.32;
+      if (ship.x < boss.x && (Math.abs(ship.y - portLanceY) < 32 || Math.abs(ship.y - stbdLanceY) < 32)) {
+        if (ship.inv <= 0) {
+          damageShip();
+          popup(ship.x, ship.y - 25, '⚡ KYBER LANCE HIT!', '#00ffee');
+          explode(ship.x, ship.y, '#00ffee', 18);
+          addShake(14);
+        }
+      }
+    }
+
+    if (boss.forcePulseT && boss.forcePulseT > 0) {
+      boss.forcePulseT -= dt;
+      boss.forcePulseRadius = (boss.forcePulseRadius || 20) + 420 * dt;
+      // Force Pulse repels player ship
+      const pDist = Math.hypot(ship.x - boss.x, ship.y - boss.y);
+      if (pDist < boss.forcePulseRadius && pDist > boss.forcePulseRadius - 120) {
+        ship.x -= 260 * dt;
+        ship.vx = -180;
+      }
+    }
+
     if (boss.haloActive) {
       boss.haloT -= dt;
       if (boss.haloT <= 0) boss.haloActive = false;
@@ -6759,6 +6877,46 @@ function update(dt) {
           eballs.push({ type: 'emp', col: '#ffd23c', x: boss.x - boss.w * 0.45, y: boss.y, vx: -620 * spdBonus, vy: 0, r: 26 });
           sfx('laser');
           popup(boss.x - 40, boss.y - 45, '⚡ SWIVEL TURBOLASER SALVO!', '#38bdf8');
+        }
+
+      } else if (boss.type === 'ataraxia') {
+        // Boss 8: MASTER AVAR KRISS: JEDI STARCRUISER ATARAXIA (HIGH REPUBLIC JEDI CRUISER)
+        if (boss.atkCycle === 2) {
+          // ULTIMATE: Twin Kyber Convergence Lances & Radiant Force Pulse + Jedi Vector Sortie!
+          boss.lanceActive = 3.0;
+          boss.forcePulseT = 2.2;
+          boss.forcePulseRadius = 25;
+          addShake(28);
+          popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: TWIN KYBER LANCES & FORCE PULSE!', '#e0e7ff');
+          sfx('laser');
+          // Launch 2 High Republic Jedi Vectors
+          if (gliders.length < 3) {
+            gliders.push({
+              variant: 'vector', type: 'jedi_vector', name: 'High Republic Jedi Vector', col: '#ffd23c',
+              x: boss.x - 40, y: boss.y - 75, vx: -(240 + level * 15), vy: -30, r: 16, maxHp: 3, hp: 3, shootT: 1.0, isVector: true
+            });
+            gliders.push({
+              variant: 'vector', type: 'jedi_vector', name: 'High Republic Jedi Vector', col: '#ffd23c',
+              x: boss.x - 40, y: boss.y + 75, vx: -(240 + level * 15), vy: 30, r: 16, maxHp: 3, hp: 3, shootT: 1.0, isVector: true
+            });
+          }
+        } else if (boss.atkCycle === 1) {
+          // High Republic Longbeam Precision Barrage (6 hyper-accelerated azure plasma bolts)
+          for (let k = 0; k < 6; k++) {
+            const spr = ((k - 2.5) / 5) * 0.40;
+            const shootAng = Math.PI + spr;
+            eballs.push({ type: 'laser', col: '#00ffee', x: boss.x - boss.w * 0.44, y: boss.y + (k % 2 === 0 ? -boss.h * 0.32 : boss.h * 0.32), vx: Math.cos(shootAng) * 740 * spdBonus, vy: Math.sin(shootAng) * 740 * spdBonus, r: 20 });
+          }
+          popup(boss.x - 40, boss.y - 45, '💫 LONGBEAM PRECISION BARRAGE!', '#38bdf8');
+          sfx('laser');
+        } else {
+          // Dual Longbeam Turbolaser Salvo + Kyber Concussion Shell
+          for (const cy of [-boss.h * 0.32, boss.h * 0.32]) {
+            eballs.push({ type: 'laser', col: '#38bdf8', x: boss.x - boss.w * 0.44, y: boss.y + cy, vx: (dx / dist) * 720 * spdBonus, vy: (dy / dist) * 720 * spdBonus, r: 20 });
+          }
+          eballs.push({ type: 'emp', col: '#ffd23c', x: boss.x - boss.w * 0.40, y: boss.y, vx: -640 * spdBonus, vy: 0, r: 28 });
+          sfx('laser');
+          popup(boss.x - 40, boss.y - 45, '⚡ KYBER TURBOLASERS!', '#ffd23c');
         }
 
       } else {
@@ -9322,6 +9480,214 @@ function draw() {
           cx.stroke();
         }
       }
+
+    } else if (boss.type === 'ataraxia') {
+      // BOSS 8: MASTER AVAR KRISS: JEDI STARCRUISER ATARAXIA (HIGH REPUBLIC JEDI CRUISER)
+      const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.65);
+      bg.addColorStop(0, 'rgba(224, 231, 255, 0.35)');
+      bg.addColorStop(0.6, 'rgba(56, 189, 248, 0.20)');
+      bg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.62, boss.h * 0.58, 0, 0, Math.PI * 2); cx.fill();
+
+      // Radiant Force Pulse expanding shockwave aura
+      if (boss.forcePulseT && boss.forcePulseT > 0) {
+        const pulseR = boss.forcePulseRadius || 30;
+        cx.save();
+        cx.strokeStyle = 'rgba(255, 210, 60, 0.7)';
+        cx.lineWidth = 14;
+        cx.beginPath(); cx.arc(0, 0, pulseR, 0, Math.PI * 2); cx.stroke();
+
+        cx.strokeStyle = 'rgba(0, 255, 238, 0.9)';
+        cx.lineWidth = 6;
+        cx.beginPath(); cx.arc(0, 0, pulseR, 0, Math.PI * 2); cx.stroke();
+        cx.restore();
+      }
+
+      // 1. Stepped Outrigger Wing Sponsons with Crimson Racing Trim
+      for (const wDir of [-1, 1]) {
+        const wy1 = wDir * (boss.h * 0.18);
+        const wy2 = wDir * (boss.h * 0.48);
+        const wy3 = wDir * (boss.h * 0.40);
+        const wy4 = wDir * (boss.h * 0.22);
+
+        const wingGrad = cx.createLinearGradient(0, wy1, 0, wy2);
+        wingGrad.addColorStop(0, '#f8fafc');
+        wingGrad.addColorStop(0.5, '#cbd5e1');
+        wingGrad.addColorStop(1, '#64748b');
+        cx.fillStyle = wingGrad;
+        cx.beginPath();
+        cx.moveTo(-boss.w * 0.12, wy1);
+        cx.lineTo(boss.w * 0.28, wy2);
+        cx.lineTo(boss.w * 0.42, wy3);
+        cx.lineTo(boss.w * 0.16, wy4);
+        cx.closePath(); cx.fill();
+        cx.strokeStyle = '#e2e8f0'; cx.lineWidth = 2.0; cx.stroke();
+
+        // High Republic Crimson Accent Strip along the wing outer edge
+        cx.strokeStyle = '#dc2626'; cx.lineWidth = 4.0;
+        cx.beginPath();
+        cx.moveTo(-boss.w * 0.08, wy1 + wDir * 3);
+        cx.lineTo(boss.w * 0.26, wy2 - wDir * 2);
+        cx.stroke();
+      }
+
+      // 2. Twin Massive Cylindrical Turbine Engine Nacelles & Forward Longbeam Barrels
+      const nacelles = [
+        { y: -boss.h * 0.32, isPort: true },
+        { y: boss.h * 0.32, isPort: false }
+      ];
+
+      for (const n of nacelles) {
+        const nw = boss.w * 0.38, nh = boss.h * 0.22;
+        const nx = boss.w * 0.12;
+
+        // Kyber Ion Thruster Exhaust Plume
+        const plumeLen = 50 + Math.sin(t * 26 + (n.isPort ? 0 : 2)) * 14;
+        const pGrad = cx.createLinearGradient(nx + nw * 0.5, n.y, nx + nw * 0.5 + plumeLen, n.y);
+        pGrad.addColorStop(0, '#ffffff');
+        pGrad.addColorStop(0.25, '#00ffee');
+        pGrad.addColorStop(0.7, '#0284c7');
+        pGrad.addColorStop(1, 'rgba(2, 132, 199, 0)');
+        cx.fillStyle = pGrad;
+        cx.beginPath();
+        cx.moveTo(nx + nw * 0.5, n.y - nh * 0.35);
+        cx.lineTo(nx + nw * 0.5 + plumeLen, n.y);
+        cx.lineTo(nx + nw * 0.5, n.y + nh * 0.35);
+        cx.closePath(); cx.fill();
+
+        // Nacelle Cylindrical Body
+        const nGrad = cx.createLinearGradient(0, n.y - nh * 0.5, 0, n.y + nh * 0.5);
+        nGrad.addColorStop(0, '#ffffff');
+        nGrad.addColorStop(0.3, '#cbd5e1');
+        nGrad.addColorStop(0.7, '#64748b');
+        nGrad.addColorStop(1, '#1e293b');
+        cx.fillStyle = nGrad;
+        cx.beginPath();
+        cx.roundRect(nx - nw * 0.5, n.y - nh * 0.5, nw, nh, 8);
+        cx.fill();
+        cx.strokeStyle = '#e2e8f0'; cx.lineWidth = 2.2; cx.stroke();
+
+        // Ribbed Engine Cooling Rings / Cowling Segment
+        cx.fillStyle = '#1e293b';
+        cx.fillRect(nx - nw * 0.15, n.y - nh * 0.52, nw * 0.30, nh * 1.04);
+        cx.strokeStyle = '#dc2626'; cx.lineWidth = 2.5;
+        cx.strokeRect(nx - nw * 0.15, n.y - nh * 0.52, nw * 0.30, nh * 1.04);
+
+        // Forward Longbeam Heavy Turbolaser Cannon Barrel protruding forward
+        const barrelLen = boss.w * 0.36;
+        const bx = nx - nw * 0.5 - barrelLen;
+        cx.fillStyle = '#64748b';
+        cx.fillRect(bx, n.y - 4, barrelLen, 8);
+        cx.strokeStyle = '#0f172a'; cx.lineWidth = 1.4;
+        cx.strokeRect(bx, n.y - 4, barrelLen, 8);
+
+        // Longbeam Cannon Muzzle & Glowing Kyber Emitter
+        cx.fillStyle = '#00ffee';
+        cx.beginPath(); cx.arc(bx, n.y, 5, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.5; cx.stroke();
+
+        // Kyber Lance Firing FX from barrels
+        if (boss.lanceActive && boss.lanceActive > 0) {
+          // Colossal continuous cyan beam forward across screen
+          cx.save();
+          // Outer beam glow
+          cx.strokeStyle = 'rgba(0, 255, 238, 0.4)';
+          cx.lineWidth = 28 + Math.sin(t * 30) * 6;
+          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(bx - 1200, n.y); cx.stroke();
+
+          // Mid cyan beam
+          cx.strokeStyle = '#00ffee';
+          cx.lineWidth = 14 + Math.cos(t * 35) * 3;
+          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(bx - 1200, n.y); cx.stroke();
+
+          // White-hot core
+          cx.strokeStyle = '#ffffff';
+          cx.lineWidth = 5;
+          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(bx - 1200, n.y); cx.stroke();
+
+          // Electric crackle arcs
+          cx.strokeStyle = '#ffd23c';
+          cx.lineWidth = 2.5;
+          cx.beginPath();
+          for (let lx = bx; lx >= bx - 1200; lx -= 50) {
+            const ly = n.y + Math.sin(lx * 0.08 + t * 30) * 10;
+            if (lx === bx) cx.moveTo(lx, ly);
+            else cx.lineTo(lx, ly);
+          }
+          cx.stroke();
+          cx.restore();
+        }
+      }
+
+      // 3. Main Pristine High Republic Pearl-White Cruiser Hull
+      const hGrad = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
+      hGrad.addColorStop(0, '#334155');
+      hGrad.addColorStop(0.2, '#64748b');
+      hGrad.addColorStop(0.55, '#cbd5e1');
+      hGrad.addColorStop(0.85, '#f8fafc');
+      hGrad.addColorStop(1, '#ffffff');
+      cx.fillStyle = hGrad;
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.48, 0);                 // Aerodynamic forward prow tip
+      cx.lineTo(-boss.w * 0.18, -boss.h * 0.24);    // Port forward shoulder
+      cx.lineTo(boss.w * 0.36, -boss.h * 0.22);     // Port aft flank
+      cx.lineTo(boss.w * 0.46, 0);                  // Aft central spine
+      cx.lineTo(boss.w * 0.36, boss.h * 0.22);      // Starboard aft flank
+      cx.lineTo(-boss.w * 0.18, boss.h * 0.24);     // Starboard forward shoulder
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 3.0; cx.stroke();
+
+      // 4. Central Crimson & Gold High Republic Royal Racing Stripes
+      cx.fillStyle = '#dc2626';
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.42, 0);
+      cx.lineTo(-boss.w * 0.16, -boss.h * 0.14);
+      cx.lineTo(boss.w * 0.32, -boss.h * 0.12);
+      cx.lineTo(boss.w * 0.32, -boss.h * 0.07);
+      cx.lineTo(-boss.w * 0.14, -boss.h * 0.08);
+      cx.lineTo(-boss.w * 0.32, 0);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.2; cx.stroke();
+
+      cx.fillStyle = '#dc2626';
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.42, 0);
+      cx.lineTo(-boss.w * 0.16, boss.h * 0.14);
+      cx.lineTo(boss.w * 0.32, boss.h * 0.12);
+      cx.lineTo(boss.w * 0.32, boss.h * 0.07);
+      cx.lineTo(-boss.w * 0.14, boss.h * 0.08);
+      cx.lineTo(-boss.w * 0.32, 0);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.2; cx.stroke();
+
+      // Centerline Gold Stripe
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.0;
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.30, 0);
+      cx.lineTo(boss.w * 0.38, 0);
+      cx.stroke();
+
+      // 5. Elevated High Republic Command Bridge Superstructure
+      const brGrad = cx.createLinearGradient(0, -boss.h * 0.10, 0, boss.h * 0.10);
+      brGrad.addColorStop(0, '#ffffff');
+      brGrad.addColorStop(0.5, '#94a3b8');
+      brGrad.addColorStop(1, '#1e293b');
+      cx.fillStyle = brGrad;
+      cx.beginPath();
+      cx.moveTo(-boss.w * 0.12, 0);
+      cx.lineTo(boss.w * 0.06, -boss.h * 0.10);
+      cx.lineTo(boss.w * 0.18, -boss.h * 0.08);
+      cx.lineTo(boss.w * 0.20, 0);
+      cx.lineTo(boss.w * 0.18, boss.h * 0.08);
+      cx.lineTo(boss.w * 0.06, boss.h * 0.10);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.8; cx.stroke();
+
+      // Command Bridge Viewport Slit (Cyan Kyber Glow)
+      cx.fillStyle = '#00ffee';
+      cx.fillRect(-boss.w * 0.04, -4, 20, 8);
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.0;
+      cx.strokeRect(-boss.w * 0.04, -4, 20, 8);
 
     } else {
       // BOSS 7: GENERAL VEERS: IMPERIAL AT-AT SIEGE COLOSSUS (ALL TERRAIN ARMORED TRANSPORT)
