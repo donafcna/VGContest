@@ -840,6 +840,11 @@
     z-index: 2;
     text-shadow: 0 1px 3px rgba(0,0,0,0.9);
   }
+  .super-badge {
+    font-size: 0.46rem;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+  }
 
   .brawl-charges {
     font-size: 0.65rem;
@@ -885,11 +890,11 @@
     <div class="brawl-key">[Q]</div>
   </button>
 
-  <!-- Yellow Super Button (Level 10 Max) with Circular Charge Meter -->
-  <button id="superBtn" onclick="activateSuper(event)" aria-label="Activate Super (E)" class="brawl-btn brawl-super">
+  <!-- Yellow Special Attack Button (Level 10 Max) with Circular Charge Meter -->
+  <button id="superBtn" onclick="activateSuper(event)" aria-label="Activate Special Attack (E)" class="brawl-btn brawl-super">
     <div class="super-ring-fill" id="superFill"></div>
     <div class="brawl-icon super-icon" id="superIcon">💀</div>
-    <div class="brawl-badge super-badge" id="superBadge">SUPER</div>
+    <div class="brawl-badge super-badge" id="superBadge">SPECIAL ATTACK</div>
     <div class="brawl-charges" id="superPercent">0%</div>
     <div class="brawl-key">[E]</div>
   </button>
@@ -1915,9 +1920,9 @@ function addSuperCharge(amt) {
     sfx('map');
     const curShipId = (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
     const curShip = shipById(curShipId);
-    const sName = (curShip && curShip.superName) || 'HYPERCHARGE SUPER';
+    const sName = (curShip && curShip.superName) || 'SPECIAL ATTACK';
     addAlert(`⚡ ${sName.toUpperCase()} READY! 🟡`, 'map');
-    popup(ship.x, ship.y - 40, `⚡ SUPER READY!`, '#ffd23c');
+    popup(ship.x, ship.y - 40, `⚡ SPECIAL ATTACK READY!`, '#ffd23c');
   }
   updateBrawlControlsVisibility();
 }
@@ -2198,8 +2203,8 @@ function activateSuper(e) {
 
   const curShipId = (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
   const curShip = shipById(curShipId);
-  const sName = (curShip && curShip.superName) || 'HYPERCHARGE SUPER';
-  addAlert(`🌟 HYPERCHARGE SUPER: ${sName.toUpperCase()}! ⚡`, 'super');
+  const sName = (curShip && curShip.superName) || 'SPECIAL ATTACK';
+  addAlert(`🌟 SPECIAL ATTACK: ${sName.toUpperCase()}! ⚡`, 'super');
   popup(ship.x, ship.y - 55, `🌟 ${sName}!`, '#ffd23c');
 
   if (curShipId === 'cutter') {
@@ -3873,7 +3878,7 @@ function renderBossIntelModalUI() {
         <div class="boss-name-tag" style="color:${b.col}">${b.name}</div>
         <div style="font-size:0.78rem;color:#ffd23c;font-weight:bold;margin-bottom:6px">${b.sector} · ❤️ ${b.hp} Base HP</div>
         <div style="font-size:0.78rem;color:#cfe4ff;margin-bottom:6px;width:100%">
-          <b>⚡ Signature Super Powers:</b>
+          <b>⚡ Signature Special Attacks:</b>
           ${b.powers.map(p => `<div style="margin:2px 0;padding-left:4px;border-left:2px solid ${b.col}">${p}</div>`).join('')}
         </div>
         <div style="font-size:0.74rem;color:#3eed87;margin-bottom:6px;background:rgba(62,237,135,0.08);padding:4px 8px;border-radius:6px;width:100%">
@@ -4995,11 +5000,11 @@ function buildShop() {
     const can = !maxed && SAVE.data.coins >= cost;
     let brawlBadge = '';
     if (lv >= 10) {
-      brawlBadge = `<div style="color:#fde047;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(253,224,71,0.5)">🌟 BRAWL SUPER &amp; HYPERCHARGE UNLOCKED! [Q/F] ⚡</div>`;
+      brawlBadge = `<div style="color:#fde047;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(253,224,71,0.5)">🌟 SPECIAL ATTACK UNLOCKED! [E/F] ⚡</div>`;
     } else if (lv >= 8) {
-      brawlBadge = `<div style="color:#34d399;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(52,211,153,0.5)">🟢 BRAWL GADGET UNLOCKED! [E/G] (3/3 Charges)</div>`;
+      brawlBadge = `<div style="color:#34d399;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(52,211,153,0.5)">🟢 GADGET UNLOCKED! [Q/G] (3/3 Charges)</div>`;
     } else {
-      brawlBadge = `<div style="color:#8fa6cb;font-size:0.70rem;margin-top:2px">Reach Lv 8 for 🟢 Gadget • Lv 10 for 🌟 Super</div>`;
+      brawlBadge = `<div style="color:#8fa6cb;font-size:0.70rem;margin-top:2px">Reach Lv 8 for 🟢 Gadget • Lv 10 for 🌟 Special Attack</div>`;
     }
 
     h += `<div class="shopitem"><div class="ic">${u.icon}</div>` +
@@ -5030,7 +5035,7 @@ function buildShop() {
     h += `<div class="shopitem" style="border-left: 3px solid ${s.cols[0] || '#ffd23c'};"><div class="ic">${shipSvg}</div>` +
       `<div class="info"><div class="t">${s.name}</div><div class="d">${s.power}</div>` +
       `<div style="margin-top:4px;padding:4px 8px;background:rgba(16,185,129,0.12);border-radius:6px;border:1px solid rgba(16,185,129,0.3);font-size:0.72rem;color:#34d399"><b>🟢 Unique Gadget:</b> ${s.gadgetName} — <i>${s.gadgetDesc}</i></div>` +
-      `<div style="margin-top:3px;padding:4px 8px;background:rgba(234,179,8,0.12);border-radius:6px;border:1px solid rgba(234,179,8,0.3);font-size:0.72rem;color:#fde047"><b>🌟 Unique Super:</b> ${s.superName} — <i>${s.superDesc}</i></div>` +
+      `<div style="margin-top:3px;padding:4px 8px;background:rgba(234,179,8,0.12);border-radius:6px;border:1px solid rgba(234,179,8,0.3);font-size:0.72rem;color:#fde047"><b>🌟 Unique Special Attack:</b> ${s.superName} — <i>${s.superDesc}</i></div>` +
       `<div class="lv" style="margin-top:4px">❤️ ${s.hp} HP · ⚡ ${(1 / s.cool).toFixed(1)} rps · 🚀 ${s.spd.toFixed(2)}x Speed${s.gold > 1 ? ' · 🪙 x' + s.gold : ''}${s.magnet ? ' · 🧲' : ''}</div></div>` +
       btn + `</div>`;
   }
