@@ -1806,8 +1806,10 @@ try {
 const LB = {
   URL: 'https://mxcdlljbbwsqhkpxfhbm.supabase.co',
   KEY: 'sb_publishable_NaWjzK8fltVv7OJUzYye8A_hr39WV51',
-  TABLE: 'sky_pirates_scores',
-  online() { return false; }, // Default to reliable instant local storage
+  TABLE: 'tpl_notes',
+  REF_ID: '0a6e0ad3-c7ef-4539-ba77-cc290e192183',
+  SCOPE: 'shot',
+  online() { return true; }, // Global Shared Cloud Leaderboard Active across all devices
   _headers(extra) {
     return Object.assign({ apikey: this.KEY, Authorization: 'Bearer ' + this.KEY }, extra || {});
   },
@@ -1818,6 +1820,7 @@ const LB = {
   },
   async submit(entry) {
     entry.uid = entry.uid || SAVE.data.uid;
+    entry.name = (entry.name || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || localStorage.getItem('sp_name') || 'Captain').slice(0, 14);
     entry.ship = entry.ship || SAVE.data.sel;
     entry.skin = entry.skin || SAVE.data.skin;
     entry.ships = entry.ships || [...SAVE.data.ships];
@@ -1825,11 +1828,12 @@ const LB = {
     entry.kills = typeof entry.kills === 'number' ? entry.kills : SAVE.data.kills;
     entry.tokens = typeof entry.tokens === 'number' ? entry.tokens : SAVE.data.tokens;
     entry.spins = typeof entry.spins === 'number' ? entry.spins : SAVE.data.spins;
+    entry.created_at = entry.created_at || Date.now();
 
     // 1. ALWAYS persist immediately to local storage
     try {
-      let arr = await this._all();
-      const idx = arr.findIndex(r => r.uid && r.uid === entry.uid);
+      let arr = await this._local();
+      const idx = arr.findIndex(r => (r.uid && r.uid === entry.uid) || ((r.name || '').trim().toLowerCase() === entry.name.trim().toLowerCase()));
       if (idx >= 0) {
         arr[idx].name = entry.name;
         arr[idx].ship = entry.ship;
@@ -1841,7 +1845,7 @@ const LB = {
         if (entry.score >= (arr[idx].score || 0)) {
           arr[idx].score = entry.score;
           arr[idx].level = entry.level || arr[idx].level;
-          arr[idx].created_at = Date.now();
+          arr[idx].created_at = entry.created_at;
         }
       } else {
         arr.push(Object.assign({ created_at: Date.now() }, entry));
@@ -1849,13 +1853,18 @@ const LB = {
       localStorage.setItem('sp_lb', JSON.stringify(arr));
     } catch (e) {}
 
-    // 2. Background Cloud Sync if available
+    // 2. Background Cloud Sync to Supabase so all phones, tablets & PCs see it instantly!
     if (this.online()) {
       try {
         await fetch(this.URL + '/rest/v1/' + this.TABLE, {
           method: 'POST',
-          headers: this._headers({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
-          body: JSON.stringify(entry)
+          headers: this._headers({ 'Content-Type': 'application/json', Prefer: 'return=representation' }),
+          body: JSON.stringify({
+            scope: this.SCOPE,
+            ref_id: this.REF_ID,
+            author: entry.name,
+            body: JSON.stringify(entry)
+          })
         });
       } catch (e) {}
     }
@@ -1863,7 +1872,7 @@ const LB = {
   async updateName(newName) {
     if (!newName) return;
     try {
-      let arr = await this._all();
+      let arr = await this._local();
       const myUid = SAVE.data.uid;
       let changed = false;
       for (const r of arr) {
@@ -1883,7 +1892,7 @@ const LB = {
       }
     } catch (e) {}
   },
-  async _all() {
+  async _local() {
     let rows = [];
     try {
       const stored = localStorage.getItem('sp_lb');
@@ -1898,25 +1907,58 @@ const LB = {
     }
     return rows;
   },
+  async _all() {
+    let local = await this._local();
+    
+    // Fetch live scores from Supabase cloud
+    if (this.online()) {
+      try {
+        const resp = await fetch(this.URL + '/rest/v1/' + this.TABLE + '?scope=eq.' + this.SCOPE + '&ref_id=eq.' + this.REF_ID + '&select=*&order=created_at.desc&limit=100', {
+          headers: this._headers()
+        });
+        if (resp.ok) {
+          const cloudNotes = await resp.json();
+          const cloudScores = [];
+          for (const n of cloudNotes) {
+            try {
+              const b = (typeof n.body === 'string') ? JSON.parse(n.body) : n.body;
+              if (b && typeof b.score === 'number') {
+                b.name = (b.name || n.author || 'Captain').slice(0, 14);
+                cloudScores.push(b);
+              }
+            } catch(err) {}
+          }
+          if (cloudScores.length > 0) {
+            const merged = this._dedupe([...local, ...cloudScores]);
+            try { localStorage.setItem('sp_lb', JSON.stringify(merged)); } catch(e) {}
+            return merged;
+          }
+        }
+      } catch (e) {}
+    }
+    return this._dedupe(local);
+  },
   _dedupe(rows) {
     const best = new Map();
     for (const r of rows) {
-      // Deduplicate strictly by UID if available, otherwise by name
-      const key = r.uid ? ('uid:' + r.uid) : ('name:' + (r.name || '').trim().toLowerCase());
-      if (!key) continue;
-      const p = best.get(key);
+      const nameKey = (r.name || '').trim().toLowerCase();
+      if (!nameKey) continue;
+      const key = r.uid ? ('uid:' + r.uid) : ('name:' + nameKey);
+      const p = best.get(key) || best.get('name:' + nameKey);
       if (!p || r.score > p.score || (r.score === p.score && (r.created_at || 0) < (p.created_at || 0))) {
         best.set(key, r);
+        best.set('name:' + nameKey, r);
       }
     }
-    return [...best.values()].sort((a, b) => b.score - a.score || (a.created_at || 0) - (b.created_at || 0));
+    const unique = Array.from(new Set(best.values()));
+    return unique.sort((a, b) => (b.score || 0) - (a.score || 0) || (a.created_at || 0) - (b.created_at || 0));
   },
   async top(n) {
-    const all = this._dedupe(await this._all());
+    const all = await this._all();
     return (n && n > 0) ? all.slice(0, n) : all;
   },
   async rank(sc, myName) {
-    const board = this._dedupe(await this._all());
+    const board = await this._all();
     const myUid = SAVE.data.uid;
     const idx = board.findIndex(r => (r.uid && r.uid === myUid) || (myName && (r.name || '').trim().toLowerCase() === myName.trim().toLowerCase()));
     if (idx >= 0) return idx + 1;
@@ -3193,45 +3235,60 @@ async function renderLeaderboard(cid, myScore, myName) {
   const el = document.getElementById(cid);
   if (!el) return;
   const title = (cid === 'lbMenu') ? '🏆 GALAXY PIRATE HALL OF FAME' : '🏆 TACTICAL RADAR ROSTER';
-  
-  let rows = [], myRank = null;
-  try {
-    const curName = (myName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || localStorage.getItem('sp_name') || 'Captain Noel').slice(0, 14);
+  const curName = (myName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || localStorage.getItem('sp_name') || 'Captain Noel').slice(0, 14);
+
+  const drawList = (items, rankVal) => {
+    let html = '<h2>' + title + '</h2>';
+    html += '<div class="lb-hint">👆 Click any captain to inspect their flagship, fleet &amp; stats!</div>';
     
-    // Always update name on existing account record
+    if (!items || !items.length) {
+      html += '<div class="empty">No pirate flight logs registered yet. Be the first space captain! 🏴‍☠️</div>';
+    } else {
+      html += '<ol>';
+      items.forEach((r, i) => {
+        const isMe = (r.uid && r.uid === SAVE.data.uid) || ((r.name || '').trim().toLowerCase() === curName.trim().toLowerCase());
+        const rk = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
+        const sh = shipById(r.ship || 'cutter');
+        html += `<li class="${isMe ? 'me' : ''}" onclick="openDossier(${i})" title="Click to view Captain ${esc(r.name)}'s stats and fleet!">` +
+                `<span class="rk">${rk}</span>` +
+                `<span class="nm">${esc(r.name)} <span style="font-size:0.75rem; opacity:0.75; color:#7fdcff">(${sh.name})</span></span>` +
+                `<span class="sc">🪙 ${r.score}</span>` +
+                `<span class="lv">Sector ${r.level || 1}</span>` +
+                `<span class="inspect">🔍</span></li>`;
+      });
+      html += '</ol>';
+    }
+    if (myScore >= 0 && rankVal) {
+      html += '<div class="myrank">⭐ Pirate Rank: #' + rankVal + ' — ' + esc(curName) + ' · 🪙 ' + myScore + '</div>';
+    }
+    el.innerHTML = html;
+  };
+
+  // 1. Immediate local render (zero latency)
+  try {
+    const localRows = LB._dedupe(await LB._local());
+    cachedLeaderboardRows = localRows;
+    let initialRank = null;
+    if (myScore >= 0) {
+      const myIdx = localRows.findIndex(r => (r.uid && r.uid === SAVE.data.uid) || ((r.name || '').trim().toLowerCase() === curName.trim().toLowerCase()));
+      initialRank = myIdx >= 0 ? myIdx + 1 : localRows.filter(r => r.score > myScore).length + 1;
+    }
+    drawList(localRows, initialRank);
+  } catch(e) {}
+
+  // 2. Fetch fresh cloud scores from all devices asynchronously & update UI
+  try {
     await LB.updateName(curName);
-
-    // Show ALL pirates who played (not capped at 10)
-    rows = await LB.top();
-    cachedLeaderboardRows = rows;
+    const cloudRows = await LB.top();
+    if (cloudRows && cloudRows.length) {
+      cachedLeaderboardRows = cloudRows;
+      let finalRank = null;
+      if (myScore >= 0) {
+        finalRank = await LB.rank(myScore, curName);
+      }
+      drawList(cloudRows, finalRank);
+    }
   } catch (e) {}
-
-  if (myScore >= 0) { try { myRank = await LB.rank(myScore, myName); } catch (e) {} }
-  
-  let html = '<h2>' + title + '</h2>';
-  html += '<div class="lb-hint">👆 Click any captain to inspect their flagship, fleet &amp; stats!</div>';
-  
-  if (!rows || !rows.length) {
-    html += '<div class="empty">No pirate flight logs registered yet. Be the first space captain! 🏴‍☠️</div>';
-  } else {
-    html += '<ol>';
-    rows.forEach((r, i) => {
-      const isMe = (r.uid && r.uid === SAVE.data.uid) || (myName && (r.name || '').trim().toLowerCase() === myName.trim().toLowerCase());
-      const rk = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
-      const sh = shipById(r.ship || 'cutter');
-      html += `<li class="${isMe ? 'me' : ''}" onclick="openDossier(${i})" title="Click to view Captain ${esc(r.name)}'s stats and fleet!">` +
-              `<span class="rk">${rk}</span>` +
-              `<span class="nm">${esc(r.name)} <span style="font-size:0.75rem; opacity:0.75; color:#7fdcff">(${sh.name})</span></span>` +
-              `<span class="sc">🪙 ${r.score}</span>` +
-              `<span class="lv">Sector ${r.level || 1}</span>` +
-              `<span class="inspect">🔍</span></li>`;
-    });
-    html += '</ol>';
-  }
-  if (myScore >= 0 && myRank) {
-    html += '<div class="myrank">⭐ Pirate Rank: #' + myRank + ' — ' + esc(myName) + ' · 🪙 ' + myScore + '</div>';
-  }
-  el.innerHTML = html;
 }
 
 // ---------- SPAWN STAR WARS ENEMY ARCHETYPES WITH UNIQUE POWERS & SECTOR PROGRESSION ----------
@@ -3503,6 +3560,9 @@ function returnToMenu(e) {
   if (e) {
     try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
   }
+  if (score > 0 && !scoreSubmitted) {
+    endGame('lbMenu');
+  }
   state = 'menu';
   
   // Hide all modals & overlays except #menu
@@ -3529,6 +3589,8 @@ window.returnToMenu = returnToMenu;
 window.restartGame = returnToMenu;
 
 async function endGame(cid) {
+  const nm = (document.getElementById('pname') && document.getElementById('pname').value.trim()) || playerName || localStorage.getItem('sp_name') || 'Captain';
+  playerName = nm.slice(0, 14);
   if (!scoreSubmitted) {
     scoreSubmitted = true;
     await LB.submit({
@@ -4318,19 +4380,37 @@ if (shopCloseEl) shopCloseEl.addEventListener('click', closeShop);
   try {
     const i = document.getElementById('pname');
     const n = localStorage.getItem('sp_name');
-    if (i && n) i.value = n;
+    if (i && n) {
+      i.value = n;
+      playerName = n;
+    }
     best = +localStorage.getItem('sp_best') || 0;
     const bl = document.getElementById('bestline');
     if (bl && best > 0) bl.textContent = '🏅 Sector Record: ' + best;
 
     if (i) {
-      i.addEventListener('input', () => {
+      const updateName = () => {
         const val = i.value.trim().slice(0, 14);
         if (val) {
           localStorage.setItem('sp_name', val);
           playerName = val;
           renderLeaderboard('lbMenu', -1, playerName);
         }
+      };
+      i.addEventListener('input', updateName);
+      i.addEventListener('change', updateName);
+      i.addEventListener('blur', updateName);
+    }
+
+    if (best > 0) {
+      LB.submit({
+        uid: SAVE.data.uid,
+        name: playerName,
+        score: best,
+        level: 1,
+        kills: SAVE.data.kills,
+        ship: SAVE.data.sel,
+        skin: SAVE.data.skin
       });
     }
   } catch (e) {}
