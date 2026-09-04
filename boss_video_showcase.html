@@ -1325,24 +1325,30 @@
         tg.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = tg; cx.beginPath(); cx.ellipse(0, 0, w * 0.62, h * 0.58, 0, 0, Math.PI * 2); cx.fill();
 
-        // 3-Tributary Composite Superlaser Lance
+        // 3-Tributary Composite Superlaser Lance (Aimed at player!)
         if (boss.compositeBeamActive > 0) {
+          const cAng = boss.compositeBeamAng !== undefined ? boss.compositeBeamAng : Math.PI;
+          const muzzleX = -w * 0.48, muzzleY = 0;
+          const beamLen = 2200;
+          const endX = muzzleX + Math.cos(cAng) * beamLen;
+          const endY = muzzleY + Math.sin(cAng) * beamLen;
+
           cx.save();
           for (const [py, col] of [[-h * 0.42, '#ff4500'], [0, '#c084fc'], [h * 0.42, '#38bdf8']]) {
             cx.strokeStyle = col; cx.lineWidth = 4;
-            cx.beginPath(); cx.moveTo(w * 0.20, py); cx.lineTo(-w * 0.48, 0); cx.stroke();
+            cx.beginPath(); cx.moveTo(w * 0.20, py); cx.lineTo(muzzleX, muzzleY); cx.stroke();
           }
           cx.shadowColor = '#ffd23c'; cx.shadowBlur = 35;
           cx.strokeStyle = 'rgba(255, 69, 0, 0.85)'; cx.lineWidth = 44;
-          cx.beginPath(); cx.moveTo(-w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+          cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
           cx.strokeStyle = 'rgba(56, 189, 248, 0.9)'; cx.lineWidth = 26;
-          cx.beginPath(); cx.moveTo(-w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+          cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
           cx.strokeStyle = '#ffffff'; cx.lineWidth = 12;
-          cx.beginPath(); cx.moveTo(-w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+          cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
           
-          const fg = cx.createRadialGradient(-w * 0.48, 0, 4, -w * 0.48, 0, 36);
+          const fg = cx.createRadialGradient(muzzleX, muzzleY, 4, muzzleX, muzzleY, 36);
           fg.addColorStop(0, '#ffffff'); fg.addColorStop(0.3, '#ffd23c'); fg.addColorStop(0.7, '#ff4500'); fg.addColorStop(1, 'rgba(0,0,0,0)');
-          cx.fillStyle = fg; cx.beginPath(); cx.arc(-w * 0.48, 0, 26 + Math.sin(t * 24) * 4, 0, Math.PI * 2); cx.fill();
+          cx.fillStyle = fg; cx.beginPath(); cx.arc(muzzleX, muzzleY, 26 + Math.sin(t * 24) * 4, 0, Math.PI * 2); cx.fill();
           cx.restore();
         }
 
@@ -1401,18 +1407,26 @@
       bg.addColorStop(0, 'rgba(0, 255, 170, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.54, boss.h * 0.50, 0, 0, Math.PI * 2); cx.fill();
 
-      // Active Axial Planet-Killer Continuous Death Ray
+      // Active Axial Planet-Killer Continuous Death Ray (Aimed at player!)
       if (boss.beamActive > 0) {
+        const bAng = boss.beamAng !== undefined ? boss.beamAng : Math.PI;
+        const muzzleX = -boss.w * 0.48, muzzleY = 0;
+        const beamLen = 2200;
+        const endX = muzzleX + Math.cos(bAng) * beamLen;
+        const endY = muzzleY + Math.sin(bAng) * beamLen;
+
         cx.save();
         cx.shadowColor = '#00ffaa'; cx.shadowBlur = 24;
         cx.strokeStyle = 'rgba(0, 255, 170, 0.85)'; cx.lineWidth = 32;
-        cx.beginPath(); cx.moveTo(-boss.w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+        cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
         cx.strokeStyle = '#ffffff'; cx.lineWidth = 12;
-        cx.beginPath(); cx.moveTo(-boss.w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+        cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
         // Electric Tachyon Arc Rings along the beam
         cx.strokeStyle = '#00ffee'; cx.lineWidth = 2.5;
-        for (let bx = -boss.w * 0.5; bx > -boss.x - 80; bx -= 75) {
-          cx.beginPath(); cx.ellipse(bx, 0, 8, 22 + Math.sin(t * 20 + bx) * 6, 0, 0, Math.PI * 2); cx.stroke();
+        for (let d = 75; d < 1800; d += 75) {
+          const rx = muzzleX + Math.cos(bAng) * d;
+          const ry = muzzleY + Math.sin(bAng) * d;
+          cx.beginPath(); cx.ellipse(rx, ry, 8, 22 + Math.sin(t * 20 + d) * 6, bAng + Math.PI * 0.5, 0, Math.PI * 2); cx.stroke();
         }
         cx.restore();
       }
@@ -2172,32 +2186,38 @@
         cx.beginPath(); cx.arc(bx, n.y, 5, 0, Math.PI * 2); cx.fill();
         cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.5; cx.stroke();
 
-        // Kyber Lance Firing FX from barrels
+        // Kyber Lance Firing FX from barrels (Aimed & converging on player!)
         if (boss.lanceActive && boss.lanceActive > 0) {
-          // Colossal continuous cyan beam forward across screen
+          const targetLocalX = ship.x - boss.x, targetLocalY = ship.y - boss.y;
+          const barrelAng = Math.atan2(targetLocalY - n.y, targetLocalX - bx);
+          const beamLen = 2200;
+          const endX = bx + Math.cos(barrelAng) * beamLen;
+          const endY = n.y + Math.sin(barrelAng) * beamLen;
+
           cx.save();
           // Outer beam glow
           cx.strokeStyle = 'rgba(0, 255, 238, 0.4)';
           cx.lineWidth = 28 + Math.sin(t * 30) * 6;
-          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(bx - 1200, n.y); cx.stroke();
+          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(endX, endY); cx.stroke();
 
           // Mid cyan beam
           cx.strokeStyle = '#00ffee';
           cx.lineWidth = 14 + Math.cos(t * 35) * 3;
-          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(bx - 1200, n.y); cx.stroke();
+          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(endX, endY); cx.stroke();
 
           // White-hot core
           cx.strokeStyle = '#ffffff';
           cx.lineWidth = 5;
-          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(bx - 1200, n.y); cx.stroke();
+          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(endX, endY); cx.stroke();
 
           // Electric crackle arcs
           cx.strokeStyle = '#ffd23c';
           cx.lineWidth = 2.5;
           cx.beginPath();
-          for (let lx = bx; lx >= bx - 1200; lx -= 50) {
-            const ly = n.y + Math.sin(lx * 0.08 + t * 30) * 10;
-            if (lx === bx) cx.moveTo(lx, ly);
+          for (let d = 0; d < 1800; d += 60) {
+            const lx = bx + Math.cos(barrelAng) * d;
+            const ly = n.y + Math.sin(barrelAng) * d + Math.sin(d * 0.08 + t * 30) * 10;
+            if (d === 0) cx.moveTo(lx, ly);
             else cx.lineTo(lx, ly);
           }
           cx.stroke();

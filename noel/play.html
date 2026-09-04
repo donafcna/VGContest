@@ -6886,16 +6886,24 @@ function update(dt) {
   // Boss updates
   if (!boss) { bossT -= dt; if (bossT <= 0) spawnBoss(); }
   if (boss) {
-    const dx = ship.x - boss.x, dy = ship.y - boss.y;
+    // Predictive targeting: lead player position based on player velocity and distance
+    const leadT = Math.min(0.28, Math.hypot(ship.x - boss.x, ship.y - boss.y) / 900);
+    const targetAimX = ship.x + (ship.vx || 0) * leadT;
+    const targetAimY = ship.y + (ship.vy || 0) * leadT;
+    const dx = targetAimX - boss.x, dy = targetAimY - boss.y;
     const dist = Math.hypot(dx, dy) || 1;
     const aimAng = Math.atan2(dy, dx);
+    const directAimAng = Math.atan2(ship.y - boss.y, ship.x - boss.x);
     const spdBonus = (1 + Math.min(1.0, (level - 1) * 0.08)) * (boss.enraged ? 1.2 : 1.0);
 
     if (boss.x > boss.targetX && !boss.isRamming) boss.x -= 130 * dt;
     boss.phase += dt;
     boss.spinRing += dt * (boss.enraged ? 7 : 4);
     if (!boss.isRamming && (boss.type !== 'trio' || boss.isMerged)) {
-      boss.y = H * 0.5 + Math.sin(boss.phase * (boss.enraged ? 1.4 : 0.9)) * (H * 0.32);
+      // Dynamic vertical tracking: the boss actively maneuvers to align its altitude with the player
+      const targetY = Math.max(90, Math.min(H - 90, ship.y + Math.sin(boss.phase * (boss.enraged ? 2.0 : 1.2)) * (boss.enraged ? 50 : 80)));
+      const trackSpeed = boss.enraged ? 3.0 : 2.0;
+      boss.y += (targetY - boss.y) * Math.min(1.0, dt * trackSpeed);
     }
 
     // TRIO BOSS: THE SITH ELEMENTAL TRIUMVIRATE (IGNIS, GLACIES, FULGUR)
@@ -6911,13 +6919,18 @@ function update(dt) {
             anyQuarterHealth = true;
           }
 
-          // Move into battlefield position
+          // Move into battlefield position and dynamically track/flank player altitude
           if (sub.x > sub.targetX) sub.x -= 140 * dt;
           sub.phase += dt * (sIdx === 2 ? 1.8 : 1.1);
-          sub.y = sub.baseY + Math.sin(sub.phase * 1.3) * 26;
+          const flankOffY = sIdx === 0 ? -110 : (sIdx === 1 ? 0 : 110);
+          const subTargetY = Math.max(75, Math.min(H - 75, ship.y + flankOffY + Math.sin(sub.phase * 1.3) * 25));
+          sub.y += (subTargetY - sub.y) * Math.min(1.0, dt * 2.2);
 
-          // Individual Aiming
-          const subDx = ship.x - sub.x, subDy = ship.y - sub.y;
+          // Individual Aiming with leading prediction directly at player
+          const subLeadT = Math.min(0.24, Math.hypot(ship.x - sub.x, ship.y - sub.y) / 800);
+          const subPredX = ship.x + (ship.vx || 0) * subLeadT;
+          const subPredY = ship.y + (ship.vy || 0) * subLeadT;
+          const subDx = subPredX - sub.x, subDy = subPredY - sub.y;
           const subAimAng = Math.atan2(subDy, subDx);
 
           sub.shootT -= dt;
@@ -7028,13 +7041,19 @@ function update(dt) {
       } else if (boss.isMerged) {
         if (boss.compositeBeamActive > 0) {
           boss.compositeBeamActive -= dt;
-          if (Math.abs(ship.y - boss.y) < 42 && ship.x < boss.x) {
-            if (ship.inv <= 0) {
-              damageShip();
-              ship.burnT = 2.0;
-              popup(ship.x, ship.y - 25, '⚡ TRI-COMPOSITE SUPERLASER HIT!', '#ffd23c');
-              explode(ship.x, ship.y, '#ffd23c', 20);
-            }
+          const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
+          const targetAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
+          boss.compositeBeamAng = boss.compositeBeamAng !== undefined ? boss.compositeBeamAng : targetAng;
+          boss.compositeBeamAng += (targetAng - boss.compositeBeamAng) * Math.min(1.0, dt * 3.5);
+          
+          const mdx = ship.x - muzzleX, mdy = ship.y - muzzleY;
+          const proj = mdx * Math.cos(boss.compositeBeamAng) + mdy * Math.sin(boss.compositeBeamAng);
+          const perp = Math.abs(-mdx * Math.sin(boss.compositeBeamAng) + mdy * Math.cos(boss.compositeBeamAng));
+          if (proj > 0 && perp < 38 && ship.inv <= 0) {
+            damageShip();
+            ship.burnT = 2.0;
+            popup(ship.x, ship.y - 25, '⚡ TRI-COMPOSITE SUPERLASER HIT!', '#ffd23c');
+            explode(ship.x, ship.y, '#ffd23c', 20);
           }
         }
       }
@@ -7043,12 +7062,19 @@ function update(dt) {
     // Active Boss Timers & Mechanics updates
     if (boss.beamActive > 0) {
       boss.beamActive -= dt;
-      // Planet-Killer Death Ray deals damage if player galleon touches the beam
-      if (Math.abs(ship.y - boss.y) < 36 && ship.x < boss.x) {
-        if (ship.inv <= 0) {
-          damageShip();
-          popup(ship.x, ship.y - 25, '⚡ TACHYON BEAM HIT!', '#00ffaa');
-        }
+      // Planet-Killer Death Ray smoothly tracks and sweeps across the player
+      const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
+      const targetAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
+      boss.beamAng = boss.beamAng !== undefined ? boss.beamAng : targetAng;
+      boss.beamAng += (targetAng - boss.beamAng) * Math.min(1.0, dt * 3.2);
+
+      const mdx = ship.x - muzzleX, mdy = ship.y - muzzleY;
+      const proj = mdx * Math.cos(boss.beamAng) + mdy * Math.sin(boss.beamAng);
+      const perp = Math.abs(-mdx * Math.sin(boss.beamAng) + mdy * Math.cos(boss.beamAng));
+      if (proj > 0 && perp < 34 && ship.inv <= 0) {
+        damageShip();
+        popup(ship.x, ship.y - 25, '⚡ TACHYON BEAM HIT!', '#00ffaa');
+        explode(ship.x, ship.y, '#00ffaa', 18);
       }
     }
 
@@ -7194,15 +7220,20 @@ function update(dt) {
 
     if (boss.lanceActive && boss.lanceActive > 0) {
       boss.lanceActive -= dt;
-      // Twin Kyber Convergence Lances deal heavy piercing damage across top and bottom lanes
-      const portLanceY = boss.y - boss.h * 0.32;
-      const stbdLanceY = boss.y + boss.h * 0.32;
-      if (ship.x < boss.x && (Math.abs(ship.y - portLanceY) < 32 || Math.abs(ship.y - stbdLanceY) < 32)) {
-        if (ship.inv <= 0) {
+      // Twin Kyber Convergence Lances deal heavy piercing damage along dynamically converging beams aimed at player
+      for (const ny of [-boss.h * 0.32, boss.h * 0.32]) {
+        const barrelWorldX = boss.x - boss.w * 0.44;
+        const barrelWorldY = boss.y + ny;
+        const bdx = ship.x - barrelWorldX, bdy = ship.y - barrelWorldY;
+        const barrelAim = Math.atan2(bdy, bdx);
+        const pProj = bdx * Math.cos(barrelAim) + bdy * Math.sin(barrelAim);
+        const pPerp = Math.abs(-bdx * Math.sin(barrelAim) + bdy * Math.cos(barrelAim));
+        if (pProj > 0 && pPerp < 28 && ship.inv <= 0) {
           damageShip();
           popup(ship.x, ship.y - 25, '⚡ KYBER LANCE HIT!', '#00ffee');
           explode(ship.x, ship.y, '#00ffee', 18);
           addShake(14);
+          break;
         }
       }
     }
@@ -7380,9 +7411,9 @@ function update(dt) {
           popup(boss.x - 40, boss.y - 45, '🌊 ULTIMATE: VENTRAL ION CANNON RAY!', '#00e5ff');
           sfx('laser');
         } else if (boss.atkCycle === 1) {
-          // Dual Guided Concussion Torpedo Volleys (Aimed directly at player)
+          // Dual Guided Concussion Torpedo Volleys (Aimed directly at player & actively tracking)
           for (const cy of [-32, 18]) {
-            eballs.push({ type: 'emp', col: '#38bdf8', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 22 });
+            eballs.push({ type: 'emp', isGuided: true, col: '#38bdf8', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 22 });
           }
           popup(boss.x - 40, boss.y - 45, '🚀 GUIDED CONCUSSION TORPEDOES!', '#38bdf8');
           sfx('incoming');
@@ -7408,11 +7439,11 @@ function update(dt) {
           popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: KESSEL RUN HYPERDRIVE!', '#00ffee');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          // Dual Forward Concussion Proton Torpedoes (Aimed at player) + Cargo Decoy Mines
+          // Dual Forward Concussion Proton Torpedoes (Aimed at player & tracking) + Cargo Decoy Mines
           for (const cy of [-22, 22]) {
-            eballs.push({ type: 'emp', col: '#00ffee', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 22 });
+            eballs.push({ type: 'emp', isGuided: true, col: '#00ffee', x: boss.x - boss.w * 0.45, y: boss.y + cy, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 22 });
           }
-          eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.25, y: boss.y, vx: -360 * spdBonus, vy: (dy / dist) * 120, r: 26, spin: 0 });
+          eballs.push({ type: 'magma', col: '#ffd23c', x: boss.x - boss.w * 0.25, y: boss.y, vx: Math.cos(aimAng) * 420 * spdBonus, vy: Math.sin(aimAng) * 420 * spdBonus, r: 26, spin: 0 });
           popup(boss.x - 40, boss.y - 45, '🚀 CONCUSSION TORPEDO SALVO!', '#00ffee');
           sfx('incoming');
         } else {
@@ -8192,6 +8223,33 @@ function update(dt) {
   // Update Enemy Projectiles (Lasers, EMP Waves, Bio-Spores, Shrapnel, Dark Matter Vortex)
   for (let i = eballs.length - 1; i >= 0; i--) {
     const b = eballs[i];
+
+    if (b.isGuided || b.isHoming) {
+      // Homing Concussion Torpedo actively tracks and steers toward player
+      const tdx = ship.x - b.x, tdy = ship.y - b.y;
+      const targetAng = Math.atan2(tdy, tdx);
+      const currAng = Math.atan2(b.vy, b.vx);
+      let diff = targetAng - currAng;
+      while (diff < -Math.PI) diff += Math.PI * 2;
+      while (diff > Math.PI) diff -= Math.PI * 2;
+      const turnRate = 2.8 * dt;
+      const newAng = currAng + Math.max(-turnRate, Math.min(turnRate, diff));
+      const curSpeed = Math.hypot(b.vx, b.vy);
+      b.vx = Math.cos(newAng) * curSpeed;
+      b.vy = Math.sin(newAng) * curSpeed;
+      if (Math.random() < 0.4) {
+        parts.push({
+          type: 'spark',
+          x: b.x, y: b.y,
+          vx: -Math.cos(newAng) * 60 + (Math.random() - 0.5) * 20,
+          vy: -Math.sin(newAng) * 60 + (Math.random() - 0.5) * 20,
+          life: 0.18, maxLife: 0.18,
+          col: b.col || '#00e5ff',
+          size: 4
+        });
+      }
+    }
+
     b.x += b.vx * dt; b.y += b.vy * dt;
 
     if (b.type === 'vortex') {
@@ -9911,24 +9969,30 @@ function draw() {
         tg.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = tg; cx.beginPath(); cx.ellipse(0, 0, w * 0.62, h * 0.58, 0, 0, Math.PI * 2); cx.fill();
 
-        // 3-Tributary Composite Superlaser Lance
+        // 3-Tributary Composite Superlaser Lance (Aimed and sweeping across player!)
         if (boss.compositeBeamActive > 0) {
+          const cAng = boss.compositeBeamAng !== undefined ? boss.compositeBeamAng : Math.PI;
+          const muzzleX = -w * 0.48, muzzleY = 0;
+          const beamLen = 2200;
+          const endX = muzzleX + Math.cos(cAng) * beamLen;
+          const endY = muzzleY + Math.sin(cAng) * beamLen;
+
           cx.save();
           for (const [py, col] of [[-h * 0.42, '#ff4500'], [0, '#c084fc'], [h * 0.42, '#38bdf8']]) {
             cx.strokeStyle = col; cx.lineWidth = 4;
-            cx.beginPath(); cx.moveTo(w * 0.20, py); cx.lineTo(-w * 0.48, 0); cx.stroke();
+            cx.beginPath(); cx.moveTo(w * 0.20, py); cx.lineTo(muzzleX, muzzleY); cx.stroke();
           }
           cx.shadowColor = '#ffd23c'; cx.shadowBlur = 35;
           cx.strokeStyle = 'rgba(255, 69, 0, 0.85)'; cx.lineWidth = 44;
-          cx.beginPath(); cx.moveTo(-w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+          cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
           cx.strokeStyle = 'rgba(56, 189, 248, 0.9)'; cx.lineWidth = 26;
-          cx.beginPath(); cx.moveTo(-w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+          cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
           cx.strokeStyle = '#ffffff'; cx.lineWidth = 12;
-          cx.beginPath(); cx.moveTo(-w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+          cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
           
-          const fg = cx.createRadialGradient(-w * 0.48, 0, 4, -w * 0.48, 0, 36);
+          const fg = cx.createRadialGradient(muzzleX, muzzleY, 4, muzzleX, muzzleY, 36);
           fg.addColorStop(0, '#ffffff'); fg.addColorStop(0.3, '#ffd23c'); fg.addColorStop(0.7, '#ff4500'); fg.addColorStop(1, 'rgba(0,0,0,0)');
-          cx.fillStyle = fg; cx.beginPath(); cx.arc(-w * 0.48, 0, 26 + Math.sin(t * 24) * 4, 0, Math.PI * 2); cx.fill();
+          cx.fillStyle = fg; cx.beginPath(); cx.arc(muzzleX, muzzleY, 26 + Math.sin(t * 24) * 4, 0, Math.PI * 2); cx.fill();
           cx.restore();
         }
 
@@ -9987,18 +10051,26 @@ function draw() {
       bg.addColorStop(0, 'rgba(0, 255, 170, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.54, boss.h * 0.50, 0, 0, Math.PI * 2); cx.fill();
 
-      // Active Axial Planet-Killer Continuous Death Ray
+      // Active Axial Planet-Killer Continuous Death Ray (Aimed and sweeping across player!)
       if (boss.beamActive > 0) {
+        const bAng = boss.beamAng !== undefined ? boss.beamAng : Math.PI;
+        const muzzleX = -boss.w * 0.48, muzzleY = 0;
+        const beamLen = 2200;
+        const endX = muzzleX + Math.cos(bAng) * beamLen;
+        const endY = muzzleY + Math.sin(bAng) * beamLen;
+
         cx.save();
         cx.shadowColor = '#00ffaa'; cx.shadowBlur = 24;
         cx.strokeStyle = 'rgba(0, 255, 170, 0.85)'; cx.lineWidth = 32;
-        cx.beginPath(); cx.moveTo(-boss.w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+        cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
         cx.strokeStyle = '#ffffff'; cx.lineWidth = 12;
-        cx.beginPath(); cx.moveTo(-boss.w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+        cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
         // Electric Tachyon Arc Rings along the beam
         cx.strokeStyle = '#00ffee'; cx.lineWidth = 2.5;
-        for (let bx = -boss.w * 0.5; bx > -boss.x - 80; bx -= 75) {
-          cx.beginPath(); cx.ellipse(bx, 0, 8, 22 + Math.sin(t * 20 + bx) * 6, 0, 0, Math.PI * 2); cx.stroke();
+        for (let d = 75; d < 1800; d += 75) {
+          const rx = muzzleX + Math.cos(bAng) * d;
+          const ry = muzzleY + Math.sin(bAng) * d;
+          cx.beginPath(); cx.ellipse(rx, ry, 8, 22 + Math.sin(t * 20 + d) * 6, bAng + Math.PI * 0.5, 0, Math.PI * 2); cx.stroke();
         }
         cx.restore();
       }
@@ -10758,32 +10830,38 @@ function draw() {
         cx.beginPath(); cx.arc(bx, n.y, 5, 0, Math.PI * 2); cx.fill();
         cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.5; cx.stroke();
 
-        // Kyber Lance Firing FX from barrels
+        // Kyber Lance Firing FX from barrels (Aimed and dynamically converging on player!)
         if (boss.lanceActive && boss.lanceActive > 0) {
-          // Colossal continuous cyan beam forward across screen
+          const targetLocalX = ship.x - boss.x, targetLocalY = ship.y - boss.y;
+          const barrelAng = Math.atan2(targetLocalY - n.y, targetLocalX - bx);
+          const beamLen = 2200;
+          const endX = bx + Math.cos(barrelAng) * beamLen;
+          const endY = n.y + Math.sin(barrelAng) * beamLen;
+
           cx.save();
           // Outer beam glow
           cx.strokeStyle = 'rgba(0, 255, 238, 0.4)';
           cx.lineWidth = 28 + Math.sin(t * 30) * 6;
-          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(bx - 1200, n.y); cx.stroke();
+          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(endX, endY); cx.stroke();
 
           // Mid cyan beam
           cx.strokeStyle = '#00ffee';
           cx.lineWidth = 14 + Math.cos(t * 35) * 3;
-          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(bx - 1200, n.y); cx.stroke();
+          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(endX, endY); cx.stroke();
 
           // White-hot core
           cx.strokeStyle = '#ffffff';
           cx.lineWidth = 5;
-          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(bx - 1200, n.y); cx.stroke();
+          cx.beginPath(); cx.moveTo(bx, n.y); cx.lineTo(endX, endY); cx.stroke();
 
           // Electric crackle arcs
           cx.strokeStyle = '#ffd23c';
           cx.lineWidth = 2.5;
           cx.beginPath();
-          for (let lx = bx; lx >= bx - 1200; lx -= 50) {
-            const ly = n.y + Math.sin(lx * 0.08 + t * 30) * 10;
-            if (lx === bx) cx.moveTo(lx, ly);
+          for (let d = 0; d < 1800; d += 60) {
+            const lx = bx + Math.cos(barrelAng) * d;
+            const ly = n.y + Math.sin(barrelAng) * d + Math.sin(d * 0.08 + t * 30) * 10;
+            if (d === 0) cx.moveTo(lx, ly);
             else cx.lineTo(lx, ly);
           }
           cx.stroke();
