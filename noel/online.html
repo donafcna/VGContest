@@ -3591,116 +3591,19 @@ function getBossSvg(id) {
 
 const BOSS_INTEL = [
   {
-    id: 'dread',
-    name: 'Grand Admiral Vex: The Imperial Eclipse',
-    sector: 'Sector 9 Flagship · Imperial II-Class Star Destroyer',
-    col: '#00ffaa',
-    hp: 60,
+    id: 'trio',
+    name: 'The Sith Elemental Triumvirate (Ignis, Glacies & Fulgur)',
+    sector: 'Sector 1 Apex · Tri-Elemental Sith Flagship Squadron',
+    col: '#ff4500',
+    hp: 120,
     powers: [
-      '⚡ Axial Planet-Killer Death Ray (Continuous piercing emerald superlaser)',
-      '🛸 Ventral TIE Carrier Launch (Deploys Imperial TIE/ln escorts)',
-      '⚡ Dual Sponson Heavy Tachyon Railguns & 5-Round Turbolaser Salvos'
+      '🔥 Left Flank: Darth Ignis Magma Dreadnought (Lava mortars inflicting Burn DoT)',
+      '❄️ Center Core: Inquisitor Glacies Cryo Cruiser (Glacial crystal lances freezing ship for 2s)',
+      '⚡ Right Flank: Sovereign Fulgur Kyber Frigate (Ultra rapid-fire Kyber lightning storm)',
+      '💥 Tri-Elemental Fusion Singularity (Merges into OVERLORD TRINITY with 3-tributary composite superlaser at <=25% HP!)'
     ],
-    loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +75 🪙',
-    tactic: 'Dodge the charging green axial superlaser by staying above or below the center flight axis!'
-  },
-  {
-    id: 'hive',
-    name: 'Overlord Chronos: DS-1 Death Star',
-    sector: 'Sector 8 Flagship · Orbital Planet-Siege Battlestation',
-    col: '#00e5ff',
-    hp: 65,
-    powers: [
-      '💥 360° Equatorial Turbolaser Trench Burst (12 radiating EMP plasma shells)',
-      '🧲 Gravitational Magnetic Tractor Beam (Pulls player ship irresistibly toward the trench while firing)',
-      '⚡ 8-Tributary Kyber Dish Superlaser Convergence'
-    ],
-    loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +100 🪙',
-    tactic: 'Survive the intense tractor beam lock and evade continuous turbolaser bombardments, then fire broadsides into the Kyber dish!'
-  },
-  {
-    id: 'ram',
-    name: 'Admiral Raddus: Mon Calamari MC85 Star Cruiser',
-    sector: 'Sector 7 Flagship · Heavy Mon Calamari Command Cruiser (The Profundity)',
-    col: '#38bdf8',
-    hp: 70,
-    powers: [
-      '🌊 Ventral Spire Heavy Ion Ray (Piercing azure continuous beam sweeping flight lanes)',
-      '🚀 Dual Guided Concussion Torpedo Volleys & Deflector Shield Bubbles',
-      '⚡ Mon Calamari 8-Gun Broadside Turbolaser Salvo (High-speed azure blue plasma fire)'
-    ],
-    loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +125 🪙',
-    tactic: 'Stay above the deep ventral command fin to avoid the downward ion beam, and target the dorsal shield blister domes!'
-  },
-  {
-    id: 'void',
-    name: 'Captain Solo: The Rogue Millennium Falcon',
-    sector: 'Sector 6 Flagship · Legendary Modified Corellian YT-1300 Gunship',
-    col: '#00ffee',
-    hp: 75,
-    powers: [
-      '⚡ Kessel Run Hyperdrive Overdrive (Fast hyperspace drift & quad-laser burst)',
-      '🚀 Dual Forward Concussion Proton Torpedoes & Magnetic Decoy Mines',
-      '🔥 360° Dorsal & Ventral Rotating Quad-Laser Cannon Strafe'
-    ],
-    loot: '👑 +3 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +150 🪙',
-    tactic: 'Avoid the rotating quad-laser tracking line and fire full broadsides into the forward mandibles when the hyperdrive cools down!'
-  },
-  {
-    id: 'cryo',
-    name: 'Admiral Sloane: Imperial Cantwell Battlecruiser',
-    sector: 'Sector 5 Flagship · Heavy Outrigger Siege Battlecruiser',
-    col: '#00ffaa',
-    hp: 80,
-    powers: [
-      '⚡ Quad Outrigger Emerald Turbolaser Barrage (Dual converging piercing green laser lances from 4 outriggers)',
-      '🛸 Ventral TIE Interceptor Carrier Sortie (Launches twin Imperial TIE escorts into the sector)',
-      '🧲 High-Energy Kinetic Arrestor Siege Cannon (Heavy kinetic concussion mortar with gravity shockwave)'
-    ],
-    loot: '👑 +3 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +170 🪙',
-    tactic: 'Weave between the 4 swept outrigger stabilizer wings to target the central bridge superstructure with concentrated cannon broadsides!'
-  },
-  {
-    id: 'fondor',
-    name: 'Luthen Rael: The Fondor Haulcraft',
-    sector: 'Sector 4 Flagship · Heavily Modified Armed Haulcraft Cruiser',
-    col: '#38bdf8',
-    hp: 88,
-    powers: [
-      '⚔️ Twin Lateral Plasma Scythes (Colossal vertical laser blade arcs slicing flight lanes)',
-      '💥 Heavy Droid Flak Countermeasure Barrage (Deploys 12 radiating explosive flak pods)',
-      '⚡ Dorsal Swivel Turbolaser & Void Torpedo Salvos (High-velocity ionized plasma tracking fire)'
-    ],
-    loot: '👑 +4 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +190 🪙',
-    tactic: 'Stay clear of the vertical flight lane when the lateral plasma scythes ignite, and shoot down incoming flak pods with cannon broadsides!'
-  },
-  {
-    id: 'ataraxia',
-    name: 'Master Avar Kriss: Jedi Starcruiser Ataraxia',
-    sector: 'Sector 3 Flagship · High Republic Jedi Star Cruiser',
-    col: '#e0e7ff',
-    hp: 92,
-    powers: [
-      '⚡ Twin Kyber Convergence Lances & Radiant Force Pulse (Colossal piercing Kyber lances + deflecting Force ring)',
-      '💫 High Republic Longbeam Precision Barrage (6 hyper-accelerated azure plasma bolts with radiant trails)',
-      '🛸 Jedi Vector Starfighter Escort Sortie (Deploys twin High Republic Jedi Vectors)'
-    ],
-    loot: '👑 +4 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +210 🪙 + 25 Gold Coins Cascade',
-    tactic: 'Dodge the converging twin Kyber laser lances emitted from the forward longbeam cannons, and destroy the escorting Jedi Vectors!'
-  },
-  {
-    id: 'pathogen',
-    name: 'Overlord Pathogen: The Imperial Bio-Spore Carrier',
-    sector: 'Sector 2 Flagship · Replicating Imperial Spore Frigate',
-    col: '#10b981',
-    hp: 90,
-    powers: [
-      '🧬 Bacterial Mitosis & Hyper-Mutation (Spawns 5 sub-clones; killing clones makes survivors grow bigger & stronger!)',
-      '🦠 Micro & Macro Bacteria Bits (Variable-sized pulsating bacteria spores & massive splitting bio-blobs)',
-      '☣️ Corrosive Toxic Acid Mortars (Deploys radiating bio-chemical spore zones)'
-    ],
-    loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +230 🪙 + 30 Gold Coins Cascade',
-    tactic: 'Focus fire directly on the Original Alpha Prime Carrier! Destroying clones makes the survivors mutate and grow larger!'
+    loot: '👑 +6 🎟️ Plasma Cores · +3 🎡 Wheel Spins · +300 🪙 + 50 Gold Coins Cascade',
+    tactic: 'Damage any of the 3 ships to 25% HP to trigger the Fusion Singularity, then dodge the converging 3-color composite superlaser!'
   },
   {
     id: 'titan',
@@ -3718,19 +3621,116 @@ const BOSS_INTEL = [
     tactic: 'Weave between the heavy chin blaster barrels and target the mechanical neck swivel joint with heavy broadsides!'
   },
   {
-    id: 'trio',
-    name: 'The Sith Elemental Triumvirate (Ignis, Glacies & Fulgur)',
-    sector: 'Sector 1 Apex · Tri-Elemental Sith Flagship Squadron',
-    col: '#ff4500',
-    hp: 120,
+    id: 'pathogen',
+    name: 'Overlord Pathogen: The Imperial Bio-Spore Carrier',
+    sector: 'Sector 2 Flagship · Replicating Imperial Spore Frigate',
+    col: '#10b981',
+    hp: 90,
     powers: [
-      '🔥 Left Flank: Darth Ignis Magma Dreadnought (Lava mortars inflicting Burn DoT)',
-      '❄️ Center Core: Inquisitor Glacies Cryo Cruiser (Glacial crystal lances freezing ship for 2s)',
-      '⚡ Right Flank: Sovereign Fulgur Kyber Frigate (Ultra rapid-fire Kyber lightning storm)',
-      '💥 Tri-Elemental Fusion Singularity (Merges into OVERLORD TRINITY with 3-tributary composite superlaser at <=25% HP!)'
+      '🧬 Bacterial Mitosis & Hyper-Mutation (Spawns 5 sub-clones; killing clones makes survivors grow bigger & stronger!)',
+      '🦠 Micro & Macro Bacteria Bits (Variable-sized pulsating bacteria spores & massive splitting bio-blobs)',
+      '☣️ Corrosive Toxic Acid Mortars (Deploys radiating bio-chemical spore zones)'
     ],
-    loot: '👑 +6 🎟️ Plasma Cores · +3 🎡 Wheel Spins · +300 🪙 + 50 Gold Coins Cascade',
-    tactic: 'Damage any of the 3 ships to 25% HP to trigger the Fusion Singularity, then dodge the converging 3-color composite superlaser!'
+    loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +230 🪙 + 30 Gold Coins Cascade',
+    tactic: 'Focus fire directly on the Original Alpha Prime Carrier! Destroying clones makes the survivors mutate and grow larger!'
+  },
+  {
+    id: 'ataraxia',
+    name: 'Master Avar Kriss: Jedi Starcruiser Ataraxia',
+    sector: 'Sector 3 Flagship · High Republic Jedi Star Cruiser',
+    col: '#e0e7ff',
+    hp: 92,
+    powers: [
+      '⚡ Twin Kyber Convergence Lances & Radiant Force Pulse (Colossal piercing Kyber lances + deflecting Force ring)',
+      '💫 High Republic Longbeam Precision Barrage (6 hyper-accelerated azure plasma bolts with radiant trails)',
+      '🛸 Jedi Vector Starfighter Escort Sortie (Deploys twin High Republic Jedi Vectors)'
+    ],
+    loot: '👑 +4 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +210 🪙 + 25 Gold Coins Cascade',
+    tactic: 'Dodge the converging twin Kyber laser lances emitted from the forward longbeam cannons, and destroy the escorting Jedi Vectors!'
+  },
+  {
+    id: 'fondor',
+    name: 'Luthen Rael: The Fondor Haulcraft',
+    sector: 'Sector 4 Flagship · Heavily Modified Armed Haulcraft Cruiser',
+    col: '#38bdf8',
+    hp: 88,
+    powers: [
+      '⚔️ Twin Lateral Plasma Scythes (Colossal vertical laser blade arcs slicing flight lanes)',
+      '💥 Heavy Droid Flak Countermeasure Barrage (Deploys 12 radiating explosive flak pods)',
+      '⚡ Dorsal Swivel Turbolaser & Void Torpedo Salvos (High-velocity ionized plasma tracking fire)'
+    ],
+    loot: '👑 +4 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +190 🪙',
+    tactic: 'Stay clear of the vertical flight lane when the lateral plasma scythes ignite, and shoot down incoming flak pods with cannon broadsides!'
+  },
+  {
+    id: 'cryo',
+    name: 'Admiral Sloane: Imperial Cantwell Battlecruiser',
+    sector: 'Sector 5 Flagship · Heavy Outrigger Siege Battlecruiser',
+    col: '#00ffaa',
+    hp: 80,
+    powers: [
+      '⚡ Quad Outrigger Emerald Turbolaser Barrage (Dual converging piercing green laser lances from 4 outriggers)',
+      '🛸 Ventral TIE Interceptor Carrier Sortie (Launches twin Imperial TIE escorts into the sector)',
+      '🧲 High-Energy Kinetic Arrestor Siege Cannon (Heavy kinetic concussion mortar with gravity shockwave)'
+    ],
+    loot: '👑 +3 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +170 🪙',
+    tactic: 'Weave between the 4 swept outrigger stabilizer wings to target the central bridge superstructure with concentrated cannon broadsides!'
+  },
+  {
+    id: 'void',
+    name: 'Captain Solo: The Rogue Millennium Falcon',
+    sector: 'Sector 6 Flagship · Legendary Modified Corellian YT-1300 Gunship',
+    col: '#00ffee',
+    hp: 75,
+    powers: [
+      '⚡ Kessel Run Hyperdrive Overdrive (Fast hyperspace drift & quad-laser burst)',
+      '🚀 Dual Forward Concussion Proton Torpedoes & Magnetic Decoy Mines',
+      '🔥 360° Dorsal & Ventral Rotating Quad-Laser Cannon Strafe'
+    ],
+    loot: '👑 +3 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +150 🪙',
+    tactic: 'Avoid the rotating quad-laser tracking line and fire full broadsides into the forward mandibles when the hyperdrive cools down!'
+  },
+  {
+    id: 'ram',
+    name: 'Admiral Raddus: Mon Calamari MC85 Star Cruiser',
+    sector: 'Sector 7 Flagship · Heavy Mon Calamari Command Cruiser (The Profundity)',
+    col: '#38bdf8',
+    hp: 70,
+    powers: [
+      '🌊 Ventral Spire Heavy Ion Ray (Piercing azure continuous beam sweeping flight lanes)',
+      '🚀 Dual Guided Concussion Torpedo Volleys & Deflector Shield Bubbles',
+      '⚡ Mon Calamari 8-Gun Broadside Turbolaser Salvo (High-speed azure blue plasma fire)'
+    ],
+    loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +125 🪙',
+    tactic: 'Stay above the deep ventral command fin to avoid the downward ion beam, and target the dorsal shield blister domes!'
+  },
+  {
+    id: 'hive',
+    name: 'Overlord Chronos: DS-1 Death Star',
+    sector: 'Sector 8 Flagship · Orbital Planet-Siege Battlestation',
+    col: '#00e5ff',
+    hp: 65,
+    powers: [
+      '💥 360° Equatorial Turbolaser Trench Burst (12 radiating EMP plasma shells)',
+      '🧲 Gravitational Magnetic Tractor Beam (Pulls player ship irresistibly toward the trench while firing)',
+      '⚡ 8-Tributary Kyber Dish Superlaser Convergence'
+    ],
+    loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +100 🪙',
+    tactic: 'Survive the intense tractor beam lock and evade continuous turbolaser bombardments, then fire broadsides into the Kyber dish!'
+  },
+  {
+    id: 'dread',
+    name: 'Grand Admiral Vex: The Imperial Eclipse',
+    sector: 'Sector 9 Flagship · Imperial II-Class Star Destroyer',
+    col: '#00ffaa',
+    hp: 60,
+    powers: [
+      '⚡ Axial Planet-Killer Death Ray (Continuous piercing emerald superlaser)',
+      '🛸 Ventral TIE Carrier Launch (Deploys Imperial TIE/ln escorts)',
+      '⚡ Dual Sponson Heavy Tachyon Railguns & 5-Round Turbolaser Salvos'
+    ],
+    loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +75 🪙',
+    tactic: 'Dodge the charging green axial superlaser by staying above or below the center flight axis!'
   }
 ];
 
@@ -4066,88 +4066,16 @@ function getEnemySvg(id) {
 }
 
 const ENEMY_INTEL = [
-  // 5 STARFIGHTERS
+  // 5 HEAVY WARSHIPS (Rank #1 - #5)
   {
-    id: 'tie',
-    name: 'Imperial TIE/ln Starfighter',
-    type: 'Starfighter · Swarm',
-    col: '#ff2255',
-    hp: '1 - 3 HP',
-    spd: '270 - 445 km/s',
-    weapons: 'Twin Ruby Laser Strafing Volley & High-G Ion Barrel Roll (3-Shot Burst)',
-    tactic: 'Shoot them down in swarms before they perform evasive barrel rolls across your broadside arc!'
-  },
-  {
-    id: 'vulture',
-    name: 'Separatist Vulture Droid Fighter',
-    type: 'Droid Interceptor',
-    col: '#a855f7',
-    hp: '1 - 2 HP',
-    spd: '260 - 435 km/s',
-    weapons: 'Quad-Mandible Tracking Plasma Flurry & Buzz Droid Micro-Pods',
-    tactic: 'Evade their tracking plasma bursts and destroy them before they deploy bio-spore pods.'
-  },
-  {
-    id: 'tie_bomber',
-    name: 'Imperial TIE Bomber',
-    type: 'Heavy Bomber',
-    col: '#ff3344',
-    hp: '1 - 2 HP',
-    spd: '350 - 550 km/s',
-    weapons: 'Seismic Proton Torpedo Bombing Run & Trailing Magnetic Sub-Munitions',
-    tactic: 'High-threat kinetic artillery! Priority target before they drop seismic shockwave torpedoes.'
-  },
-  {
-    id: 'tie_defender',
-    name: 'Imperial TIE Defender',
-    type: 'Elite Fighter',
-    col: '#00ffee',
-    hp: '2 - 3 HP',
-    spd: '340 - 520 km/s',
-    weapons: '3-Way 120° Synchronized Cyan Ion Hyper-Burst & Deflector Shield',
-    tactic: 'Fastest fighter in the galaxy with an ion shield. Counter with Chain Lightning or Rapid Cannons!'
-  },
-  {
-    id: 'tri_fighter',
-    name: 'Separatist Tri-Fighter',
-    type: 'Droid Hunter',
-    col: '#c084fc',
-    hp: '2 - 3 HP',
-    spd: '310 - 470 km/s',
-    weapons: 'Droid-Brain Laser Lock-On (3-Round Barrage) & Quantum Phase Dodge',
-    tactic: 'Armored droid brain that phase-dodges the first shot. Lead your target to land direct broadside hits.'
-  },
-
-  // 5 WARSHIPS
-  {
-    id: 'cruiser',
-    name: 'SS-54 Light Assault Gunship (The Halo)',
-    type: 'Assault Gunship · Sector 1+',
-    col: '#f59e0b',
-    hp: '5 - 10 HP',
-    spd: '140 - 250 km/s',
-    weapons: 'Twin Heavy Blaster Cannons, Downward Wingtip Stabilizers & Deflector Shields',
-    tactic: 'Flank its wide swept armor wings and target the rear thrusters while dodging the forward blaster battery!'
-  },
-  {
-    id: 'tesla',
-    name: 'The Razor Crest (ST-70 Assault Gunship)',
-    type: 'Heavy Gunship · Sector 2+',
-    col: '#38bdf8',
-    hp: '6 - 12 HP',
-    spd: '140 - 260 km/s',
-    weapons: 'Twin Heavy Chin MS-1 Blasters & Dual Turbine EMP Shockwaves',
-    tactic: 'Stay clear of the twin massive flank engine turbine blast radius and target the rear cargo hatch!'
-  },
-  {
-    id: 'brood',
-    name: 'Pirate "Ugly" Heavy Hybrid Gunship (TYE-Wing)',
-    type: 'Pirate Hybrid Gunship · Sector 3+',
-    col: '#ff5500',
-    hp: '7 - 13 HP',
-    spd: '135 - 250 km/s',
-    weapons: 'Dorsal Double Turbolaser Turret, Homing Concussion Missiles & Escort TIE Deployment',
-    tactic: 'Target the central spherical TIE cockpit ball while evading the rotating top turret and flank turbine exhaust!'
+    id: 'venator',
+    name: 'Imperial TIE/d Defender Gunship',
+    type: 'Elite Tri-Wing Gunship · Sector 5+',
+    col: '#ef4444',
+    hp: '9 - 16 HP',
+    spd: '145 - 270 km/s',
+    weapons: '6-Gun Tri-Wing Turbolaser Barrage, Micro-Warp Dodge & Heavy Deflectors',
+    tactic: 'Elite Imperial tri-wing starfighter with 6 wingtip laser cannons and deflector shields. Anticipate its micro-warp dodge!'
   },
   {
     id: 'cryo_gunship',
@@ -4160,14 +4088,86 @@ const ENEMY_INTEL = [
     tactic: 'Shatter the 4 rotating ice shield shards to pierce through to the central cockpit pod!'
   },
   {
-    id: 'venator',
-    name: 'Imperial TIE/d Defender Gunship',
-    type: 'Elite Tri-Wing Gunship · Sector 5+',
-    col: '#ef4444',
-    hp: '9 - 16 HP',
-    spd: '145 - 270 km/s',
-    weapons: '6-Gun Tri-Wing Turbolaser Barrage, Micro-Warp Dodge & Heavy Deflectors',
-    tactic: 'Elite Imperial tri-wing starfighter with 6 wingtip laser cannons and deflector shields. Anticipate its micro-warp dodge!'
+    id: 'brood',
+    name: 'Pirate "Ugly" Heavy Hybrid Gunship (TYE-Wing)',
+    type: 'Pirate Hybrid Gunship · Sector 3+',
+    col: '#ff5500',
+    hp: '7 - 13 HP',
+    spd: '135 - 250 km/s',
+    weapons: 'Dorsal Double Turbolaser Turret, Homing Concussion Missiles & Escort TIE Deployment',
+    tactic: 'Target the central spherical TIE cockpit ball while evading the rotating top turret and flank turbine exhaust!'
+  },
+  {
+    id: 'tesla',
+    name: 'The Razor Crest (ST-70 Assault Gunship)',
+    type: 'Heavy Gunship · Sector 2+',
+    col: '#38bdf8',
+    hp: '6 - 12 HP',
+    spd: '140 - 260 km/s',
+    weapons: 'Twin Heavy Chin MS-1 Blasters & Dual Turbine EMP Shockwaves',
+    tactic: 'Stay clear of the twin massive flank engine turbine blast radius and target the rear cargo hatch!'
+  },
+  {
+    id: 'cruiser',
+    name: 'SS-54 Light Assault Gunship (The Halo)',
+    type: 'Assault Gunship · Sector 1+',
+    col: '#f59e0b',
+    hp: '5 - 10 HP',
+    spd: '140 - 250 km/s',
+    weapons: 'Twin Heavy Blaster Cannons, Downward Wingtip Stabilizers & Deflector Shields',
+    tactic: 'Flank its wide swept armor wings and target the rear thrusters while dodging the forward blaster battery!'
+  },
+
+  // 5 STARFIGHTERS (Rank #6 - #10)
+  {
+    id: 'tri_fighter',
+    name: 'Separatist Tri-Fighter',
+    type: 'Droid Hunter',
+    col: '#c084fc',
+    hp: '2 - 3 HP',
+    spd: '310 - 470 km/s',
+    weapons: 'Droid-Brain Laser Lock-On (3-Round Barrage) & Quantum Phase Dodge',
+    tactic: 'Armored droid brain that phase-dodges the first shot. Lead your target to land direct broadside hits.'
+  },
+  {
+    id: 'tie_defender',
+    name: 'Imperial TIE Defender',
+    type: 'Elite Fighter',
+    col: '#00ffee',
+    hp: '2 - 3 HP',
+    spd: '340 - 520 km/s',
+    weapons: '3-Way 120° Synchronized Cyan Ion Hyper-Burst & Deflector Shield',
+    tactic: 'Fastest fighter in the galaxy with an ion shield. Counter with Chain Lightning or Rapid Cannons!'
+  },
+  {
+    id: 'tie_bomber',
+    name: 'Imperial TIE Bomber',
+    type: 'Heavy Bomber',
+    col: '#ff3344',
+    hp: '1 - 2 HP',
+    spd: '350 - 550 km/s',
+    weapons: 'Seismic Proton Torpedo Bombing Run & Trailing Magnetic Sub-Munitions',
+    tactic: 'High-threat kinetic artillery! Priority target before they drop seismic shockwave torpedoes.'
+  },
+  {
+    id: 'vulture',
+    name: 'Separatist Vulture Droid Fighter',
+    type: 'Droid Interceptor',
+    col: '#a855f7',
+    hp: '1 - 2 HP',
+    spd: '260 - 435 km/s',
+    weapons: 'Quad-Mandible Tracking Plasma Flurry & Buzz Droid Micro-Pods',
+    tactic: 'Evade their tracking plasma bursts and destroy them before they deploy bio-spore pods.'
+  },
+  {
+    id: 'tie',
+    name: 'Imperial TIE/ln Starfighter',
+    type: 'Starfighter · Swarm',
+    col: '#ff2255',
+    hp: '1 - 3 HP',
+    spd: '270 - 445 km/s',
+    weapons: 'Twin Ruby Laser Strafing Volley & High-G Ion Barrel Roll (3-Shot Burst)',
+    tactic: 'Shoot them down in swarms before they perform evasive barrel rolls across your broadside arc!'
   }
 ];
 
@@ -4195,7 +4195,7 @@ function switchIntelTab(tab) {
       tabFleet.style.boxShadow = '0 0 14px rgba(168,85,247,0.45)';
       tabFleet.style.border = 'none';
     }
-    if (title) title.textContent = 'ENEMY FLEET (10) — RANKED WEAKEST TO STRONGEST';
+    if (title) title.textContent = 'ENEMY FLEET (10) — RANKED #1 STRONGEST → #10 WEAKEST';
     if (tip) tip.innerHTML = '💡 <b>Tactical Pro-Tip:</b> Use Chain Lightning & Homing Missiles against TIE and Vulture Droid swarms!';
     renderFleetIntelUI();
   } else {
@@ -4213,7 +4213,7 @@ function switchIntelTab(tab) {
       tabBoss.style.boxShadow = '0 0 14px rgba(0,255,170,0.4)';
       tabBoss.style.border = 'none';
     }
-    if (title) title.textContent = 'SECTOR FLAGSHIP BOSSES (10) — RANKED WEAKEST TO STRONGEST';
+    if (title) title.textContent = 'SECTOR FLAGSHIP BOSSES (10) — RANKED #1 STRONGEST → #10 WEAKEST';
     if (tip) tip.innerHTML = '💡 <b>Captain Noel\'s Tactical Pro-Tip:</b> Target boss cores with heavy 32-pounder broadsides while dodging their ultimate attack trajectories!';
     renderBossIntelModalUI();
   }
@@ -4226,9 +4226,9 @@ function renderBossIntelModalUI() {
   grid.innerHTML = BOSS_INTEL.map((b, idx) => {
     const svg = getBossSvg(b.id);
     const rankNum = idx + 1;
-    const rankLabel = rankNum === 1 ? '⭐ RANK #1 (ENTRY / WEAKEST)' : rankNum === 10 ? '👑 RANK #10 (APEX / STRONGEST)' : `⭐ RANK #${rankNum}`;
-    const rankBg = rankNum === 10 ? 'linear-gradient(135deg, #ff4500, #a855f7)' : rankNum >= 8 ? 'linear-gradient(135deg, #ef4444, #f59e0b)' : rankNum >= 5 ? 'rgba(56,189,248,0.2)' : 'rgba(255,255,255,0.08)';
-    const rankCol = rankNum === 10 ? '#ffffff' : rankNum >= 8 ? '#ffd23c' : rankNum >= 5 ? '#38bdf8' : '#94a3b8';
+    const rankLabel = rankNum === 1 ? '👑 RANK #1 (APEX / STRONGEST)' : rankNum === 10 ? '⭐ RANK #10 (ENTRY / WEAKEST)' : `⭐ RANK #${rankNum}`;
+    const rankBg = rankNum === 1 ? 'linear-gradient(135deg, #ff4500, #a855f7)' : rankNum <= 3 ? 'linear-gradient(135deg, #ef4444, #f59e0b)' : rankNum <= 6 ? 'rgba(56,189,248,0.2)' : 'rgba(255,255,255,0.08)';
+    const rankCol = rankNum === 1 ? '#ffffff' : rankNum <= 3 ? '#ffd23c' : rankNum <= 6 ? '#38bdf8' : '#94a3b8';
 
     return `
       <div class="boss-card-item" style="border-color:${b.col}44;box-shadow:0 4px 18px ${b.col}22">
@@ -4261,9 +4261,9 @@ function renderFleetIntelUI() {
   grid.innerHTML = ENEMY_INTEL.map((e, idx) => {
     const svg = getEnemySvg(e.id);
     const rankNum = idx + 1;
-    const rankLabel = rankNum === 1 ? '⭐ RANK #1 (SWARM / WEAKEST)' : rankNum === 10 ? '👑 RANK #10 (APEX CAPITAL / STRONGEST)' : `⭐ RANK #${rankNum}`;
-    const rankBg = rankNum === 10 ? 'linear-gradient(135deg, #ef4444, #a855f7)' : rankNum >= 6 ? 'rgba(245,158,11,0.2)' : 'rgba(255,255,255,0.08)';
-    const rankCol = rankNum === 10 ? '#ffffff' : rankNum >= 6 ? '#ffd23c' : '#94a3b8';
+    const rankLabel = rankNum === 1 ? '👑 RANK #1 (APEX CAPITAL / STRONGEST)' : rankNum === 10 ? '⭐ RANK #10 (SWARM / WEAKEST)' : `⭐ RANK #${rankNum}`;
+    const rankBg = rankNum === 1 ? 'linear-gradient(135deg, #ef4444, #a855f7)' : rankNum <= 5 ? 'rgba(245,158,11,0.2)' : 'rgba(255,255,255,0.08)';
+    const rankCol = rankNum === 1 ? '#ffffff' : rankNum <= 5 ? '#ffd23c' : '#94a3b8';
 
     return `
       <div class="boss-card-item" style="border-color:${e.col}44;box-shadow:0 4px 18px ${e.col}22">
