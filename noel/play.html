@@ -1732,7 +1732,7 @@ const SHIPS = [
   { id: 'cutter',  name: 'Millennium Falcon (YT-1300) ⚓',   cost: 0,  cols: ['#f59e0b', '#b45309', '#451a03'], hp: 6, cool: 0.20, spd: 1.15, gold: 1.25, magnet: 45, spread: [0], power: '🔥 Quad-Laser Blaster Cannons & Hyperdrive Overdrive' },
   { id: 'runner',  name: 'T-65B X-Wing Starfighter ⚡',     cost: 5,  cols: ['#00ffee', '#0284c7', '#082f49'], hp: 6, cool: 0.14, spd: 1.50, gold: 1.30, magnet: 90, spread: [0], power: '⚡ S-Foil Attack Wings, +50% Speed & Proton Laser Barrage' },
   { id: 'galleon', name: 'The Rogue Shadow (Stealth Transport) 🛡️',cost: 6,  cols: ['#38bdf8', '#334155', '#0f172a'], hp: 9, cool: 0.28, spd: 0.95, gold: 1.15, magnet: 35, spread: [0], power: '🛡️ Stealth Armor (+3 Hearts) & Quad Tachyon Concussion Blast' },
-  { id: 'hind',    name: 'Naboo Royal J-Type Cruiser ✨',   cost: 8,  cols: ['#fff0b3', '#ffd23c', '#78350f'], hp: 6, cool: 0.22, spd: 1.20, gold: 2.00, magnet: 180, spread: [0], power: '🪙 24K Midas Gold Rush (+100% Dubloons) & Gravity Tractor' },
+  { id: 'hind',    name: 'Republic Hammerhead Corvette 🚀',   cost: 8,  cols: ['#ef4444', '#f8fafc', '#0f172a'], hp: 7, cool: 0.20, spd: 1.25, gold: 2.00, magnet: 180, spread: [0], power: '🚀 Dual Swivel Turbolasers & Quad Sublight Engine Surge (+100% Dubloons)' },
   { id: 'storm',   name: 'Razor Crest Assault Gunship 🌌',  cost: 10, cols: ['#e9d5ff', '#a855f7', '#1e1035'], hp: 7, cool: 0.25, spd: 1.15, gold: 1.40, magnet: 65, spread: [-0.15, 0.15], power: '🌀 Twin Singularity Void Torpedoes with Gravity Implosion' },
 ];
 
@@ -2078,23 +2078,55 @@ function getShipSvg(shipId, cols) {
   }
 
   if (shipId === 'hind') {
-    // 3. NABOO ROYAL J-TYPE CRUISER: 24K Mirror Chrome & Gold Sleek Aerodynamic Delta Wing
+    // 3. REPUBLIC HAMMERHEAD CORVETTE: Vertical Hammerhead Prow, Quad Sublight Engines, Swivel Turrets
     return `<svg viewBox="0 0 110 65" width="105" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${filterBlock}
-      <!-- Golden Solar Ether Engine Flare -->
-      <polygon points="12,32 0,33 12,34" fill="#ffd23c" filter="url(#glow_${uid})"/>
+      <!-- Quad Sublight Ion Engine Exhaust Plumes -->
+      <polygon points="14,16 2,17 14,18" fill="#38bdf8" filter="url(#glow_${uid})"/>
+      <polygon points="14,26 2,27 14,28" fill="#ffffff" filter="url(#glow_${uid})"/>
+      <polygon points="14,38 2,39 14,40" fill="#ffffff" filter="url(#glow_${uid})"/>
+      <polygon points="14,48 2,49 14,50" fill="#38bdf8" filter="url(#glow_${uid})"/>
 
-      <!-- Ultra-Sleek Chrome & 24K Gold Delta Wing Hull -->
-      <path d="M12 33 L54 14 L88 22 L106 33 L88 44 L54 52 Z" fill="url(#metal_${uid})" stroke="#ffd23c" stroke-width="2.8"/>
-      
-      <!-- Twin Blended Royal Hyperdrive Nacelles -->
-      <ellipse cx="64" cy="18" rx="18" ry="4.5" fill="#78350f" stroke="#ffd23c" stroke-width="1.4"/>
-      <ellipse cx="64" cy="48" rx="18" ry="4.5" fill="#78350f" stroke="#ffd23c" stroke-width="1.4"/>
+      <!-- Quad Cylindrical Engine Nacelles with Republic Red Bands -->
+      <!-- Upper Outrigger Engine -->
+      <rect x="14" y="11" width="22" height="10" rx="3" fill="#1e293b" stroke="#e2e8f0" stroke-width="1.2"/>
+      <rect x="20" y="11" width="8" height="10" fill="#ef4444"/>
+      <circle cx="16" cy="16" r="3" fill="#38bdf8"/>
+      <!-- Lower Outrigger Engine -->
+      <rect x="14" y="44" width="22" height="10" rx="3" fill="#1e293b" stroke="#e2e8f0" stroke-width="1.2"/>
+      <rect x="20" y="44" width="8" height="10" fill="#ef4444"/>
+      <circle cx="16" cy="49" r="3" fill="#38bdf8"/>
+      <!-- Mid Engine Mount Pylons -->
+      <polygon points="24,18 36,25 36,40 24,47" fill="#334155" stroke="#64748b" stroke-width="1"/>
 
-      <!-- Golden Royal Cockpit Canopy & Prow Attractor Beam -->
-      <ellipse cx="80" cy="33" rx="12" ry="5" fill="#ffd23c" stroke="#ffffff" stroke-width="1.5"/>
-      <circle cx="102" cy="33" r="4.5" fill="#ffd23c" stroke="#ffffff" stroke-width="1.8" filter="url(#glow_${uid})"/>
-      <circle cx="102" cy="33" r="2" fill="#ffffff"/>
+      <!-- Main Armored Cylindrical Fuselage Spine -->
+      <rect x="34" y="24" width="46" height="17" rx="3" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+      <!-- Red Dorsal Spine Cowling & Gold Trim -->
+      <rect x="36" y="25" width="42" height="5" rx="1.5" fill="#ef4444"/>
+      <line x1="36" y1="36" x2="78" y2="36" stroke="#f59e0b" stroke-width="1.5"/>
+      <!-- Dark Keel Greebles & Radiators -->
+      <rect x="38" y="38" width="38" height="3" fill="#0f172a"/>
+
+      <!-- Dorsal Sensor / Comm Tower -->
+      <polygon points="48,24 54,17 60,24" fill="#ef4444" stroke="#e2e8f0" stroke-width="1"/>
+
+      <!-- Iconic Vertical Hammerhead Bow / Bridge Section -->
+      <!-- Upper Hammerhead Fin -->
+      <polygon points="80,24 88,8 96,10 92,24" fill="#f8fafc" stroke="#dc2626" stroke-width="1.5"/>
+      <polygon points="86,10 94,11 91,20 84,20" fill="#ef4444"/>
+      <!-- Lower Hammerhead Fin -->
+      <polygon points="80,41 88,57 96,55 92,41" fill="#f8fafc" stroke="#dc2626" stroke-width="1.5"/>
+      <polygon points="86,55 94,54 91,45 84,45" fill="#ef4444"/>
+      <!-- Central Hammerhead Bridge Face -->
+      <polygon points="84,21 102,23 104,32.5 102,42 84,44 80,32.5" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.8"/>
+      <polygon points="86,23 100,25 101,32.5 100,40 86,42 84,32.5" fill="#ef4444"/>
+      <!-- Bridge Viewport Slit -->
+      <rect x="94" y="30.5" width="8" height="4" rx="1" fill="#0284c7" stroke="#ffffff" stroke-width="0.8" filter="url(#glow_${uid})"/>
+
+      <!-- Lateral Circular Swivel Turret & Heavy Cannons -->
+      <circle cx="84" cy="32.5" r="5" fill="#1e293b" stroke="#e2e8f0" stroke-width="1.2"/>
+      <line x1="84" y1="31" x2="98" y2="31" stroke="#334155" stroke-width="1.6"/>
+      <line x1="84" y1="34" x2="98" y2="34" stroke="#334155" stroke-width="1.6"/>
     </svg>`;
   }
 
@@ -8278,56 +8310,181 @@ function draw() {
       cx.fill();
 
     // -------------------------------------------------------------
-    // SHAPE 3: NABOO ROYAL J-TYPE CRUISER (hind)
+    // SHAPE 3: REPUBLIC HAMMERHEAD CORVETTE (hind)
     // -------------------------------------------------------------
     } else if (curShip === 'hind') {
-      // Golden Starlight Thruster Wake
-      const jg = cx.createLinearGradient(-44, 0, -74, 0);
-      jg.addColorStop(0, '#ffffff');
-      jg.addColorStop(0.4, '#ffd23c');
-      jg.addColorStop(0.8, '#f59e0b');
-      jg.addColorStop(1, 'rgba(245, 158, 11, 0)');
-      cx.fillStyle = jg;
-      cx.beginPath();
-      cx.moveTo(-44, -6);
-      cx.lineTo(-72 - Math.random() * 16, 0);
-      cx.lineTo(-44, 6);
-      cx.closePath();
-      cx.fill();
-
-      // Ultra-Sleek Mirror Chrome & 24K Gold Delta Wing Hull
-      const hGrad = cx.createLinearGradient(0, -28, 0, 28);
-      hGrad.addColorStop(0, '#fffbeb');
-      hGrad.addColorStop(0.25, '#fef08a');
-      hGrad.addColorStop(0.65, '#f59e0b');
-      hGrad.addColorStop(1, '#78350f');
-      cx.fillStyle = hGrad;
-      cx.beginPath();
-      cx.moveTo(-44, 0);
-      cx.lineTo(-6, -26);
-      cx.lineTo(28, -14);
-      cx.lineTo(58, 0); // Smooth Chrome Needle Bow
-      cx.lineTo(28, 14);
-      cx.lineTo(-6, 26);
-      cx.closePath();
-      cx.fill();
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 3; cx.stroke();
-
-      // Twin Blended Royal Hyperdrive Nacelles
-      for (const ny of [-16, 16]) {
-        cx.fillStyle = '#78350f';
-        cx.beginPath(); cx.ellipse(4, ny, 18, 5.5, 0, 0, Math.PI * 2); cx.fill();
-        cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.6; cx.stroke();
+      // Quad Sublight Ion Engine Exhaust Plumes
+      const ionEnginesY = [-20, -7, 7, 20];
+      for (let i = 0; i < ionEnginesY.length; i++) {
+        const ey = ionEnginesY[i];
+        const jg = cx.createLinearGradient(-46, ey, -76, ey);
+        jg.addColorStop(0, '#ffffff');
+        jg.addColorStop(0.35, '#38bdf8');
+        jg.addColorStop(0.75, '#0284c7');
+        jg.addColorStop(1, 'rgba(2, 132, 199, 0)');
+        cx.fillStyle = jg;
+        cx.beginPath();
+        cx.moveTo(-46, ey - (Math.abs(ey) > 15 ? 4 : 3));
+        cx.lineTo(-66 - Math.random() * 16, ey);
+        cx.lineTo(-46, ey + (Math.abs(ey) > 15 ? 4 : 3));
+        cx.closePath();
+        cx.fill();
       }
 
-      // Golden Royal Cockpit Canopy & Prow Attractor Core
-      cx.fillStyle = '#ffd23c';
-      cx.beginPath(); cx.ellipse(22, 0, 14, 6, 0, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.5; cx.stroke();
+      // Symmetrical Quad Engine Pylons & Mounts
+      cx.fillStyle = '#1e293b';
+      cx.beginPath();
+      cx.moveTo(-34, -22);
+      cx.lineTo(-14, -8);
+      cx.lineTo(-14, 8);
+      cx.lineTo(-34, 22);
+      cx.lineTo(-44, 18);
+      cx.lineTo(-30, 0);
+      cx.lineTo(-44, -18);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#64748b';
+      cx.lineWidth = 1.6;
+      cx.stroke();
 
-      // Midas Tractor Beam Glow
-      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(52, 0, 4.5, 0, Math.PI * 2); cx.fill();
-      cx.fillStyle = '#ffd23c'; cx.beginPath(); cx.arc(52, 0, 2.5, 0, Math.PI * 2); cx.fill();
+      // Quad Cylindrical Sublight Engine Pods
+      for (const ey of [-20, 20]) {
+        // Outer Engine Pods
+        cx.fillStyle = '#0f172a';
+        cx.fillRect(-48, ey - 5, 24, 10);
+        cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 1.4;
+        cx.strokeRect(-48, ey - 5, 24, 10);
+        // Republic Crimson Engine Band
+        cx.fillStyle = '#ef4444';
+        cx.fillRect(-40, ey - 5, 8, 10);
+        // Blue Ion Thruster Ring
+        cx.fillStyle = '#38bdf8';
+        cx.beginPath(); cx.arc(-48, ey, 3, 0, Math.PI * 2); cx.fill();
+      }
+
+      // Main Armored Cylindrical Spine Fuselage
+      const hGrad = cx.createLinearGradient(0, -12, 0, 12);
+      hGrad.addColorStop(0, '#ffffff');
+      hGrad.addColorStop(0.3, '#f1f5f9');
+      hGrad.addColorStop(0.7, '#e2e8f0');
+      hGrad.addColorStop(1, '#94a3b8');
+      cx.fillStyle = hGrad;
+      cx.fillRect(-28, -10, 52, 20);
+      cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 2;
+      cx.strokeRect(-28, -10, 52, 20);
+
+      // Red Dorsal Spine Cowling & Republic Markings
+      cx.fillStyle = '#ef4444';
+      cx.fillRect(-26, -10, 48, 5);
+      // Gold Trim Accent Line
+      cx.fillStyle = '#f59e0b';
+      cx.fillRect(-24, 3, 44, 2.5);
+
+      // Mechanical Underside Keel Greebles & Conduits
+      cx.fillStyle = '#0f172a';
+      cx.fillRect(-22, 6, 40, 4);
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1;
+      cx.strokeRect(-22, 6, 40, 4);
+
+      // Dorsal Communications / Sensor Tower
+      cx.fillStyle = '#ef4444';
+      cx.beginPath();
+      cx.moveTo(-6, -10);
+      cx.lineTo(2, -18);
+      cx.lineTo(10, -10);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.2; cx.stroke();
+
+      // Iconic Vertical Hammerhead Bow / Bridge Structure
+      // Upper Vertical Hammerhead Fin
+      cx.fillStyle = '#f8fafc';
+      cx.beginPath();
+      cx.moveTo(22, -10);
+      cx.lineTo(32, -32);
+      cx.lineTo(44, -28);
+      cx.lineTo(38, -10);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#dc2626'; cx.lineWidth = 1.8; cx.stroke();
+
+      // Upper Fin Republic Red Armor Face
+      cx.fillStyle = '#ef4444';
+      cx.beginPath();
+      cx.moveTo(28, -12);
+      cx.lineTo(34, -28);
+      cx.lineTo(42, -26);
+      cx.lineTo(36, -12);
+      cx.closePath();
+      cx.fill();
+
+      // Lower Vertical Hammerhead Fin
+      cx.fillStyle = '#f8fafc';
+      cx.beginPath();
+      cx.moveTo(22, 10);
+      cx.lineTo(32, 32);
+      cx.lineTo(44, 28);
+      cx.lineTo(38, 10);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#dc2626'; cx.lineWidth = 1.8; cx.stroke();
+
+      // Lower Fin Republic Red Armor Face
+      cx.fillStyle = '#ef4444';
+      cx.beginPath();
+      cx.moveTo(28, 12);
+      cx.lineTo(34, 28);
+      cx.lineTo(42, 26);
+      cx.lineTo(36, 12);
+      cx.closePath();
+      cx.fill();
+
+      // Central Hammerhead Prow & Bridge Head
+      cx.fillStyle = '#f8fafc';
+      cx.beginPath();
+      cx.moveTo(24, -14);
+      cx.lineTo(48, -12);
+      cx.lineTo(54, 0);
+      cx.lineTo(48, 12);
+      cx.lineTo(24, 14);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#64748b'; cx.lineWidth = 2.2; cx.stroke();
+
+      // Republic Crimson Bow Sponson
+      cx.fillStyle = '#ef4444';
+      cx.beginPath();
+      cx.moveTo(28, -11);
+      cx.lineTo(46, -9);
+      cx.lineTo(50, 0);
+      cx.lineTo(46, 9);
+      cx.lineTo(28, 11);
+      cx.closePath();
+      cx.fill();
+
+      // Horizontal Viewport Visor Glow
+      const bGlow = cx.createLinearGradient(42, 0, 52, 0);
+      bGlow.addColorStop(0, '#ffffff');
+      bGlow.addColorStop(0.5, '#38bdf8');
+      bGlow.addColorStop(1, '#0284c7');
+      cx.fillStyle = bGlow;
+      cx.fillRect(44, -3, 8, 6);
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1; cx.strokeRect(44, -3, 8, 6);
+
+      // Lateral Circular Swivel Turrets with Twin Turbolasers
+      cx.fillStyle = '#1e293b';
+      cx.beginPath(); cx.arc(28, 0, 6.5, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 1.4; cx.stroke();
+
+      // Twin Turbolaser Cannons
+      cx.strokeStyle = '#f8fafc'; cx.lineWidth = 2.2;
+      cx.beginPath();
+      cx.moveTo(28, -2.5); cx.lineTo(46, -2.5);
+      cx.moveTo(28, 2.5); cx.lineTo(46, 2.5);
+      cx.stroke();
+      cx.fillStyle = '#ffd23c';
+      cx.fillRect(44, -3.5, 3, 2);
+      cx.fillRect(44, 1.5, 3, 2);
 
     // -------------------------------------------------------------
     // SHAPE 4: THE RAZOR CREST ST-70 GUNSHIP (storm)
