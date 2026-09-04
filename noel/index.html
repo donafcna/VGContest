@@ -5344,14 +5344,8 @@ function update(dt) {
         } else {
           // Top Swiveling Double Turret Rapid Laser Volley
           for (const spr of [-0.24, 0, 0.24]) {
-            eballs.push({
-              type: 'laser',
-              col: '#ffd23c',
-              x: f.x - f.w * 0.20, y: f.y - 16,
             const shootAng = Math.PI + spr;
             eballs.push({ type: 'laser', col: '#ffd23c', x: f.x - f.w * 0.20, y: f.y - 16, vx: Math.cos(shootAng) * 560 * spdBonus, vy: Math.sin(shootAng) * 560 * spdBonus, r: 12 });
-              r: 12
-            });
           }
           popup(f.x, f.y - 28, '⚡ DORSAL TURRET FLURRY!', '#ffd23c');
           sfx('laser');
@@ -5382,14 +5376,8 @@ function update(dt) {
       } else if (f.variant === 'venator' || f.variant === 'imperial') {
         // 5. IMPERIAL TIE/d DEFENDER: 6-Gun Tri-Wing Turbolaser Barrage & Micro-Warp Dodge!
         for (const spr of [-0.30, -0.18, -0.06, 0.06, 0.18, 0.30]) {
-          eballs.push({
-            type: 'laser',
-            col: '#ef4444',
-            x: f.x - f.w * 0.40, y: f.y,
-            const shootAng = Math.PI + spr;
-            eballs.push({ type: 'laser', col: '#ef4444', x: f.x - f.w * 0.40, y: f.y, vx: Math.cos(shootAng) * 620 * spdBonus, vy: Math.sin(shootAng) * 620 * spdBonus, r: 13 });
-            r: 13
-          });
+          const shootAng = Math.PI + spr;
+          eballs.push({ type: 'laser', col: '#ef4444', x: f.x - f.w * 0.40, y: f.y, vx: Math.cos(shootAng) * 620 * spdBonus, vy: Math.sin(shootAng) * 620 * spdBonus, r: 13 });
         }
         popup(f.x, f.y - 28, '⚔️ 6-GUN TRI-WING TURBOLASERS!', '#ef4444');
         sfx('laser');
@@ -5402,14 +5390,8 @@ function update(dt) {
         // Broadside Battery if below 50% HP
         if (f.hp <= f.maxHp * 0.5) {
           for (const spr of [-0.20, 0.20]) {
-            eballs.push({
-              type: 'laser',
-              col: '#ffd23c',
-              x: f.x, y: f.y,
             const shootAng = Math.PI + spr;
             eballs.push({ type: 'laser', col: '#ffd23c', x: f.x, y: f.y, vx: Math.cos(shootAng) * 500 * spdBonus, vy: Math.sin(shootAng) * 500 * spdBonus, r: 11 });
-              r: 11
-            });
           }
           popup(f.x, f.y - 28, '⚡ GUNSHIP BROADSIDE!', '#f59e0b');
         }
@@ -5512,14 +5494,8 @@ function update(dt) {
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 100) {
         g.shootT = Math.max(0.8, 1.8 - level * 0.14) + Math.random() * 0.6;
         for (const spr of [-0.22, 0, 0.22]) {
-          eballs.push({
-            type: 'emp',
-            col: '#00ffee',
-            x: g.x - 22, y: g.y,
           const shootAng = Math.PI + spr;
           eballs.push({ type: 'emp', col: '#00ffee', x: g.x - 22, y: g.y, vx: Math.cos(shootAng) * 600 * spdBonus, vy: Math.sin(shootAng) * 600 * spdBonus, r: 12 });
-            r: 12
-          });
         }
         popup(g.x, g.y - 20, '⚡ ION HYPER-BURST!', '#00ffee');
         sfx('incoming');
@@ -5531,16 +5507,9 @@ function update(dt) {
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 100) {
         g.shootT = Math.max(0.9, 1.9 - level * 0.14) + Math.random() * 0.5;
         const dx = ship.x - g.x, dy = ship.y - g.y;
-        const dist = Math.hypot(dx, dy) || 1;
         for (const spr of [-0.12, 0, 0.12]) {
-          eballs.push({
-            type: 'laser',
-            col: '#c084fc',
-            x: g.x - 22, y: g.y,
           const baseAng = Math.atan2(dy, dx) + spr;
           eballs.push({ type: 'laser', col: '#c084fc', x: g.x - 22, y: g.y, vx: Math.cos(baseAng) * 600 * spdBonus, vy: Math.sin(baseAng) * 600 * spdBonus, r: 11 });
-            r: 11
-          });
         }
         sfx('laser');
       }
