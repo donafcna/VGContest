@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Space Pirates: Galleon vs Star Wars UFOs — Realistic Space Combat with 7-Day Daily Rewards by Noel v30.0 -->
+<!-- Space Pirates: Galleon vs Star Wars UFOs — Realistic Space Combat with 7-Day Daily Rewards by Noel v32.0 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -2646,20 +2646,39 @@ function getEnemySvg(id) {
     </svg>`;
 
   } else if (id === 'tesla') {
-    // 7. SEPARATIST MUNIFICENT STAR FRIGATE
+    // 7. THE RAZOR CREST (ST-70 ASSAULT GUNSHIP)
     return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${glowFilter}
-      <!-- Slender Hammerhead Needle Bow -->
-      <polygon points="8,40 70,20 144,24 144,56 70,60" fill="url(#metal_${uid})" stroke="#00e5ff" stroke-width="2.2"/>
-      <polygon points="30,40 85,26 130,28 130,52 85,54" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+      <!-- Twin Giant Cylindrical Flank Engine Turbines (Signature Razor Crest Feature) -->
+      <!-- Port Turbine Engine -->
+      <ellipse cx="68" cy="16" rx="20" ry="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
+      <ellipse cx="62" cy="16" rx="14" ry="9" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+      <circle cx="56" cy="16" r="5" fill="#38bdf8" filter="url(#glow_${uid})"/>
+      <polygon points="88,16 110,12 110,20" fill="#38bdf8" filter="url(#glow_${uid})"/>
 
-      <!-- Dorsal Communications Spine Tower -->
-      <rect x="76" y="8" width="14" height="64" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
-      <circle cx="83" cy="12" r="3" fill="#00e5ff" filter="url(#glow_${uid})"/>
+      <!-- Starboard Turbine Engine -->
+      <ellipse cx="68" cy="64" rx="20" ry="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
+      <ellipse cx="62" cy="64" rx="14" ry="9" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+      <circle cx="56" cy="64" r="5" fill="#38bdf8" filter="url(#glow_${uid})"/>
+      <polygon points="88,64 110,60 110,68" fill="#38bdf8" filter="url(#glow_${uid})"/>
 
-      <!-- Prow Heavy Turbo-Ion Emitters -->
-      <circle cx="36" cy="40" r="8" fill="#00e5ff" filter="url(#glow_${uid})"/>
-      <circle cx="36" cy="40" r="3.5" fill="#ffffff"/>
+      <!-- Main Heavy Beskar Armored Fuselage -->
+      <path d="M14 40 L38 24 L120 26 L142 34 L142 46 L120 54 L38 56 Z" fill="url(#armor_${uid})" stroke="#94a3b8" stroke-width="2.2"/>
+      <polygon points="42,30 112,32 112,48 42,50" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+
+      <!-- Forward Curved Cockpit Canopy & Nose Ramp -->
+      <polygon points="10,40 28,30 45,30 45,50 28,50" fill="#1e293b" stroke="#ffffff" stroke-width="1.6"/>
+      <rect x="18" y="35" width="12" height="10" fill="#38bdf8" rx="2" filter="url(#glow_${uid})"/>
+      <line x1="12" y1="40" x2="26" y2="40" stroke="#020617" stroke-width="1.5"/>
+
+      <!-- Dual Heavy Chin-Mounted Laser Cannons -->
+      <rect x="6" y="32" width="16" height="3" fill="#ff0033" rx="1"/>
+      <rect x="6" y="45" width="16" height="3" fill="#ff0033" rx="1"/>
+
+      <!-- Sponson Side Thrusters & Hull Greebles -->
+      <rect x="74" y="22" width="24" height="4" fill="#64748b"/>
+      <rect x="74" y="54" width="24" height="4" fill="#64748b"/>
+      <circle cx="95" cy="40" r="4.5" fill="#ffd23c" stroke="#ffffff" stroke-width="1"/>
     </svg>`;
 
   } else if (id === 'brood') {
@@ -2798,13 +2817,13 @@ const ENEMY_INTEL = [
   },
   {
     id: 'tesla',
-    name: 'Separatist Munificent Star Frigate',
-    type: 'Star Frigate · Sector 2+',
-    col: '#00e5ff',
+    name: 'The Razor Crest (ST-70 Assault Gunship)',
+    type: 'Heavy Gunship · Sector 2+',
+    col: '#38bdf8',
     hp: '6 - 12 HP',
-    spd: '130 - 240 km/s',
-    weapons: 'Prow Heavy Turbo-Ion EMP Sphere & 4-Way Ball Lightning Cascade',
-    tactic: 'Weave through the expanding EMP sphere before it splits into homing ball lightning sparks.'
+    spd: '140 - 260 km/s',
+    weapons: 'Twin Heavy Chin MS-1 Blasters & Dual Turbine EMP Shockwaves',
+    tactic: 'Stay clear of the twin massive flank engine turbine blast radius and target the rear cargo hatch!'
   },
   {
     id: 'brood',
@@ -3098,8 +3117,8 @@ function spawnFort() {
     // 1. SS-54 Light Assault Gunship (The Halo / Bounty Hunter Assault Ship)
     variant = 'cruiser'; col = '#f59e0b'; name = 'SS-54 ASSAULT GUNSHIP'; hp = 5 + Math.floor(level * 0.7); w = 128; h = 68; shield = 2;
   } else if (roll < 0.52) {
-    // 2. Separatist Munificent Star Frigate (Electric Cyan & Navy)
-    variant = 'tesla'; col = '#00e5ff'; name = 'SEPARATIST MUNIFICENT FRIGATE'; hp = 6 + Math.floor(level * 0.8); w = 118; h = 70; shield = 0;
+    // 2. The Razor Crest (ST-70 Assault Gunship - Twin Flank Turbines & Beskar Armor)
+    variant = 'tesla'; col = '#38bdf8'; name = 'THE RAZOR CREST (ST-70)'; hp = 6 + Math.floor(level * 0.8); w = 126; h = 72; shield = 2;
   } else if (roll < 0.72) {
     // 3. Imperial Gozanti Armed Gunship (Magma Orange & Heavy Armor)
     variant = 'brood'; col = '#ff5500'; name = 'IMPERIAL GOZANTI GUNSHIP'; hp = 7 + Math.floor(level * 0.9); w = 126; h = 68; shield = 0;
@@ -5123,26 +5142,28 @@ function update(dt) {
       const spdBonus = 1 + Math.min(0.8, (level - 1) * 0.07);
 
       if (f.variant === 'tesla') {
-        // 2. SEPARATIST MUNIFICENT STAR FRIGATE: Prow Turbo-Ion EMP Sphere + 4-Way Ball Lightning Cascade!
-        eballs.push({
-          type: 'emp',
-          col: '#00e5ff',
-          x: f.x - f.w * 0.45, y: f.y,
-          vx: -390 * spdBonus, vy: (dy / dist) * 120 * spdBonus,
-          r: 22
-        });
-        // 4 Branching Ball Lightning Sparks
-        for (const spr of [-0.25, -0.08, 0.08, 0.25]) {
+        // 2. THE RAZOR CREST (ST-70 ASSAULT GUNSHIP): Dual Heavy Chin Blasters & Twin Turbine EMP Shockwaves!
+        for (const cy of [-12, 12]) {
           eballs.push({
-            type: 'emp',
-            col: '#00ffee',
-            x: f.x - f.w * 0.40, y: f.y,
-            vx: -480 * spdBonus * Math.cos(spr), vy: 480 * spdBonus * Math.sin(spr),
-            r: 11
+            type: 'laser',
+            col: '#ff0033',
+            x: f.x - f.w * 0.45, y: f.y + cy,
+            vx: (dx / dist) * 620 * spdBonus, vy: (dy / dist) * 620 * spdBonus,
+            r: 13
           });
         }
-        popup(f.x, f.y - 28, '⚡ TURBO-ION TEMPEST!', '#00e5ff');
-        sfx('incoming');
+        // Twin Flank Engine Turbine EMP Shockwave
+        for (const ty of [-f.h * 0.35, f.h * 0.35]) {
+          eballs.push({
+            type: 'emp',
+            col: '#38bdf8',
+            x: f.x - f.w * 0.10, y: f.y + ty,
+            vx: -480 * spdBonus, vy: (ty < 0 ? -60 : 60),
+            r: 14
+          });
+        }
+        popup(f.x, f.y - 28, '💥 RAZOR CREST CHIN CANNONS!', '#38bdf8');
+        sfx('laser');
 
       } else if (f.variant === 'brood') {
         // 3. IMPERIAL GOZANTI ARMED GUNSHIP: Molten Magma Cluster Torpedo + Escort TIE Deployment!
@@ -5856,69 +5877,89 @@ function draw() {
     cx.save(); cx.translate(f.x, f.y);
     
     if (f.variant === 'tesla') {
-      // 2. SEPARATIST MUNIFICENT STAR FRIGATE (Slender Needle Bow, Dorsal Sensor Spine, Prow Ion Cannons)
-      // Subspace Ion EMP Aura
+      // 2. THE RAZOR CREST: ST-70 ASSAULT GUNSHIP (From User Reference Photo)
       const sg = cx.createRadialGradient(0, 0, 15, 0, 0, f.w * 0.54);
-      sg.addColorStop(0, 'rgba(0, 229, 255, 0.40)'); sg.addColorStop(0.6, 'rgba(0, 150, 255, 0.15)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      sg.addColorStop(0, 'rgba(56, 189, 248, 0.40)'); sg.addColorStop(0.6, 'rgba(0, 150, 255, 0.15)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = sg; cx.beginPath(); cx.arc(0, 0, f.w * 0.52, 0, Math.PI * 2); cx.fill();
 
-      // Slender Separatist Frigate Fuselage (Titanium Slate & Separatist Navy Bronze)
-      const tg = cx.createLinearGradient(-f.w * 0.48, 0, f.w * 0.45, 0);
-      tg.addColorStop(0, '#020617'); tg.addColorStop(0.25, '#0f172a'); tg.addColorStop(0.6, '#1e293b'); tg.addColorStop(1, '#334155');
-      cx.fillStyle = tg;
-      cx.beginPath();
-      cx.moveTo(-f.w * 0.48, 0);                 // Long needle bow
-      cx.lineTo(-f.w * 0.22, -f.h * 0.36);       // Port bow flare
-      cx.lineTo(f.w * 0.20, -f.h * 0.42);        // Port mid wing
-      cx.lineTo(f.w * 0.45, -f.h * 0.22);        // Port rear engine
-      cx.lineTo(f.w * 0.38, 0);                  // Aft spine center
-      cx.lineTo(f.w * 0.45, f.h * 0.22);         // Starboard rear engine
-      cx.lineTo(f.w * 0.20, f.h * 0.42);         // Starboard mid wing
-      cx.lineTo(-f.w * 0.22, f.h * 0.36);        // Starboard bow flare
-      cx.closePath(); cx.fill();
-      cx.strokeStyle = '#00e5ff'; cx.lineWidth = 2.4; cx.stroke();
+      // TWIN GIANT FLANK CYLINDRICAL ION ENGINE TURBINES (Signature Razor Crest Feature)
+      for (const ty of [-f.h * 0.38, f.h * 0.38]) {
+        // Outer Engine Cowling
+        cx.fillStyle = '#0f172a';
+        cx.beginPath(); cx.ellipse(-f.w * 0.05, ty, 22, 14, 0, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 2.2; cx.stroke();
 
-      // Armor Inset Trench Plating
-      cx.fillStyle = '#090d16';
-      cx.beginPath();
-      cx.moveTo(-f.w * 0.32, 0);
-      cx.lineTo(-f.w * 0.10, -f.h * 0.22);
-      cx.lineTo(f.w * 0.28, -f.h * 0.22);
-      cx.lineTo(f.w * 0.32, 0);
-      cx.lineTo(f.w * 0.28, f.h * 0.22);
-      cx.lineTo(-f.w * 0.10, f.h * 0.22);
-      cx.closePath(); cx.fill();
-      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.2; cx.stroke();
+        // Intake Fan Blade Disc
+        cx.fillStyle = '#1e293b';
+        cx.beginPath(); cx.ellipse(-f.w * 0.12, ty, 12, 10, 0, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.4; cx.stroke();
+        
+        // Rotating Turbine Intake Blades
+        cx.save(); cx.translate(-f.w * 0.12, ty); cx.rotate(t * 14);
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.2;
+        for (let b = 0; b < 6; b++) {
+          const ba = b * Math.PI / 3;
+          cx.beginPath(); cx.moveTo(0, 0); cx.lineTo(Math.cos(ba) * 10, Math.sin(ba) * 8); cx.stroke();
+        }
+        cx.restore();
 
-      // Tall Dorsal Communications Tower / Sensor Array Spine
-      cx.fillStyle = '#020617';
-      cx.fillRect(-f.w * 0.05, -f.h * 0.48, f.w * 0.14, f.h * 0.96);
-      cx.strokeStyle = '#00e5ff'; cx.lineWidth = 1.6;
-      cx.strokeRect(-f.w * 0.05, -f.h * 0.48, f.w * 0.14, f.h * 0.96);
-      cx.fillStyle = '#00e5ff'; cx.beginPath(); cx.arc(f.w * 0.02, -f.h * 0.46, 3.5, 0, Math.PI * 2); cx.fill();
-
-      // Central Heavy Turbo-Ion Reactor Core
-      const rcg = cx.createRadialGradient(0, 0, 1, 0, 0, 14);
-      rcg.addColorStop(0, '#ffffff'); rcg.addColorStop(0.4, '#00e5ff'); rcg.addColorStop(1, '#082f49');
-      cx.fillStyle = rcg;
-      cx.beginPath(); cx.arc(0, 0, 12, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#00e5ff'; cx.lineWidth = 2; cx.stroke();
-      cx.beginPath(); cx.arc(0, 0, 16, t * 8, t * 8 + Math.PI * 1.3); cx.stroke();
-      
-      // Dual Prow Heavy Ion Emitters
-      for (const cy of [-f.h * 0.24, f.h * 0.24]) {
-        cx.fillStyle = '#020617'; cx.fillRect(-f.w * 0.38, cy - 3.5, 20, 7);
-        cx.fillStyle = '#00e5ff'; cx.fillRect(-f.w * 0.42, cy - 2, 6, 4);
-        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1; cx.strokeRect(-f.w * 0.38, cy - 3.5, 20, 7);
+        // Engine Rear Exhaust Glow
+        const jg = cx.createLinearGradient(f.w * 0.12, ty, f.w * 0.45, ty);
+        jg.addColorStop(0, '#ffffff'); jg.addColorStop(0.35, '#38bdf8'); jg.addColorStop(0.75, '#0284c7'); jg.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.fillStyle = jg; cx.beginPath();
+        cx.moveTo(f.w * 0.12, ty - 8); cx.lineTo(f.w * 0.38 + Math.random() * 8, ty); cx.lineTo(f.w * 0.12, ty + 8);
+        cx.closePath(); cx.fill();
       }
 
-      // Outboard Twin Ion Engines
-      for (const ty of [-f.h * 0.22, f.h * 0.22]) {
-        const jg = cx.createLinearGradient(f.w * 0.45, ty, f.w * 0.68, ty);
-        jg.addColorStop(0, '#ffffff'); jg.addColorStop(0.3, '#00e5ff'); jg.addColorStop(0.7, '#0284c7'); jg.addColorStop(1, 'rgba(0,0,0,0)');
-        cx.fillStyle = jg; cx.beginPath();
-        cx.moveTo(f.w * 0.45, ty - 4); cx.lineTo(f.w * 0.64 + Math.random() * 8, ty); cx.lineTo(f.w * 0.45, ty + 4);
-        cx.closePath(); cx.fill();
+      // Main Heavy Weathered Beskar Gunship Fuselage
+      const tg = cx.createLinearGradient(-f.w * 0.48, 0, f.w * 0.45, 0);
+      tg.addColorStop(0, '#0f172a'); tg.addColorStop(0.3, '#1e293b'); tg.addColorStop(0.65, '#475569'); tg.addColorStop(0.9, '#94a3b8'); tg.addColorStop(1, '#cbd5e1');
+      cx.fillStyle = tg;
+      cx.beginPath();
+      cx.moveTo(-f.w * 0.46, 0);                 // Forward nose ramp
+      cx.lineTo(-f.w * 0.28, -f.h * 0.26);       // Port cockpit shoulder
+      cx.lineTo(f.w * 0.28, -f.h * 0.28);        // Port wing root
+      cx.lineTo(f.w * 0.44, -f.h * 0.16);        // Port aft hull
+      cx.lineTo(f.w * 0.44, f.h * 0.16);         // Starboard aft hull
+      cx.lineTo(f.w * 0.28, f.h * 0.28);         // Starboard wing root
+      cx.lineTo(-f.w * 0.28, f.h * 0.26);        // Starboard cockpit shoulder
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 2.4; cx.stroke();
+
+      // Mandalorian Ochre / Yellow Weathering Paint Stripe
+      cx.fillStyle = 'rgba(245, 158, 11, 0.75)';
+      cx.beginPath();
+      cx.moveTo(-f.w * 0.10, -f.h * 0.24);
+      cx.lineTo(f.w * 0.10, -f.h * 0.24);
+      cx.lineTo(f.w * 0.05, f.h * 0.24);
+      cx.lineTo(-f.w * 0.15, f.h * 0.24);
+      cx.closePath(); cx.fill();
+
+      // Forward Rounded Pilot Cockpit Canopy Glass
+      cx.fillStyle = '#0f172a';
+      cx.beginPath();
+      cx.moveTo(-f.w * 0.44, 0);
+      cx.lineTo(-f.w * 0.26, -f.h * 0.16);
+      cx.lineTo(-f.w * 0.12, -f.h * 0.14);
+      cx.lineTo(-f.w * 0.12, f.h * 0.14);
+      cx.lineTo(-f.w * 0.26, f.h * 0.16);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.4; cx.stroke();
+
+      // Glowing Cyan Cockpit Viewports
+      cx.fillStyle = '#38bdf8';
+      cx.fillRect(-f.w * 0.36, -6, 12, 12);
+      cx.fillStyle = '#ffffff';
+      cx.fillRect(-f.w * 0.34, -4, 4, 8);
+
+      // Dual Aimed Heavy Chin MS-1 Blaster Cannons
+      const aimAng = Math.atan2(ship.y - f.y, ship.x - f.x);
+      for (const wy of [-10, 10]) {
+        cx.save(); cx.translate(-f.w * 0.40, wy); cx.rotate(aimAng);
+        cx.fillStyle = '#020617'; cx.fillRect(0, -2.5, 16, 5);
+        cx.fillStyle = '#ff0033'; cx.fillRect(14, -2, 4, 4);
+        cx.strokeStyle = '#ff0033'; cx.lineWidth = 1; cx.strokeRect(0, -2.5, 16, 5);
+        cx.restore();
       }
       
     } else if (f.variant === 'brood') {
