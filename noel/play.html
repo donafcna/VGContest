@@ -733,6 +733,140 @@
     box-shadow: 0 0 20px #00ffee, inset 0 0 12px #00ffee;
     transform: scale(0.92);
   }
+
+  /* Brawl Stars Action Controls Container */
+  #brawlControls {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 55;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .brawl-btn {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 3px solid #ffffff;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.8), inset 0 0 12px rgba(255,255,255,0.4);
+    transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s, filter 0.15s;
+    font-family: 'Orbitron', sans-serif;
+    color: #ffffff;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .brawl-btn:active {
+    transform: scale(0.90);
+  }
+
+  .brawl-btn.disabled {
+    filter: grayscale(0.85) brightness(0.6);
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  /* Green Gadget Button (Level 8+) */
+  .brawl-gadget {
+    background: radial-gradient(circle at 35% 35%, #34d399 0%, #059669 65%, #064e3b 100%);
+    border-color: #6ee7b7;
+    box-shadow: 0 0 22px rgba(16, 185, 129, 0.65), 0 6px 18px rgba(0,0,0,0.7);
+  }
+
+  .brawl-gadget:hover:not(.disabled) {
+    transform: scale(1.08);
+    box-shadow: 0 0 30px rgba(52, 211, 153, 0.95), 0 8px 24px rgba(0,0,0,0.8);
+  }
+
+  /* Yellow/Gold Super Button (Level 10 Max) */
+  .brawl-super {
+    width: 82px;
+    height: 82px;
+    background: radial-gradient(circle at 35% 35%, #fde047 0%, #eab308 50%, #854d0e 100%);
+    border: 4px solid #fef08a;
+    box-shadow: 0 0 20px rgba(234, 179, 8, 0.5), 0 6px 22px rgba(0,0,0,0.8);
+  }
+
+  .brawl-super.ready {
+    border-color: #ffffff;
+    background: radial-gradient(circle at 35% 35%, #fff 0%, #ffd23c 35%, #f59e0b 70%, #9333ea 100%);
+    box-shadow: 0 0 35px #ffd23c, 0 0 60px rgba(168, 85, 247, 0.8), inset 0 0 20px #ffffff;
+    animation: brawlSuperPulse 0.85s infinite alternate;
+  }
+
+  @keyframes brawlSuperPulse {
+    0% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 10px #ffd23c); }
+    100% { transform: scale(1.1); filter: brightness(1.25) drop-shadow(0 0 25px #c084fc); }
+  }
+
+  .super-ring-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: rgba(255, 255, 255, 0.25);
+    pointer-events: none;
+    transition: height 0.2s ease-out;
+  }
+
+  .brawl-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    z-index: 2;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+  }
+  .brawl-super .brawl-icon {
+    font-size: 2.0rem;
+  }
+
+  .brawl-badge {
+    font-size: 0.58rem;
+    font-weight: 900;
+    letter-spacing: 0.8px;
+    line-height: 1;
+    margin-top: 2px;
+    z-index: 2;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  }
+
+  .brawl-charges {
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 1px 6px;
+    border-radius: 99px;
+    margin-top: 2px;
+    z-index: 2;
+    letter-spacing: 0.5px;
+  }
+
+  .brawl-key {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #0f172a;
+    border: 1.5px solid #ffffff;
+    color: #ffd23c;
+    font-size: 0.62rem;
+    font-weight: 900;
+    padding: 1px 5px;
+    border-radius: 6px;
+    z-index: 3;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  }
 </style>
 </head>
 <body>
@@ -740,6 +874,26 @@
 <button id="musicbtn" onclick="toggleMusic(event)" aria-label="Toggle Audio">🔊</button>
 <button id="pausebtn" onclick="togglePause(event)" aria-label="Pause Game">⏸</button>
 <div id="touchHint" style="display:none;">🕹️ D-PAD: MOVE • TAP SCREEN: SHOOT 💥</div>
+
+<!-- Brawl Stars Style Gadget & Super Action Controls -->
+<div id="brawlControls" style="display:none;">
+  <!-- Green Gadget Button (Level 8+) -->
+  <button id="gadgetBtn" onclick="activateGadget(event)" aria-label="Activate Gadget" class="brawl-btn brawl-gadget">
+    <div class="brawl-icon">🟢</div>
+    <div class="brawl-badge">GADGET</div>
+    <div class="brawl-charges" id="gadgetCharges">3/3</div>
+    <div class="brawl-key">[E]</div>
+  </button>
+
+  <!-- Yellow Super Button (Level 10 Max) with Circular Charge Meter -->
+  <button id="superBtn" onclick="activateSuper(event)" aria-label="Activate Super" class="brawl-btn brawl-super">
+    <div class="super-ring-fill" id="superFill"></div>
+    <div class="brawl-icon super-icon" id="superIcon">💀</div>
+    <div class="brawl-badge super-badge" id="superBadge">SUPER</div>
+    <div class="brawl-charges" id="superPercent">0%</div>
+    <div class="brawl-key">[Q]</div>
+  </button>
+</div>
 
 <!-- Mobile Flight D-Pad -->
 <div id="dpad" style="display:none;">
@@ -1194,12 +1348,18 @@ addEventListener('keydown', e => {
     e.preventDefault();
     if (state === 'intro') { advanceStory(); return; }
   }
+  if (e.code === 'KeyE' || e.code === 'KeyG') {
+    activateGadget(e);
+  }
+  if (e.code === 'KeyQ' || e.code === 'KeyF') {
+    activateSuper(e);
+  }
   if (e.code === 'Escape' || e.code === 'KeyP') togglePause(e);
 });
 addEventListener('keyup', e => keys[e.code] = false);
 addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
 addEventListener('mousedown', e => {
-  if (e.target && e.target.closest && e.target.closest('button, .overlay, #dpad, #musicbtn, #pausebtn, a, input, select')) {
+  if (e.target && e.target.closest && e.target.closest('button, .overlay, #dpad, #brawlControls, #musicbtn, #pausebtn, a, input, select')) {
     return;
   }
   initAudio();
@@ -1588,6 +1748,32 @@ function sfx(type) {
       g.gain.setValueAtTime(0.22, t0);
       g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.30);
       o.connect(g); g.connect(masterG); o.start(t0); o.stop(t0 + 0.32);
+    } else if (type === 'gadget') {
+      // Brawl Stars Gadget Technological Activation Chime
+      for (const [fq, dl] of [[587, 0], [880, 0.06], [1174, 0.12], [1760, 0.18]]) {
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.type = 'sawtooth'; o.frequency.setValueAtTime(fq, t0 + dl);
+        o.frequency.exponentialRampToValueAtTime(fq * 1.5, t0 + dl + 0.15);
+        g.gain.setValueAtTime(0.28, t0 + dl);
+        g.gain.exponentialRampToValueAtTime(0.001, t0 + dl + 0.18);
+        o.connect(g); g.connect(masterG); o.start(t0 + dl); o.stop(t0 + dl + 0.19);
+      }
+    } else if (type === 'super') {
+      // Brawl Stars Super / Hypercharge Colossal Fanfare & Blast
+      for (const [fq, dl] of [[440, 0], [554, 0.08], [659, 0.16], [880, 0.24], [1108, 0.32], [1760, 0.42]]) {
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.type = 'sawtooth'; o.frequency.setValueAtTime(fq, t0 + dl);
+        g.gain.setValueAtTime(0.35, t0 + dl);
+        g.gain.exponentialRampToValueAtTime(0.001, t0 + dl + 0.35);
+        o.connect(g); g.connect(masterG); o.start(t0 + dl); o.stop(t0 + dl + 0.36);
+      }
+      // Sub-Bass Explosion Rumble
+      const osc = ac.createOscillator(), og = ac.createGain();
+      osc.type = 'sine'; osc.frequency.setValueAtTime(140, t0);
+      osc.frequency.exponentialRampToValueAtTime(22, t0 + 0.9);
+      og.gain.setValueAtTime(0.85, t0);
+      og.gain.exponentialRampToValueAtTime(0.001, t0 + 0.9);
+      osc.connect(og); og.connect(masterG); osc.start(t0); osc.stop(t0 + 0.92);
     }
   } catch (e) {}
 }
@@ -1682,6 +1868,189 @@ function explode(x, y, col, n) {
     });
   }
 }
+
+// ---------- BRAWL STARS GADGET & SUPER ABILITY ENGINE ----------
+let gadgetCharges = 3;
+let maxGadgetCharges = 3;
+let gadgetCooldown = 0;
+let superCharge = 0; // 0 to 100
+let hyperchargeActiveT = 0;
+let superBeamActiveT = 0;
+let meteorStrikes = [];
+
+function hasGadget() {
+  const u = SAVE.data.upg || {};
+  return (u.hull >= 8 || u.cannon >= 8 || u.engine >= 8 || u.magnet >= 8);
+}
+
+function hasSuper() {
+  const u = SAVE.data.upg || {};
+  return (u.hull >= 10 || u.cannon >= 10 || u.engine >= 10 || u.magnet >= 10);
+}
+
+function addSuperCharge(amt) {
+  if (!hasSuper() || state !== 'play') return;
+  if (hyperchargeActiveT > 0) return;
+  const prev = superCharge;
+  superCharge = Math.min(100, superCharge + amt);
+  if (prev < 100 && superCharge >= 100) {
+    sfx('map');
+    addAlert('⚡ HYPERCHARGE SUPER READY! 🟡', 'map');
+    popup(ship.x, ship.y - 40, '⚡ SUPER READY!', '#ffd23c');
+  }
+  updateBrawlControlsVisibility();
+}
+
+function updateBrawlControlsVisibility() {
+  const brawlEl = document.getElementById('brawlControls');
+  if (!brawlEl) return;
+  if (state === 'play' || state === 'pause') {
+    brawlEl.style.display = 'flex';
+    const gBtn = document.getElementById('gadgetBtn');
+    const sBtn = document.getElementById('superBtn');
+    if (gBtn) {
+      gBtn.style.display = hasGadget() ? 'flex' : 'none';
+      const gCh = document.getElementById('gadgetCharges');
+      if (gCh) gCh.textContent = `${gadgetCharges}/3`;
+      if (gadgetCharges <= 0 || gadgetCooldown > 0) {
+        gBtn.classList.add('disabled');
+      } else {
+        gBtn.classList.remove('disabled');
+      }
+    }
+    if (sBtn) {
+      sBtn.style.display = hasSuper() ? 'flex' : 'none';
+      const sPct = document.getElementById('superPercent');
+      const sFill = document.getElementById('superFill');
+      const pct = Math.min(100, Math.round(superCharge));
+      if (sPct) sPct.textContent = pct >= 100 ? 'READY!' : `${pct}%`;
+      if (sFill) sFill.style.height = `${pct}%`;
+      if (pct >= 100) {
+        sBtn.classList.add('ready');
+      } else {
+        sBtn.classList.remove('ready');
+      }
+    }
+  } else {
+    brawlEl.style.display = 'none';
+  }
+}
+
+function activateGadget(e) {
+  if (e) {
+    try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
+  }
+  if (!hasGadget() || state !== 'play' || gadgetCharges <= 0 || gadgetCooldown > 0) return;
+  initAudio();
+  gadgetCharges--;
+  gadgetCooldown = 1.0;
+  sfx('gadget');
+  addShake(20);
+  addAlert('🟢 GADGET ACTIVATED: COMBINED POWER SURGE!', 'gadget');
+  popup(ship.x, ship.y - 45, '🟢 GADGET ACTIVATED!', '#10b981');
+
+  const u = SAVE.data.upg || {};
+
+  // 1. Hull Gadget (Lv 8+): Kinetic Deflector Matrix + Repair + EMP Shockwave
+  if (u.hull >= 8) {
+    ship.hp = Math.min(maxHp, ship.hp + 3);
+    shieldT = Math.max(shieldT, 4.5);
+    explode(ship.x, ship.y, '#10b981', 65);
+    for (const g of gliders) {
+      const d = Math.hypot(g.x - ship.x, g.y - ship.y);
+      if (d < 500) {
+        const ang = Math.atan2(g.y - ship.y, g.x - ship.x);
+        g.x += Math.cos(ang) * 260;
+        g.y += Math.sin(ang) * 260;
+        g.hp -= 90;
+        explode(g.x, g.y, '#10b981', 25);
+      }
+    }
+  }
+
+  // 2. Cannon Gadget (Lv 8+): 360° Ring of 24 Plasma Seeker Torpedoes
+  if (u.cannon >= 8) {
+    for (let i = 0; i < 24; i++) {
+      const ang = (i / 24) * Math.PI * 2;
+      balls.push({
+        x: ship.x,
+        y: ship.y,
+        vx: Math.cos(ang) * 1100,
+        vy: Math.sin(ang) * 1100,
+        r: 14,
+        shipModel: 'runner',
+        skinId: 'toxic',
+        cannonLevel: 10
+      });
+    }
+  }
+
+  // 3. Engine Gadget (Lv 8+): Hyper-Dash Afterburner
+  if (u.engine >= 8) {
+    const dashAng = ship.pitch || 0;
+    ship.x += Math.cos(dashAng) * 320;
+    ship.y += Math.sin(dashAng) * 320;
+    ship.inv = 2.0;
+    for (let i = 0; i < 24; i++) {
+      parts.push({
+        x: ship.x - Math.cos(dashAng) * i * 14,
+        y: ship.y - Math.sin(dashAng) * i * 14,
+        vx: (Math.random() - 0.5) * 80,
+        vy: (Math.random() - 0.5) * 80,
+        life: 0.75,
+        col: Math.random() < 0.5 ? '#f59e0b' : '#34d399',
+        size: 10 + Math.random() * 8
+      });
+    }
+  }
+
+  // 4. Magnet Gadget (Lv 8+): Screen-wide Singularity Vacuum + 3.5s Stun
+  if (u.magnet >= 8) {
+    for (const c of coins) {
+      c.x = ship.x + (Math.random() - 0.5) * 40;
+      c.y = ship.y + (Math.random() - 0.5) * 40;
+    }
+    for (const g of gliders) {
+      g.frozenT = 3.5;
+      explode(g.x, g.y, '#38bdf8', 18);
+    }
+  }
+  updateBrawlControlsVisibility();
+}
+window.activateGadget = activateGadget;
+
+function activateSuper(e) {
+  if (e) {
+    try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
+  }
+  if (!hasSuper() || state !== 'play' || superCharge < 100) return;
+  initAudio();
+  superCharge = 0;
+  hyperchargeActiveT = 6.0;
+  superBeamActiveT = 3.2;
+  shieldT = Math.max(shieldT, 6.0);
+  ship.hp = Math.min(maxHp, ship.hp + 4);
+  sfx('super');
+  addShake(32);
+  addAlert('🌟 HYPERCHARGE SUPER: GALAXY OBLIVION BARRAGE! ⚡', 'super');
+  popup(ship.x, ship.y - 55, '🌟 HYPERCHARGE SUPER!', '#ffd23c');
+
+  // Launch 8 Orbital Bombardment Meteors
+  for (let m = 0; m < 8; m++) {
+    const targetX = ship.x + (Math.random() - 0.15) * (W * 0.85);
+    const targetY = (Math.random() * 0.8 + 0.1) * H;
+    meteorStrikes.push({
+      x: targetX,
+      y: targetY - 650,
+      targetY: targetY,
+      vy: 1200 + Math.random() * 250,
+      delay: m * 0.22,
+      size: 24 + Math.random() * 10
+    });
+  }
+  updateBrawlControlsVisibility();
+}
+window.activateSuper = activateSuper;
 
 // ---------- PROGRESSION / SAVE / UPGRADES ----------
 const ALL_SHIP_IDS = ['cutter', 'galleon', 'runner', 'hind', 'storm'];
@@ -3511,6 +3880,7 @@ function startCombat() {
   addShake(18);
   addAlert('🚨 RED ALERT: IMPERIAL STARFLEET & SEPARATIST FIGHTERS ATTACKING!', 'incoming');
   updateDpadVisibility();
+  updateBrawlControlsVisibility();
   spawnGlider(W + 50, H * 0.22, 'tie');
   spawnGlider(W + 110, H * 0.75, 'stalker');
   spawnGlider(W + 170, H * 0.48, 'rammer');
@@ -3530,6 +3900,14 @@ function startSolarSail(e) {
   applyLoadout();
   ship.hp = maxHp; ship.inv = 0; ship.x = W * 0.22; ship.y = H * 0.5;
   ship.vx = 0; ship.vy = 0; ship.pitch = 0;
+
+  // Initialize Brawl Stars Gadget & Super Loadout
+  gadgetCharges = 3;
+  gadgetCooldown = 0;
+  superCharge = 0;
+  hyperchargeActiveT = 0;
+  superBeamActiveT = 0;
+  meteorStrikes = [];
 
   introT = 0;
   storyStage = 0;
@@ -3572,6 +3950,7 @@ function startSolarSail(e) {
   state = 'intro';
   updateDpadVisibility();
   updatePauseBtnVisibility();
+  updateBrawlControlsVisibility();
 }
 window.startSolarSail = startSolarSail;
 
@@ -3642,6 +4021,7 @@ function returnToMenu(e) {
   
   updatePauseBtnVisibility();
   updateDpadVisibility();
+  updateBrawlControlsVisibility();
   renderWallet();
   renderLeaderboard('lbMenu', -1, null);
 }
@@ -4244,9 +4624,19 @@ function buildShop() {
     const u = UPG[key], lv = SAVE.data.upg[key], maxed = lv >= u.max;
     const cost = maxed ? 0 : u.cost(lv);
     const can = !maxed && SAVE.data.coins >= cost;
+    let brawlBadge = '';
+    if (lv >= 10) {
+      brawlBadge = `<div style="color:#fde047;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(253,224,71,0.5)">🌟 BRAWL SUPER &amp; HYPERCHARGE UNLOCKED! [Q/F] ⚡</div>`;
+    } else if (lv >= 8) {
+      brawlBadge = `<div style="color:#34d399;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(52,211,153,0.5)">🟢 BRAWL GADGET UNLOCKED! [E/G] (3/3 Charges)</div>`;
+    } else {
+      brawlBadge = `<div style="color:#8fa6cb;font-size:0.70rem;margin-top:2px">Reach Lv 8 for 🟢 Gadget • Lv 10 for 🌟 Super</div>`;
+    }
+
     h += `<div class="shopitem"><div class="ic">${u.icon}</div>` +
       `<div class="info"><div class="t">${u.name}</div><div class="d">${u.desc}</div>` +
-      `<div class="lv">Engineering Level ${lv}/${u.max}</div></div>` +
+      `<div class="lv">Engineering Level ${lv}/${u.max}</div>` +
+      brawlBadge + `</div>` +
       (maxed ? `<span class="maxed">✔ MAXED</span>` : `<button data-buy="upg" data-key="${key}"${can ? '' : ' disabled'}>🪙 ${cost}</button>`) +
       `</div>`;
   }
@@ -4391,6 +4781,8 @@ function bindActionButtons() {
   bind('musicbtn', toggleMusic);
   bind('resumebtn', togglePause);
   bind('restartbtn', returnToMenu);
+  bind('gadgetBtn', activateGadget);
+  bind('superBtn', activateSuper);
   bind('dosCloseBtn', () => {
     const m = document.getElementById('dossierModal');
     if (m) m.classList.add('hidden');
@@ -4884,9 +5276,108 @@ function update(dt) {
 
   if (state !== 'play') return;
 
+  // Update Brawl Stars Gadget & Super Timers and Abilities
+  if (gadgetCooldown > 0) gadgetCooldown -= dt;
+  if (hyperchargeActiveT > 0) {
+    hyperchargeActiveT -= dt;
+    ship.inv = Math.max(ship.inv, 0.5);
+    // Hypercharge particle aura
+    if (Math.random() < 0.65) {
+      parts.push({
+        x: ship.x + (Math.random() - 0.5) * 50,
+        y: ship.y + (Math.random() - 0.5) * 40,
+        vx: (Math.random() - 0.5) * 80,
+        vy: (Math.random() - 0.5) * 80,
+        life: 0.45,
+        col: Math.random() < 0.5 ? '#ffd23c' : '#c084fc',
+        size: 7 + Math.random() * 8
+      });
+    }
+  }
+
+  // Super Mega Doom Beam Damage Engine
+  if (superBeamActiveT > 0) {
+    superBeamActiveT -= dt;
+    const beamAngle = ship.aimAngle || 0;
+    const bCos = Math.cos(beamAngle), bSin = Math.sin(beamAngle);
+    const startX = ship.x + 36 * bCos, startY = ship.y + 36 * bSin;
+
+    for (const g of gliders) {
+      const dx = g.x - startX, dy = g.y - startY;
+      const proj = dx * bCos + dy * bSin;
+      if (proj > 0 && proj < 2200) {
+        const perp = Math.abs(-dx * bSin + dy * bCos);
+        if (perp < (g.w * 0.5 || 24) + 42) {
+          g.hp -= 280 * dt;
+          explode(g.x, g.y, '#ffd23c', 12);
+        }
+      }
+    }
+    for (const f of forts) {
+      const dx = f.x - startX, dy = f.y - startY;
+      const proj = dx * bCos + dy * bSin;
+      if (proj > 0 && proj < 2200) {
+        const perp = Math.abs(-dx * bSin + dy * bCos);
+        if (perp < (f.w * 0.5 || 32) + 42) {
+          f.hp -= 320 * dt;
+          explode(f.x, f.y, '#c084fc', 14);
+        }
+      }
+    }
+    if (boss) {
+      const dx = boss.x - startX, dy = boss.y - startY;
+      const proj = dx * bCos + dy * bSin;
+      if (proj > 0 && proj < 2200) {
+        const perp = Math.abs(-dx * bSin + dy * bCos);
+        if (perp < (boss.w * 0.5) + 42) {
+          boss.hp -= 360 * dt;
+          explode(boss.x + (Math.random() - 0.5) * boss.w, boss.y + (Math.random() - 0.5) * boss.h, '#ffd23c', 18);
+        }
+      }
+    }
+  }
+
+  // Update Orbital Bombardment Meteors
+  for (let i = meteorStrikes.length - 1; i >= 0; i--) {
+    const met = meteorStrikes[i];
+    if (met.delay > 0) { met.delay -= dt; continue; }
+    met.y += met.vy * dt;
+    parts.push({
+      x: met.x + (Math.random() - 0.5) * 16,
+      y: met.y,
+      vx: (Math.random() - 0.5) * 40,
+      vy: -160,
+      life: 0.35,
+      col: Math.random() < 0.5 ? '#ff5277' : '#ffd23c',
+      size: 10 + Math.random() * 6
+    });
+    if (met.y >= met.targetY) {
+      explode(met.x, met.targetY, '#ffd23c', 75);
+      explode(met.x, met.targetY, '#c084fc', 55);
+      addShake(24);
+      sfx('boom');
+      for (const g of gliders) {
+        if (Math.hypot(g.x - met.x, g.y - met.targetY) < 200) {
+          g.hp -= 260;
+        }
+      }
+      for (const f of forts) {
+        if (Math.hypot(f.x - met.x, f.y - met.targetY) < 220) {
+          f.hp -= 300;
+        }
+      }
+      if (boss && Math.hypot(boss.x - met.x, boss.y - met.targetY) < 240) {
+        boss.hp -= 380;
+      }
+      meteorStrikes.splice(i, 1);
+    }
+  }
+
+  updateBrawlControlsVisibility();
+
   // Space Pirate Galleon Navigation & Solar Ether Inertia
   slowT = Math.max(0, slowT - dt);
-  const curSpdMul = spdMul * (slowT > 0 ? 0.55 : 1.0);
+  const curSpdMul = spdMul * (hyperchargeActiveT > 0 ? 1.55 : 1.0) * (slowT > 0 ? 0.55 : 1.0);
   const ACC = 1450 * curSpdMul, MAX_SPD = 480 * curSpdMul;
   let ax = 0, ay = 0;
   if (keys['KeyW'] || keys['ArrowUp'] || dpadState.up) ay -= 1;
@@ -4965,7 +5456,7 @@ function update(dt) {
   shootCool -= dt;
   let wantShoot = mouse.down || keys['Space'] || (isTouch && touchOn);
   if (wantShoot && shootCool <= 0) {
-    shootCool = rapidT > 0 ? baseCool * 0.45 : baseCool;
+    shootCool = hyperchargeActiveT > 0 ? baseCool * 0.35 : (rapidT > 0 ? baseCool * 0.45 : baseCool);
     ship.recoil = 1.0;
     muzzleFlash = 1.0;
     
@@ -5349,8 +5840,10 @@ function update(dt) {
         addShake(6);
       } else {
         boss.hp--; hit = true;
+        addSuperCharge(5);
         explode(b.x, b.y, '#ffd23c', 8);
         if (boss.hp <= 0) {
+          addSuperCharge(100);
           explode(boss.x, boss.y, boss.col, 95); sfx('boom'); addShake(26);
           const bLevel = boss.sectorLevel || level;
           const bTokens = 2 + Math.floor((bLevel - 1) * 0.5);
@@ -5384,6 +5877,7 @@ function update(dt) {
           if (f.shield && f.shield > 0) {
             f.shield--;
             hit = true;
+            addSuperCharge(3);
             const sCol = f.variant === 'cryo_gunship' ? '#38bdf8' : '#00ffee';
             explode(b.x, b.y, sCol, 14);
             popup(f.x, f.y - 30, f.variant === 'cryo_gunship' ? '❄️ ICE SHIELD CRACKED!' : '🛡️ DEFLECTOR ABSORBED!', sCol);
@@ -5392,8 +5886,10 @@ function update(dt) {
           }
 
           f.hp--; hit = true;
+          addSuperCharge(4);
           explode(b.x, b.y, '#ffd23c', 8);
           if (f.hp <= 0) {
+            addSuperCharge(10);
             explode(f.x, f.y, f.col, 40); sfx('boom');
             addScore(10, f.x, f.y); addShake(8);
             coins.push({ x: f.x, y: f.y, vx: -120, vy: -30 });
@@ -5457,6 +5953,7 @@ function update(dt) {
           if (g.shield && g.shield > 0) {
             g.shield--;
             hit = true;
+            addSuperCharge(3);
             explode(b.x, b.y, '#00ffee', 12);
             popup(g.x, g.y - 20, '🛡️ ION DEFLECTOR!', '#00ffee');
             sfx('metal');
@@ -5465,8 +5962,10 @@ function update(dt) {
 
           g.hp = (g.hp || 1) - 1;
           hit = true;
+          addSuperCharge(3);
           explode(b.x, b.y, '#ffd23c', 8);
           if (g.hp <= 0) {
+            addSuperCharge(8);
             explode(g.x, g.y, g.col || '#00ff66', 20); sfx('boom');
             addScore(5 + Math.floor(level * 1.5), g.x, g.y); addShake(5);
             if (Math.random() < 0.55) coins.push({ x: g.x, y: g.y, vx: -95, vy: 0 });
@@ -5481,6 +5980,7 @@ function update(dt) {
       for (let j = mines.length - 1; j >= 0; j--) {
         const m = mines[j];
         if (Math.hypot(b.x - m.x, b.y - m.y) < m.r + 12) {
+          addSuperCharge(5);
           explode(m.x, m.y, m.col || '#00e5ff', 28); sfx('boom');
           addScore(8, m.x, m.y); addShake(7); hit = true;
 
@@ -5846,6 +6346,7 @@ function update(dt) {
     
     if (dist < 48) {
       coinsN++; score += 2; sfx('coin');
+      addSuperCharge(3);
       coins.splice(i, 1);
     } else if (c.x < -40) coins.splice(i, 1);
   }
@@ -5863,6 +6364,7 @@ function update(dt) {
     
     if (dist < 52) {
       sfx('map');
+      addSuperCharge(6);
       if (p.type === 'heart') { ship.hp = Math.min(maxHp, ship.hp + 1); popup(ship.x, ship.y - 45, '+1 ❤️ HULL REPAIR', '#ff6b6b'); }
       else if (p.type === 'rapid') { rapidT = 7; popup(ship.x, ship.y - 45, 'RAPID CANNONS! ⚡', '#3fd5ff'); }
       else if (p.type === 'shield') { shieldT = 6; ship.inv = Math.max(ship.inv, 6); popup(ship.x, ship.y - 45, 'ENERGY DEFLECTOR SHIELD! 🛡️', '#00dfa2'); }
@@ -8091,6 +8593,114 @@ function draw() {
   }
   cx.globalAlpha = 1;
 
+  // 9b. Render Brawl Stars Hypercharge Mega Doom Beam
+  if (superBeamActiveT > 0) {
+    const beamAngle = ship.aimAngle || 0;
+    const bCos = Math.cos(beamAngle), bSin = Math.sin(beamAngle);
+    const startX = ship.x + 36 * bCos, startY = ship.y + 36 * bSin;
+    const beamLen = 2200;
+    const endX = startX + bCos * beamLen, endY = startY + bSin * beamLen;
+
+    cx.save();
+    
+    // Outer diffuse cosmic violet glow
+    cx.strokeStyle = 'rgba(192, 132, 252, 0.45)';
+    cx.lineWidth = 42 + Math.sin(t * 24) * 8;
+    cx.lineCap = 'round';
+    cx.beginPath();
+    cx.moveTo(startX, startY);
+    cx.lineTo(endX, endY);
+    cx.stroke();
+
+    // Mid blazing golden plasma beam
+    cx.strokeStyle = '#ffd23c';
+    cx.lineWidth = 22 + Math.cos(t * 30) * 4;
+    cx.beginPath();
+    cx.moveTo(startX, startY);
+    cx.lineTo(endX, endY);
+    cx.stroke();
+
+    // Inner hyper-white laser core
+    cx.strokeStyle = '#ffffff';
+    cx.lineWidth = 9 + Math.sin(t * 40) * 2;
+    cx.beginPath();
+    cx.moveTo(startX, startY);
+    cx.lineTo(endX, endY);
+    cx.stroke();
+
+    // Animated electric lightning arcs along the beam
+    cx.strokeStyle = '#e879f9';
+    cx.lineWidth = 3;
+    cx.beginPath();
+    for (let d = 0; d < 1200; d += 60) {
+      const px = startX + bCos * d + (-bSin) * (Math.sin(d * 0.05 + t * 25) * 16);
+      const py = startY + bSin * d + (bCos) * (Math.sin(d * 0.05 + t * 25) * 16);
+      if (d === 0) cx.moveTo(px, py);
+      else cx.lineTo(px, py);
+    }
+    cx.stroke();
+
+    // Blazing muzzle flare at ship cannon
+    const mGlow = cx.createRadialGradient(startX, startY, 2, startX, startY, 38);
+    mGlow.addColorStop(0, '#ffffff');
+    mGlow.addColorStop(0.4, '#ffd23c');
+    mGlow.addColorStop(0.8, '#c084fc');
+    mGlow.addColorStop(1, 'rgba(192, 132, 252, 0)');
+    cx.fillStyle = mGlow;
+    cx.beginPath();
+    cx.arc(startX, startY, 38, 0, Math.PI * 2);
+    cx.fill();
+
+    cx.restore();
+  }
+
+  // 9c. Render Orbital Bombardment Meteors
+  for (const met of meteorStrikes) {
+    cx.save();
+    // Warning impact crosshair on ground target
+    const targetAlpha = Math.min(1, Math.max(0.2, 0.7 + Math.sin(t * 18) * 0.3));
+    cx.strokeStyle = `rgba(255, 82, 119, ${targetAlpha})`;
+    cx.lineWidth = 2.5;
+    cx.beginPath();
+    cx.arc(met.x, met.targetY, 36, 0, Math.PI * 2);
+    cx.stroke();
+    cx.strokeStyle = `rgba(255, 210, 60, ${targetAlpha})`;
+    cx.beginPath();
+    cx.arc(met.x, met.targetY, 18, 0, Math.PI * 2);
+    cx.stroke();
+    cx.beginPath();
+    cx.moveTo(met.x - 44, met.targetY); cx.lineTo(met.x + 44, met.targetY);
+    cx.moveTo(met.x, met.targetY - 44); cx.lineTo(met.x, met.targetY + 44);
+    cx.stroke();
+
+    if (met.delay <= 0) {
+      // Falling Fiery Meteor Orb with Flame Trail
+      const mGrad = cx.createRadialGradient(met.x, met.y, 2, met.x, met.y, 24);
+      mGrad.addColorStop(0, '#ffffff');
+      mGrad.addColorStop(0.3, '#ffd23c');
+      mGrad.addColorStop(0.65, '#ff3b30');
+      mGrad.addColorStop(1, 'rgba(126, 34, 206, 0)');
+      cx.fillStyle = mGrad;
+      cx.beginPath();
+      cx.arc(met.x, met.y, 24, 0, Math.PI * 2);
+      cx.fill();
+
+      // Blazing Tail
+      const tGrad = cx.createLinearGradient(met.x, met.y, met.x, met.y - 70);
+      tGrad.addColorStop(0, '#ffd23c');
+      tGrad.addColorStop(0.5, '#ff3b30');
+      tGrad.addColorStop(1, 'rgba(255, 0, 85, 0)');
+      cx.fillStyle = tGrad;
+      cx.beginPath();
+      cx.moveTo(met.x - 14, met.y);
+      cx.lineTo(met.x, met.y - 75);
+      cx.lineTo(met.x + 14, met.y);
+      cx.closePath();
+      cx.fill();
+    }
+    cx.restore();
+  }
+
   // 10. REALISTIC PIRATE SHIP (CUSTOM ARCHITECTURE FOR EACH SHIP & UPGRADE)
   if (state === 'intro' || state === 'play' || state === 'pause') {
     cx.save();
@@ -8841,6 +9451,34 @@ function draw() {
       cx.globalAlpha = 0.16; cx.fillStyle = '#00dfa2';
       cx.beginPath(); cx.arc(0, 0, 70, 0, Math.PI * 2); cx.fill();
       cx.globalAlpha = 1;
+    }
+
+    // Active Brawl Stars Hypercharge Overdrive Aura
+    if (hyperchargeActiveT > 0) {
+      cx.save();
+      const hAlpha = 0.55 + Math.sin(t * 16) * 0.25;
+      cx.strokeStyle = `rgba(255, 210, 60, ${hAlpha})`;
+      cx.lineWidth = 4;
+      cx.beginPath();
+      cx.ellipse(0, 10, 78, 52, t * 4, 0, Math.PI * 2);
+      cx.stroke();
+
+      cx.strokeStyle = `rgba(192, 132, 252, ${hAlpha})`;
+      cx.lineWidth = 3;
+      cx.beginPath();
+      cx.ellipse(0, 10, 68, 44, -t * 3.5, 0, Math.PI * 2);
+      cx.stroke();
+
+      // Hypercharge Flame Particles around ship
+      for (let k = 0; k < 4; k++) {
+        const a = t * 6 + (k * Math.PI * 0.5);
+        const px = Math.cos(a) * 62, py = Math.sin(a) * 38;
+        cx.fillStyle = k % 2 === 0 ? '#ffd23c' : '#c084fc';
+        cx.beginPath();
+        cx.arc(px, py, 4.5, 0, Math.PI * 2);
+        cx.fill();
+      }
+      cx.restore();
     }
 
     cx.restore();
