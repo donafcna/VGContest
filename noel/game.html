@@ -878,20 +878,20 @@
 <!-- Brawl Stars Style Gadget & Super Action Controls -->
 <div id="brawlControls" style="display:none;">
   <!-- Green Gadget Button (Level 8+) -->
-  <button id="gadgetBtn" onclick="activateGadget(event)" aria-label="Activate Gadget" class="brawl-btn brawl-gadget">
+  <button id="gadgetBtn" onclick="activateGadget(event)" aria-label="Activate Gadget (Q)" class="brawl-btn brawl-gadget">
     <div class="brawl-icon">🟢</div>
     <div class="brawl-badge">GADGET</div>
     <div class="brawl-charges" id="gadgetCharges">3/3</div>
-    <div class="brawl-key">[E]</div>
+    <div class="brawl-key">[Q]</div>
   </button>
 
   <!-- Yellow Super Button (Level 10 Max) with Circular Charge Meter -->
-  <button id="superBtn" onclick="activateSuper(event)" aria-label="Activate Super" class="brawl-btn brawl-super">
+  <button id="superBtn" onclick="activateSuper(event)" aria-label="Activate Super (E)" class="brawl-btn brawl-super">
     <div class="super-ring-fill" id="superFill"></div>
     <div class="brawl-icon super-icon" id="superIcon">💀</div>
     <div class="brawl-badge super-badge" id="superBadge">SUPER</div>
     <div class="brawl-charges" id="superPercent">0%</div>
-    <div class="brawl-key">[Q]</div>
+    <div class="brawl-key">[E]</div>
   </button>
 </div>
 
@@ -1351,10 +1351,10 @@ addEventListener('keydown', e => {
       keys.spaceClicked = true;
     }
   }
-  if (e.code === 'KeyE' || e.code === 'KeyG') {
+  if (e.code === 'KeyQ' || e.code === 'KeyG' || e.key === 'q' || e.key === 'Q') {
     activateGadget(e);
   }
-  if (e.code === 'KeyQ' || e.code === 'KeyF') {
+  if (e.code === 'KeyE' || e.code === 'KeyF' || e.key === 'e' || e.key === 'E') {
     activateSuper(e);
   }
   if (e.code === 'Escape' || e.code === 'KeyP') togglePause(e);
@@ -1935,7 +1935,7 @@ function updateBrawlControlsVisibility() {
     if (gBtn) {
       gBtn.style.display = hasGadget() ? 'flex' : 'none';
       if (curShip && curShip.gadgetName) {
-        gBtn.title = `${curShip.gadgetName}: ${curShip.gadgetDesc || ''}`;
+        gBtn.title = `[Q] ${curShip.gadgetName}: ${curShip.gadgetDesc || ''} (Press Q on PC)`;
       }
       const gCh = document.getElementById('gadgetCharges');
       if (gCh) gCh.textContent = `${gadgetCharges}/3`;
@@ -1948,7 +1948,7 @@ function updateBrawlControlsVisibility() {
     if (sBtn) {
       sBtn.style.display = hasSuper() ? 'flex' : 'none';
       if (curShip && curShip.superName) {
-        sBtn.title = `${curShip.superName}: ${curShip.superDesc || ''}`;
+        sBtn.title = `[E] ${curShip.superName}: ${curShip.superDesc || ''} (Press E on PC)`;
       }
       const sPct = document.getElementById('superPercent');
       const sFill = document.getElementById('superFill');
