@@ -2089,44 +2089,44 @@ function activateGadget(e) {
   popup(ship.x, ship.y - 45, `🟢 ${gName}!`, '#10b981');
 
   if (curShipId === 'cutter') {
-    // 1. Millennium Falcon: Hyperdrive Kessel Drift
-    ship.inv = 1.8;
-    ship.hp = Math.min(maxHp, ship.hp + 2);
-    shieldT = Math.max(shieldT, 2.5);
+    // 1. Millennium Falcon (Tier 1 Starter, Cost 0 Cores): Hyperdrive Kessel Drift
+    ship.inv = 1.2;
+    ship.hp = Math.min(maxHp, ship.hp + 1);
+    shieldT = Math.max(shieldT, 1.5);
     const dashAng = ship.pitch || 0;
-    ship.x = Math.min(W * 0.85, Math.max(60, ship.x + Math.cos(dashAng) * 280));
-    ship.y = Math.min(H * 0.90, Math.max(50, ship.y + Math.sin(dashAng) * 280));
-    explode(ship.x, ship.y, '#f59e0b', 75);
-    // 360° Gyro Burst of 16 quad-laser blaster bolts
-    for (let i = 0; i < 16; i++) {
-      const ang = (i / 16) * Math.PI * 2;
+    ship.x = Math.min(W * 0.85, Math.max(60, ship.x + Math.cos(dashAng) * 220));
+    ship.y = Math.min(H * 0.90, Math.max(50, ship.y + Math.sin(dashAng) * 220));
+    explode(ship.x, ship.y, '#f59e0b', 55);
+    // 8 radial quad-laser blaster bolts (Tier 1 baseline dmg: 2.0)
+    for (let i = 0; i < 8; i++) {
+      const ang = (i / 8) * Math.PI * 2;
       balls.push({
         x: ship.x,
         y: ship.y,
-        vx: Math.cos(ang) * 1150,
-        vy: Math.sin(ang) * 1150,
-        r: 12,
+        vx: Math.cos(ang) * 950,
+        vy: Math.sin(ang) * 950,
+        r: 10,
         shipModel: 'cutter',
         skinId: 'sunset',
         cannonLevel: 10,
         isGadget: true,
-        dmg: 3.5
+        dmg: 2.0
       });
     }
-    // Knock back gliders
+    // Modest Glider Knockback
     for (let gi = gliders.length - 1; gi >= 0; gi--) {
       const g = gliders[gi];
-      if (Math.hypot(g.x - ship.x, g.y - ship.y) < 450) {
+      if (Math.hypot(g.x - ship.x, g.y - ship.y) < 300) {
         const ang = Math.atan2(g.y - ship.y, g.x - ship.x);
-        g.x += Math.cos(ang) * 220;
-        g.y += Math.sin(ang) * 220;
-        g.hp -= 2.0;
-        explode(g.x, g.y, '#f59e0b', 22);
+        g.x += Math.cos(ang) * 150;
+        g.y += Math.sin(ang) * 150;
+        g.hp -= 1.5;
+        explode(g.x, g.y, '#f59e0b', 16);
         if (g.hp <= 0) killGlider(gi, g);
       }
     }
   } else if (curShipId === 'runner') {
-    // 2. X-Wing: Proton Torpedo Lock-On (4 smart homing torpedoes)
+    // 2. T-65B X-Wing (Tier 2, Cost 5 Cores): Proton Torpedo Lock-On (4 smart homing torpedoes)
     ship.inv = 1.0;
     explode(ship.x, ship.y, '#00ffee', 45);
     for (let i = 0; i < 4; i++) {
@@ -2134,27 +2134,27 @@ function activateGadget(e) {
       protonTorpedoes.push({
         x: ship.x + Math.cos(launchAngle) * 30,
         y: ship.y + Math.sin(launchAngle) * 30,
-        vx: Math.cos(launchAngle) * 600,
-        vy: Math.sin(launchAngle) * 600,
+        vx: Math.cos(launchAngle) * 650,
+        vy: Math.sin(launchAngle) * 650,
         target: null,
         life: 4.5,
         maxLife: 4.5,
-        dmg: 4.0,
+        dmg: 4.5,
         col: '#00ffee'
       });
     }
   } else if (curShipId === 'galleon') {
-    // 3. Rogue Shadow: Stealth Cloak & Decoys
+    // 3. Rogue Shadow (Tier 3, Cost 6 Cores): Stealth Cloak & Decoys
     stealthCloakT = 3.5;
     ship.inv = 3.5;
-    ship.hp = Math.min(maxHp, ship.hp + 3);
+    ship.hp = Math.min(maxHp, ship.hp + 2);
     explode(ship.x, ship.y, '#38bdf8', 60);
     // Screen-wide coin vacuum
     for (const c of coins) {
       c.x = ship.x + (Math.random() - 0.5) * 50;
       c.y = ship.y + (Math.random() - 0.5) * 50;
     }
-    // Spawn 2 Decoy Phantoms
+    // Spawn 2 Decoy Phantoms with EMP Shockwave Detonation
     for (let d = 0; d < 2; d++) {
       stealthDecoys.push({
         x: ship.x + (d === 0 ? -40 : 40),
@@ -2168,20 +2168,20 @@ function activateGadget(e) {
       });
     }
   } else if (curShipId === 'hind') {
-    // 4. Hammerhead Corvette: Deflector Ramming Prow
-    rammingProwT = 2.2;
+    // 4. Hammerhead Corvette (Tier 4, Cost 8 Cores): Deflector Ramming Prow
+    rammingProwT = 2.5;
     ship.inv = 2.5;
     const dashAng = ship.pitch || 0;
-    ship.vx = Math.cos(dashAng) * 850;
-    ship.vy = Math.sin(dashAng) * 850;
-    explode(ship.x, ship.y, '#ef4444', 65);
-    popup(ship.x, ship.y - 30, '🛡️ RAMMING PROW ONLINE!', '#ef4444');
+    ship.vx = Math.cos(dashAng) * 950;
+    ship.vy = Math.sin(dashAng) * 950;
+    explode(ship.x, ship.y, '#ef4444', 75);
+    popup(ship.x, ship.y - 30, '🛡️ RAMMING PROW ENGAGED!', '#ef4444');
   } else if (curShipId === 'storm') {
-    // 5. Fondor Haulcraft: Twin Lateral Laser Scythes
-    fondorScythesT = 4.0;
-    ship.inv = 1.0;
-    explode(ship.x, ship.y, '#38bdf8', 60);
-    popup(ship.x, ship.y - 30, '⚔️ PLASMA SCYTHES IGNITED!', '#00ffee');
+    // 5. Fondor Haulcraft (Tier 5 - The Best Ship, Cost 10 Cores): Colossal Twin Laser Scythes
+    fondorScythesT = 5.0;
+    ship.inv = 1.5;
+    explode(ship.x, ship.y, '#00ffee', 80);
+    popup(ship.x, ship.y - 30, '⚔️ SUPREME PLASMA SCYTHES IGNITED!', '#00ffee');
   }
 
   updateBrawlControlsVisibility();
@@ -2203,21 +2203,21 @@ function activateSuper(e) {
 
   const curShipId = (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
   const curShip = shipById(curShipId);
-  const sName = (curShip && curShip.superName) || 'HYPERCHARGE SUPER';
-  addAlert(`🌟 HYPERCHARGE SUPER: ${sName.toUpperCase()}! ⚡`, 'super');
+  const sName = (curShip && curShip.superName) || 'SUPER';
+  addAlert(`🌟 SUPER ACTIVATED: ${sName.toUpperCase()}! ⚡`, 'super');
   popup(ship.x, ship.y - 55, `🌟 ${sName}!`, '#ffd23c');
 
   if (curShipId === 'cutter') {
-    // 1. Millennium Falcon: Coaxium Quad-Turret Tempest
-    falconTurretT = 4.5;
+    // 1. Millennium Falcon (Tier 1 Starter, Cost 0 Cores): Coaxium Quad-Turret Tempest
+    falconTurretT = 3.5;
     falconAngle = 0;
     superBeamActiveT = 0;
   } else if (curShipId === 'runner') {
-    // 2. X-Wing: S-Foil Attack Stance: Proton Nova (Piercing Mega-Beam + Chain Lightning)
-    xwingSuperT = 3.5;
-    superBeamActiveT = 3.5;
+    // 2. T-65B X-Wing (Tier 2, Cost 5 Cores): S-Foil Attack Stance: Proton Nova (Piercing Mega-Beam)
+    xwingSuperT = 4.0;
+    superBeamActiveT = 4.0;
   } else if (curShipId === 'galleon') {
-    // 3. Rogue Shadow: Tachyon Gravitational Singularity (Dark Matter Black Hole)
+    // 3. Rogue Shadow (Tier 3, Cost 6 Cores): Tachyon Gravitational Singularity
     const sAng = ship.pitch || 0;
     const singX = Math.min(W * 0.9, Math.max(150, ship.x + Math.cos(sAng) * 280));
     const singY = Math.min(H * 0.85, Math.max(100, ship.y + Math.sin(sAng) * 280));
@@ -2226,38 +2226,38 @@ function activateSuper(e) {
       y: singY,
       life: 5.0,
       maxLife: 5.0,
-      radius: 340,
+      radius: 360,
       col: '#c084fc'
     });
   } else if (curShipId === 'hind') {
-    // 4. Hammerhead Corvette: Orbital Turbolaser Bombardment (10 Heavy Orbital Strikes)
-    for (let m = 0; m < 10; m++) {
+    // 4. Hammerhead Corvette (Tier 4, Cost 8 Cores): Orbital Turbolaser Bombardment (12 Heavy Strikes)
+    for (let m = 0; m < 12; m++) {
       const targetX = ship.x + (Math.random() - 0.15) * (W * 0.85);
       const targetY = (Math.random() * 0.8 + 0.1) * H;
       meteorStrikes.push({
         x: targetX,
-        y: targetY - 700,
+        y: targetY - 750,
         targetY: targetY,
-        vy: 1350 + Math.random() * 300,
+        vy: 1450 + Math.random() * 300,
         delay: m * 0.20,
-        size: 28 + Math.random() * 12,
+        size: 30 + Math.random() * 12,
         col: '#ef4444'
       });
     }
   } else if (curShipId === 'storm') {
-    // 5. Fondor Haulcraft: Countermeasure Flak Barrage (16 Articulated Flak Pods)
-    for (let f = 0; f < 16; f++) {
-      const ang = (f / 16) * Math.PI * 2 + (Math.random() - 0.5) * 0.2;
-      const spd = 300 + Math.random() * 350;
+    // 5. Fondor Haulcraft (Tier 5 - The Best Ship, Cost 10 Cores): Armada Flak Countermeasure Storm (24 Pods)
+    for (let f = 0; f < 24; f++) {
+      const ang = (f / 24) * Math.PI * 2 + (Math.random() - 0.5) * 0.25;
+      const spd = 350 + Math.random() * 450;
       flakPods.push({
         x: ship.x,
         y: ship.y,
         vx: Math.cos(ang) * spd,
         vy: Math.sin(ang) * spd,
-        fuse: 0.35 + Math.random() * 0.65,
+        fuse: 0.30 + Math.random() * 0.70,
         maxFuse: 1.0,
         exploded: false,
-        radius: 140,
+        radius: 220,
         col: '#00ffee'
       });
     }
@@ -2321,9 +2321,9 @@ const SHIPS = [
     hp: 6, cool: 0.20, spd: 1.15, gold: 1.25, magnet: 45, spread: [0],
     power: '🔥 Quad-Laser Blaster Cannons & Hyperdrive Overdrive',
     gadgetName: 'Hyperdrive Kessel Drift ⚡',
-    gadgetDesc: '1.8s invulnerable phase dash, 360° Gyro Quad-Laser Burst & +2 HP repair',
+    gadgetDesc: 'Tier 1 [Q]: 1.2s phase dash, 8 gyro blaster bolts (2.0 dmg) & +1 HP repair',
     superName: 'Coaxium Quad-Turret Tempest 🌟',
-    superDesc: 'Twin rotating 360° laser sweep rays & 6s 4-barrel rapid overdrive'
+    superDesc: 'Tier 1 [E]: 3.5s twin 360° sweeping laser turrets (3.0 dmg/s)'
   },
   {
     id: 'runner',
@@ -2333,9 +2333,9 @@ const SHIPS = [
     hp: 6, cool: 0.14, spd: 1.50, gold: 1.30, magnet: 90, spread: [0],
     power: '⚡ S-Foil Attack Wings, +50% Speed & Proton Laser Barrage',
     gadgetName: 'Proton Torpedo Lock-On 🎯',
-    gadgetDesc: 'Fires 4 smart-seeking high-yield Proton Torpedoes that lock onto enemies',
+    gadgetDesc: 'Tier 2 [Q]: 4 smart homing torpedoes with high-yield blast (4.5 dmg)',
     superName: 'S-Foil Attack Stance: Proton Nova ⚡',
-    superDesc: 'Piercing Proton Mega-Beam with screen-wide Chain Lightning arcs'
+    superDesc: 'Tier 2 [E]: 4.0s piercing Proton Mega-Beam with chain lightning (5.5 dmg/s)'
   },
   {
     id: 'galleon',
@@ -2345,9 +2345,9 @@ const SHIPS = [
     hp: 9, cool: 0.28, spd: 0.95, gold: 1.15, magnet: 35, spread: [0],
     power: '🛡️ Stealth Armor (+3 Hearts) & Quad Tachyon Concussion Blast',
     gadgetName: 'Stealth Cloak & Decoys 👤',
-    gadgetDesc: '3.5s invisibility cloak, +40% speed, 2 decoy phantoms & coin vacuum',
+    gadgetDesc: 'Tier 3 [Q]: 3.5s stealth + +50% spd, 2 decoy phantoms (7.0 EMP dmg + freeze)',
     superName: 'Tachyon Gravitational Singularity 🌀',
-    superDesc: 'Spawns a massive dark matter gravity vortex pulling in all enemies & bullets'
+    superDesc: 'Tier 3 [E]: 5.0s dark matter gravity vortex (7.5 dmg/s) & supernova implosion (16.0 dmg)'
   },
   {
     id: 'hind',
@@ -2357,9 +2357,9 @@ const SHIPS = [
     hp: 7, cool: 0.20, spd: 1.25, gold: 2.00, magnet: 180, spread: [0],
     power: '🚀 Dual Swivel Turbolasers & Quad Sublight Engine Surge (+100% Dubloons)',
     gadgetName: 'Deflector Ramming Prow 🛡️',
-    gadgetDesc: '2.2s invulnerable ramming rush (+800 speed) that crushes enemy hulls',
+    gadgetDesc: 'Tier 4 [Q]: 2.5s invulnerable kinetic ram surge (+950 spd, 14.0 contact dmg)',
     superName: 'Orbital Turbolaser Bombardment ☄️',
-    superDesc: 'Calls down 10 heavy orbital capital-ship artillery turbolaser strikes'
+    superDesc: 'Tier 4 [E]: 12 heavy orbital turbolaser artillery strikes (10.0-15.0 dmg per strike)'
   },
   {
     id: 'storm',
@@ -2368,10 +2368,10 @@ const SHIPS = [
     cols: ['#38bdf8', '#64748b', '#0f172a'],
     hp: 8, cool: 0.22, spd: 1.20, gold: 1.50, magnet: 75, spread: [-0.15, 0.15],
     power: '🌀 Twin Plasma Scythes, Quad Articulated Turbines & Void Torpedoes',
-    gadgetName: 'Twin Laser Scythes ⚔️',
-    gadgetDesc: '4s dual lateral plasma blade scythes extending vertically from hull',
-    superName: 'Countermeasure Flak Barrage 💥',
-    superDesc: 'Deploys 16 droid flak countermeasure pods that vaporize bullets & bomb foes'
+    gadgetName: 'Twin Supreme Plasma Scythes ⚔️',
+    gadgetDesc: 'Tier 5 [Q]: 5.0s colossal dual plasma scythes vaporizing bullets (18.0 dmg/s)',
+    superName: 'Armada Flak Countermeasure Storm 💥',
+    superDesc: 'Tier 5 [E]: 24 articulated heavy droid flak pods wiping the screen (12.0-14.0 dmg each, >200 dmg)'
   },
 ];
 
@@ -5673,14 +5673,14 @@ function update(dt) {
     }
   }
 
-  // 1. MILLENNIUM FALCON: Coaxium Quad-Turret Tempest (Rotating sweeping lasers)
+  // 1. MILLENNIUM FALCON (Tier 1 Starter, Cost 0 Cores): Coaxium Quad-Turret Tempest
   if (falconTurretT > 0) {
     falconTurretT -= dt;
     falconAngle += Math.PI * 1.6 * dt;
     for (const sweepAng of [falconAngle, falconAngle + Math.PI]) {
       const bCos = Math.cos(sweepAng), bSin = Math.sin(sweepAng);
       const startX = ship.x, startY = ship.y;
-      // Gliders
+      // Gliders (Tier 1: 2.8 dmg/s)
       for (let gi = gliders.length - 1; gi >= 0; gi--) {
         const g = gliders[gi];
         const dx = g.x - startX, dy = g.y - startY;
@@ -5688,13 +5688,13 @@ function update(dt) {
         if (proj > 0 && proj < 2200) {
           const perp = Math.abs(-dx * bSin + dy * bCos);
           if (perp < (g.w * 0.5 || 24) + 40) {
-            g.hp -= 3.8 * dt;
-            explode(g.x, g.y, '#38bdf8', 8);
+            g.hp -= 2.8 * dt;
+            explode(g.x, g.y, '#f59e0b', 8);
             if (g.hp <= 0) killGlider(gi, g);
           }
         }
       }
-      // Forts
+      // Forts (Tier 1: 3.2 dmg/s)
       for (let fi = forts.length - 1; fi >= 0; fi--) {
         const f = forts[fi];
         const dx = f.x - startX, dy = f.y - startY;
@@ -5702,7 +5702,7 @@ function update(dt) {
         if (proj > 0 && proj < 2200) {
           const perp = Math.abs(-dx * bSin + dy * bCos);
           if (perp < (f.w * 0.5 || 32) + 40) {
-            f.hp -= 4.2 * dt;
+            f.hp -= 3.2 * dt;
             explode(f.x, f.y, '#ffd23c', 10);
             if (f.hp <= 0) killFort(fi, f);
           }
@@ -5726,20 +5726,20 @@ function update(dt) {
         if (proj > 0 && proj < 2200) {
           const perp = Math.abs(-dx * bSin + dy * bCos);
           if (perp < 44) {
-            explode(eb.x, eb.y, '#38bdf8', 6);
+            explode(eb.x, eb.y, '#f59e0b', 6);
             eballs.splice(bi, 1);
           }
         }
       }
-      // Boss
+      // Boss (Tier 1: 3.5 dmg/s)
       if (boss) {
         const dx = boss.x - startX, dy = boss.y - startY;
         const proj = dx * bCos + dy * bSin;
         if (proj > 0 && proj < 2200) {
           const perp = Math.abs(-dx * bSin + dy * bCos);
           if (perp < (boss.w * 0.5) + 40) {
-            boss.hp -= 4.5 * dt;
-            explode(boss.x + (Math.random()-0.5)*boss.w*0.7, boss.y + (Math.random()-0.5)*boss.h*0.7, '#38bdf8', 12);
+            boss.hp -= 3.5 * dt;
+            explode(boss.x + (Math.random()-0.5)*boss.w*0.7, boss.y + (Math.random()-0.5)*boss.h*0.7, '#f59e0b', 12);
             if (boss.hp <= 0) killBoss();
           }
         }
@@ -5747,14 +5747,14 @@ function update(dt) {
     }
   }
 
-  // 2. T-65B X-WING: S-Foil Proton Nova Mega-Beam & Proton Torpedoes
+  // 2. T-65B X-WING (Tier 2, Cost 5 Cores): S-Foil Proton Nova Mega-Beam & Proton Torpedoes
   if (superBeamActiveT > 0) {
     superBeamActiveT -= dt;
     const beamAngle = ship.aimAngle || 0;
     const bCos = Math.cos(beamAngle), bSin = Math.sin(beamAngle);
     const startX = ship.x + 36 * bCos, startY = ship.y + 36 * bSin;
 
-    // Vaporize Gliders in Beam
+    // Vaporize Gliders in Beam (Tier 2: 5.0 dmg/s)
     for (let gi = gliders.length - 1; gi >= 0; gi--) {
       const g = gliders[gi];
       const dx = g.x - startX, dy = g.y - startY;
@@ -5762,7 +5762,7 @@ function update(dt) {
       if (proj > 0 && proj < 2400) {
         const perp = Math.abs(-dx * bSin + dy * bCos);
         if (perp < (g.w * 0.5 || 24) + 48) {
-          g.hp -= 3.8 * dt;
+          g.hp -= 5.0 * dt;
           g.shield = 0;
           explode(g.x, g.y, '#00ffee', 12);
           if (g.hp <= 0) killGlider(gi, g);
@@ -5770,7 +5770,7 @@ function update(dt) {
       }
     }
 
-    // Melt Forts in Beam
+    // Melt Forts in Beam (Tier 2: 5.5 dmg/s)
     for (let fi = forts.length - 1; fi >= 0; fi--) {
       const f = forts[fi];
       const dx = f.x - startX, dy = f.y - startY;
@@ -5778,8 +5778,8 @@ function update(dt) {
       if (proj > 0 && proj < 2400) {
         const perp = Math.abs(-dx * bSin + dy * bCos);
         if (perp < (f.w * 0.5 || 32) + 48) {
-          f.hp -= 4.2 * dt;
-          if (f.shield) f.shield = Math.max(0, f.shield - 2.5 * dt);
+          f.hp -= 5.5 * dt;
+          if (f.shield) f.shield = Math.max(0, f.shield - 3.0 * dt);
           explode(f.x, f.y, '#38bdf8', 14);
           if (f.hp <= 0) killFort(fi, f);
         }
@@ -5811,15 +5811,15 @@ function update(dt) {
       }
     }
 
-    // Blast Boss in Beam
+    // Blast Boss in Beam (Tier 2: 6.5 dmg/s)
     if (boss) {
       const dx = boss.x - startX, dy = boss.y - startY;
       const proj = dx * bCos + dy * bSin;
       if (proj > 0 && proj < 2400) {
         const perp = Math.abs(-dx * bSin + dy * bCos);
         if (perp < (boss.w * 0.5) + 48) {
-          boss.hp -= 5.0 * dt;
-          if (boss.iceShards > 0) boss.iceShards = Math.max(0, boss.iceShards - 2.5 * dt);
+          boss.hp -= 6.5 * dt;
+          if (boss.iceShards > 0) boss.iceShards = Math.max(0, boss.iceShards - 3.0 * dt);
           explode(boss.x + (Math.random() - 0.5) * boss.w * 0.8, boss.y + (Math.random() - 0.5) * boss.h * 0.8, '#00ffee', 16);
           if (boss.hp <= 0) killBoss();
         }
@@ -5827,7 +5827,7 @@ function update(dt) {
     }
   }
 
-  // X-Wing Smart Homing Proton Torpedoes
+  // X-Wing Smart Homing Proton Torpedoes (Tier 2 Gadget: 4.5 dmg each)
   for (let i = protonTorpedoes.length - 1; i >= 0; i--) {
     const torp = protonTorpedoes[i];
     torp.life -= dt;
@@ -5847,8 +5847,8 @@ function update(dt) {
     }
     if (target) {
       const ang = Math.atan2(target.y - torp.y, target.x - torp.x);
-      const curSpd = Math.hypot(torp.vx, torp.vy) || 600;
-      const newSpd = Math.min(1300, curSpd + 500 * dt);
+      const curSpd = Math.hypot(torp.vx, torp.vy) || 650;
+      const newSpd = Math.min(1350, curSpd + 550 * dt);
       torp.vx = Math.cos(ang) * newSpd;
       torp.vy = Math.sin(ang) * newSpd;
     }
@@ -5901,7 +5901,7 @@ function update(dt) {
       explode(torp.x, torp.y, '#38bdf8', 40);
       sfx('boom');
       addShake(12);
-      popup(torp.x, torp.y - 20, '💥 40 PROTON TORP!', '#00ffee');
+      popup(torp.x, torp.y - 20, '💥 45 PROTON TORP!', '#00ffee');
       for (let bi = eballs.length - 1; bi >= 0; bi--) {
         if (Math.hypot(eballs[bi].x - torp.x, eballs[bi].y - torp.y) < 130) {
           eballs.splice(bi, 1);
@@ -5911,7 +5911,7 @@ function update(dt) {
     }
   }
 
-  // 3. THE ROGUE SHADOW: Stealth Cloak, Decoys & Gravitational Singularity
+  // 3. THE ROGUE SHADOW (Tier 3, Cost 6 Cores): Stealth Cloak, Decoys & Gravitational Singularity
   if (stealthCloakT > 0) {
     stealthCloakT -= dt;
     ship.inv = Math.max(ship.inv, 0.5);
@@ -5922,17 +5922,29 @@ function update(dt) {
     dec.x += dec.vx * dt;
     dec.y += dec.vy * dt;
     if (dec.life <= 0 || dec.hp <= 0) {
-      explode(dec.x, dec.y, '#38bdf8', 65);
+      explode(dec.x, dec.y, '#38bdf8', 75);
+      explode(dec.x, dec.y, '#00ffee', 55);
       sfx('boom');
-      addShake(14);
-      popup(dec.x, dec.y - 20, '⚡ DECOY EMP SHOCKWAVE!', '#38bdf8');
+      addShake(16);
+      popup(dec.x, dec.y - 20, '⚡ 70 DECOY EMP SHOCKWAVE!', '#38bdf8');
       for (let gi = gliders.length - 1; gi >= 0; gi--) {
         const g = gliders[gi];
-        if (Math.hypot(g.x - dec.x, g.y - dec.y) < 220) {
-          g.hp -= 2.5;
-          g.frozenT = 2.0;
+        if (Math.hypot(g.x - dec.x, g.y - dec.y) < 260) {
+          g.hp -= 7.0;
+          g.frozenT = 2.5;
           if (g.hp <= 0) killGlider(gi, g);
         }
+      }
+      for (let fi = forts.length - 1; fi >= 0; fi--) {
+        const f = forts[fi];
+        if (Math.hypot(f.x - dec.x, f.y - dec.y) < 260) {
+          f.hp -= 7.0;
+          if (f.hp <= 0) killFort(fi, f);
+        }
+      }
+      if (boss && Math.hypot(boss.x - dec.x, boss.y - dec.y) < 280) {
+        boss.hp -= 8.0;
+        if (boss.hp <= 0) killBoss();
       }
       stealthDecoys.splice(i, 1);
     }
@@ -5953,16 +5965,17 @@ function update(dt) {
         size: 7 + Math.random() * 6
       });
     }
+    // Pull and continuous crushing damage (Tier 3: 7.0-7.5 dmg/s)
     for (let gi = gliders.length - 1; gi >= 0; gi--) {
       const g = gliders[gi];
       const d = Math.hypot(sing.x - g.x, sing.y - g.y);
       if (d < 1200) {
         const ang = Math.atan2(sing.y - g.y, sing.x - g.x);
-        g.x += Math.cos(ang) * 240 * dt;
-        g.y += Math.sin(ang) * 240 * dt;
+        g.x += Math.cos(ang) * 260 * dt;
+        g.y += Math.sin(ang) * 260 * dt;
       }
       if (d < sing.radius + 160) {
-        g.hp -= 3.8 * dt;
+        g.hp -= 7.0 * dt;
         if (g.hp <= 0) killGlider(gi, g);
       }
     }
@@ -5970,7 +5983,7 @@ function update(dt) {
       const f = forts[fi];
       const d = Math.hypot(sing.x - f.x, sing.y - f.y);
       if (d < sing.radius + 160) {
-        f.hp -= 4.0 * dt;
+        f.hp -= 7.5 * dt;
         if (f.hp <= 0) killFort(fi, f);
       }
     }
@@ -5979,8 +5992,8 @@ function update(dt) {
       const d = Math.hypot(sing.x - eb.x, sing.y - eb.y);
       if (d < sing.radius + 200) {
         const ang = Math.atan2(sing.y - eb.y, sing.x - eb.x);
-        eb.vx += Math.cos(ang) * 700 * dt;
-        eb.vy += Math.sin(ang) * 700 * dt;
+        eb.vx += Math.cos(ang) * 750 * dt;
+        eb.vy += Math.sin(ang) * 750 * dt;
         if (d < 60) eballs.splice(bi, 1);
       }
     }
@@ -5988,39 +6001,44 @@ function update(dt) {
       const d = Math.hypot(sing.x - c.x, sing.y - c.y);
       if (d < 1400) {
         const ang = Math.atan2(sing.y - c.y, sing.x - c.x);
-        c.vx += Math.cos(ang) * 600 * dt;
-        c.vy += Math.sin(ang) * 600 * dt;
+        c.vx += Math.cos(ang) * 650 * dt;
+        c.vy += Math.sin(ang) * 650 * dt;
       }
     }
     if (boss && Math.hypot(sing.x - boss.x, sing.y - boss.y) < sing.radius + 180) {
-      boss.hp -= 4.2 * dt;
+      boss.hp -= 8.0 * dt;
       if (boss.hp <= 0) killBoss();
     }
+    // Supernova Implosion Final Blast (Tier 3: 16.0-18.0 dmg)
     if (sing.life <= 0) {
-      explode(sing.x, sing.y, '#c084fc', 140);
-      explode(sing.x, sing.y, '#38bdf8', 110);
+      explode(sing.x, sing.y, '#c084fc', 150);
+      explode(sing.x, sing.y, '#38bdf8', 120);
       sfx('boom');
-      addShake(30);
-      popup(sing.x, sing.y - 35, '💥 TACHYON SUPERNOVA IMPLOSION!', '#c084fc');
+      addShake(32);
+      popup(sing.x, sing.y - 35, '💥 160 TACHYON SUPERNOVA IMPLOSION!', '#c084fc');
       for (let gi = gliders.length - 1; gi >= 0; gi--) {
         const g = gliders[gi];
-        if (Math.hypot(sing.x - g.x, sing.y - g.y) < sing.radius + 80) {
-          g.hp -= 6.0;
+        if (Math.hypot(sing.x - g.x, sing.y - g.y) < sing.radius + 100) {
+          g.hp -= 16.0;
           if (g.hp <= 0) killGlider(gi, g);
         }
       }
       for (let fi = forts.length - 1; fi >= 0; fi--) {
         const f = forts[fi];
-        if (Math.hypot(sing.x - f.x, sing.y - f.y) < sing.radius + 80) {
-          f.hp -= 6.0;
+        if (Math.hypot(sing.x - f.x, sing.y - f.y) < sing.radius + 100) {
+          f.hp -= 16.0;
           if (f.hp <= 0) killFort(fi, f);
         }
+      }
+      if (boss && Math.hypot(sing.x - boss.x, sing.y - boss.y) < sing.radius + 120) {
+        boss.hp -= 18.0;
+        if (boss.hp <= 0) killBoss();
       }
       singularities.splice(i, 1);
     }
   }
 
-  // 4. HAMMERHEAD CORVETTE: Deflector Ramming Prow & Orbital Turbolaser Bombardment
+  // 4. HAMMERHEAD CORVETTE (Tier 4, Cost 8 Cores): Deflector Ramming Prow & Orbital Turbolaser Bombardment
   if (rammingProwT > 0) {
     rammingProwT -= dt;
     ship.inv = Math.max(ship.inv, 0.5);
@@ -6029,8 +6047,8 @@ function update(dt) {
       const g = gliders[gi];
       if (Math.hypot(g.x - prowX, g.y - prowY) < (g.w * 0.5 || 28) + 40) {
         killGlider(gi, g);
-        addShake(12);
-        popup(g.x, g.y - 20, '💥 RAMMED!', '#ef4444');
+        addShake(14);
+        popup(g.x, g.y - 20, '💥 RAM CRUSH!', '#ef4444');
       }
     }
     for (let mi = mines.length - 1; mi >= 0; mi--) {
@@ -6042,26 +6060,26 @@ function update(dt) {
     for (let fi = forts.length - 1; fi >= 0; fi--) {
       const f = forts[fi];
       if (Math.hypot(f.x - prowX, f.y - prowY) < (f.w * 0.5 || 34) + 40) {
-        f.hp -= 4.0 * dt;
-        explode(f.x, f.y, '#ef4444', 16);
+        f.hp -= 14.0 * dt;
+        explode(f.x, f.y, '#ef4444', 18);
         if (f.hp <= 0) killFort(fi, f);
       }
     }
     for (let bi = eballs.length - 1; bi >= 0; bi--) {
       const eb = eballs[bi];
-      if (Math.hypot(eb.x - prowX, eb.y - prowY) < 55) {
+      if (Math.hypot(eb.x - prowX, eb.y - prowY) < 60) {
         explode(eb.x, eb.y, '#ef4444', 10);
         eballs.splice(bi, 1);
       }
     }
     if (boss && Math.hypot(boss.x - prowX, boss.y - prowY) < (boss.w * 0.5) + 40) {
-      boss.hp -= 4.5 * dt;
-      explode(boss.x, boss.y, '#ef4444', 18);
+      boss.hp -= 16.0 * dt;
+      explode(boss.x, boss.y, '#ef4444', 20);
       if (boss.hp <= 0) killBoss();
     }
   }
 
-  // Hammerhead / Orbital Turbolaser Bombardment Meteors
+  // Hammerhead / Orbital Turbolaser Bombardment Meteors (Tier 4 Super: 10.0-15.0 dmg per strike)
   for (let i = meteorStrikes.length - 1; i >= 0; i--) {
     const met = meteorStrikes[i];
     if (met.delay > 0) { met.delay -= dt; continue; }
@@ -6076,87 +6094,89 @@ function update(dt) {
       size: 10 + Math.random() * 6
     });
     if (met.y >= met.targetY) {
-      explode(met.x, met.targetY, '#ef4444', 85);
-      explode(met.x, met.targetY, '#ffd23c', 65);
-      addShake(24);
+      explode(met.x, met.targetY, '#ef4444', 95);
+      explode(met.x, met.targetY, '#ffd23c', 75);
+      addShake(26);
       sfx('boom');
-      popup(met.x, met.targetY - 25, '💥 35 TURBOLASER DMG', '#ef4444');
+      popup(met.x, met.targetY - 25, '💥 150 TURBOLASER DMG', '#ef4444');
 
       for (let gi = gliders.length - 1; gi >= 0; gi--) {
         const g = gliders[gi];
-        if (Math.hypot(g.x - met.x, g.y - met.targetY) < 220) {
-          g.hp -= 1.5;
+        if (Math.hypot(g.x - met.x, g.y - met.targetY) < 240) {
+          g.hp -= 10.0;
           if (g.hp <= 0) killGlider(gi, g);
         }
       }
       for (let fi = forts.length - 1; fi >= 0; fi--) {
         const f = forts[fi];
-        if (Math.hypot(f.x - met.x, f.y - met.targetY) < 240) {
-          f.hp -= 2.0;
+        if (Math.hypot(f.x - met.x, f.y - met.targetY) < 260) {
+          f.hp -= 12.0;
           if (f.hp <= 0) killFort(fi, f);
         }
       }
       for (let mi = mines.length - 1; mi >= 0; mi--) {
         const m = mines[mi];
-        if (Math.hypot(m.x - met.x, m.y - met.targetY) < 220) {
+        if (Math.hypot(m.x - met.x, m.y - met.targetY) < 240) {
           killMine(mi, m);
         }
       }
       for (let bi = eballs.length - 1; bi >= 0; bi--) {
         const eb = eballs[bi];
-        if (Math.hypot(eb.x - met.x, eb.y - met.targetY) < 220) {
+        if (Math.hypot(eb.x - met.x, eb.y - met.targetY) < 240) {
           eballs.splice(bi, 1);
         }
       }
-      if (boss && Math.hypot(boss.x - met.x, boss.y - met.targetY) < 260) {
-        boss.hp -= 3.5;
+      if (boss && Math.hypot(boss.x - met.x, boss.y - met.targetY) < 280) {
+        boss.hp -= 15.0;
         if (boss.hp <= 0) killBoss();
       }
       meteorStrikes.splice(i, 1);
     }
   }
 
-  // 5. FONDOR HAULCRAFT: Twin Lateral Laser Scythes & Droid Flak Barrage
+  // 5. FONDOR HAULCRAFT (Tier 5 - The Best Ship, Cost 10 Cores): Supreme Twin Plasma Scythes & Armada Flak Storm
   if (fondorScythesT > 0) {
     fondorScythesT -= dt;
-    const scytheTopY = ship.y - 320, scytheBotY = ship.y + 320;
+    const scytheTopY = ship.y - 450, scytheBotY = ship.y + 450;
     const scytheX = ship.x;
+    // Continuous Scythe Cutting Power (Tier 5: 18.0 dmg/s)
     for (let gi = gliders.length - 1; gi >= 0; gi--) {
       const g = gliders[gi];
-      if (Math.abs(g.x - scytheX) < (g.w * 0.5 || 24) + 24 && g.y >= scytheTopY && g.y <= scytheBotY) {
-        g.hp -= 4.0 * dt;
-        explode(g.x, g.y, '#00ffee', 10);
+      if (Math.abs(g.x - scytheX) < (g.w * 0.5 || 24) + 30 && g.y >= scytheTopY && g.y <= scytheBotY) {
+        g.hp -= 18.0 * dt;
+        explode(g.x, g.y, '#00ffee', 14);
         if (g.hp <= 0) killGlider(gi, g);
       }
     }
     for (let fi = forts.length - 1; fi >= 0; fi--) {
       const f = forts[fi];
-      if (Math.abs(f.x - scytheX) < (f.w * 0.5 || 32) + 24 && f.y >= scytheTopY && f.y <= scytheBotY) {
-        f.hp -= 4.2 * dt;
-        explode(f.x, f.y, '#00ffee', 12);
+      if (Math.abs(f.x - scytheX) < (f.w * 0.5 || 32) + 30 && f.y >= scytheTopY && f.y <= scytheBotY) {
+        f.hp -= 18.0 * dt;
+        explode(f.x, f.y, '#00ffee', 16);
         if (f.hp <= 0) killFort(fi, f);
       }
     }
     for (let mi = mines.length - 1; mi >= 0; mi--) {
       const m = mines[mi];
-      if (Math.abs(m.x - scytheX) < (m.r || 28) + 24 && m.y >= scytheTopY && m.y <= scytheBotY) {
+      if (Math.abs(m.x - scytheX) < (m.r || 28) + 30 && m.y >= scytheTopY && m.y <= scytheBotY) {
         killMine(mi, m);
       }
     }
     for (let bi = eballs.length - 1; bi >= 0; bi--) {
       const eb = eballs[bi];
-      if (Math.abs(eb.x - scytheX) < 32 && eb.y >= scytheTopY && eb.y <= scytheBotY) {
-        explode(eb.x, eb.y, '#00ffee', 8);
+      if (Math.abs(eb.x - scytheX) < 40 && eb.y >= scytheTopY && eb.y <= scytheBotY) {
+        explode(eb.x, eb.y, '#00ffee', 10);
         eballs.splice(bi, 1);
       }
     }
-    if (boss && Math.abs(boss.x - scytheX) < (boss.w * 0.5) + 24 && boss.y >= scytheTopY && boss.y <= scytheBotY) {
-      boss.hp -= 4.5 * dt;
-      explode(boss.x, boss.y, '#00ffee', 14);
+    if (boss && Math.abs(boss.x - scytheX) < (boss.w * 0.5) + 30 && boss.y >= scytheTopY && boss.y <= scytheBotY) {
+      boss.hp -= 20.0 * dt;
+      explode(boss.x, boss.y, '#00ffee', 18);
       if (boss.hp <= 0) killBoss();
     }
   }
 
+  // 24 Articulated Heavy Flak Pods (Tier 5 Super: 12.0-14.0 dmg per explosion)
   for (let i = flakPods.length - 1; i >= 0; i--) {
     const pod = flakPods[i];
     pod.fuse -= dt;
@@ -6164,11 +6184,11 @@ function update(dt) {
     pod.y += pod.vy * dt;
     pod.vx *= 0.96; pod.vy *= 0.96;
     if (pod.fuse <= 0) {
-      explode(pod.x, pod.y, '#00ffee', 80);
-      explode(pod.x, pod.y, '#38bdf8', 60);
+      explode(pod.x, pod.y, '#00ffee', 95);
+      explode(pod.x, pod.y, '#ffd23c', 75);
       sfx('boom');
-      addShake(12);
-      popup(pod.x, pod.y - 20, '💥 25 FLAK BURST!', '#00ffee');
+      addShake(14);
+      popup(pod.x, pod.y - 20, '💥 120 FLAK BURST!', '#00ffee');
       for (let bi = eballs.length - 1; bi >= 0; bi--) {
         if (Math.hypot(eballs[bi].x - pod.x, eballs[bi].y - pod.y) < pod.radius) {
           eballs.splice(bi, 1);
@@ -6177,19 +6197,19 @@ function update(dt) {
       for (let gi = gliders.length - 1; gi >= 0; gi--) {
         const g = gliders[gi];
         if (Math.hypot(g.x - pod.x, g.y - pod.y) < pod.radius) {
-          g.hp -= 2.5;
+          g.hp -= 12.0;
           if (g.hp <= 0) killGlider(gi, g);
         }
       }
       for (let fi = forts.length - 1; fi >= 0; fi--) {
         const f = forts[fi];
         if (Math.hypot(f.x - pod.x, f.y - pod.y) < pod.radius) {
-          f.hp -= 2.5;
+          f.hp -= 12.0;
           if (f.hp <= 0) killFort(fi, f);
         }
       }
       if (boss && Math.hypot(boss.x - pod.x, boss.y - pod.y) < pod.radius + 40) {
-        boss.hp -= 3.0;
+        boss.hp -= 14.0;
         if (boss.hp <= 0) killBoss();
       }
       flakPods.splice(i, 1);
@@ -9551,36 +9571,36 @@ function draw() {
     cx.restore();
   }
 
-  // 9g. Render Fondor Haulcraft Twin Lateral Laser Scythes
+  // 9g. Render Fondor Haulcraft Twin Lateral Laser Scythes (Tier 5)
   if (fondorScythesT > 0) {
     cx.save();
     for (const sDir of [-1, 1]) {
-      const topY = ship.y + (sDir === -1 ? -320 : 20);
-      const botY = ship.y + (sDir === -1 ? -20 : 320);
+      const topY = ship.y + (sDir === -1 ? -450 : 20);
+      const botY = ship.y + (sDir === -1 ? -20 : 450);
       const beamH = botY - topY;
 
       // Outer glow
-      cx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
-      cx.lineWidth = 28 + Math.sin(t * 30) * 6;
+      cx.strokeStyle = 'rgba(0, 255, 238, 0.45)';
+      cx.lineWidth = 32 + Math.sin(t * 30) * 8;
       cx.lineCap = 'round';
       cx.beginPath(); cx.moveTo(ship.x, topY); cx.lineTo(ship.x, botY); cx.stroke();
 
       // Mid laser
-      cx.strokeStyle = '#ef4444';
-      cx.lineWidth = 14 + Math.cos(t * 35) * 4;
+      cx.strokeStyle = '#00ffee';
+      cx.lineWidth = 18 + Math.cos(t * 35) * 4;
       cx.beginPath(); cx.moveTo(ship.x, topY); cx.lineTo(ship.x, botY); cx.stroke();
 
       // White laser blade core
       cx.strokeStyle = '#ffffff';
-      cx.lineWidth = 5;
+      cx.lineWidth = 6;
       cx.beginPath(); cx.moveTo(ship.x, topY); cx.lineTo(ship.x, botY); cx.stroke();
 
       // Crackling plasma arcs along the scythe
       cx.strokeStyle = '#ffd23c';
-      cx.lineWidth = 2.5;
+      cx.lineWidth = 3.0;
       cx.beginPath();
       for (let y = topY; y <= botY; y += 40) {
-        const sx = ship.x + Math.sin(y * 0.1 + t * 25) * 12;
+        const sx = ship.x + Math.sin(y * 0.1 + t * 25) * 14;
         if (y === topY) cx.moveTo(sx, y);
         else cx.lineTo(sx, y);
       }
