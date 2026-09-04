@@ -2970,24 +2970,67 @@ const LB = {
   },
   async updateName(newName) {
     if (!newName) return;
+    newName = newName.trim().slice(0, 14);
+    if (!newName) return;
     try {
+      localStorage.setItem('sp_name', newName);
+      playerName = newName;
       let arr = await this._local();
       const myUid = SAVE.data.uid;
       let changed = false;
+      let myMaxScore = +localStorage.getItem('sp_best') || 0;
+      let myLevel = 1;
+      let myCoins = 0;
+
       for (const r of arr) {
-        if (r.uid === myUid) {
+        if (r.uid === myUid || ((r.name || '').trim().toLowerCase() === newName.toLowerCase())) {
           r.name = newName;
+          r.uid = myUid;
           r.ship = SAVE.data.sel;
           r.skin = SAVE.data.skin;
           r.ships = [...SAVE.data.ships];
           r.upg = { ...SAVE.data.upg };
           r.kills = SAVE.data.kills;
           r.tokens = SAVE.data.tokens;
+          r.spins = SAVE.data.spins;
+          if (r.score > myMaxScore) {
+            myMaxScore = r.score;
+            myLevel = r.level || myLevel;
+            myCoins = r.coins || myCoins;
+          }
           changed = true;
         }
       }
       if (changed) {
         localStorage.setItem('sp_lb', JSON.stringify(arr));
+      }
+
+      // Push updated captain dossier to Supabase cloud
+      if (this.online() && myMaxScore > 0) {
+        await fetch(this.URL + '/rest/v1/' + this.TABLE, {
+          method: 'POST',
+          headers: this._headers({ 'Content-Type': 'application/json', Prefer: 'return=representation' }),
+          body: JSON.stringify({
+            scope: this.SCOPE,
+            ref_id: this.REF_ID,
+            author: newName,
+            body: JSON.stringify({
+              uid: myUid,
+              name: newName,
+              score: myMaxScore,
+              level: myLevel,
+              coins: myCoins,
+              kills: SAVE.data.kills,
+              ship: SAVE.data.sel,
+              skin: SAVE.data.skin,
+              ships: [...SAVE.data.ships],
+              upg: { ...SAVE.data.upg },
+              tokens: SAVE.data.tokens,
+              spins: SAVE.data.spins,
+              created_at: Date.now()
+            })
+          })
+        });
       }
     } catch (e) {}
   },
@@ -3038,19 +3081,104 @@ const LB = {
     return this._dedupe(local);
   },
   _dedupe(rows) {
-    const best = new Map();
+    if (!rows || !Array.isArray(rows)) return [];
+    
+    // 1. Group all entries by pilot UID first
+    const byUid = new Map();
+    const noUid = [];
+    
     for (const r of rows) {
-      const nameKey = (r.name || '').trim().toLowerCase();
-      if (!nameKey) continue;
-      const key = r.uid ? ('uid:' + r.uid) : ('name:' + nameKey);
-      const p = best.get(key) || best.get('name:' + nameKey);
-      if (!p || r.score > p.score || (r.score === p.score && (r.created_at || 0) < (p.created_at || 0))) {
-        best.set(key, r);
-        best.set('name:' + nameKey, r);
+      if (!r || typeof r.score !== 'number') continue;
+      r.name = (r.name || 'Captain').trim().slice(0, 14);
+      if (!r.name) continue;
+      
+      const uid = (r.uid || '').trim();
+      if (uid) {
+        if (!byUid.has(uid)) byUid.set(uid, []);
+        byUid.get(uid).push(r);
+      } else {
+        noUid.push(r);
       }
     }
-    const unique = Array.from(new Set(best.values()));
-    return unique.sort((a, b) => (b.score || 0) - (a.score || 0) || (a.created_at || 0) - (b.created_at || 0));
+    
+    const combined = [];
+    
+    // For each UID: latest timestamp dictates current name and loadout; max score dictates high score
+    for (const [uid, entries] of byUid.entries()) {
+      entries.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+      const latest = Object.assign({}, entries[0]);
+      let maxScore = -1;
+      let bestLevel = latest.level || 1;
+      let maxCoins = latest.coins || 0;
+      let maxKills = 0;
+      let maxTokens = 0;
+      let maxSpins = 0;
+      let bestCreatedAt = latest.created_at || Date.now();
+      
+      for (const e of entries) {
+        if (e.score > maxScore) {
+          maxScore = e.score;
+          bestLevel = e.level || bestLevel;
+          maxCoins = e.coins || maxCoins;
+          bestCreatedAt = e.created_at || bestCreatedAt;
+        }
+        maxKills = Math.max(maxKills, e.kills || 0);
+        maxTokens = Math.max(maxTokens, e.tokens || 0);
+        maxSpins = Math.max(maxSpins, e.spins || 0);
+      }
+      
+      latest.score = maxScore >= 0 ? maxScore : (latest.score || 0);
+      latest.level = bestLevel;
+      latest.coins = maxCoins;
+      latest.kills = maxKills;
+      latest.tokens = maxTokens;
+      latest.spins = maxSpins;
+      latest.created_at = bestCreatedAt;
+      combined.push(latest);
+    }
+    
+    // 2. Group no-UID entries by normalized name
+    const byName = new Map();
+    for (const r of noUid) {
+      const nk = (r.name || '').trim().toLowerCase();
+      if (!nk) continue;
+      if (combined.some(c => (c.name || '').trim().toLowerCase() === nk)) continue;
+      if (!byName.has(nk)) byName.set(nk, []);
+      byName.get(nk).push(r);
+    }
+    
+    for (const [nk, entries] of byName.entries()) {
+      entries.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+      const latest = Object.assign({}, entries[0]);
+      let maxScore = -1;
+      let bestLevel = latest.level || 1;
+      let bestCreatedAt = latest.created_at || Date.now();
+      
+      for (const e of entries) {
+        if (e.score > maxScore) {
+          maxScore = e.score;
+          bestLevel = e.level || bestLevel;
+          bestCreatedAt = e.created_at || bestCreatedAt;
+        }
+      }
+      latest.score = maxScore >= 0 ? maxScore : (latest.score || 0);
+      latest.level = bestLevel;
+      latest.created_at = bestCreatedAt;
+      combined.push(latest);
+    }
+    
+    // 3. Dedupe by normalized name across combined
+    const nameMap = new Map();
+    for (const r of combined) {
+      const nk = (r.name || '').trim().toLowerCase();
+      const existing = nameMap.get(nk);
+      if (!existing || (r.score || 0) > (existing.score || 0)) {
+        nameMap.set(nk, r);
+      }
+    }
+    
+    const finalRows = Array.from(nameMap.values());
+    return finalRows.sort((a, b) => (b.score || 0) - (a.score || 0) || (a.created_at || 0) - (b.created_at || 0));
   },
   async top(n) {
     const all = await this._all();
@@ -4797,7 +4925,6 @@ async function renderLeaderboard(cid, myScore, myName) {
 
   // 2. Fetch fresh cloud scores from all devices asynchronously & update UI
   try {
-    await LB.updateName(curName);
     const cloudRows = await LB.top();
     if (cloudRows && cloudRows.length) {
       cachedLeaderboardRows = cloudRows;
@@ -6140,17 +6267,27 @@ if (shopCloseEl) shopCloseEl.addEventListener('click', closeShop);
     if (bl && best > 0) bl.textContent = '🏅 Sector Record: ' + best;
 
     if (i) {
-      const updateName = () => {
+      let nameTimer = null;
+      const updateName = (immediate = false) => {
         const val = i.value.trim().slice(0, 14);
         if (val) {
           localStorage.setItem('sp_name', val);
           playerName = val;
-          renderLeaderboard('lbMenu', -1, playerName);
+          if (immediate) {
+            LB.updateName(val);
+            renderLeaderboard('lbMenu', -1, playerName);
+          } else {
+            clearTimeout(nameTimer);
+            nameTimer = setTimeout(() => {
+              LB.updateName(val);
+              renderLeaderboard('lbMenu', -1, playerName);
+            }, 500);
+          }
         }
       };
-      i.addEventListener('input', updateName);
-      i.addEventListener('change', updateName);
-      i.addEventListener('blur', updateName);
+      i.addEventListener('input', () => updateName(false));
+      i.addEventListener('change', () => updateName(true));
+      i.addEventListener('blur', () => updateName(true));
     }
 
     if (best > 0) {
@@ -6161,7 +6298,11 @@ if (shopCloseEl) shopCloseEl.addEventListener('click', closeShop);
         level: 1,
         kills: SAVE.data.kills,
         ship: SAVE.data.sel,
-        skin: SAVE.data.skin
+        skin: SAVE.data.skin,
+        ships: [...SAVE.data.ships],
+        upg: { ...SAVE.data.upg },
+        tokens: SAVE.data.tokens,
+        spins: SAVE.data.spins
       });
     }
   } catch (e) {}
