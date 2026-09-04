@@ -5414,7 +5414,7 @@ function update(dt) {
       if (proj > 0 && proj < 2400) {
         const perp = Math.abs(-dx * bSin + dy * bCos);
         if (perp < (g.w * 0.5 || 24) + 48) {
-          g.hp -= 35 * dt;
+          g.hp -= 3.5 * dt;
           g.shield = 0;
           explode(g.x, g.y, '#ffd23c', 12);
           if (g.hp <= 0) {
@@ -5432,8 +5432,8 @@ function update(dt) {
       if (proj > 0 && proj < 2400) {
         const perp = Math.abs(-dx * bSin + dy * bCos);
         if (perp < (f.w * 0.5 || 32) + 48) {
-          f.hp -= 40 * dt;
-          if (f.shield) f.shield = Math.max(0, f.shield - 15 * dt);
+          f.hp -= 4.0 * dt;
+          if (f.shield) f.shield = Math.max(0, f.shield - 2.5 * dt);
           explode(f.x, f.y, '#c084fc', 14);
           if (f.hp <= 0) {
             killFort(fi, f);
@@ -5476,8 +5476,8 @@ function update(dt) {
       if (proj > 0 && proj < 2400) {
         const perp = Math.abs(-dx * bSin + dy * bCos);
         if (perp < (boss.w * 0.5) + 48) {
-          boss.hp -= 45 * dt;
-          if (boss.iceShards > 0) boss.iceShards = Math.max(0, boss.iceShards - 15 * dt);
+          boss.hp -= 5.0 * dt;
+          if (boss.iceShards > 0) boss.iceShards = Math.max(0, boss.iceShards - 2.5 * dt);
           explode(boss.x + (Math.random() - 0.5) * boss.w * 0.8, boss.y + (Math.random() - 0.5) * boss.h * 0.8, '#ffd23c', 16);
           if (boss.hp <= 0) {
             killBoss();
@@ -5506,13 +5506,13 @@ function update(dt) {
       explode(met.x, met.targetY, '#c084fc', 65);
       addShake(24);
       sfx('boom');
-      popup(met.x, met.targetY - 25, '💥 300 ORBITAL DMG', '#ffd23c');
+      popup(met.x, met.targetY - 25, '💥 35 ORBITAL DMG', '#ffd23c');
 
       // Detonate Gliders
       for (let gi = gliders.length - 1; gi >= 0; gi--) {
         const g = gliders[gi];
         if (Math.hypot(g.x - met.x, g.y - met.targetY) < 220) {
-          g.hp -= 20;
+          g.hp -= 1.5;
           if (g.hp <= 0) killGlider(gi, g);
         }
       }
@@ -5521,7 +5521,7 @@ function update(dt) {
       for (let fi = forts.length - 1; fi >= 0; fi--) {
         const f = forts[fi];
         if (Math.hypot(f.x - met.x, f.y - met.targetY) < 240) {
-          f.hp -= 25;
+          f.hp -= 2.0;
           if (f.hp <= 0) killFort(fi, f);
         }
       }
@@ -5544,7 +5544,7 @@ function update(dt) {
 
       // Damage Boss
       if (boss && Math.hypot(boss.x - met.x, boss.y - met.targetY) < 260) {
-        boss.hp -= 35;
+        boss.hp -= 3.5;
         if (boss.hp <= 0) killBoss();
       }
       meteorStrikes.splice(i, 1);
@@ -5664,7 +5664,7 @@ function update(dt) {
         skinId: activeSkin,
         cannonLevel: cannonLevel,
         isHypercharge: hyperchargeActiveT > 0,
-        dmg: hyperchargeActiveT > 0 ? 8 : 1
+        dmg: hyperchargeActiveT > 0 ? 2 : 1
       });
       
       let mCol = shipModel === 'runner' ? '#00ffee' : shipModel === 'storm' ? '#c084fc' : shipModel === 'hind' ? '#ffd700' : '#ffd23c';
@@ -6028,10 +6028,10 @@ function update(dt) {
       } else {
         boss.hp -= dmg; hit = true;
         addSuperCharge(5);
-        explode(b.x, b.y, '#ffd23c', b.isHypercharge ? 24 : 8);
+        explode(b.x, b.y, '#ffd23c', b.isHypercharge ? 20 : 8);
         if (b.isHypercharge) {
-          popup(boss.x, boss.y - 30, '⚡ CRIT -' + (dmg * 10), '#ffd23c');
-          addShake(8);
+          popup(boss.x, boss.y - 30, '⚡ CRIT -' + (dmg * 5), '#ffd23c');
+          addShake(5);
         }
         if (boss.hp <= 0) {
           killBoss();
@@ -6057,10 +6057,10 @@ function update(dt) {
 
           f.hp -= dmg; hit = true;
           addSuperCharge(4);
-          explode(b.x, b.y, '#ffd23c', b.isHypercharge ? 24 : 8);
+          explode(b.x, b.y, '#ffd23c', b.isHypercharge ? 20 : 8);
           if (b.isHypercharge) {
             popup(f.x, f.y - 25, '⚡ HYPER BLAST -' + dmg, '#ffd23c');
-            addShake(7);
+            addShake(5);
           }
           if (f.hp <= 0) {
             killFort(j, f);
@@ -6106,7 +6106,7 @@ function update(dt) {
           g.hp = (g.hp || 1) - dmg;
           hit = true;
           addSuperCharge(3);
-          explode(b.x, b.y, '#ffd23c', b.isHypercharge ? 20 : 8);
+          explode(b.x, b.y, '#ffd23c', b.isHypercharge ? 16 : 8);
           if (g.hp <= 0) {
             killGlider(j, g);
           }
@@ -6131,12 +6131,12 @@ function update(dt) {
       if (b.shipModel === 'runner') triggerChainLightning(b.x, b.y);
       if (b.isHypercharge) {
         // Hypercharge AOE Shockwave Explosion
-        explode(b.x, b.y, '#ffd23c', 45);
-        explode(b.x, b.y, '#c084fc', 35);
+        explode(b.x, b.y, '#ffd23c', 35);
+        explode(b.x, b.y, '#c084fc', 25);
         for (let gj = gliders.length - 1; gj >= 0; gj--) {
           const eg = gliders[gj];
-          if (Math.hypot(eg.x - b.x, eg.y - b.y) < 95) {
-            eg.hp -= 5;
+          if (Math.hypot(eg.x - b.x, eg.y - b.y) < 80) {
+            eg.hp -= 0.8;
             if (eg.hp <= 0) killGlider(gj, eg);
           }
         }
