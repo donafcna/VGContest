@@ -4148,6 +4148,59 @@ document.getElementById('spinCloseBtn').addEventListener('click', () => {
   closeSpinModal();
 });
 
+
+// Global Window Function Attachments for 100% Click Reliability
+window.startSolarSail = startSolarSail;
+window.openHangar = openHangar;
+window.closeShop = closeShop;
+window.openDailyModal = openDailyModal;
+window.closeDailyModal = closeDailyModal;
+window.openBossIntelModal = openBossIntelModal;
+window.closeBossIntelModal = closeBossIntelModal;
+window.switchIntelTab = switchIntelTab;
+window.openDossier = openDossier;
+window.openSpinModal = openSpinModal;
+window.closeSpinModal = closeSpinModal;
+window.claimDailyReward = claimDailyReward;
+window.repairDailyStreak = repairDailyStreak;
+window.resetDailyStreak = resetDailyStreak;
+window.togglePause = togglePause;
+window.advanceStory = advanceStory;
+
+function bindActionButtons() {
+  const bind = (id, handler) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.onclick = (e) => {
+        if (e) {
+          try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
+        }
+        handler(e);
+      };
+    }
+  };
+  bind('startbtn', startSolarSail);
+  bind('hangarbtn', openHangar);
+  bind('dailybtn', openDailyModal);
+  bind('bossbtn', openBossIntelModal);
+  bind('shopclose', closeShop);
+  bind('pausebtn', togglePause);
+  bind('resumebtn', togglePause);
+  bind('dosCloseBtn', () => {
+    const m = document.getElementById('dossierModal');
+    if (m) m.classList.add('hidden');
+  });
+  bind('spinCloseBtn', () => {
+    const m = document.getElementById('spinModal');
+    if (m) m.classList.add('hidden');
+  });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bindActionButtons);
+} else {
+  bindActionButtons();
+}
+
 function openHangar(e) {
   if (e) {
     try { e.stopPropagation(); } catch(err) {}
