@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Space Pirates: Galleon vs Star Wars UFOs — Realistic Space Combat with 7-Day Daily Rewards by Noel v32.0 -->
+<!-- Space Pirates: Galleon vs Star Wars UFOs — Realistic Space Combat with 7-Day Daily Rewards by Noel v33.0 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -2682,20 +2682,45 @@ function getEnemySvg(id) {
     </svg>`;
 
   } else if (id === 'brood') {
-    // 8. IMPERIAL GOZANTI ARMED GUNSHIP
+    // 8. PIRATE "UGLY" HEAVY HYBRID GUNSHIP (TYE-WING / DEATHSEED ASSAULT SHIP - From User Reference Photo)
     return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${glowFilter}
-      <!-- Heavy Armored Cargo Fuselage -->
-      <polygon points="12,40 50,16 135,22 145,40 135,58 50,64" fill="#450a0a" stroke="#ff5500" stroke-width="2.4"/>
-      <polygon points="36,40 68,26 120,30 120,50 68,54" fill="#180408" stroke="#ffd23c" stroke-width="1.4"/>
+      <!-- Port Side: Angled TIE Interceptor Dagger Solar Wing -->
+      <polygon points="12,12 85,8 145,22 110,28 65,22" fill="#090d16" stroke="#94a3b8" stroke-width="1.8"/>
+      <line x1="25" y1="12" x2="135" y2="21" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3 2"/>
+      <polygon points="30,14 75,12 90,24 45,22" fill="#1e293b" opacity="0.8"/>
 
-      <!-- Dorsal Command Turret -->
-      <rect x="68" y="24" width="28" height="32" fill="#180408" stroke="#ffd23c" stroke-width="1.5"/>
-      <circle cx="82" cy="40" r="8" fill="#ff5500" filter="url(#glow_${uid})"/>
+      <!-- Starboard Side: Long Outrigger Y-Wing Engine Nacelle & Strut -->
+      <polygon points="20,70 148,64 135,52 65,56" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.8"/>
+      <rect x="95" y="52" width="40" height="12" fill="#0f172a" stroke="#f59e0b" stroke-width="1.2" rx="2"/>
+      <circle cx="140" cy="58" r="4.5" fill="#f59e0b" filter="url(#glow_${uid})"/>
 
-      <!-- Twin Heavy Torpedo Emitters -->
-      <circle cx="28" cy="30" r="4" fill="#ffd23c"/>
-      <circle cx="28" cy="50" r="4" fill="#ffd23c"/>
+      <!-- Twin Flank Engine Turbines with Intake Cowling -->
+      <ellipse cx="65" cy="26" rx="12" ry="8" fill="#0f172a" stroke="#cbd5e1" stroke-width="1.5"/>
+      <circle cx="65" cy="26" r="3.5" fill="#38bdf8"/>
+      <ellipse cx="90" cy="54" rx="14" ry="9" fill="#0f172a" stroke="#cbd5e1" stroke-width="1.5"/>
+      <circle cx="90" cy="54" r="4" fill="#f59e0b"/>
+
+      <!-- Central Fuselage Body & Exposed Mechanical Machinery -->
+      <path d="M18 42 L42 28 L95 28 L115 40 L95 52 L42 52 Z" fill="url(#armor_${uid})" stroke="#94a3b8" stroke-width="2"/>
+      <!-- Exposed Engine Greebles & Conduits -->
+      <rect x="25" y="36" width="30" height="8" fill="#0f172a" stroke="#ef4444" stroke-width="1"/>
+      <line x1="28" y1="34" x2="52" y2="34" stroke="#38bdf8" stroke-width="1.5"/>
+      <line x1="28" y1="46" x2="52" y2="46" stroke="#f59e0b" stroke-width="1.5"/>
+
+      <!-- Central Spherical TIE Command Ball Cockpit -->
+      <circle cx="85" cy="40" r="14" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="85" cy="40" r="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1"/>
+      <circle cx="85" cy="40" r="3" fill="#ff0033" filter="url(#glow_${uid})"/>
+
+      <!-- Forward Angular Cockpit Nose & Front Sensor Dome -->
+      <polygon points="12,40 32,32 46,32 46,48 32,48" fill="#1e293b" stroke="#ffffff" stroke-width="1.5"/>
+      <circle cx="14" cy="40" r="3.5" fill="#38bdf8" filter="url(#glow_${uid})"/>
+
+      <!-- Top Swiveling Heavy Double Turbolaser Turret -->
+      <rect x="75" y="18" width="22" height="5" fill="#0f172a" stroke="#ffd23c" stroke-width="1.2" rx="1"/>
+      <line x1="72" y1="19" x2="58" y2="19" stroke="#ffd23c" stroke-width="2"/>
+      <line x1="72" y1="22" x2="58" y2="22" stroke="#ffd23c" stroke-width="2"/>
     </svg>`;
 
   } else if (id === 'cryo_gunship') {
@@ -2827,13 +2852,13 @@ const ENEMY_INTEL = [
   },
   {
     id: 'brood',
-    name: 'Imperial Gozanti Armed Gunship',
-    type: 'Armed Gunship · Sector 3+',
+    name: 'Pirate "Ugly" Heavy Hybrid Gunship (TYE-Wing)',
+    type: 'Pirate Hybrid Gunship · Sector 3+',
     col: '#ff5500',
     hp: '7 - 13 HP',
-    spd: '130 - 240 km/s',
-    weapons: 'Molten Magma Cluster Bombardment & Escort TIE Fighter Hangar Deployment',
-    tactic: 'Bank hard away from magma torpedoes, and destroy the gunship before it deploys escort TIEs!'
+    spd: '135 - 250 km/s',
+    weapons: 'Dorsal Double Turbolaser Turret, Homing Concussion Missiles & Escort TIE Deployment',
+    tactic: 'Target the central spherical TIE cockpit ball while evading the rotating top turret and flank turbine exhaust!'
   },
   {
     id: 'cryo_gunship',
@@ -3120,8 +3145,8 @@ function spawnFort() {
     // 2. The Razor Crest (ST-70 Assault Gunship - Twin Flank Turbines & Beskar Armor)
     variant = 'tesla'; col = '#38bdf8'; name = 'THE RAZOR CREST (ST-70)'; hp = 6 + Math.floor(level * 0.8); w = 126; h = 72; shield = 2;
   } else if (roll < 0.72) {
-    // 3. Imperial Gozanti Armed Gunship (Magma Orange & Heavy Armor)
-    variant = 'brood'; col = '#ff5500'; name = 'IMPERIAL GOZANTI GUNSHIP'; hp = 7 + Math.floor(level * 0.9); w = 126; h = 68; shield = 0;
+    // 3. Pirate "Ugly" Heavy Hybrid Gunship (TYE-Wing / Deathseed Gunship)
+    variant = 'brood'; col = '#ff5500'; name = 'PIRATE "UGLY" HYBRID GUNSHIP'; hp = 7 + Math.floor(level * 0.9); w = 128; h = 70; shield = 0;
   } else if (roll < 0.88) {
     // 4. Chiss Ascendancy Clawcraft Cruiser (Glacial Frost Ice)
     variant = 'cryo_gunship'; col = '#38bdf8'; name = 'CHISS ASCENDANCY CLAWCRAFT'; hp = 7 + Math.floor(level * 0.9); w = 122; h = 64; shield = 2;
@@ -5166,29 +5191,31 @@ function update(dt) {
         sfx('laser');
 
       } else if (f.variant === 'brood') {
-        // 3. IMPERIAL GOZANTI ARMED GUNSHIP: Molten Magma Cluster Torpedo + Escort TIE Deployment!
+        // 3. PIRATE "UGLY" HEAVY HYBRID GUNSHIP: Dorsal Double Turret Volley & Homing Torpedo + Escort TIE!
         f.altShot = !f.altShot;
         if (f.altShot) {
           eballs.push({
             type: 'magma',
-            col: '#ff4400',
+            col: '#ff5500',
             x: f.x - f.w * 0.45, y: f.y,
-            vx: -420 * spdBonus, vy: (dy / dist) * 140 * spdBonus,
+            vx: -450 * spdBonus, vy: (dy / dist) * 140 * spdBonus,
             r: 18,
             spin: 0
           });
-          popup(f.x, f.y - 28, '🔥 MOLTEN MAGMA TORPEDO!', '#ff5500');
+          popup(f.x, f.y - 28, '🔥 PIRATE CONCUSSION TORPEDO!', '#ff5500');
           sfx('incoming');
         } else {
+          // Top Swiveling Double Turret Rapid Laser Volley
           for (const spr of [-0.24, 0, 0.24]) {
             eballs.push({
               type: 'laser',
-              col: '#ff5500',
-              x: f.x - f.w * 0.45, y: f.y,
-              vx: -540 * spdBonus * Math.cos(spr), vy: 540 * spdBonus * Math.sin(spr),
+              col: '#ffd23c',
+              x: f.x - f.w * 0.20, y: f.y - 16,
+              vx: -560 * spdBonus * Math.cos(spr), vy: 560 * spdBonus * Math.sin(spr),
               r: 12
             });
           }
+          popup(f.x, f.y - 28, '⚡ DORSAL TURRET FLURRY!', '#ffd23c');
           sfx('laser');
         }
 
@@ -5196,7 +5223,7 @@ function update(dt) {
         if (f.hp <= f.maxHp * 0.5 && !f.deployedEscort && f.x > 200) {
           f.deployedEscort = true;
           spawnGlider(f.x, f.y + 35, 'tie');
-          popup(f.x, f.y - 35, '🚨 TIE FIGHTER SCRAMBLED!', '#ff5500');
+          popup(f.x, f.y - 35, '🚨 PIRATE TIE ESCORT LAUNCHED!', '#ff5500');
           sfx('incoming');
         }
 
@@ -5963,58 +5990,101 @@ function draw() {
       }
       
     } else if (f.variant === 'brood') {
-      // 3. IMPERIAL GOZANTI ARMED GUNSHIP (Heavy Armored Cargo Hull, Dorsal Turret, Orange Thrusters)
+      // 3. PIRATE "UGLY" HEAVY HYBRID GUNSHIP (TYE-WING / DEATHSEED ASSAULT SHIP - From User Reference Photo)
       const sg = cx.createRadialGradient(0, 0, 10, 0, 0, f.w * 0.55);
-      sg.addColorStop(0, 'rgba(255, 85, 0, 0.45)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      sg.addColorStop(0, 'rgba(255, 85, 0, 0.40)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = sg; cx.beginPath(); cx.ellipse(0, 0, f.w * 0.52, f.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
 
-      // Gozanti Armored Heavy Transport Hull (Multi-Tone Crimson & Gunmetal Plates)
-      const bg = cx.createLinearGradient(f.w * 0.45, 0, -f.w * 0.45, 0);
-      bg.addColorStop(0, '#1c0509'); bg.addColorStop(0.35, '#450a0a'); bg.addColorStop(0.75, '#7f1d1d'); bg.addColorStop(1, '#b91c1c');
-      cx.fillStyle = bg;
+      // PORT WING: Angled TIE Interceptor Solar Dagger Wing
+      cx.fillStyle = '#090d16';
       cx.beginPath();
-      cx.moveTo(-f.w * 0.46, 0);                 // Armored nose
-      cx.lineTo(-f.w * 0.25, -f.h * 0.44);       // Port shoulder
-      cx.lineTo(f.w * 0.28, -f.h * 0.40);        // Port aft pod
-      cx.lineTo(f.w * 0.45, -f.h * 0.20);        // Port thruster
-      cx.lineTo(f.w * 0.45, f.h * 0.20);         // Starboard thruster
-      cx.lineTo(f.w * 0.28, f.h * 0.40);         // Starboard aft pod
-      cx.lineTo(-f.w * 0.25, f.h * 0.44);        // Starboard shoulder
+      cx.moveTo(-f.w * 0.42, -f.h * 0.20);
+      cx.lineTo(f.w * 0.10, -f.h * 0.48);
+      cx.lineTo(f.w * 0.42, -f.h * 0.42);
+      cx.lineTo(f.w * 0.25, -f.h * 0.22);
       cx.closePath(); cx.fill();
-      cx.strokeStyle = '#ff5500'; cx.lineWidth = 2.5; cx.stroke();
+      cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 2.2; cx.stroke();
+      // Solar Grid Lines
+      cx.strokeStyle = 'rgba(56, 189, 248, 0.5)'; cx.lineWidth = 1;
+      cx.beginPath(); cx.moveTo(-f.w * 0.20, -f.h * 0.28); cx.lineTo(f.w * 0.30, -f.h * 0.38); cx.stroke();
 
-      // Hazard Warning Chevrons & Inset Plating
-      cx.fillStyle = '#180408';
-      cx.fillRect(-f.w * 0.15, -f.h * 0.25, f.w * 0.32, f.h * 0.50);
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.2;
-      cx.strokeRect(-f.w * 0.15, -f.h * 0.25, f.w * 0.32, f.h * 0.50);
+      // STARBOARD SPAR: Long Outrigger Y-Wing Engine Nacelle & Strut
+      cx.fillStyle = '#1e293b';
+      cx.beginPath();
+      cx.moveTo(-f.w * 0.35, f.h * 0.46);
+      cx.lineTo(f.w * 0.46, f.h * 0.42);
+      cx.lineTo(f.w * 0.40, f.h * 0.24);
+      cx.lineTo(-f.w * 0.10, f.h * 0.26);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#94a3b8'; cx.lineWidth = 2; cx.stroke();
 
-      // Elevated Command Bridge Pod
-      cx.fillStyle = '#450a0a'; cx.fillRect(-f.w * 0.08, -f.h * 0.14, f.w * 0.18, f.h * 0.28);
-      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1; cx.strokeRect(-f.w * 0.08, -f.h * 0.14, f.w * 0.18, f.h * 0.28);
-      cx.fillStyle = '#ffcc00'; cx.fillRect(-f.w * 0.06, -f.h * 0.06, 4, f.h * 0.12);
-
-      // Superheated Magma Fusion Core
-      const cg = cx.createRadialGradient(0, 0, 1, 0, 0, 14);
-      cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.35, '#ffdd33'); cg.addColorStop(0.7, '#ff3300'); cg.addColorStop(1, '#660000');
-      cx.fillStyle = cg; cx.beginPath(); cx.arc(0, 0, 11 + Math.sin(t * 16) * 1.8, 0, Math.PI * 2); cx.fill();
-
-      // Aimed Torpedo Launchers on Wing Flanks
-      const aimToPlayer = Math.atan2(ship.y - f.y, ship.x - f.x);
-      for (const wy of [-f.h * 0.36, f.h * 0.36]) {
-        cx.save(); cx.translate(-f.w * 0.15, wy); cx.rotate(aimToPlayer);
-        cx.fillStyle = '#0f172a'; cx.fillRect(0, -3.5, 18, 7);
-        cx.fillStyle = '#ff4400'; cx.fillRect(14, -2.5, 4, 5);
-        cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1; cx.strokeRect(0, -3.5, 18, 7);
+      // TWIN FLANK ENGINE TURBINES WITH ROTATING INTAKE FANS
+      for (const [tx, ty, tr] of [[-f.w * 0.05, -f.h * 0.30, 14], [f.w * 0.08, f.h * 0.34, 16]]) {
+        cx.fillStyle = '#0f172a'; cx.beginPath(); cx.arc(tx, ty, tr, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 1.8; cx.stroke();
+        // Rotating blades
+        cx.save(); cx.translate(tx, ty); cx.rotate(t * 12);
+        cx.strokeStyle = '#f59e0b'; cx.lineWidth = 1.2;
+        for (let b = 0; b < 4; b++) {
+          const ba = b * Math.PI / 2;
+          cx.beginPath(); cx.moveTo(0, 0); cx.lineTo(Math.cos(ba) * (tr - 3), Math.sin(ba) * (tr - 3)); cx.stroke();
+        }
         cx.restore();
       }
 
-      // Dual Heavy Fire Exhausts
-      for (const ty of [-f.h * 0.16, f.h * 0.16]) {
-        const jg = cx.createLinearGradient(f.w * 0.45, ty, f.w * 0.68, ty);
-        jg.addColorStop(0, '#ffffff'); jg.addColorStop(0.3, '#ffdd00'); jg.addColorStop(0.7, '#ff3300'); jg.addColorStop(1, 'rgba(255, 50, 0, 0)');
+      // MAIN FUSELAGE: Weathered Durasteel Body & Exposed Mechanical Wiring
+      const bg = cx.createLinearGradient(-f.w * 0.46, 0, f.w * 0.40, 0);
+      bg.addColorStop(0, '#f8fafc'); bg.addColorStop(0.35, '#cbd5e1'); bg.addColorStop(0.7, '#64748b'); bg.addColorStop(1, '#1e293b');
+      cx.fillStyle = bg;
+      cx.beginPath();
+      cx.moveTo(-f.w * 0.44, 0);                 // Forward sensor nose
+      cx.lineTo(-f.w * 0.26, -f.h * 0.20);
+      cx.lineTo(f.w * 0.25, -f.h * 0.22);
+      cx.lineTo(f.w * 0.40, 0);
+      cx.lineTo(f.w * 0.25, f.h * 0.22);
+      cx.lineTo(-f.w * 0.26, f.h * 0.20);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#475569'; cx.lineWidth = 2.2; cx.stroke();
+
+      // Exposed Mechanical Greebles, Hydraulic Pistons & Conduits
+      cx.fillStyle = '#090d16'; cx.fillRect(-f.w * 0.30, -f.h * 0.12, f.w * 0.34, f.h * 0.24);
+      cx.strokeStyle = '#ef4444'; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.moveTo(-f.w * 0.28, -4); cx.lineTo(-f.w * 0.05, -4); cx.stroke();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.5;
+      cx.beginPath(); cx.moveTo(-f.w * 0.28, 4); cx.lineTo(-f.w * 0.05, 4); cx.stroke();
+
+      // Nose Astromech / Sensor Ball Dome
+      cx.fillStyle = '#0284c7'; cx.beginPath(); cx.arc(-f.w * 0.40, 0, 7, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.4; cx.stroke();
+      cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(-f.w * 0.42, 0, 2.5, 0, Math.PI * 2); cx.fill();
+
+      // CENTRAL SPHERICAL TIE COMMAND BALL COCKPIT
+      cx.fillStyle = '#0f172a'; cx.beginPath(); cx.arc(f.w * 0.06, 0, 16, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 2.4; cx.stroke();
+      cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(f.w * 0.06, 0, 5, 0, Math.PI * 2); cx.fill();
+
+      // TOP SWIVELING DOUBLE TURBOLASER TURRET (Aimed in Real-Time!)
+      const aimToPlayer = Math.atan2(ship.y - f.y, ship.x - f.x);
+      cx.save();
+      cx.translate(f.w * 0.06, -f.h * 0.22);
+      cx.rotate(aimToPlayer);
+      cx.fillStyle = '#020617'; cx.beginPath(); cx.arc(0, 0, 9, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.5; cx.stroke();
+      // Twin Gun Barrels
+      cx.fillStyle = '#475569';
+      cx.fillRect(0, -5, 20, 3.5);
+      cx.fillRect(0, 1.5, 20, 3.5);
+      cx.fillStyle = '#ffd23c';
+      cx.fillRect(16, -5, 4, 3.5);
+      cx.fillRect(16, 1.5, 4, 3.5);
+      cx.restore();
+
+      // Rear Hybrid Engine Thrusters
+      for (const ty of [-f.h * 0.12, f.h * 0.14, f.h * 0.35]) {
+        const jg = cx.createLinearGradient(f.w * 0.40, ty, f.w * 0.65, ty);
+        jg.addColorStop(0, '#ffffff'); jg.addColorStop(0.35, '#ff5500'); jg.addColorStop(0.75, '#b91c1c'); jg.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = jg; cx.beginPath();
-        cx.moveTo(f.w * 0.45, ty - 4); cx.lineTo(f.w * 0.64 + Math.random() * 10, ty); cx.lineTo(f.w * 0.45, ty + 4);
+        cx.moveTo(f.w * 0.40, ty - 4); cx.lineTo(f.w * 0.62 + Math.random() * 8, ty); cx.lineTo(f.w * 0.40, ty + 4);
         cx.closePath(); cx.fill();
       }
 
