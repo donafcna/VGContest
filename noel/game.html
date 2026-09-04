@@ -2955,7 +2955,77 @@ function getShipSvg(shipId, cols) {
 
 function getBossSvg(id) {
   const uid = 'b' + Math.random().toString(36).substr(2, 6);
-  if (id === 'dread') {
+  if (id === 'trio') {
+    // 0. SITH ELEMENTAL TRIUMVIRATE (Ignis, Glacies, Fulgur & Overlord Trinity)
+    return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow_trio_${uid}" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+        <linearGradient id="ignis_grad_${uid}" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ff6b00"/>
+          <stop offset="50%" stop-color="#ef4444"/>
+          <stop offset="100%" stop-color="#7f1d1d"/>
+        </linearGradient>
+        <linearGradient id="glacies_grad_${uid}" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#e0f2fe"/>
+          <stop offset="50%" stop-color="#38bdf8"/>
+          <stop offset="100%" stop-color="#0369a1"/>
+        </linearGradient>
+        <linearGradient id="fulgur_grad_${uid}" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f3e8ff"/>
+          <stop offset="50%" stop-color="#c084fc"/>
+          <stop offset="100%" stop-color="#6b21a8"/>
+        </linearGradient>
+      </defs>
+      <!-- Background Connecting Plasma Resonance Arcs -->
+      <path d="M30 46 Q80 20 130 46" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <line x1="30" y1="46" x2="80" y2="38" stroke="#ff4500" stroke-width="1" opacity="0.6"/>
+      <line x1="80" y1="38" x2="130" y2="46" stroke="#c084fc" stroke-width="1" opacity="0.6"/>
+
+      <!-- 1. LEFT: DARTH IGNIS - GOTHIC MAGMA DREADNOUGHT -->
+      <g transform="translate(10, 24)">
+        <polygon points="2,22 18,6 28,12 28,32 18,38" fill="url(#ignis_grad_${uid})" stroke="#ff8844" stroke-width="1.2"/>
+        <line x1="12" y1="12" x2="12" y2="32" stroke="#ffcc00" stroke-width="1.5" filter="url(#glow_trio_${uid})"/>
+        <circle cx="10" cy="22" r="3.5" fill="#ff2200" filter="url(#glow_trio_${uid})"/>
+        <circle cx="10" cy="22" r="1.5" fill="#ffffff"/>
+        <!-- Magma Spire -->
+        <polygon points="14,14 26,18 26,26 14,30" fill="#2d0606" stroke="#ef4444" stroke-width="0.8"/>
+        <circle cx="28" cy="16" r="2" fill="#ff4500"/>
+        <circle cx="28" cy="28" r="2" fill="#ff4500"/>
+      </g>
+
+      <!-- 2. CENTER: INQUISITOR GLACIES - CRYO CLAW CRUISER -->
+      <g transform="translate(60, 16)">
+        <polygon points="2,22 20,4 38,22 20,40" fill="url(#glacies_grad_${uid})" stroke="#7dd3fc" stroke-width="1.2"/>
+        <!-- Forward Claw Stabilizers -->
+        <path d="M8 8 Q2 16 4 24" stroke="#38bdf8" stroke-width="1.8" fill="none"/>
+        <path d="M8 36 Q2 28 4 20" stroke="#38bdf8" stroke-width="1.8" fill="none"/>
+        <path d="M32 8 Q38 16 36 24" stroke="#38bdf8" stroke-width="1.8" fill="none"/>
+        <path d="M32 36 Q38 28 36 20" stroke="#38bdf8" stroke-width="1.8" fill="none"/>
+        <!-- Cryo Focal Singularity -->
+        <circle cx="20" cy="22" r="4.5" fill="#0284c7" stroke="#e0f2fe" stroke-width="1" filter="url(#glow_trio_${uid})"/>
+        <circle cx="20" cy="22" r="2" fill="#ffffff"/>
+      </g>
+
+      <!-- 3. RIGHT: SOVEREIGN FULGUR - KYBER CROSSWING FRIGATE -->
+      <g transform="translate(110, 24)">
+        <polygon points="2,22 16,8 36,2 26,22 36,42 16,36" fill="url(#fulgur_grad_${uid})" stroke="#e9d5ff" stroke-width="1.2"/>
+        <!-- Crosswing Beam Pylons -->
+        <line x1="16" y1="4" x2="30" y2="12" stroke="#c084fc" stroke-width="2" filter="url(#glow_trio_${uid})"/>
+        <line x1="16" y1="40" x2="30" y2="32" stroke="#c084fc" stroke-width="2" filter="url(#glow_trio_${uid})"/>
+        <!-- Lightning Core Node -->
+        <circle cx="20" cy="22" r="3.5" fill="#9333ea" stroke="#f3e8ff" stroke-width="1" filter="url(#glow_trio_${uid})"/>
+        <circle cx="20" cy="22" r="1.5" fill="#ffffff"/>
+        <!-- Lightning Sparks -->
+        <line x1="2" y1="22" x2="10" y2="22" stroke="#e9d5ff" stroke-width="1.5"/>
+      </g>
+
+      <!-- Sector Badges -->
+      <text x="80" y="74" text-anchor="middle" fill="#ffd23c" font-size="7.5" font-family="monospace" font-weight="bold" letter-spacing="1">TRI-ELEMENTAL FUSION APEX</text>
+    </svg>`;
+  } else if (id === 'dread') {
     // 1. DREAD-ADMIRAL VEX: THE IRON ECLIPSE (Omega-ISD Star-Dreadnought)
     return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -3520,6 +3590,21 @@ function getBossSvg(id) {
 }
 
 const BOSS_INTEL = [
+  {
+    id: 'trio',
+    name: 'The Sith Elemental Triumvirate (Ignis, Glacies & Fulgur)',
+    sector: 'Sector 1 Apex · Tri-Elemental Sith Flagship Squadron',
+    col: '#ff4500',
+    hp: 120,
+    powers: [
+      '🔥 Left Flank: Darth Ignis Magma Dreadnought (Lava mortars inflicting Burn DoT)',
+      '❄️ Center Core: Inquisitor Glacies Cryo Cruiser (Glacial crystal lances freezing ship for 2s)',
+      '⚡ Right Flank: Sovereign Fulgur Kyber Frigate (Ultra rapid-fire Kyber lightning storm)',
+      '💥 Tri-Elemental Fusion Singularity (Merges into OVERLORD TRINITY with 3-tributary composite superlaser at <=25% HP!)'
+    ],
+    loot: '👑 +6 🎟️ Plasma Cores · +3 🎡 Wheel Spins · +300 🪙 + 50 Gold Coins Cascade',
+    tactic: 'Damage any of the 3 ships to 25% HP to trigger the Fusion Singularity, then dodge the converging 3-color composite superlaser!'
+  },
   {
     id: 'titan',
     name: 'General Veers: Imperial AT-AT Siege Colossus',
@@ -4454,6 +4539,7 @@ function spawnMine() {
 }
 
 const BTYPES = [
+  { id: 'trio',     name: 'The Sith Elemental Triumvirate (Ignis, Glacies & Fulgur)', col: '#ff4500', w: 320, h: 180, hp: 120, spd: 46, atk: 'tri_elemental' },
   { id: 'titan',    name: 'General Veers: Imperial AT-AT Siege Colossus', col: '#ef4444', w: 310, h: 180, hp: 95, spd: 48, atk: 'heavy_chin_blasters' },
   { id: 'pathogen', name: 'Overlord Pathogen: The Imperial Bio-Spore Carrier', col: '#10b981', w: 325, h: 165, hp: 90, spd: 46, atk: 'pathogen_mitosis' },
   { id: 'ataraxia', name: 'Master Avar Kriss: Jedi Starcruiser Ataraxia', col: '#e0e7ff', w: 330, h: 165, hp: 92, spd: 48, atk: 'ataraxia_kyber' },
@@ -4466,13 +4552,55 @@ const BTYPES = [
 ];
 
 function spawnBoss() {
-  // Sector Progression: Bosses fight in order from STRONGEST (#1 General Veers AT-AT) to WEAKEST (#9 Grand Admiral Vex)
+  // Sector Progression: Bosses fight in order from STRONGEST (#1 Sith Elemental Triumvirate) to WEAKEST (#10 Grand Admiral Vex)
   const bossIndex = (Math.max(1, level) - 1) % BTYPES.length;
   const b = BTYPES[bossIndex];
   
   // Dynamic Boss Scaling: The further you venture, the stronger they become!
   const hp = b.hp + (level - 1) * 26;
   const bossSpd = b.spd + level * 6;
+
+  const isTrio = b.id === 'trio';
+  const initialTrio = [];
+  if (isTrio) {
+    const subHp = Math.round(hp / 3);
+    initialTrio.push({
+      id: 'ignis',
+      name: 'Darth Ignis: Sith Magma Siege Dreadnought',
+      element: 'lava',
+      col: '#ff4500',
+      x: W + 150, targetX: W - 380,
+      y: H * 0.26, baseY: H * 0.26,
+      w: 240, h: 120,
+      hp: subHp, maxhp: subHp,
+      shootT: 1.45,
+      atkCycle: 0, phase: 0
+    });
+    initialTrio.push({
+      id: 'glacies',
+      name: 'Inquisitor Glacies: Imperial Cryo-Apex Cruiser',
+      element: 'ice',
+      col: '#38bdf8',
+      x: W + 220, targetX: W - 250,
+      y: H * 0.50, baseY: H * 0.50,
+      w: 230, h: 115,
+      hp: subHp, maxhp: subHp,
+      shootT: 1.85,
+      atkCycle: 0, phase: 1.4
+    });
+    initialTrio.push({
+      id: 'fulgur',
+      name: 'Sovereign Fulgur: Sith Kyber Storm Frigate',
+      element: 'electric',
+      col: '#c084fc',
+      x: W + 290, targetX: W - 120,
+      y: H * 0.74, baseY: H * 0.74,
+      w: 220, h: 110,
+      hp: subHp, maxhp: subHp,
+      shootT: 0.28,
+      atkCycle: 0, phase: 2.8
+    });
+  }
 
   const isPathogen = b.id === 'pathogen';
   const initialClones = [];
@@ -4510,7 +4638,7 @@ function spawnBoss() {
     hp, maxhp: hp,
     sectorLevel: level,
     spd: bossSpd,
-    x: isPathogen ? W + 450 : W + 180, 
+    x: isPathogen ? W + 450 : (isTrio ? W + 260 : W + 180), 
     targetX: W - 260,
     y: H * 0.5,
     atk: b.atk, atkT: 2.0, phase: 0,
@@ -4531,7 +4659,12 @@ function spawnBoss() {
     isOriginalActive: !isPathogen,
     mutationLevel: 0,
     clonesKilled: 0,
-    totalClones: isPathogen ? 5 : 0
+    totalClones: isPathogen ? 5 : 0,
+    trio: initialTrio,
+    isMerged: false,
+    isMerging: false,
+    mergeT: 0,
+    compositeBeamActive: 0
   };
 
   // VAPORIZE ALL ENEMY MINIONS & CLEAR BATTLEFIELD FOR 1v1 DUEL!
@@ -4548,6 +4681,8 @@ function spawnBoss() {
   addAlert(`☠️ [SECTOR ${level} BOSS] ${b.name.toUpperCase()} (HP: ${hp})!`, 'incoming');
   popup(W * 0.5, H * 0.35, `🚨 SECTOR ${level} BOSS: ${b.name}!`, '#ffd23c');
 }
+window.spawnBoss = spawnBoss;
+window.ship = ship;
 
 function startCombat() {
   state = 'play';
@@ -6531,12 +6666,60 @@ function update(dt) {
 
   // Space Pirate Galleon Navigation & Solar Ether Inertia
   slowT = Math.max(0, slowT - dt);
+
+  // Status Effect 1: Burning Lava Inferno (Damage over Time)
+  if (ship.burnT > 0) {
+    ship.burnT -= dt;
+    ship.burnTick = (ship.burnTick || 0) + dt;
+    if (ship.burnTick >= 0.6) {
+      ship.burnTick = 0;
+      if (ship.inv <= 0) {
+        damageShip();
+        popup(ship.x, ship.y - 25, '🔥 BURN -1 HP', '#ff4500');
+        addShake(6);
+      }
+    }
+    // Burning fire sparks
+    if (Math.random() < 0.75) {
+      parts.push({
+        type: 'spark',
+        x: ship.x + (Math.random() - 0.5) * 36,
+        y: ship.y + (Math.random() - 0.5) * 24,
+        vx: -130 - Math.random() * 80,
+        vy: -35 + (Math.random() - 0.5) * 40,
+        life: 0.35, maxLife: 0.35,
+        col: Math.random() < 0.6 ? '#ff4500' : '#ffd23c',
+        size: 4 + Math.random() * 4
+      });
+    }
+  }
+
+  // Status Effect 2: Cryo Stasis Freeze (2-Second Movement Lockdown)
+  const isFrozen = ship.freezeT > 0;
+  if (isFrozen) {
+    ship.freezeT -= dt;
+    // Frost crystal particles around player ship
+    if (Math.random() < 0.65) {
+      parts.push({
+        type: 'spark',
+        x: ship.x + (Math.random() - 0.5) * 40,
+        y: ship.y + (Math.random() - 0.5) * 30,
+        vx: (Math.random() - 0.5) * 30,
+        vy: (Math.random() - 0.5) * 30,
+        life: 0.4, maxLife: 0.4,
+        col: '#a5f3fc',
+        size: 3 + Math.random() * 4
+      });
+    }
+  }
+
   const curSpdMul = spdMul * (hyperchargeActiveT > 0 ? 1.55 : 1.0) * (slowT > 0 ? 0.55 : 1.0);
   const isTractorLocked = boss && boss.tractorT > 0;
-  const ACC = (isTractorLocked ? 0 : 1450) * curSpdMul;
-  const MAX_SPD = (isTractorLocked ? 0 : 480) * curSpdMul;
+  const isImmobilized = isTractorLocked || isFrozen;
+  const ACC = (isImmobilized ? 0 : 1450) * curSpdMul;
+  const MAX_SPD = (isImmobilized ? 0 : 480) * curSpdMul;
   let ax = 0, ay = 0;
-  if (!isTractorLocked) {
+  if (!isImmobilized) {
     if (keys['KeyW'] || keys['ArrowUp'] || dpadState.up) ay -= 1;
     if (keys['KeyS'] || keys['ArrowDown'] || dpadState.down) ay += 1;
     if (keys['KeyA'] || keys['ArrowLeft'] || dpadState.left) ax -= 1;
@@ -6545,6 +6728,7 @@ function update(dt) {
 
   ship.vx += ax * ACC * dt;
   ship.vy += ay * ACC * dt;
+  if (isFrozen) { ship.vx = 0; ship.vy = 0; }
   ship.vx *= Math.pow(0.025, dt);
   ship.vy *= Math.pow(0.025, dt);
   ship.vx = Math.max(-MAX_SPD, Math.min(MAX_SPD, ship.vx));
@@ -6710,8 +6894,150 @@ function update(dt) {
     if (boss.x > boss.targetX && !boss.isRamming) boss.x -= 130 * dt;
     boss.phase += dt;
     boss.spinRing += dt * (boss.enraged ? 7 : 4);
-    if (!boss.isRamming) {
+    if (!boss.isRamming && (boss.type !== 'trio' || boss.isMerged)) {
       boss.y = H * 0.5 + Math.sin(boss.phase * (boss.enraged ? 1.4 : 0.9)) * (H * 0.32);
+    }
+
+    // TRIO BOSS: THE SITH ELEMENTAL TRIUMVIRATE (IGNIS, GLACIES, FULGUR)
+    if (boss.type === 'trio') {
+      if (!boss.isMerged && !boss.isMerging && boss.trio) {
+        let totalHp = 0;
+        let anyQuarterHealth = false;
+
+        for (let sIdx = 0; sIdx < boss.trio.length; sIdx++) {
+          const sub = boss.trio[sIdx];
+          totalHp += Math.max(0, sub.hp);
+          if (sub.hp <= sub.maxhp * 0.25) {
+            anyQuarterHealth = true;
+          }
+
+          // Move into battlefield position
+          if (sub.x > sub.targetX) sub.x -= 140 * dt;
+          sub.phase += dt * (sIdx === 2 ? 1.8 : 1.1);
+          sub.y = sub.baseY + Math.sin(sub.phase * 1.3) * 26;
+
+          // Individual Aiming
+          const subDx = ship.x - sub.x, subDy = ship.y - sub.y;
+          const subAimAng = Math.atan2(subDy, subDx);
+
+          sub.shootT -= dt;
+          if (sub.shootT <= 0) {
+            if (sub.id === 'ignis') {
+              // 1. Darth Ignis: Molten Lava Mortars (Inflicts 3.0s Burn DoT on contact!)
+              sub.shootT = 1.45;
+              for (const offY of [-14, 14]) {
+                eballs.push({
+                  type: 'lava',
+                  isLava: true,
+                  col: '#ff4500',
+                  x: sub.x - 50,
+                  y: sub.y + offY,
+                  vx: Math.cos(subAimAng) * 440 * spdBonus,
+                  vy: Math.sin(subAimAng) * 440 * spdBonus,
+                  r: 16
+                });
+              }
+              sfx('shot');
+            } else if (sub.id === 'glacies') {
+              // 2. Inquisitor Glacies: Cryo Frost Lances (Freezes player for 2.0s on contact!)
+              sub.shootT = 1.85;
+              for (const spr of [-0.18, 0, 0.18]) {
+                const sAng = subAimAng + spr;
+                eballs.push({
+                  type: 'ice',
+                  isIce: true,
+                  col: '#38bdf8',
+                  x: sub.x - 45,
+                  y: sub.y,
+                  vx: Math.cos(sAng) * 490 * spdBonus,
+                  vy: Math.sin(sAng) * 490 * spdBonus,
+                  r: 14
+                });
+              }
+              sfx('laser');
+            } else if (sub.id === 'fulgur') {
+              // 3. Sovereign Fulgur: Ultra Rapid-Fire Kyber Lightning Stream
+              sub.shootT = 0.28; // Rapid fire!
+              const spread = (Math.random() - 0.5) * 0.12;
+              eballs.push({
+                type: 'electric',
+                isElectric: true,
+                col: '#c084fc',
+                x: sub.x - 40,
+                y: sub.y + (Math.random() - 0.5) * 16,
+                vx: Math.cos(subAimAng + spread) * 720 * spdBonus,
+                vy: Math.sin(subAimAng + spread) * 720 * spdBonus,
+                r: 10
+              });
+              sfx('laser');
+            }
+          }
+        }
+
+        boss.hp = totalHp;
+
+        // Check 25% health threshold on ANY of the 3 ships to trigger dynamic fusion!
+        if (anyQuarterHealth) {
+          boss.isMerging = true;
+          boss.mergeT = 2.5;
+          addShake(35);
+          sfx('incoming');
+          addAlert('⚠️ CRITICAL HULL DETECTED! TRIUMVIRATE FUSING INTO SITH SINGULARITY!', 'incoming');
+          popup(W * 0.5, H * 0.35, '💥 TRIUMVIRATE FUSION SEQUENCE INITIATED!', '#ff5500');
+        }
+      } else if (boss.isMerging) {
+        boss.mergeT -= dt;
+        const targetCenterX = W - 260, targetCenterY = H * 0.5;
+        for (const sub of boss.trio) {
+          sub.x += (targetCenterX - sub.x) * dt * 4.2;
+          sub.y += (targetCenterY - sub.y) * dt * 4.2;
+          for (let k = 0; k < 3; k++) {
+            parts.push({
+              type: 'spark',
+              x: sub.x + (Math.random() - 0.5) * 40,
+              y: sub.y + (Math.random() - 0.5) * 30,
+              vx: (Math.random() - 0.5) * 160,
+              vy: (Math.random() - 0.5) * 160,
+              life: 0.28, maxLife: 0.28,
+              col: Math.random() < 0.33 ? '#ff4500' : (Math.random() < 0.5 ? '#38bdf8' : '#c084fc'),
+              size: 5 + Math.random() * 4
+            });
+          }
+        }
+        if (boss.mergeT <= 0) {
+          boss.isMerging = false;
+          boss.isMerged = true;
+          boss.name = 'OVERLORD TRINITY: SITH TRI-ELEMENTAL ECLIPSE COLOSSUS';
+          boss.col = '#ff4500';
+          boss.w = 340;
+          boss.h = 190;
+          boss.x = targetCenterX;
+          boss.y = targetCenterY;
+          boss.targetX = targetCenterX;
+          boss.hp = Math.max(75, boss.hp) + 45;
+          boss.maxhp = boss.hp;
+          explode(boss.x, boss.y, '#ffd23c', 130);
+          explode(boss.x, boss.y, '#ff4500', 95);
+          explode(boss.x, boss.y, '#38bdf8', 95);
+          explode(boss.x, boss.y, '#c084fc', 95);
+          sfx('boom');
+          addShake(45);
+          addAlert('👑 [SITH APEX] OVERLORD TRINITY EMERGES WITH TRI-ELEMENTAL SUPERLASER!', 'incoming');
+          popup(W * 0.5, H * 0.35, '⚡ SITH TRI-ELEMENTAL COLOSSUS BORN!', '#ffd23c');
+        }
+      } else if (boss.isMerged) {
+        if (boss.compositeBeamActive > 0) {
+          boss.compositeBeamActive -= dt;
+          if (Math.abs(ship.y - boss.y) < 42 && ship.x < boss.x) {
+            if (ship.inv <= 0) {
+              damageShip();
+              ship.burnT = 2.0;
+              popup(ship.x, ship.y - 25, '⚡ TRI-COMPOSITE SUPERLASER HIT!', '#ffd23c');
+              explode(ship.x, ship.y, '#ffd23c', 20);
+            }
+          }
+        }
+      }
     }
 
     // Active Boss Timers & Mechanics updates
@@ -7302,6 +7628,65 @@ function update(dt) {
           popup(boss.x - 40, boss.y - 45, '💥 HEAVY CHIN MS-1 BLASTERS!', '#ef4444');
           sfx('incoming');
         }
+
+      } else if (boss.type === 'trio' && boss.isMerged) {
+        // OVERLORD TRINITY: COMBINED SITH TRI-ELEMENTAL ARSENAL (LAVA, ICE, LIGHTNING)
+        if (boss.atkCycle === 3) {
+          // ULTIMATE: 3-Tributary Composite Superlaser (Image 3 inspired)
+          boss.atkT = 4.0;
+          boss.compositeBeamActive = 3.0;
+          addShake(36);
+          sfx('incoming');
+          popup(boss.x - 40, boss.y - 45, '👑 SITH COMPOSITE SUPERLASER FIRING!', '#ffd23c');
+          addAlert('☠️ CRITICAL! SITH COMPOSITE SUPERLASER SWEEPING FLIGHT LANES!', 'incoming');
+        } else if (boss.atkCycle === 2) {
+          // Rapid-fire Kyber Lightning Storm
+          boss.atkT = 2.0;
+          for (let k = 0; k < 6; k++) {
+            setTimeout(() => {
+              if (boss && boss.hp > 0) {
+                const currDx = ship.x - boss.x, currDy = ship.y - boss.y;
+                const currAng = Math.atan2(currDy, currDx) + (Math.random() - 0.5) * 0.15;
+                eballs.push({
+                  type: 'electric', isElectric: true, col: '#c084fc',
+                  x: boss.x - boss.w * 0.45, y: boss.y + (Math.random() - 0.5) * 24,
+                  vx: Math.cos(currAng) * 750 * spdBonus, vy: Math.sin(currAng) * 750 * spdBonus,
+                  r: 11
+                });
+                sfx('laser');
+              }
+            }, k * 120);
+          }
+          popup(boss.x - 40, boss.y - 45, '⚡ KYBER LIGHTNING STORM!', '#c084fc');
+        } else if (boss.atkCycle === 1) {
+          // Cryo Frost Stasis Nova (Freezes for 2s)
+          boss.atkT = 2.4;
+          for (let spr = -0.35; spr <= 0.35; spr += 0.14) {
+            const bAng = aimAng + spr;
+            eballs.push({
+              type: 'ice', isIce: true, col: '#38bdf8',
+              x: boss.x - boss.w * 0.45, y: boss.y,
+              vx: Math.cos(bAng) * 520 * spdBonus, vy: Math.sin(bAng) * 520 * spdBonus,
+              r: 15
+            });
+          }
+          popup(boss.x - 40, boss.y - 45, '❄️ CRYO-FROST STASIS NOVA!', '#38bdf8');
+          sfx('laser');
+        } else {
+          // Magma Eruption Barrage (Burns for 3s)
+          boss.atkT = 2.2;
+          for (let spr = -0.3; spr <= 0.3; spr += 0.15) {
+            const bAng = aimAng + spr;
+            eballs.push({
+              type: 'lava', isLava: true, col: '#ff4500',
+              x: boss.x - boss.w * 0.45, y: boss.y,
+              vx: Math.cos(bAng) * 460 * spdBonus, vy: Math.sin(bAng) * 460 * spdBonus,
+              r: 16
+            });
+          }
+          popup(boss.x - 40, boss.y - 45, '🔥 MAGMA ERUPTION BARRAGE!', '#ff4500');
+          sfx('shot');
+        }
       }
     }
   }
@@ -7326,7 +7711,23 @@ function update(dt) {
     const dmg = b.dmg || (b.isHypercharge ? 8 : 1);
     let hit = false;
 
-    // 0. Pathogen Clones Collision
+    // 0. Trio Sub-Bosses Collision (when unmerged)
+    if (!hit && boss && boss.type === 'trio' && !boss.isMerged && !boss.isMerging && boss.trio) {
+      for (let sIdx = 0; sIdx < boss.trio.length; sIdx++) {
+        const sub = boss.trio[sIdx];
+        if (Math.abs(b.x - sub.x) < sub.w * 0.48 && Math.abs(b.y - sub.y) < sub.h * 0.48) {
+          hit = true;
+          sub.hp -= dmg;
+          explode(b.x, b.y, sub.col, 14);
+          addSuperCharge(4);
+          popup(sub.x, sub.y - 25, `-${dmg}`, sub.col);
+          sfx('hit');
+          break;
+        }
+      }
+    }
+
+    // 0b. Pathogen Clones Collision
     if (!hit && boss && boss.type === 'pathogen' && !boss.isOriginalActive && boss.clones && boss.clones.length > 0) {
       for (let cIdx = boss.clones.length - 1; cIdx >= 0; cIdx--) {
         const c = boss.clones[cIdx];
@@ -7816,13 +8217,23 @@ function update(dt) {
     
     if (b.x < -40 || b.y < -40 || b.y > H + 40) eballs.splice(i, 1);
     else if (ship.inv <= 0 && Math.hypot(b.x - ship.x, b.y - ship.y) < ship.r + b.r - 5) {
-      if (b.type === 'emp') {
+      if (b.isLava || b.type === 'lava' || b.type === 'magma') {
+        ship.burnT = 3.0; // Inflicts 3.0s Burn Damage-over-Time!
+        popup(ship.x, ship.y - 30, '🔥 INFERNO BURN! [3.0s DoT]', '#ff4500');
+        explode(b.x, b.y, '#ff4500', 32);
+        addShake(16);
+      } else if (b.isIce || b.type === 'ice' || b.type === 'cryo') {
+        ship.freezeT = 2.0; // Inflicts 2.0s Complete Movement Freeze Lock!
+        popup(ship.x, ship.y - 30, '❄️ CRYO-FROZEN FOR 2 SECONDS!', '#38bdf8');
+        explode(b.x, b.y, '#38bdf8', 28);
+        addShake(16);
+      } else if (b.isElectric || b.type === 'electric') {
+        popup(ship.x, ship.y - 30, '⚡ KYBER LIGHTNING VOLTAGE!', '#c084fc');
+        explode(b.x, b.y, '#c084fc', 22);
+        addShake(12);
+      } else if (b.type === 'emp') {
         slowT = 2.8;
         popup(ship.x, ship.y - 30, '⚡ EMP SHOCK — ENGINES DISRUPTED!', '#00e5ff');
-      } else if (b.type === 'magma') {
-        popup(ship.x, ship.y - 30, '🔥 SOLAR INFERNO BURN!', '#ff5500');
-        explode(b.x, b.y, '#ff4400', 32);
-        addShake(16);
       } else if (b.type === 'spore') {
         popup(ship.x, ship.y - 30, '☣ ACID SPORE HIT!', '#d946ef');
       } else if (b.type === 'bacteria_macro') {
@@ -9294,12 +9705,283 @@ function draw() {
       }
     }
     
-    // Captain Solo Hyperspace Overdrive Transparency Shimmer
-    if (boss.isCloaked) {
-      cx.globalAlpha = 0.22 + Math.sin(t * 18) * 0.12;
-    }
+    if (boss.type === 'trio') {
+      if (!boss.isMerged && boss.trio) {
+        // Draw the 3 Simultaneous Flagship Vessels
+        for (let sIdx = 0; sIdx < boss.trio.length; sIdx++) {
+          const sub = boss.trio[sIdx];
+          cx.save();
+          cx.translate(sub.x - boss.x, sub.y - boss.y);
 
-    if (boss.type === 'dread') {
+          if (sub.id === 'ignis') {
+            // 1. DARTH IGNIS: SITH MAGMA SIEGE DREADNOUGHT (Image 1)
+            const w = sub.w || 240, h = sub.h || 120;
+            const mg = cx.createRadialGradient(0, 0, 10, 0, 0, w * 0.55);
+            mg.addColorStop(0, 'rgba(255, 69, 0, 0.45)');
+            mg.addColorStop(0.5, 'rgba(255, 140, 0, 0.2)');
+            mg.addColorStop(1, 'rgba(0,0,0,0)');
+            cx.fillStyle = mg;
+            cx.beginPath(); cx.ellipse(0, 0, w * 0.55, h * 0.52, 0, 0, Math.PI * 2); cx.fill();
+
+            const hg = cx.createLinearGradient(w * 0.45, 0, -w * 0.45, 0);
+            hg.addColorStop(0, '#1c1917'); hg.addColorStop(0.4, '#292524'); hg.addColorStop(0.8, '#44403c'); hg.addColorStop(1, '#78716c');
+            cx.fillStyle = hg;
+            cx.beginPath();
+            cx.moveTo(-w * 0.46, -h * 0.12);
+            cx.lineTo(-w * 0.48, 0);
+            cx.lineTo(-w * 0.46, h * 0.12);
+            cx.lineTo(-w * 0.35, h * 0.38);
+            cx.lineTo(w * 0.38, h * 0.42);
+            cx.lineTo(w * 0.44, h * 0.20);
+            cx.lineTo(w * 0.42, 0);
+            cx.lineTo(w * 0.44, -h * 0.20);
+            cx.lineTo(w * 0.38, -h * 0.42);
+            cx.lineTo(-w * 0.35, -h * 0.38);
+            cx.closePath(); cx.fill();
+            cx.strokeStyle = '#ff4500'; cx.lineWidth = 2.4; cx.stroke();
+
+            // Gothic Cathedral Superstructure
+            cx.fillStyle = '#0c0a09'; cx.fillRect(-w * 0.12, -h * 0.32, w * 0.32, h * 0.64);
+            cx.strokeStyle = '#d97706'; cx.lineWidth = 1.4; cx.strokeRect(-w * 0.12, -h * 0.32, w * 0.32, h * 0.64);
+            cx.fillStyle = '#1c1917'; cx.fillRect(w * 0.05, -h * 0.44, w * 0.16, h * 0.88);
+            cx.strokeStyle = '#ff7700'; cx.lineWidth = 1.6; cx.strokeRect(w * 0.05, -h * 0.44, w * 0.16, h * 0.88);
+
+            // Incandescent Lava Broadside Batteries (Image 1 Fire Cannons)
+            for (let bx = -w * 0.30; bx <= w * 0.25; bx += 24) {
+              for (const by of [-h * 0.22, h * 0.22]) {
+                cx.fillStyle = '#ff4500'; cx.fillRect(bx, by - 4, 14, 8);
+                cx.fillStyle = '#ffd23c'; cx.fillRect(bx + 2, by - 2, 10, 4);
+                if (Math.random() < 0.35) {
+                  cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(bx - 3, by, 3, 0, Math.PI * 2); cx.fill();
+                }
+              }
+            }
+
+            // Molten Radiator Vents
+            for (let vx = -w * 0.22; vx <= w * 0.15; vx += 18) {
+              cx.fillStyle = '#ff5500'; cx.fillRect(vx, -3, 10, 6);
+              cx.fillStyle = '#fff'; cx.fillRect(vx + 2, -1.5, 6, 3);
+            }
+
+            // Molten Prow
+            cx.fillStyle = '#ff4500'; cx.beginPath();
+            cx.moveTo(-w * 0.46, -h * 0.08); cx.lineTo(-w * 0.48, 0); cx.lineTo(-w * 0.46, h * 0.08);
+            cx.closePath(); cx.fill();
+
+            // Aft Thrusters
+            for (const ty of [-h * 0.18, 0, h * 0.18]) {
+              const tg = cx.createLinearGradient(w * 0.42, ty, w * 0.42 + 45, ty);
+              tg.addColorStop(0, '#ffffff'); tg.addColorStop(0.3, '#ffd23c'); tg.addColorStop(0.7, '#ff4500'); tg.addColorStop(1, 'rgba(255,0,0,0)');
+              cx.fillStyle = tg; cx.beginPath();
+              cx.moveTo(w * 0.42, ty - 5); cx.lineTo(w * 0.42 + 35 + Math.sin(t * 18 + ty) * 8, ty); cx.lineTo(w * 0.42, ty + 5);
+              cx.closePath(); cx.fill();
+            }
+
+          } else if (sub.id === 'glacies') {
+            // 2. INQUISITOR GLACIES: IMPERIAL CRYO-APEX CRUISER (Image 2)
+            const w = sub.w || 230, h = sub.h || 115;
+            const fg = cx.createRadialGradient(0, 0, 10, 0, 0, w * 0.55);
+            fg.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
+            fg.addColorStop(0.6, 'rgba(165, 243, 252, 0.15)');
+            fg.addColorStop(1, 'rgba(0,0,0,0)');
+            cx.fillStyle = fg; cx.beginPath(); cx.ellipse(0, 0, w * 0.55, h * 0.52, 0, 0, Math.PI * 2); cx.fill();
+
+            const hg = cx.createLinearGradient(w * 0.45, 0, -w * 0.45, 0);
+            hg.addColorStop(0, '#0f172a'); hg.addColorStop(0.4, '#1e293b'); hg.addColorStop(0.8, '#475569'); hg.addColorStop(1, '#94a3b8');
+            cx.fillStyle = hg;
+            cx.beginPath();
+            cx.moveTo(-w * 0.46, 0);
+            cx.lineTo(w * 0.28, -h * 0.32);
+            cx.lineTo(w * 0.40, -h * 0.15);
+            cx.lineTo(w * 0.36, 0);
+            cx.lineTo(w * 0.40, h * 0.15);
+            cx.lineTo(w * 0.28, h * 0.32);
+            cx.closePath(); cx.fill();
+            cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.4; cx.stroke();
+
+            // 4 Curved Claw Stabilizers (Image 2)
+            for (const side of [-1, 1]) {
+              cx.strokeStyle = '#94a3b8'; cx.lineWidth = 4;
+              cx.beginPath(); cx.moveTo(w * 0.32, side * h * 0.28);
+              cx.quadraticCurveTo(-w * 0.15, side * h * 0.52, -w * 0.42, side * h * 0.24);
+              cx.stroke();
+              cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.8;
+              cx.beginPath(); cx.moveTo(w * 0.28, side * h * 0.26);
+              cx.quadraticCurveTo(-w * 0.14, side * h * 0.48, -w * 0.40, side * h * 0.22);
+              cx.stroke();
+            }
+
+            // Cryo Singularity Core
+            const cg = cx.createRadialGradient(-w * 0.10, 0, 3, -w * 0.10, 0, 22);
+            cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.3, '#a5f3fc'); cg.addColorStop(0.7, '#0284c7'); cg.addColorStop(1, '#082f49');
+            cx.fillStyle = cg; cx.beginPath(); cx.arc(-w * 0.10, 0, 14 + Math.sin(t * 12) * 2, 0, Math.PI * 2); cx.fill();
+            cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.6; cx.stroke();
+
+            // Emitter lance
+            cx.strokeStyle = '#a5f3fc'; cx.lineWidth = 2.5; cx.beginPath(); cx.moveTo(-w * 0.46, 0); cx.lineTo(-w * 0.20, 0); cx.stroke();
+
+            for (const ty of [-h * 0.12, h * 0.12]) {
+              const tg = cx.createLinearGradient(w * 0.38, ty, w * 0.38 + 35, ty);
+              tg.addColorStop(0, '#ffffff'); tg.addColorStop(0.4, '#38bdf8'); tg.addColorStop(1, 'rgba(0,200,255,0)');
+              cx.fillStyle = tg; cx.beginPath();
+              cx.moveTo(w * 0.38, ty - 4); cx.lineTo(w * 0.38 + 28 + Math.sin(t * 20 + ty) * 6, ty); cx.lineTo(w * 0.38, ty + 4);
+              cx.closePath(); cx.fill();
+            }
+
+          } else if (sub.id === 'fulgur') {
+            // 3. SOVEREIGN FULGUR: SITH KYBER STORM FRIGATE (Image 3)
+            const w = sub.w || 220, h = sub.h || 110;
+            const eg = cx.createRadialGradient(0, 0, 10, 0, 0, w * 0.55);
+            eg.addColorStop(0, 'rgba(192, 132, 252, 0.45)');
+            eg.addColorStop(0.6, 'rgba(254, 240, 138, 0.2)');
+            eg.addColorStop(1, 'rgba(0,0,0,0)');
+            cx.fillStyle = eg; cx.beginPath(); cx.ellipse(0, 0, w * 0.55, h * 0.52, 0, 0, Math.PI * 2); cx.fill();
+
+            const hg = cx.createLinearGradient(w * 0.45, 0, -w * 0.45, 0);
+            hg.addColorStop(0, '#450a0a'); hg.addColorStop(0.35, '#991b1b'); hg.addColorStop(0.7, '#dc2626'); hg.addColorStop(1, '#f87171');
+            
+            // Vertical Crosswing Mast (Image 3)
+            cx.fillStyle = hg;
+            cx.beginPath();
+            cx.moveTo(w * 0.05, -h * 0.46); cx.lineTo(w * 0.15, -h * 0.42);
+            cx.lineTo(w * 0.15, h * 0.42); cx.lineTo(w * 0.05, h * 0.46); cx.lineTo(-w * 0.05, 0);
+            cx.closePath(); cx.fill();
+            cx.strokeStyle = '#ffd23c'; cx.lineWidth = 1.8; cx.stroke();
+
+            // Cockpit pod
+            cx.fillStyle = '#1c1917'; cx.beginPath(); cx.ellipse(0, 0, w * 0.24, h * 0.22, 0, 0, Math.PI * 2); cx.fill();
+            cx.strokeStyle = '#c084fc'; cx.lineWidth = 2.2; cx.stroke();
+
+            // Radiating Pylons & Tributary Beams (Image 3)
+            for (const side of [-1, 1]) {
+              cx.strokeStyle = '#cbd5e1'; cx.lineWidth = 2.4;
+              cx.beginPath(); cx.moveTo(0, side * h * 0.12); cx.lineTo(-w * 0.22, side * h * 0.38); cx.stroke();
+              cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(-w * 0.22, side * h * 0.38, 7, 0, Math.PI * 2); cx.fill();
+              cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(w * 0.10, side * h * 0.44, 8, 0, Math.PI * 2); cx.fill();
+              cx.strokeStyle = 'rgba(255, 0, 50, 0.75)'; cx.lineWidth = 2.2;
+              cx.beginPath(); cx.moveTo(w * 0.10, side * h * 0.44); cx.lineTo(-w * 0.45, 0); cx.stroke();
+              cx.beginPath(); cx.moveTo(-w * 0.22, side * h * 0.38); cx.lineTo(-w * 0.45, 0); cx.stroke();
+            }
+
+            // Convergence Node
+            const fnode = cx.createRadialGradient(-w * 0.45, 0, 2, -w * 0.45, 0, 16);
+            fnode.addColorStop(0, '#ffffff'); fnode.addColorStop(0.4, '#ff0055'); fnode.addColorStop(1, 'rgba(255,0,0,0)');
+            cx.fillStyle = fnode; cx.beginPath(); cx.arc(-w * 0.45, 0, 12 + Math.sin(t * 22) * 3, 0, Math.PI * 2); cx.fill();
+          }
+
+          // Individual Sub-Boss Health Bar
+          const sbarW = sub.w * 0.72;
+          const sbarY = -sub.h * 0.5 - 18;
+          cx.font = 'bold 10px "Orbitron", sans-serif'; cx.textAlign = 'center';
+          cx.fillStyle = sub.col;
+          cx.fillText(`${sub.name} [${Math.ceil(sub.hp)}/${sub.maxhp}]`, 0, sbarY - 4);
+          cx.fillStyle = 'rgba(2, 6, 23, 0.9)'; cx.fillRect(-sbarW * 0.5, sbarY, sbarW, 8);
+          const sGrad = cx.createLinearGradient(-sbarW * 0.5, 0, sbarW * 0.5, 0);
+          sGrad.addColorStop(0, '#ffffff'); sGrad.addColorStop(1, sub.col);
+          cx.fillStyle = sGrad;
+          cx.fillRect(-sbarW * 0.5 + 1, sbarY + 1, (sbarW - 2) * Math.max(0, sub.hp / sub.maxhp), 6);
+          cx.strokeStyle = sub.col; cx.lineWidth = 1.2; cx.strokeRect(-sbarW * 0.5, sbarY, sbarW, 8);
+
+          cx.restore();
+        }
+
+        // Fusion Convergence Vortex Arcs
+        if (boss.isMerging) {
+          cx.save();
+          cx.strokeStyle = '#ffd23c'; cx.lineWidth = 3;
+          for (let i = 0; i < boss.trio.length; i++) {
+            const s1 = boss.trio[i], s2 = boss.trio[(i + 1) % boss.trio.length];
+            cx.beginPath();
+            cx.moveTo(s1.x - boss.x, s1.y - boss.y);
+            const midX = (s1.x + s2.x) * 0.5 - boss.x + (Math.random() - 0.5) * 40;
+            const midY = (s1.y + s2.y) * 0.5 - boss.y + (Math.random() - 0.5) * 40;
+            cx.quadraticCurveTo(midX, midY, s2.x - boss.x, s2.y - boss.y);
+            cx.stroke();
+          }
+          cx.restore();
+        }
+
+      } else if (boss.isMerged) {
+        // OVERLORD TRINITY: SITH TRI-ELEMENTAL ECLIPSE COLOSSUS
+        const w = boss.w || 340, h = boss.h || 190;
+        const tg = cx.createRadialGradient(0, 0, 20, 0, 0, w * 0.65);
+        tg.addColorStop(0, 'rgba(255, 210, 60, 0.4)');
+        tg.addColorStop(0.35, 'rgba(255, 69, 0, 0.3)');
+        tg.addColorStop(0.7, 'rgba(56, 189, 248, 0.2)');
+        tg.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.fillStyle = tg; cx.beginPath(); cx.ellipse(0, 0, w * 0.62, h * 0.58, 0, 0, Math.PI * 2); cx.fill();
+
+        // 3-Tributary Composite Superlaser Lance
+        if (boss.compositeBeamActive > 0) {
+          cx.save();
+          for (const [py, col] of [[-h * 0.42, '#ff4500'], [0, '#c084fc'], [h * 0.42, '#38bdf8']]) {
+            cx.strokeStyle = col; cx.lineWidth = 4;
+            cx.beginPath(); cx.moveTo(w * 0.20, py); cx.lineTo(-w * 0.48, 0); cx.stroke();
+          }
+          cx.shadowColor = '#ffd23c'; cx.shadowBlur = 35;
+          cx.strokeStyle = 'rgba(255, 69, 0, 0.85)'; cx.lineWidth = 44;
+          cx.beginPath(); cx.moveTo(-w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+          cx.strokeStyle = 'rgba(56, 189, 248, 0.9)'; cx.lineWidth = 26;
+          cx.beginPath(); cx.moveTo(-w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+          cx.strokeStyle = '#ffffff'; cx.lineWidth = 12;
+          cx.beginPath(); cx.moveTo(-w * 0.48, 0); cx.lineTo(-boss.x - 80, 0); cx.stroke();
+          
+          const fg = cx.createRadialGradient(-w * 0.48, 0, 4, -w * 0.48, 0, 36);
+          fg.addColorStop(0, '#ffffff'); fg.addColorStop(0.3, '#ffd23c'); fg.addColorStop(0.7, '#ff4500'); fg.addColorStop(1, 'rgba(0,0,0,0)');
+          cx.fillStyle = fg; cx.beginPath(); cx.arc(-w * 0.48, 0, 26 + Math.sin(t * 24) * 4, 0, Math.PI * 2); cx.fill();
+          cx.restore();
+        }
+
+        // Composite Mega-Hull
+        const hg = cx.createLinearGradient(w * 0.5, 0, -w * 0.5, 0);
+        hg.addColorStop(0, '#020617'); hg.addColorStop(0.3, '#1c1917'); hg.addColorStop(0.6, '#1e293b'); hg.addColorStop(1, '#475569');
+        cx.fillStyle = hg;
+        cx.beginPath();
+        cx.moveTo(-w * 0.48, 0);
+        cx.lineTo(-w * 0.28, -h * 0.40);
+        cx.lineTo(w * 0.38, -h * 0.46);
+        cx.lineTo(w * 0.46, -h * 0.20);
+        cx.lineTo(w * 0.40, 0);
+        cx.lineTo(w * 0.46, h * 0.20);
+        cx.lineTo(w * 0.38, h * 0.46);
+        cx.lineTo(-w * 0.28, h * 0.40);
+        cx.closePath(); cx.fill();
+        cx.strokeStyle = '#ffd23c'; cx.lineWidth = 3.5; cx.stroke();
+
+        // Magma Top Flank (Image 1)
+        cx.fillStyle = '#292524'; cx.fillRect(-w * 0.20, -h * 0.38, w * 0.50, h * 0.22);
+        cx.strokeStyle = '#ff4500'; cx.lineWidth = 1.8; cx.strokeRect(-w * 0.20, -h * 0.38, w * 0.50, h * 0.22);
+        for (let bx = -w * 0.16; bx <= w * 0.22; bx += 22) {
+          cx.fillStyle = '#ff4500'; cx.fillRect(bx, -h * 0.32, 12, 6);
+          cx.fillStyle = '#ffd23c'; cx.fillRect(bx + 2, -h * 0.31, 8, 4);
+        }
+
+        // Cryo Bottom Claws (Image 2)
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 3.8;
+        cx.beginPath(); cx.moveTo(w * 0.35, h * 0.40);
+        cx.quadraticCurveTo(-w * 0.10, h * 0.54, -w * 0.42, h * 0.28);
+        cx.stroke();
+        cx.strokeStyle = '#a5f3fc'; cx.lineWidth = 1.6;
+        cx.beginPath(); cx.moveTo(w * 0.30, h * 0.36);
+        cx.quadraticCurveTo(-w * 0.08, h * 0.48, -w * 0.38, h * 0.26);
+        cx.stroke();
+
+        // Kyber Core (Image 3)
+        const cg = cx.createRadialGradient(-w * 0.12, 0, 4, -w * 0.12, 0, 26);
+        cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.3, '#c084fc'); cg.addColorStop(0.7, '#ff0055'); cg.addColorStop(1, '#020617');
+        cx.fillStyle = cg; cx.beginPath(); cx.arc(-w * 0.12, 0, 18 + Math.sin(t * 14) * 3, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.2; cx.stroke();
+
+        // 3 Thrusters
+        for (const [ey, ecol] of [[-h * 0.24, '#ff4500'], [0, '#ffd23c'], [h * 0.24, '#38bdf8']]) {
+          const eg = cx.createLinearGradient(w * 0.44, ey, w * 0.44 + 45, ey);
+          eg.addColorStop(0, '#ffffff'); eg.addColorStop(0.35, ecol); eg.addColorStop(1, 'rgba(0,0,0,0)');
+          cx.fillStyle = eg; cx.beginPath();
+          cx.moveTo(w * 0.44, ey - 6); cx.lineTo(w * 0.44 + 38 + Math.sin(t * 20 + ey) * 8, ey); cx.lineTo(w * 0.44, ey + 6);
+          cx.closePath(); cx.fill();
+        }
+      }
+    } else if (boss.type === 'dread') {
       // BOSS 1: GRAND ADMIRAL VEX: IMPERIAL ECLIPSE SUPER-DREADNOUGHT (Star Wars Imperial Star Destroyer)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.55);
       bg.addColorStop(0, 'rgba(0, 255, 170, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');

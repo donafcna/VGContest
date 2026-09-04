@@ -1,3 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Star Wars Boss Video Showcase - Ultra-Realistic Combat Theater</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Space+Grotesk:wght@500;700&display=swap');
+    * { box-sizing: border-box; }
+    body { font-family: 'Space Grotesk', sans-serif; }
+    .font-orbitron { font-family: 'Orbitron', sans-serif; }
+    .glass-card { background: rgba(6, 12, 28, 0.95); backdrop-filter: blur(16px); }
+    .neon-cyan { box-shadow: 0 0 25px rgba(0, 229, 255, 0.35), inset 0 0 15px rgba(0, 229, 255, 0.15); }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #ff4500, #7e22ce) !important;
+      color: #ffffff !important;
+      border-color: #ffd23c !important;
+      box-shadow: 0 0 15px rgba(255, 69, 0, 0.6);
+    }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: rgba(2, 6, 23, 0.8); }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.6); border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-transparent text-[var(--foreground)] p-2 md:p-4">
+  <div class="max-w-6xl mx-auto glass-card border border-cyan-500/50 rounded-2xl p-4 md:p-6 shadow-2xl relative overflow-hidden neon-cyan">
+    
+    <!-- Top Bar / Director Controls -->
+    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 border-b border-cyan-500/30 pb-4 mb-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-2xl animate-pulse">🛸</span>
+          <h1 class="text-xl md:text-2xl font-orbitron font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-yellow-300 via-cyan-400 to-purple-400 tracking-wide">
+            1:1 FLAGSHIP BOSS COMBAT THEATER
+          </h1>
+          <span class="text-[10px] bg-red-950 border border-red-400 text-red-300 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+            10 SECTOR DREADNOUGHTS
+          </span>
+        </div>
+        <p class="text-xs text-cyan-200/80 mt-1">
+          Hyper-realistic 60 FPS combat simulation running the exact 1:1 game engine physics, boss models, status effects & signature attacks
+        </p>
+      </div>
+
+      <!-- Playback Mode & Director Speed Buttons -->
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="flex items-center bg-slate-900/90 rounded-lg p-1 border border-cyan-500/30 text-xs font-orbitron">
+          <button id="btnTour" onclick="toggleAutoTour()" class="px-3 py-1 rounded font-bold transition flex items-center gap-1.5 bg-cyan-500 text-slate-950 shadow-[0_0_10px_rgba(0,229,255,0.7)]">
+            <span id="tourIcon">🎬</span> <span id="tourLabel">AUTO-TOUR</span>
+          </button>
+        </div>
+
+        <div class="flex items-center bg-slate-900/90 rounded-lg p-1 border border-cyan-500/30 text-xs font-orbitron text-slate-300">
+          <span class="px-2 text-[10px] text-slate-400 uppercase">Speed:</span>
+          <button onclick="setGameSpeed(0.5)" id="spd05" class="px-2 py-0.5 rounded hover:bg-cyan-500/20 text-[11px]">0.5x Slow-Mo</button>
+          <button onclick="setGameSpeed(1.0)" id="spd10" class="px-2 py-0.5 rounded bg-cyan-500/40 text-cyan-200 text-[11px] font-bold">1.0x Real</button>
+          <button onclick="setGameSpeed(1.5)" id="spd15" class="px-2 py-0.5 rounded hover:bg-cyan-500/20 text-[11px]">1.5x Hyper</button>
+        </div>
+
+        <button onclick="triggerBossUltimate()" class="px-3 py-1.5 rounded-lg text-xs font-bold font-orbitron bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-400/60 shadow-[0_0_15px_rgba(251,191,36,0.3)] transition flex items-center gap-1.5">
+          ⚡ TRIGGER SIGNATURE MOVE
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Live Action Screen -->
+    <div class="relative bg-slate-950 rounded-xl border border-cyan-500/40 overflow-hidden aspect-[16/9] max-h-[520px] shadow-[0_0_40px_rgba(0,0,0,0.9)] flex items-center justify-center">
+      <canvas id="gameCanvas" class="w-full h-full block"></canvas>
+
+      <!-- Boss Tactical Header HUD inside Theater -->
+      <div class="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-md border border-cyan-400/40 rounded-xl p-3 max-w-sm pointer-events-none shadow-xl">
+        <div class="flex items-center justify-between gap-2">
+          <span id="hudSectorBadge" class="text-[10px] font-orbitron font-extrabold px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-400/40 uppercase">SECTOR 1 APEX</span>
+          <span id="hudTierBadge" class="text-[10px] font-orbitron font-bold text-yellow-400">TRI-ELEMENTAL SITH</span>
+        </div>
+        <h3 id="hudBossName" class="text-sm font-bold text-white font-orbitron mt-1 leading-snug truncate">The Sith Elemental Triumvirate</h3>
+        
+        <!-- Live Boss HP Bar -->
+        <div class="mt-2">
+          <div class="flex justify-between text-[10px] font-mono text-slate-300 mb-0.5">
+            <span>BOSS HULL SHIELDS</span>
+            <span id="hudHpText" class="text-emerald-400 font-bold">120 / 120 HP</span>
+          </div>
+          <div class="w-full h-2 bg-slate-950 rounded-full border border-slate-700 overflow-hidden">
+            <div id="hudHpBar" class="h-full bg-gradient-to-r from-red-500 via-amber-400 to-cyan-400 transition-all duration-150" style="width: 100%"></div>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-cyan-200 mt-2 flex items-center gap-1.5 line-clamp-1">
+          <span class="text-yellow-400">⚡</span> <span id="hudAttackDesc">Tri-Elemental Fusion & Composite Superlaser</span>
+        </div>
+      </div>
+
+      <!-- Real-Time Combat Announcement Banner -->
+      <div id="combatBanner" class="absolute top-3 right-3 bg-slate-900/90 backdrop-blur-md border border-yellow-400/60 rounded-xl px-3 py-2 text-xs font-orbitron text-yellow-300 pointer-events-none shadow-lg flex items-center gap-2 transition-all duration-300 opacity-0 transform -translate-y-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+        <span id="combatBannerText">TRI-ELEMENTAL FUSION ACTIVATED!</span>
+      </div>
+
+      <!-- Player Status Indicator -->
+      <div id="playerStatusHud" class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md border border-slate-700 rounded-lg px-2.5 py-1 text-[11px] font-mono pointer-events-none flex items-center gap-2 text-slate-300">
+        <span>SHIP STATUS:</span>
+        <span id="statusBurn" class="text-orange-400 font-bold hidden">🔥 BURNING (DoT)</span>
+        <span id="statusFreeze" class="text-cyan-300 font-bold hidden">❄️ FROZEN (STASIS)</span>
+        <span id="statusNormal" class="text-emerald-400 font-bold">🟢 OPTIMAL</span>
+      </div>
+
+      <!-- Video Tour Progress Timeline -->
+      <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-slate-900/80">
+        <div id="timelineBar" class="h-full bg-gradient-to-r from-red-500 via-yellow-300 to-cyan-400 transition-all duration-100" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- 10-Boss Selection Carousel -->
+    <div class="mt-4">
+      <div class="flex items-center justify-between text-xs font-orbitron text-cyan-300 font-bold uppercase tracking-wider mb-2">
+        <span>Select Flagship Dreadnought:</span>
+        <span class="text-[10px] text-slate-400 font-normal">Ranked from Apex Squadron (#1 Strongest) → Sector 9 (#10 Weakest)</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-5 md:grid-cols-10 gap-1.5 custom-scroll" id="bossTabsContainer">
+        <!-- Generated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Interactive Special Move Palette & Full Tactical Dossier -->
+    <div class="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+      
+      <!-- Special Moves Palette (Interactive Buttons) -->
+      <div class="bg-slate-900/70 border border-cyan-500/30 rounded-xl p-3.5 flex flex-col justify-between">
+        <div>
+          <div class="text-xs font-orbitron font-bold text-yellow-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <span>🎮</span> <span>Trigger Specific Signature Attack:</span>
+          </div>
+          <div id="specialMovesList" class="flex flex-wrap gap-1.5">
+            <!-- Generated dynamically based on boss -->
+          </div>
+        </div>
+        <div class="mt-3 pt-2 border-t border-slate-700/50 text-[11px] text-slate-400 flex items-center justify-between">
+          <span>Simulation Physics:</span>
+          <span class="text-emerald-400 font-mono">60 FPS Collisions Active</span>
+        </div>
+      </div>
+
+      <!-- Boss Tactical Dossier -->
+      <div class="lg:col-span-2 bg-slate-900/70 border border-cyan-500/30 rounded-xl p-3.5 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-orbitron font-extrabold text-yellow-400" id="dossierRank">RANK #1</span>
+              <h4 class="text-sm font-bold text-white font-orbitron" id="dossierTitle">The Sith Elemental Triumvirate</h4>
+            </div>
+            <span class="text-[11px] font-mono text-cyan-300" id="dossierStats">120 Base HP · 50 Spd</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed mb-2" id="dossierDesc">
+            Simultaneous 3-in-1 Sith Flagship Squadron: Left Lava Dreadnought (Burn DoT), Middle Ice Cruiser (2s Freeze), Right Kyber Lightning Frigate. Merges into OVERLORD TRINITY with a 3-tributary composite superlaser at <= 25% HP!
+          </p>
+          <div class="bg-slate-950/80 border border-slate-700/70 rounded-lg p-2 text-xs text-slate-200">
+            <span class="text-[10px] font-orbitron font-bold text-cyan-400 uppercase block mb-0.5">🎯 Captain Noel's Combat Tactic:</span>
+            <span id="dossierTactic" class="italic text-cyan-100/90">Damage any of the 3 ships below 25% HP to trigger the Fusion vortex, then weave around the converging tri-color composite superlaser!</span>
+          </div>
+        </div>
+        <div class="mt-2 pt-2 border-t border-slate-700/50 flex items-center justify-between text-[11px]">
+          <span class="text-slate-400">Victory Bounty Loot:</span>
+          <span class="text-yellow-300 font-semibold" id="dossierLoot">👑 +6 Plasma Cores · +3 Wheel Spins · +300 🪙 + 50 Coin Cascade</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const BOSS_DATA = [
+      {
+        id: 'trio', rank: '#1 (Apex)', sector: 'Sector 1 Apex', tier: 'Tri-Elemental Sith Apex',
+        name: 'The Sith Elemental Triumvirate', shortName: '1. Sith Trio',
+        col: '#ff4500', w: 340, h: 190, hp: 120, spd: 50,
+        desc: 'Simultaneous 3-in-1 Sith Flagship Squadron: Darth Ignis (Left Lava dreadnought with Burn DoT), Inquisitor Glacies (Middle Ice cruiser with 2s Freeze), Sovereign Fulgur (Right Kyber lightning frigate). Merges into OVERLORD TRINITY with a 3-tributary composite superlaser at <= 25% HP!',
+        tactic: 'Damage any of the 3 vessels below 25% HP to trigger the Fusion vortex, then evade the converging tri-color superlaser!',
+        loot: '👑 +6 Plasma Cores · +3 Wheel Spins · +300 🪙 + 50 Coin Cascade',
+        specialName: 'Tri-Elemental Fusion & Composite Superlaser',
+        moves: [
+          { name: 'Tri-Elemental Fusion Singularity', key: 'trio_fusion' },
+          { name: 'Ignis Molten Lava Mortars (Burn DoT)', key: 'trio_lava' },
+          { name: 'Glacies Cryo Lances (2s Freeze)', key: 'trio_cryo' },
+          { name: 'Fulgur Kyber Lightning Flurry', key: 'trio_lightning' }
+        ]
+      },
+      {
+        id: 'titan', rank: '#2', sector: 'Sector 1', tier: 'Tier 1 Apex Colossus',
+        name: 'General Veers: Imperial AT-AT Colossus', shortName: '2. AT-AT',
+        col: '#ef4444', w: 310, h: 180, hp: 95, spd: 48,
+        desc: 'All-Terrain Heavy Armored Siege Colossus with swiveling cockpit chin turbolasers tracking the player, hydraulic stomping legs, and seismic artillery.',
+        tactic: 'Weave between the heavy chin blaster barrels and target the mechanical neck swivel joint!',
+        loot: '👑 +5 Plasma Cores · +2 Wheel Spins · +250 🪙 + 36 Coin Cascade',
+        specialName: 'Dual Heavy Chin MS-1 Turbolasers',
+        moves: [
+          { name: 'Chin MS-1 Turbolaser Tracking', key: 'chin_lasers' },
+          { name: 'Temple Repeating Blaster Flurry', key: 'temple' },
+          { name: 'Orbital Seismic Artillery', key: 'artillery' }
+        ]
+      },
+      {
+        id: 'pathogen', rank: '#3', sector: 'Sector 2', tier: 'Tier 1 Bioweapon Swarm',
+        name: 'Overlord Pathogen: Bio-Spore Carrier', shortName: '3. Pathogen',
+        col: '#10b981', w: 325, h: 165, hp: 90, spd: 46,
+        desc: 'Replicating Bioweapon Frigate starting with 5 sub-clones; killing clones triggers Mitosis mutation making survivors grow larger and stronger!',
+        tactic: 'Focus fire directly on the Original Alpha Prime Carrier before clones mutate into giants!',
+        loot: '👑 +5 Plasma Cores · +2 Wheel Spins · +230 🪙 + 30 Coin Cascade',
+        specialName: 'Bacterial Mitosis Hyper-Mutation',
+        moves: [
+          { name: 'Mitosis Clone Hyper-Mutation', key: 'mitosis' },
+          { name: 'Macro-Amoeba Splitting Bio-Blob', key: 'macro_blob' },
+          { name: 'Micro-Bacteria Spore Stream', key: 'micro_stream' }
+        ]
+      },
+      {
+        id: 'ataraxia', rank: '#4', sector: 'Sector 3', tier: 'Tier 1 Jedi Dreadnought',
+        name: 'Master Avar Kriss: Jedi Cruiser Ataraxia', shortName: '4. Ataraxia',
+        col: '#e0e7ff', w: 330, h: 165, hp: 92, spd: 48,
+        desc: 'High Republic Jedi Cruiser with converging Kyber lances, projectile-deflecting Radiant Force Ring, Longbeam precision cannons, and twin Jedi Vectors.',
+        tactic: 'Dodge the converging twin Kyber laser lances and shoot down the escorting Jedi Vectors!',
+        loot: '👑 +4 Plasma Cores · +2 Wheel Spins · +210 🪙 + 25 Coin Cascade',
+        specialName: 'Converging Kyber Lances & Radiant Force Ring',
+        moves: [
+          { name: 'Converging Twin Kyber Lances', key: 'kyber' },
+          { name: 'Radiant Force Pulse Ring', key: 'force_pulse' },
+          { name: 'Jedi Vector Escort Sortie', key: 'vectors' }
+        ]
+      },
+      {
+        id: 'fondor', rank: '#5', sector: 'Sector 4', tier: 'Tier 2 Armed Cruiser',
+        name: 'Luthen Rael: Fondor Haulcraft', shortName: '5. Fondor',
+        col: '#38bdf8', w: 320, h: 175, hp: 88, spd: 50,
+        desc: 'Armed Custom Cruiser featuring lethal Twin Lateral Plasma Laser Scythes that sweep the entire vertical screen with electric crackling arcs and flak pods.',
+        tactic: 'Back off into the far left quadrant when the lateral plasma scythes ignite!',
+        loot: '👑 +4 Plasma Cores · +2 Wheel Spins · +190 🪙',
+        specialName: 'Twin Lateral Full-Screen Plasma Scythes',
+        moves: [
+          { name: 'Twin Lateral Plasma Scythes', key: 'scythes' },
+          { name: 'Dorsal Flak Pods', key: 'flak' },
+          { name: 'Forward Pulse Cannons', key: 'pulse' }
+        ]
+      },
+      {
+        id: 'cryo', rank: '#6', sector: 'Sector 5', tier: 'Tier 2 Heavy Cruiser',
+        name: 'Admiral Sloane: Cantwell Battlecruiser', shortName: '6. Sloane',
+        col: '#00ffaa', w: 305, h: 175, hp: 80, spd: 44,
+        desc: 'Arresting-class Imperial Battlecruiser equipped with 4 swept outrigger stabilizer wings, heavy sponson turbolasers, and tractor web lockdown.',
+        tactic: 'Weave between the 4 outrigger stabilizer wings to target the central bridge superstructure!',
+        loot: '👑 +3 Plasma Cores · +1 Wheel Spin · +170 🪙',
+        specialName: 'Outrigger Sponson Turbolasers & Web',
+        moves: [
+          { name: 'Sponson Turbolaser Salvo', key: 'sponsons' },
+          { name: 'Tractor Web Lockdown', key: 'web' },
+          { name: 'Heavy Ordnance Bombardment', key: 'ordnance' }
+        ]
+      },
+      {
+        id: 'void', rank: '#7', sector: 'Sector 6', tier: 'Tier 2 High-Agility',
+        name: 'Captain Solo: Rogue Millennium Falcon', shortName: '7. Falcon',
+        col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52,
+        desc: 'Agile modified YT-1300 light freighter with hyperspace cloaking overdrive, rotating quad-laser turrets, and dropped seismic proton mines.',
+        tactic: 'Watch for hyperspace shimmer exit points and shoot through cloaked evasion cycles!',
+        loot: '👑 +3 Plasma Cores · +1 Wheel Spin · +150 🪙',
+        specialName: 'Hyperspace Cloaking & Quad-Lasers',
+        moves: [
+          { name: 'Hyperspace Cloak Shimmer', key: 'cloak' },
+          { name: 'Quad-Laser 8-Round Barrage', key: 'quads' },
+          { name: 'Proximity Proton Mines', key: 'mines' }
+        ]
+      },
+      {
+        id: 'ram', rank: '#8', sector: 'Sector 7', tier: 'Tier 3 Battleship',
+        name: 'Admiral Raddus: Mon Calamari MC85 Cruiser', shortName: '8. Raddus',
+        col: '#38bdf8', w: 320, h: 175, hp: 70, spd: 40,
+        desc: 'Heavy Mon Calamari Command Cruiser with ventral spire heavy ion ray, guided concussion torpedo volleys, and deflector shield bubble shells.',
+        tactic: 'Stay above the deep ventral command fin to avoid the downward ion beam, and target shield blisters!',
+        loot: '👑 +2 Plasma Cores · +1 Wheel Spin · +125 🪙',
+        specialName: 'Ventral Spire Ion Ray & Deflector Bubbles',
+        moves: [
+          { name: 'Ventral Spire Ion Ray', key: 'ion' },
+          { name: 'Deflector Shield Bubbles', key: 'shields' },
+          { name: 'Guided Concussion Torpedoes', key: 'torps' }
+        ]
+      },
+      {
+        id: 'hive', rank: '#9', sector: 'Sector 8', tier: 'Tier 3 Battlestation',
+        name: 'Overlord Chronos: DS-1 Death Star', shortName: '9. Chronos',
+        col: '#00e5ff', w: 280, h: 280, hp: 65, spd: 30,
+        desc: 'Orbital Planet-Siege Battlestation with 360° equatorial trench burst, irresistible gravitational magnetic tractor pull, and converging 8-tributary Kyber dish superlaser.',
+        tactic: 'Survive the intense tractor beam lock and evade continuous turbolasers, then blast the Kyber dish!',
+        loot: '👑 +2 Plasma Cores · +1 Wheel Spin · +100 🪙',
+        specialName: 'Irresistible Tractor Beam & Kyber Superlaser',
+        moves: [
+          { name: '8-Dish Kyber Superlaser', key: 'dish' },
+          { name: '360° Trench EMP Burst', key: 'trench' },
+          { name: 'Irresistible Tractor Pull', key: 'tractor' }
+        ]
+      },
+      {
+        id: 'dread', rank: '#10 (Weakest)', sector: 'Sector 9', tier: 'Tier 3 Entry Dreadnought',
+        name: 'Grand Admiral Vex: Imperial Eclipse', shortName: '10. Vex',
+        col: '#00ffaa', w: 320, h: 180, hp: 60, spd: 36,
+        desc: 'Imperial II-Class Super-Dreadnought armed with continuous axial planet-killer green superlaser, ventral TIE carrier launch escorts, and dual tachyon railguns.',
+        tactic: 'Dodge the charging green axial superlaser by staying above or below the center flight axis!',
+        loot: '👑 +2 Plasma Cores · +1 Wheel Spin · +75 🪙',
+        specialName: 'Axial Planet-Killer Superlaser',
+        moves: [
+          { name: 'Axial Planet-Killer Superlaser', key: 'beam' },
+          { name: 'Ventral TIE Escort Launch', key: 'ties' },
+          { name: 'Dual Heavy Railgun Salvo', key: 'railguns' }
+        ]
+      }
+    ];
+
+    let currentIdx = 0;
+    let isAutoTour = true;
+    let autoTourTimer = 0;
+    const TOUR_DURATION = 8.0; // seconds per boss in auto tour
+    let gameSpeed = 1.0;
+    let animTime = 0;
+
+    // Simulation Entities
+    const canvas = document.getElementById('gameCanvas');
+    const cx = canvas.getContext('2d');
+
+    let ship = { x: 140, y: 220, vy: 0, shootTimer: 0, hp: 100, maxhp: 100, burnT: 0, freezeT: 0 };
+    let boss = null;
+    let playerBullets = [];
+    let enemyBullets = [];
+    let particles = [];
+    let floatingTexts = [];
+    let escorts = [];
+    let screenShake = 0;
+
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * (window.devicePixelRatio || 1);
+      canvas.height = rect.height * (window.devicePixelRatio || 1);
+      cx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+    }
+    window.addEventListener('resize', resize);
+
+    // Build Tab Buttons
+    const tabsContainer = document.getElementById('bossTabsContainer');
+    BOSS_DATA.forEach((b, idx) => {
+      const btn = document.createElement('button');
+      btn.className = `tab-btn px-2 py-1.5 rounded text-[10px] font-orbitron font-semibold border border-slate-700/70 bg-slate-900/80 text-slate-300 hover:bg-slate-800 transition truncate ${idx === 0 ? 'active' : ''}`;
+      btn.textContent = b.shortName;
+      btn.onclick = () => selectBoss(idx, true);
+      tabsContainer.appendChild(btn);
+    });
+
+    function selectBoss(idx, manual = false) {
+      currentIdx = idx;
+      if (manual) {
+        isAutoTour = false;
+        updateTourUI();
+      }
+      autoTourTimer = 0;
+      
+      const bDef = BOSS_DATA[currentIdx];
+      const rect = canvas.getBoundingClientRect();
+      const W = rect.width || 800, H = rect.height || 450;
+
+      // Spawn Exact 1:1 Boss State
+      boss = {
+        id: bDef.id,
+        type: bDef.id,
+        name: bDef.name,
+        col: bDef.col,
+        w: bDef.w * 0.75,
+        h: bDef.h * 0.75,
+        hp: bDef.hp,
+        maxhp: bDef.hp,
+        spd: bDef.spd,
+        x: W * 0.75,
+        y: H * 0.5,
+        vx: 0,
+        vy: 30,
+        enraged: false,
+        shootT: 0.1,
+        subAtk: 0,
+        // Ability state fields
+        beamActive: 0,
+        forcePulseT: 0,
+        forcePulseRadius: 30,
+        lanceActive: 0,
+        scytheActive: 0,
+        isCloaked: false,
+        shieldBubbleActive: 0,
+        mitosisGeneration: 1,
+        clones: [],
+        // Trio Specific State
+        trio: null,
+        isMerged: false,
+        isMerging: false,
+        mergeT: 0,
+        superlaser: 0,
+        mergedPhase: 0,
+        mergedPhaseT: 0
+      };
+
+      if (boss.type === 'trio') {
+        const cxPos = boss.x, cyPos = boss.y;
+        boss.trio = [
+          { id: 'ignis', name: 'Darth Ignis (Lava)', x: cxPos - 45, y: cyPos - 55, baseY: cyPos - 55, w: 220, h: 110, hp: 40, maxhp: 40, shootT: 0.8, col: '#ff4500' },
+          { id: 'glacies', name: 'Inquisitor Glacies (Ice)', x: cxPos + 25, y: cyPos, baseY: cyPos, w: 210, h: 105, hp: 40, maxhp: 40, shootT: 1.4, col: '#38bdf8' },
+          { id: 'fulgur', name: 'Sovereign Fulgur (Electric)', x: cxPos - 45, y: cyPos + 55, baseY: cyPos + 55, w: 200, h: 100, hp: 40, maxhp: 40, shootT: 0.28, col: '#c084fc' }
+        ];
+      } else if (boss.type === 'pathogen') {
+        for (let i = 0; i < 5; i++) {
+          const ang = (i / 5) * Math.PI * 2;
+          boss.clones.push({
+            id: i,
+            x: boss.x + Math.cos(ang) * 95,
+            y: boss.y + Math.sin(ang) * 65,
+            scale: 0.7,
+            gen: 1,
+            hp: 12,
+            maxhp: 12,
+            shootT: i * 0.4
+          });
+        }
+      }
+
+      escorts = [];
+      if (boss.type === 'dread') {
+        escorts.push({ x: boss.x - 60, y: boss.y - 70, type: 'tie' });
+        escorts.push({ x: boss.x - 60, y: boss.y + 70, type: 'tie' });
+      } else if (boss.type === 'ataraxia') {
+        escorts.push({ x: boss.x - 70, y: boss.y - 60, type: 'vector' });
+        escorts.push({ x: boss.x - 70, y: boss.y + 60, type: 'vector' });
+      }
+
+      // Reset Combat Lists
+      playerBullets = [];
+      enemyBullets = [];
+      particles = [];
+      floatingTexts = [];
+      ship.burnT = 0;
+      ship.freezeT = 0;
+
+      // Update UI Tabs
+      document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+        if (i === idx) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+
+      // Update HUD
+      document.getElementById('hudSectorBadge').textContent = bDef.sector.toUpperCase();
+      document.getElementById('hudTierBadge').textContent = bDef.tier.toUpperCase();
+      document.getElementById('hudBossName').textContent = bDef.name;
+      document.getElementById('hudHpText').textContent = `${bDef.hp} / ${bDef.hp} HP`;
+      document.getElementById('hudHpBar').style.width = '100%';
+      document.getElementById('hudAttackDesc').textContent = bDef.specialName;
+
+      // Update Dossier
+      document.getElementById('dossierRank').textContent = `RANK ${bDef.rank} · ${bDef.sector.toUpperCase()}`;
+      document.getElementById('dossierTitle').textContent = bDef.name;
+      document.getElementById('dossierStats').textContent = `${bDef.hp} Base HP · ${bDef.spd} Sublight Spd`;
+      document.getElementById('dossierDesc').textContent = bDef.desc;
+      document.getElementById('dossierTactic').textContent = bDef.tactic;
+      document.getElementById('dossierLoot').textContent = bDef.loot;
+
+      // Build Special Moves Palette Buttons
+      const movesWrap = document.getElementById('specialMovesList');
+      movesWrap.innerHTML = '';
+      bDef.moves.forEach(m => {
+        const mBtn = document.createElement('button');
+        mBtn.className = 'px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-200 border border-cyan-500/40 text-[11px] font-orbitron font-semibold transition flex items-center gap-1 shadow-sm';
+        mBtn.innerHTML = `<span>⚡</span> ${m.name}`;
+        mBtn.onclick = () => triggerActionMove(m.key, m.name);
+        movesWrap.appendChild(mBtn);
+      });
+
+      showCombatBanner(`ENGAGING: ${bDef.name.toUpperCase()}`);
+    }
+
+    function updateTourUI() {
+      document.getElementById('tourIcon').textContent = isAutoTour ? '⏸️' : '🎬';
+      document.getElementById('tourLabel').textContent = isAutoTour ? 'PAUSE TOUR' : 'RESUME TOUR';
+      document.getElementById('btnTour').className = `px-3 py-1 rounded font-bold transition flex items-center gap-1.5 ${isAutoTour ? 'bg-cyan-500 text-slate-950 shadow-[0_0_10px_rgba(0,229,255,0.7)]' : 'bg-slate-800 text-cyan-300 border border-cyan-500/40'}`;
+    }
+
+    function setGameSpeed(spd) {
+      gameSpeed = spd;
+      ['spd05', 'spd10', 'spd15'].forEach(id => document.getElementById(id).className = 'px-2 py-0.5 rounded text-[11px] hover:bg-cyan-500/20 text-slate-300');
+      if (spd === 0.5) document.getElementById('spd05').className = 'px-2 py-0.5 rounded bg-cyan-500/40 text-cyan-200 text-[11px] font-bold';
+      else if (spd === 1.0) document.getElementById('spd10').className = 'px-2 py-0.5 rounded bg-cyan-500/40 text-cyan-200 text-[11px] font-bold';
+      else if (spd === 1.5) document.getElementById('spd15').className = 'px-2 py-0.5 rounded bg-cyan-500/40 text-cyan-200 text-[11px] font-bold';
+    }
+
+    function showCombatBanner(text) {
+      const banner = document.getElementById('combatBanner');
+      document.getElementById('combatBannerText').textContent = text;
+      banner.style.opacity = '1';
+      banner.style.transform = 'translateY(0)';
+      clearTimeout(banner._hideTimer);
+      banner._hideTimer = setTimeout(() => {
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-8px)';
+      }, 2800);
+    }
+
+    function triggerBossUltimate() {
+      if (!boss) return;
+      const bDef = BOSS_DATA[currentIdx];
+      showCombatBanner(`⚡ ULTIMATE ACTIVATED: ${bDef.specialName.toUpperCase()}!`);
+      triggerActionMove(bDef.moves[0].key, bDef.specialName);
+    }
+
+    function triggerActionMove(key, moveName) {
+      if (!boss) return;
+      showCombatBanner(`⚡ ${moveName.toUpperCase()}!`);
+      screenShake = 12;
+
+      if (key === 'trio_fusion') {
+        if (!boss.isMerged) {
+          boss.isMerging = true;
+          boss.mergeT = 2.5;
+          popupText(boss.x, boss.y - 40, '💥 SITH FUSION SINGULARITY!', '#ff0033');
+        } else {
+          boss.superlaser = 3.5;
+          popupText(boss.x, boss.y - 40, '⚡ TRINITY COMPOSITE SUPERLASER!', '#ffd23c');
+        }
+      } else if (key === 'trio_lava') {
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            if (!boss) return;
+            const ignis = boss.trio ? boss.trio[0] : boss;
+            enemyBullets.push({
+              x: ignis.x - 40,
+              y: ignis.y + (i - 1) * 20,
+              vx: -240,
+              vy: (i - 1) * 60,
+              r: 10,
+              type: 'magma_mortar',
+              col: '#ff4500'
+            });
+            ship.burnT = 3.0;
+          }, i * 150);
+        }
+      } else if (key === 'trio_cryo') {
+        for (let i = -1; i <= 1; i++) {
+          const glacies = boss.trio ? boss.trio[1] : boss;
+          enemyBullets.push({
+            x: glacies.x - 50,
+            y: glacies.y + i * 18,
+            vx: -360,
+            vy: i * 45,
+            r: 7,
+            type: 'cryo_lance',
+            col: '#38bdf8'
+          });
+        }
+        ship.freezeT = 2.0;
+      } else if (key === 'trio_lightning') {
+        const fulgur = boss.trio ? boss.trio[2] : boss;
+        for (let i = 0; i < 8; i++) {
+          setTimeout(() => {
+            if (!boss) return;
+            enemyBullets.push({
+              x: fulgur.x - 45,
+              y: fulgur.y + (Math.random() - 0.5) * 24,
+              vx: -520,
+              vy: (Math.random() - 0.5) * 80,
+              r: 5,
+              type: 'kyber_bolt',
+              col: '#c084fc'
+            });
+          }, i * 60);
+        }
+      } else if (key === 'beam' || key === 'dish') {
+        boss.beamActive = 2.5;
+      } else if (key === 'scythes') {
+        boss.scytheActive = 3.0;
+      } else if (key === 'kyber') {
+        boss.lanceActive = 2.8;
+      } else if (key === 'force_pulse') {
+        boss.forcePulseT = 2.0;
+        boss.forcePulseRadius = 30;
+      } else if (key === 'cloak') {
+        boss.isCloaked = true;
+        setTimeout(() => { if (boss) boss.isCloaked = false; }, 3000);
+      } else if (key === 'mitosis') {
+        if (boss.clones && boss.clones.length > 0) {
+          boss.mitosisGeneration++;
+          boss.clones.forEach(c => {
+            c.scale = Math.min(1.4, c.scale + 0.22);
+            c.gen = boss.mitosisGeneration;
+            c.maxhp += 10;
+            c.hp = c.maxhp;
+          });
+          popupText(boss.x, boss.y - 40, '🧬 MITOSIS HYPER-MUTATION!', '#10b981');
+        }
+      } else if (key === 'macro_blob') {
+        enemyBullets.push({
+          x: boss.x - boss.w * 0.45,
+          y: boss.y,
+          vx: -180,
+          vy: 0,
+          r: 38,
+          type: 'bacteria_macro',
+          col: '#10b981',
+          life: 4.0
+        });
+      } else if (key === 'micro_stream') {
+        for (let i = 0; i < 8; i++) {
+          setTimeout(() => {
+            if (!boss) return;
+            enemyBullets.push({
+              x: boss.x - boss.w * 0.45,
+              y: boss.y + (Math.random() - 0.5) * 40,
+              vx: -320 - Math.random() * 80,
+              vy: (Math.random() - 0.5) * 120,
+              r: 10,
+              type: 'bacteria_micro',
+              col: '#84cc16'
+            });
+          }, i * 70);
+        }
+      } else if (key === 'trench') {
+        for (let i = 0; i < 16; i++) {
+          const a = (i / 16) * Math.PI * 2;
+          enemyBullets.push({
+            x: boss.x,
+            y: boss.y,
+            vx: Math.cos(a) * 220,
+            vy: Math.sin(a) * 220,
+            r: 7,
+            type: 'emp_orb',
+            col: '#ef4444'
+          });
+        }
+      } else if (key === 'ties') {
+        for (let i = 0; i < 2; i++) {
+          escorts.push({ x: boss.x - 40, y: boss.y + (i === 0 ? -60 : 60), type: 'tie' });
+        }
+      } else if (key === 'vectors') {
+        for (let i = 0; i < 2; i++) {
+          escorts.push({ x: boss.x - 40, y: boss.y + (i === 0 ? -60 : 60), type: 'vector' });
+        }
+      } else if (key === 'ion') {
+        for (let i = 0; i < 10; i++) {
+          setTimeout(() => {
+            if (!boss) return;
+            enemyBullets.push({
+              x: boss.x - boss.w * 0.2,
+              y: boss.y + boss.h * 0.3,
+              vx: -340,
+              vy: 120 + Math.random() * 60,
+              r: 8,
+              type: 'ion',
+              col: '#00ffee'
+            });
+          }, i * 80);
+        }
+      } else if (key === 'shields') {
+        boss.shieldBubbleActive = 3.0;
+        popupText(boss.x, boss.y - 40, '🛡️ DEFLECTOR SHIELDS ONLINE!', '#38bdf8');
+      } else if (key === 'tractor') {
+        boss.tractorT = 3.5;
+        popupText(boss.x, boss.y - 40, '🧲 GRAVITATIONAL TRACTOR PULL!', '#00e5ff');
+      } else if (key === 'torps') {
+        for (let i = -1; i <= 1; i += 2) {
+          enemyBullets.push({
+            x: boss.x - boss.w * 0.3,
+            y: boss.y + i * 40,
+            vx: -260,
+            vy: i * 80,
+            r: 9,
+            type: 'torpedo',
+            col: '#f59e0b'
+          });
+        }
+      } else if (key === 'quads') {
+        for (let i = 0; i < 8; i++) {
+          setTimeout(() => {
+            if (!boss) return;
+            enemyBullets.push({
+              x: boss.x - 40,
+              y: boss.y + (i % 2 === 0 ? -12 : 12),
+              vx: -420,
+              vy: (Math.random() - 0.5) * 80,
+              r: 5,
+              type: 'quad',
+              col: '#ffd23c'
+            });
+          }, i * 60);
+        }
+      } else if (key === 'mines') {
+        for (let i = 0; i < 3; i++) {
+          enemyBullets.push({
+            x: boss.x - 60 - i * 40,
+            y: boss.y + (i - 1) * 50,
+            vx: -80,
+            vy: 0,
+            r: 12,
+            type: 'mine',
+            col: '#ef4444'
+          });
+        }
+      } else if (key === 'sponsons' || key === 'ordnance') {
+        for (let i = 0; i < 6; i++) {
+          setTimeout(() => {
+            if (!boss) return;
+            enemyBullets.push({
+              x: boss.x - boss.w * 0.3,
+              y: boss.y + (Math.random() - 0.5) * boss.h * 0.7,
+              vx: -380,
+              vy: (Math.random() - 0.5) * 90,
+              r: 7,
+              type: 'ordnance',
+              col: '#38bdf8'
+            });
+          }, i * 90);
+        }
+      } else if (key === 'flak') {
+        for (let i = 0; i < 12; i++) {
+          const a = Math.random() * Math.PI * 2;
+          enemyBullets.push({
+            x: boss.x - 30,
+            y: boss.y,
+            vx: Math.cos(a) * (180 + Math.random() * 120),
+            vy: Math.sin(a) * (180 + Math.random() * 120),
+            r: 5,
+            type: 'flak',
+            col: '#ffd23c'
+          });
+        }
+      } else if (key === 'chin_lasers') {
+        for (let i = 0; i < 6; i++) {
+          setTimeout(() => {
+            if (!boss) return;
+            enemyBullets.push({
+              x: boss.x - boss.w * 0.45,
+              y: boss.y - 10 + (i % 2) * 20,
+              vx: -480,
+              vy: 0,
+              r: 6,
+              type: 'chin_laser',
+              col: '#ff0033'
+            });
+          }, i * 80);
+        }
+      } else if (key === 'temple' || key === 'artillery') {
+        for (let i = 0; i < 8; i++) {
+          setTimeout(() => {
+            if (!boss) return;
+            enemyBullets.push({
+              x: boss.x - boss.w * 0.3,
+              y: boss.y + (Math.random() - 0.5) * 60,
+              vx: -400 - Math.random() * 100,
+              vy: (Math.random() - 0.5) * 140,
+              r: 6,
+              type: 'laser',
+              col: '#ffd23c'
+            });
+          }, i * 70);
+        }
+      }
+    }
+
+    function popupText(x, y, text, col = '#ffd23c') {
+      floatingTexts.push({ x, y, text, col, life: 1.0 });
+    }
+
+    // 60 FPS Game Physics & Update Loop
+    let lastTime = performance.now();
+    function gameLoop(now) {
+      const dt = Math.min(0.1, ((now - lastTime) / 1000) * gameSpeed);
+      lastTime = now;
+      animTime += dt;
+
+      if (isAutoTour) {
+        autoTourTimer += dt;
+        const p = Math.min(100, (autoTourTimer / TOUR_DURATION) * 100);
+        document.getElementById('timelineBar').style.width = `${p}%`;
+        if (autoTourTimer >= TOUR_DURATION) {
+          autoTourTimer = 0;
+          currentIdx = (currentIdx + 1) % BOSS_DATA.length;
+          selectBoss(currentIdx, false);
+        }
+      } else {
+        document.getElementById('timelineBar').style.width = '100%';
+      }
+
+      const rect = canvas.getBoundingClientRect();
+      const W = rect.width || 800, H = rect.height || 450;
+
+      // Update Player Status Indicators
+      if (ship.burnT > 0) {
+        ship.burnT -= dt;
+        document.getElementById('statusBurn').classList.remove('hidden');
+        document.getElementById('statusNormal').classList.add('hidden');
+        // Spawn fire embers
+        particles.push({
+          x: ship.x - 10 + Math.random() * 20,
+          y: ship.y - 10 + Math.random() * 20,
+          vx: -60 - Math.random() * 40,
+          vy: (Math.random() - 0.5) * 40,
+          col: Math.random() < 0.5 ? '#ff4500' : '#ffd23c',
+          life: 0.6
+        });
+      } else {
+        document.getElementById('statusBurn').classList.add('hidden');
+      }
+
+      if (ship.freezeT > 0) {
+        ship.freezeT -= dt;
+        document.getElementById('statusFreeze').classList.remove('hidden');
+        document.getElementById('statusNormal').classList.add('hidden');
+        // Spawn ice sparkles
+        particles.push({
+          x: ship.x - 12 + Math.random() * 24,
+          y: ship.y - 12 + Math.random() * 24,
+          vx: (Math.random() - 0.5) * 20,
+          vy: (Math.random() - 0.5) * 20,
+          col: '#38bdf8',
+          life: 0.5
+        });
+      } else {
+        document.getElementById('statusFreeze').classList.add('hidden');
+      }
+
+      if (ship.burnT <= 0 && ship.freezeT <= 0) {
+        document.getElementById('statusNormal').classList.remove('hidden');
+      }
+
+      // Update Player Ship AI Maneuver & Firing (Freeze locks movement)
+      if (ship.freezeT <= 0) {
+        ship.y = H * 0.5 + Math.sin(animTime * 2.2) * 60;
+      }
+      
+      ship.shootTimer += dt;
+      if (ship.shootTimer >= 0.28) {
+        ship.shootTimer = 0;
+        // Fire Broadside Cannonballs
+        playerBullets.push({ x: ship.x + 35, y: ship.y - 12, vx: 520, vy: -30, r: 6 });
+        playerBullets.push({ x: ship.x + 35, y: ship.y + 12, vx: 520, vy: 30, r: 6 });
+      }
+
+      // Update Boss
+      if (boss) {
+        boss.y += boss.vy * dt;
+        if (boss.y < H * 0.28) { boss.y = H * 0.28; boss.vy = Math.abs(boss.vy); }
+        if (boss.y > H * 0.72) { boss.y = H * 0.72; boss.vy = -Math.abs(boss.vy); }
+
+        if (boss.beamActive > 0) boss.beamActive -= dt;
+        if (boss.scytheActive > 0) boss.scytheActive -= dt;
+        if (boss.lanceActive > 0) boss.lanceActive -= dt;
+        if (boss.superlaser > 0) boss.superlaser -= dt;
+
+        if (boss.tractorT > 0) {
+          boss.tractorT -= dt;
+          const dishWorldX = boss.x - boss.w * 0.12;
+          const dishWorldY = boss.y - boss.h * 0.15;
+          const tdx = dishWorldX - ship.x;
+          const tdy = dishWorldY - ship.y;
+          const tdist = Math.hypot(tdx, tdy) || 1;
+          ship.x += (tdx / tdist) * 240 * dt;
+          ship.y += (tdy / tdist) * 240 * dt;
+          screenShake = Math.max(screenShake, 5);
+        }
+        if (boss.forcePulseT > 0) {
+          boss.forcePulseT -= dt;
+          boss.forcePulseRadius += dt * 140;
+        }
+
+        // Handle Trio Updates & Merging Singularity
+        if (boss.type === 'trio') {
+          if (boss.isMerging) {
+            boss.mergeT -= dt;
+            const targetX = boss.x;
+            const targetY = boss.y;
+            screenShake = Math.max(screenShake, 8);
+
+            // Pull 3 sub-ships toward the center
+            if (boss.trio) {
+              boss.trio.forEach(sub => {
+                sub.x += (targetX - sub.x) * dt * 4.5;
+                sub.y += (targetY - sub.y) * dt * 4.5;
+              });
+            }
+
+            // Lightning vortex particles
+            for (let k = 0; k < 3; k++) {
+              const ang = Math.random() * Math.PI * 2;
+              const rad = 30 + Math.random() * 80;
+              particles.push({
+                x: targetX + Math.cos(ang) * rad,
+                y: targetY + Math.sin(ang) * rad,
+                vx: -Math.cos(ang) * 160,
+                vy: -Math.sin(ang) * 160,
+                col: ['#ff4500', '#38bdf8', '#c084fc'][Math.floor(Math.random() * 3)],
+                life: 0.4
+              });
+            }
+
+            if (boss.mergeT <= 0) {
+              boss.isMerging = false;
+              boss.isMerged = true;
+              boss.name = 'OVERLORD TRINITY: SITH TRI-ELEMENTAL ECLIPSE COLOSSUS';
+              boss.w = 340;
+              boss.h = 190;
+              boss.superlaser = 3.5;
+              showCombatBanner('💥 OVERLORD TRINITY EMERGES! COMPOSITE SUPERLASER FIRING!');
+            }
+          } else if (!boss.isMerged && boss.trio) {
+            // Update individual sub-ships
+            boss.trio.forEach((sub, sIdx) => {
+              sub.y = sub.baseY + Math.sin(animTime * 2.5 + sIdx * 1.5) * 18;
+              sub.shootT -= dt;
+              if (sub.shootT <= 0) {
+                if (sub.id === 'ignis') {
+                  sub.shootT = 1.6;
+                  enemyBullets.push({
+                    x: sub.x - 30, y: sub.y,
+                    vx: -260, vy: (Math.random() - 0.5) * 40,
+                    r: 9, type: 'magma_mortar', col: '#ff4500'
+                  });
+                } else if (sub.id === 'glacies') {
+                  sub.shootT = 2.2;
+                  for (let k = -1; k <= 1; k++) {
+                    enemyBullets.push({
+                      x: sub.x - 35, y: sub.y + k * 14,
+                      vx: -350, vy: k * 35,
+                      r: 6, type: 'cryo_lance', col: '#38bdf8'
+                    });
+                  }
+                } else if (sub.id === 'fulgur') {
+                  sub.shootT = 0.32;
+                  enemyBullets.push({
+                    x: sub.x - 35, y: sub.y + (Math.random() - 0.5) * 16,
+                    vx: -480, vy: (Math.random() - 0.5) * 60,
+                    r: 4, type: 'kyber_bolt', col: '#c084fc'
+                  });
+                }
+              }
+
+              // Check if sub-ship falls below 25% HP
+              if (sub.hp <= sub.maxhp * 0.25 && !boss.isMerging && !boss.isMerged) {
+                boss.isMerging = true;
+                boss.mergeT = 2.5;
+                showCombatBanner('⚡ CRITICAL DAMAGE DETECTED: TRI-ELEMENTAL FUSION ENGAGED!');
+              }
+            });
+          }
+        }
+
+        // Automatic Signature Attack Cycle for other bosses
+        boss.shootT -= dt;
+        if (boss.shootT <= 0) {
+          boss.shootT = 2.5;
+          boss.subAtk = (boss.subAtk + 1) % 3;
+          const bDef = BOSS_DATA[currentIdx];
+          const move = bDef.moves[boss.subAtk % bDef.moves.length];
+          triggerActionMove(move.key, move.name);
+        }
+
+        // Update Clones
+        if (boss.clones) {
+          boss.clones.forEach((c, idx) => {
+            c.angle = (c.angle || 0) + 0.03;
+            c.x = boss.x + Math.cos(c.angle + (idx / 5) * Math.PI * 2) * 110;
+            c.y = boss.y + Math.sin(c.angle + (idx / 5) * Math.PI * 2) * 75;
+          });
+        }
+      }
+
+      // Update Player Bullets & Collision
+      for (let i = playerBullets.length - 1; i >= 0; i--) {
+        const pb = playerBullets[i];
+        pb.x += pb.vx * dt;
+        pb.y += pb.vy * dt;
+
+        // Force deflection on Ataraxia
+        if (boss && boss.type === 'ataraxia' && boss.forcePulseT > 0) {
+          const dx = pb.x - boss.x, dy = pb.y - boss.y;
+          if (Math.hypot(dx, dy) < boss.forcePulseRadius + 10) {
+            pb.vx = -pb.vx * 1.2;
+            popupText(pb.x, pb.y, 'FORCE DEFLECTED!', '#00ffee');
+            continue;
+          }
+        }
+
+        // Trio Sub-ship Collisions
+        if (boss && boss.type === 'trio' && !boss.isMerged && !boss.isMerging && boss.trio) {
+          let hitSub = false;
+          for (let sIdx = 0; sIdx < boss.trio.length; sIdx++) {
+            const sub = boss.trio[sIdx];
+            if (Math.abs(pb.x - sub.x) < 45 && Math.abs(pb.y - sub.y) < 30) {
+              sub.hp = Math.max(1, sub.hp - 2.5);
+              playerBullets.splice(i, 1);
+              hitSub = true;
+              
+              const totalHp = boss.trio.reduce((acc, s) => acc + s.hp, 0);
+              const totalMax = boss.trio.reduce((acc, s) => acc + s.maxhp, 0);
+              document.getElementById('hudHpBar').style.width = `${(totalHp / totalMax) * 100}%`;
+              document.getElementById('hudHpText').textContent = `${Math.ceil(totalHp)} / ${totalMax} HP`;
+              
+              for (let k = 0; k < 3; k++) {
+                particles.push({
+                  x: pb.x, y: pb.y,
+                  vx: (Math.random() - 0.5) * 150, vy: (Math.random() - 0.5) * 150,
+                  col: sub.col, life: 0.4
+                });
+              }
+              popupText(pb.x, pb.y - 10, `-20 HIT!`, sub.col);
+              break;
+            }
+          }
+          if (hitSub) continue;
+        }
+
+        // Collision with Boss
+        if (boss && Math.abs(pb.x - boss.x) < boss.w * 0.45 && Math.abs(pb.y - boss.y) < boss.h * 0.45) {
+          playerBullets.splice(i, 1);
+          boss.hp = Math.max(5, boss.hp - 1.5);
+          if (boss.hp <= 5) boss.hp = boss.maxhp; // loop health
+          
+          const hpRatio = boss.hp / boss.maxhp;
+          document.getElementById('hudHpBar').style.width = `${hpRatio * 100}%`;
+          document.getElementById('hudHpText').textContent = `${Math.ceil(boss.hp)} / ${boss.maxhp} HP`;
+
+          // Hit spark particles
+          for (let k = 0; k < 4; k++) {
+            particles.push({
+              x: pb.x, y: pb.y,
+              vx: (Math.random() - 0.5) * 180, vy: (Math.random() - 0.5) * 180,
+              col: '#ffd23c', life: 0.5
+            });
+          }
+          if (Math.random() < 0.25) popupText(pb.x, pb.y - 10, '-24 CRIT!', '#ff3344');
+          continue;
+        }
+
+        if (pb.x > W + 50) playerBullets.splice(i, 1);
+      }
+
+      // Update Enemy Bullets
+      for (let i = enemyBullets.length - 1; i >= 0; i--) {
+        const eb = enemyBullets[i];
+        eb.x += (eb.vx || -240) * dt;
+        eb.y += (eb.vy || 0) * dt;
+        if (eb.x < -100 || eb.x > W + 100 || eb.y < -100 || eb.y > H + 100) {
+          enemyBullets.splice(i, 1);
+        }
+      }
+
+      // Update Floating Texts
+      for (let i = floatingTexts.length - 1; i >= 0; i--) {
+        const ft = floatingTexts[i];
+        ft.y -= dt * 25;
+        ft.life -= dt * 1.2;
+        if (ft.life <= 0) floatingTexts.splice(i, 1);
+      }
+
+      // Screen Shake Decay
+      if (screenShake > 0) screenShake -= dt * 25;
+
+      // Draw Everything
+      cx.save();
+      if (screenShake > 0) {
+        cx.translate((Math.random() - 0.5) * screenShake, (Math.random() - 0.5) * screenShake);
+      }
+
+      cx.clearRect(0, 0, W, H);
+      drawSpaceBackground(cx, W, H, animTime);
+      drawPlayerGalleon(cx, ship.x, ship.y, animTime);
+
+      // Draw Escorts
+      if (escorts && escorts.length > 0) {
+        escorts.forEach((esc, ei) => {
+          const ey = esc.y + Math.sin(animTime * 4 + ei) * 15;
+          cx.save();
+          cx.translate(esc.x, ey);
+          if (esc.type === 'tie') {
+            // TIE Fighter Vector
+            cx.fillStyle = '#1e293b'; cx.fillRect(-12, -10, 4, 20); cx.fillRect(8, -10, 4, 20);
+            cx.fillStyle = '#64748b'; cx.beginPath(); cx.arc(0, 0, 6, 0, Math.PI * 2); cx.fill();
+            cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(0, 0, 2, 0, Math.PI * 2); cx.fill();
+          } else if (esc.type === 'vector') {
+            // Jedi Vector Starfighter
+            cx.fillStyle = '#f8fafc';
+            cx.beginPath(); cx.moveTo(-16, 0); cx.lineTo(14, -10); cx.lineTo(14, 10); cx.closePath(); cx.fill();
+            cx.strokeStyle = '#dc2626'; cx.lineWidth = 1.2; cx.stroke();
+            cx.fillStyle = '#00ffee'; cx.beginPath(); cx.arc(14, 0, 3, 0, Math.PI * 2); cx.fill();
+          }
+          cx.restore();
+        });
+      }
+
+      // Draw Active Boss with Exact 1:1 Engine Code!
+      const t = animTime;
   if (boss) {
     cx.save(); cx.translate(boss.x, boss.y);
 
@@ -1587,3 +2684,195 @@
 
     cx.restore();
   }
+
+      // Draw Projectiles
+      drawProjectiles(cx, animTime);
+
+      // Draw Floating Combat Texts
+      floatingTexts.forEach(ft => {
+        cx.save();
+        cx.globalAlpha = Math.max(0, ft.life);
+        cx.font = 'bold 11px "Orbitron", sans-serif';
+        cx.fillStyle = ft.col;
+        cx.shadowColor = ft.col;
+        cx.shadowBlur = 6;
+        cx.textAlign = 'center';
+        cx.fillText(ft.text, ft.x, ft.y);
+        cx.restore();
+      });
+
+      cx.restore();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function drawSpaceBackground(cx, W, H, t) {
+      // Cosmic Deep Void
+      const bg = cx.createLinearGradient(0, 0, W, H);
+      bg.addColorStop(0, '#020617'); bg.addColorStop(0.5, '#080e22'); bg.addColorStop(1, '#020617');
+      cx.fillStyle = bg; cx.fillRect(0, 0, W, H);
+
+      // Glowing Cyan Gas Giant Planet
+      cx.save();
+      const pg = cx.createRadialGradient(W * 0.85, H * 0.22, 10, W * 0.85, H * 0.22, 120);
+      pg.addColorStop(0, '#38bdf8'); pg.addColorStop(0.5, '#1e3a8a'); pg.addColorStop(1, '#020617');
+      cx.fillStyle = pg;
+      cx.beginPath(); cx.arc(W * 0.85, H * 0.22, 85, 0, Math.PI * 2); cx.fill();
+
+      // Giant Ring System
+      cx.strokeStyle = 'rgba(56, 189, 248, 0.4)'; cx.lineWidth = 8;
+      cx.beginPath(); cx.ellipse(W * 0.85, H * 0.22, 150, 32, -Math.PI / 7, 0, Math.PI * 2); cx.stroke();
+      cx.restore();
+
+      // Animated Speed Lines & Star Dust
+      cx.fillStyle = '#ffffff';
+      for (let i = 0; i < 50; i++) {
+        const sx = ((i * 43 + t * 90 * ((i % 4) + 1)) % (W + 100));
+        const sy = (i * 31) % H;
+        const len = 4 + (i % 4) * 8;
+        cx.globalAlpha = 0.25 + Math.sin(t * 6 + i) * 0.25;
+        cx.fillRect(W - sx, sy, len, 1.5);
+      }
+      cx.globalAlpha = 1.0;
+    }
+
+    function drawPlayerGalleon(cx, x, y, t) {
+      cx.save();
+      cx.translate(x, y);
+
+      // Golden Photonic Engine Trail
+      const sg = cx.createRadialGradient(0, 0, 10, 0, 0, 48);
+      sg.addColorStop(0, 'rgba(255, 210, 60, 0.45)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      cx.fillStyle = sg; cx.beginPath(); cx.arc(0, 0, 48, 0, Math.PI * 2); cx.fill();
+
+      // Wooden Naval Hull
+      const hg = cx.createLinearGradient(-35, 0, 35, 0);
+      hg.addColorStop(0, '#78350f'); hg.addColorStop(0.5, '#b45309'); hg.addColorStop(1, '#f59e0b');
+      cx.fillStyle = hg;
+      cx.beginPath();
+      cx.moveTo(42, 0);
+      cx.lineTo(-24, -20);
+      cx.lineTo(-35, -14);
+      cx.lineTo(-35, 14);
+      cx.lineTo(-24, 20);
+      cx.closePath(); cx.fill();
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2.4; cx.stroke();
+
+      // Photonic Solar Sails
+      for (const sDir of [-1, 1]) {
+        cx.fillStyle = 'rgba(0, 229, 255, 0.8)';
+        cx.beginPath();
+        cx.moveTo(-6, sDir * 6);
+        cx.quadraticCurveTo(18, sDir * 18, -6, sDir * 32);
+        cx.lineTo(-12, sDir * 6);
+        cx.closePath(); cx.fill();
+        cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.4; cx.stroke();
+      }
+
+      // Pirate Skull Flag
+      cx.fillStyle = '#0f172a'; cx.fillRect(-32, -8, 14, 16);
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(-25, 0, 3, 0, Math.PI * 2); cx.fill();
+
+      // Frosted ice hull overlay if frozen
+      if (ship.freezeT > 0) {
+        cx.fillStyle = 'rgba(56, 189, 248, 0.45)';
+        cx.beginPath(); cx.arc(0, 0, 36, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#a5f3fc'; cx.lineWidth = 2; cx.stroke();
+      }
+
+      cx.restore();
+    }
+
+    function drawProjectiles(cx, t) {
+      // Player Broadside Cannonballs
+      playerBullets.forEach(pb => {
+        cx.save();
+        cx.fillStyle = '#ffd23c';
+        cx.shadowColor = '#f59e0b'; cx.shadowBlur = 8;
+        cx.beginPath(); cx.arc(pb.x, pb.y, pb.r, 0, Math.PI * 2); cx.fill();
+        // Smoke Puff Trail
+        cx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        cx.beginPath(); cx.arc(pb.x - 8, pb.y, pb.r * 0.6, 0, Math.PI * 2); cx.fill();
+        cx.restore();
+      });
+
+      // Enemy Specialized Bullets
+      enemyBullets.forEach(eb => {
+        cx.save();
+        if (eb.type === 'magma_mortar') {
+          // Fiery Lava Mortar
+          cx.fillStyle = '#ff4500';
+          cx.shadowColor = '#ff2200'; cx.shadowBlur = 14;
+          cx.beginPath(); cx.arc(eb.x, eb.y, eb.r + Math.sin(t * 20) * 2, 0, Math.PI * 2); cx.fill();
+          cx.fillStyle = '#ffd23c'; cx.beginPath(); cx.arc(eb.x + 2, eb.y, eb.r * 0.5, 0, Math.PI * 2); cx.fill();
+        } else if (eb.type === 'cryo_lance') {
+          // Sharp Ice Crystal Lance
+          cx.fillStyle = '#38bdf8';
+          cx.shadowColor = '#a5f3fc'; cx.shadowBlur = 10;
+          cx.beginPath();
+          cx.moveTo(eb.x - 14, eb.y); cx.lineTo(eb.x + 10, eb.y - 5); cx.lineTo(eb.x + 6, eb.y); cx.lineTo(eb.x + 10, eb.y + 5);
+          cx.closePath(); cx.fill();
+          cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.2; cx.stroke();
+        } else if (eb.type === 'kyber_bolt') {
+          // Lightning Bolt
+          cx.fillStyle = '#c084fc';
+          cx.shadowColor = '#e879f9'; cx.shadowBlur = 12;
+          cx.fillRect(eb.x - 16, eb.y - 3, 32, 6);
+          cx.fillStyle = '#ffffff'; cx.fillRect(eb.x - 12, eb.y - 1.5, 24, 3);
+        } else if (eb.type === 'bacteria_macro') {
+          // Wobbly Amoeba Bio-Blob
+          cx.fillStyle = 'rgba(16, 185, 129, 0.85)';
+          cx.shadowColor = '#00ffaa'; cx.shadowBlur = 12;
+          cx.beginPath();
+          cx.arc(eb.x, eb.y, eb.r + Math.sin(t * 15) * 4, 0, Math.PI * 2);
+          cx.fill();
+          cx.strokeStyle = '#34d399'; cx.lineWidth = 2.5; cx.stroke();
+          // Nucleus
+          cx.fillStyle = '#022c22';
+          cx.beginPath(); cx.arc(eb.x - 4, eb.y - 4, eb.r * 0.35, 0, Math.PI * 2); cx.fill();
+        } else if (eb.type === 'bacteria_micro') {
+          // Squiggling Micro-Bacteria Spore
+          cx.fillStyle = '#84cc16';
+          cx.shadowColor = '#00ffaa'; cx.shadowBlur = 8;
+          cx.beginPath(); cx.ellipse(eb.x, eb.y, eb.r, eb.r * 0.5, Math.sin(t * 20), 0, Math.PI * 2); cx.fill();
+        } else if (eb.type === 'chin_laser') {
+          cx.fillStyle = '#ff0033';
+          cx.shadowColor = '#ff0033'; cx.shadowBlur = 10;
+          cx.fillRect(eb.x - 14, eb.y - 3, 28, 6);
+          cx.fillStyle = '#ffffff'; cx.fillRect(eb.x - 10, eb.y - 1.5, 20, 3);
+        } else if (eb.type === 'torpedo') {
+          cx.fillStyle = '#f59e0b';
+          cx.shadowColor = '#f59e0b'; cx.shadowBlur = 8;
+          cx.beginPath(); cx.arc(eb.x, eb.y, eb.r, 0, Math.PI * 2); cx.fill();
+          cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(eb.x + 4, eb.y, 3, 0, Math.PI * 2); cx.fill();
+        } else if (eb.type === 'mine') {
+          cx.fillStyle = '#ef4444';
+          cx.shadowColor = '#ef4444'; cx.shadowBlur = 12;
+          cx.beginPath(); cx.arc(eb.x, eb.y, eb.r, 0, Math.PI * 2); cx.fill();
+          cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2; cx.stroke();
+          if (Math.sin(t * 20) > 0) {
+            cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(eb.x, eb.y, 4, 0, Math.PI * 2); cx.fill();
+          }
+        } else {
+          cx.fillStyle = eb.col || '#ef4444';
+          cx.shadowColor = eb.col || '#ef4444'; cx.shadowBlur = 8;
+          cx.beginPath(); cx.arc(eb.x, eb.y, eb.r, 0, Math.PI * 2); cx.fill();
+        }
+        cx.restore();
+      });
+
+      // Particles
+      particles.forEach(p => {
+        cx.fillStyle = p.col;
+        cx.globalAlpha = p.life;
+        cx.beginPath(); cx.arc(p.x, p.y, 2, 0, Math.PI * 2); cx.fill();
+      });
+      cx.globalAlpha = 1.0;
+    }
+
+    // Initialize
+    resize();
+    selectBoss(0);
+    requestAnimationFrame(gameLoop);
+  </script>
+</body>
+</html>
