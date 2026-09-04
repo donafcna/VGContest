@@ -257,6 +257,123 @@
     transform: scale(1.02);
   }
 
+  /* Pirate Fleet Ship Upgrades Selector & Modern Cards */
+  .fleet-upg-tabs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 6px 4px 14px;
+    margin-bottom: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: #ffd23c rgba(0,0,0,0.5);
+  }
+  .fleet-upg-tab {
+    flex: 1;
+    min-width: 145px;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.75));
+    border: 1.5px solid rgba(255, 210, 60, 0.25);
+    border-radius: 14px;
+    padding: 10px 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+    text-align: center;
+  }
+  .fleet-upg-tab:hover {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 0.85));
+    border-color: rgba(255, 210, 60, 0.7);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  }
+  .fleet-upg-tab.active {
+    background: linear-gradient(135deg, rgba(255, 210, 60, 0.22), rgba(56, 189, 248, 0.18));
+    border-color: #ffd23c;
+    box-shadow: 0 0 20px rgba(255, 210, 60, 0.45);
+    transform: translateY(-2px);
+  }
+  .fleet-upg-tab .tab-svg {
+    width: 65px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fleet-upg-tab .tab-svg svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+  }
+  .fleet-upg-tab .tab-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .fleet-upg-tab .tab-status {
+    font-size: 0.68rem;
+    font-family: 'Orbitron', sans-serif;
+    color: #38bdf8;
+    font-weight: 800;
+  }
+  .fleet-upg-tab .tab-inflight {
+    background: #10b981;
+    color: #04240f;
+    font-size: 0.60rem;
+    font-weight: 900;
+    padding: 1px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+  .fleet-upg-ship-banner {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
+    border: 2px solid #ffd23c;
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 0 25px rgba(255, 210, 60, 0.25);
+  }
+  .fleet-stat-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .fleet-stat-badge {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 0.76rem;
+    font-family: 'Orbitron', sans-serif;
+    color: #cfe4ff;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .upg-bar-track {
+    width: 100%;
+    height: 7px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 5px;
+  }
+  .upg-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00e5ff, #00ffaa);
+    border-radius: 3px;
+    box-shadow: 0 0 8px rgba(0, 255, 170, 0.5);
+  }
+
   /* Roblox Grow a Garden Style Lucky Spin Wheel Modal */
   .spin-card {
     background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.99));
@@ -1901,13 +2018,13 @@ let meteorStrikes = []; // [{x, y, targetY, vy, delay, size, col}]
 let fondorScythesT = 0;
 let flakPods = []; // [{x, y, vx, vy, fuse, maxFuse, exploded, radius, col}]
 
-function hasGadget() {
-  const u = SAVE.data.upg || {};
+function hasGadget(shipId) {
+  const u = getShipUpg(shipId);
   return (u.hull >= 8 || u.cannon >= 8 || u.engine >= 8 || u.magnet >= 8);
 }
 
-function hasSuper() {
-  const u = SAVE.data.upg || {};
+function hasSuper(shipId) {
+  const u = getShipUpg(shipId);
   return (u.hull >= 10 || u.cannon >= 10 || u.engine >= 10 || u.magnet >= 10);
 }
 
@@ -2281,6 +2398,23 @@ window.activateSuper = activateSuper;
 // ---------- PROGRESSION / SAVE / UPGRADES ----------
 const ALL_SHIP_IDS = ['cutter', 'galleon', 'runner', 'hind', 'storm'];
 
+let activeUpgradeShip = 'cutter';
+
+function getShipUpg(shipId) {
+  const sid = shipId || (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
+  if (!SAVE || !SAVE.data) return { hull: 10, cannon: 10, engine: 10, magnet: 10 };
+  if (!SAVE.data.shipUpg) SAVE.data.shipUpg = {};
+  if (!SAVE.data.shipUpg[sid]) {
+    SAVE.data.shipUpg[sid] = {
+      hull: (SAVE.data.upg && typeof SAVE.data.upg.hull === 'number') ? SAVE.data.upg.hull : 10,
+      cannon: (SAVE.data.upg && typeof SAVE.data.upg.cannon === 'number') ? SAVE.data.upg.cannon : 10,
+      engine: (SAVE.data.upg && typeof SAVE.data.upg.engine === 'number') ? SAVE.data.upg.engine : 10,
+      magnet: (SAVE.data.upg && typeof SAVE.data.upg.magnet === 'number') ? SAVE.data.upg.magnet : 10,
+    };
+  }
+  return SAVE.data.shipUpg[sid];
+}
+
 const SAVE = {
   data: {
     uid: '',
@@ -2290,6 +2424,13 @@ const SAVE = {
     spins: 99,
     skin: 'default',
     upg: { hull: 10, cannon: 10, engine: 10, magnet: 10 },
+    shipUpg: {
+      cutter: { hull: 10, cannon: 10, engine: 10, magnet: 10 },
+      runner: { hull: 10, cannon: 10, engine: 10, magnet: 10 },
+      galleon: { hull: 10, cannon: 10, engine: 10, magnet: 10 },
+      hind: { hull: 10, cannon: 10, engine: 10, magnet: 10 },
+      storm: { hull: 10, cannon: 10, engine: 10, magnet: 10 },
+    },
     ships: ['cutter', 'galleon', 'runner', 'hind', 'storm'],
     sel: 'cutter'
   },
@@ -2299,8 +2440,16 @@ const SAVE = {
       if (d) {
         this.data = Object.assign(this.data, d);
         this.data.upg = Object.assign({ hull: 10, cannon: 10, engine: 10, magnet: 10 }, d.upg || {});
-        // Ensure Creator Vault has all ships, skins & max currency
+        this.data.shipUpg = this.data.shipUpg || {};
         for (const sid of ALL_SHIP_IDS) {
+          if (!this.data.shipUpg[sid]) {
+            this.data.shipUpg[sid] = {
+              hull: (d.shipUpg && d.shipUpg[sid] && typeof d.shipUpg[sid].hull === 'number') ? d.shipUpg[sid].hull : (this.data.upg.hull || 10),
+              cannon: (d.shipUpg && d.shipUpg[sid] && typeof d.shipUpg[sid].cannon === 'number') ? d.shipUpg[sid].cannon : (this.data.upg.cannon || 10),
+              engine: (d.shipUpg && d.shipUpg[sid] && typeof d.shipUpg[sid].engine === 'number') ? d.shipUpg[sid].engine : (this.data.upg.engine || 10),
+              magnet: (d.shipUpg && d.shipUpg[sid] && typeof d.shipUpg[sid].magnet === 'number') ? d.shipUpg[sid].magnet : (this.data.upg.magnet || 10),
+            };
+          }
           if (!this.data.ships.includes(sid)) this.data.ships.push(sid);
         }
         if (this.data.coins < 99999) this.data.coins = 99999;
@@ -2316,6 +2465,7 @@ const SAVE = {
         this.data.uid = localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36));
         localStorage.setItem('sp_uid', this.data.uid);
       }
+      activeUpgradeShip = this.data.sel || 'cutter';
       this.save();
     } catch (e) {}
   },
@@ -2498,13 +2648,15 @@ const SKINS = [
 function skinById(id) { return SKINS.find(k => k.id === id) || SKINS[0]; }
 function shipById(id) { return SHIPS.find(s => s.id === id) || SHIPS[0]; }
 
-function computeLoadout() {
-  const s = shipById(SAVE.data.sel), u = SAVE.data.upg || {};
+function computeLoadout(shipId) {
+  const sid = shipId || (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
+  const s = shipById(sid);
+  const u = getShipUpg(sid);
   let cols = s.cols ? [...s.cols] : ['#c88a55', '#8c5528', '#3b1c06'];
   const sk = skinById(SAVE.data.skin);
   if (sk && sk.cols && SAVE.data.kills >= sk.kills) cols = [...sk.cols];
   const cannonLv = Math.min(10, u.cannon || 0);
-  const cool = Math.max(0.20, (s.cool || 0.32) - cannonLv * 0.012);
+  const cool = Math.max(0.12, (s.cool || 0.32) - cannonLv * 0.012);
   return {
     maxHp: (s.hp || 5) + (u.hull || 0),
     baseCool: cool,
@@ -5457,26 +5609,87 @@ function buildShop() {
     `<div class="lv" style="color:#c084fc">9 Sector Flagships Documented 👾</div></div>` +
     `<button style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;box-shadow:0 0 15px rgba(0,229,255,0.5)" onclick="openBossIntelModal(event)">🔬 INSPECT</button></div>`;
 
-  // 1. COIN UPGRADES AT THE TOP
-  h += '<h2>⚙️ SOLAR GALLEON UPGRADES — Buy with Coins 🪙</h2>';
+  // 1. PIRATE FLEET SHIP UPGRADES (Customizable for every ship!)
+  h += '<h2>⚙️ PIRATE FLEET SHIP UPGRADES — Customize Every Ship 🪙</h2>';
+
+  // Ship Selector Tabs Bar
+  h += `<div class="fleet-upg-tabs">`;
+  for (const s of SHIPS) {
+    const isAct = activeUpgradeShip === s.id;
+    const isSel = SAVE.data.sel === s.id;
+    const uShip = getShipUpg(s.id);
+    const totLv = (uShip.hull || 0) + (uShip.cannon || 0) + (uShip.engine || 0) + (uShip.magnet || 0);
+    const tabSvg = getShipSvg(s.id, s.cols);
+    h += `<div class="fleet-upg-tab${isAct ? ' active' : ''}" data-select-upg-ship="${s.id}">` +
+      `<div class="tab-svg">${tabSvg}</div>` +
+      `<div class="tab-name">${s.name.split(' (')[0]}</div>` +
+      (isSel ? `<div class="tab-inflight">✔ IN FLIGHT</div>` : '') +
+      `<div class="tab-status" style="color:${totLv === 40 ? '#ffd23c' : '#38bdf8'}">${totLv === 40 ? '👑 MAXED' : `★ Lv ${totLv}/40`}</div>` +
+      `</div>`;
+  }
+  h += `</div>`;
+
+  // Selected Ship Blueprint & Live Stats Banner
+  const curUpgShip = shipById(activeUpgradeShip);
+  const curShipUpg = getShipUpg(activeUpgradeShip);
+  const curLoadout = computeLoadout(activeUpgradeShip);
+  const isCurrentlyInFlight = SAVE.data.sel === activeUpgradeShip;
+  const isShipOwned = SAVE.data.ships.includes(activeUpgradeShip);
+  const curSvg = getShipSvg(curUpgShip.id, curUpgShip.cols);
+
+  h += `<div class="fleet-upg-ship-banner" style="border-color:${curUpgShip.cols[0] || '#ffd23c'};">` +
+    `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">` +
+      `<div style="display:flex;align-items:center;gap:14px">` +
+        `<div style="width:80px;height:52px;background:rgba(0,0,0,0.4);border-radius:10px;padding:4px;display:flex;align-items:center;justify-content:center;border:1px solid ${curUpgShip.cols[0]}55">${curSvg}</div>` +
+        `<div>` +
+          `<div style="font-family:'Orbitron',sans-serif;font-size:1.15rem;font-weight:900;color:${curUpgShip.cols[0] || '#ffd23c'}">${curUpgShip.name}</div>` +
+          `<div style="font-size:0.80rem;color:#cfe4ff;margin-top:2px">${curUpgShip.power}</div>` +
+        `</div>` +
+      `</div>` +
+      `<div>` +
+        (isCurrentlyInFlight
+          ? `<button class="sel" disabled style="padding:8px 16px;font-size:0.85rem">✔ ACTIVE IN FLIGHT</button>`
+          : (isShipOwned
+              ? `<button data-buy="sel" data-key="${curUpgShip.id}" style="background:linear-gradient(135deg,#38bdf8,#6366f1);color:#fff;padding:8px 16px;font-size:0.85rem">⚡ EQUIP FOR FLIGHT</button>`
+              : `<button class="locked" data-buy="ship" data-key="${curUpgShip.id}" style="padding:8px 16px;font-size:0.85rem">🎟️ UNLOCK SHIP (${curUpgShip.cost})</button>`
+            )
+        ) +
+      `</div>` +
+    `</div>` +
+    `<div class="fleet-stat-badges">` +
+      `<div class="fleet-stat-badge" style="border-color:rgba(0,255,170,0.3)"><span style="color:#00ffaa">🛡️ Total HP:</span> <b>${curLoadout.maxHp} HP</b> <span style="opacity:0.75;font-size:0.70rem">(${curUpgShip.hp} Base + ${curShipUpg.hull} Upg)</span></div>` +
+      `<div class="fleet-stat-badge" style="border-color:rgba(255,210,60,0.3)"><span style="color:#ffd23c">💥 Fire Rate:</span> <b>${(1 / curLoadout.baseCool).toFixed(1)} rps</b> <span style="opacity:0.75;font-size:0.70rem">(${(1 / curUpgShip.cool).toFixed(1)} Base + Lv ${curShipUpg.cannon})</span></div>` +
+      `<div class="fleet-stat-badge" style="border-color:rgba(56,189,248,0.3)"><span style="color:#38bdf8">🚀 Sublight Speed:</span> <b>${curLoadout.spdMul.toFixed(2)}x</b> <span style="opacity:0.75;font-size:0.70rem">(${curUpgShip.spd.toFixed(2)}x Base + Lv ${curShipUpg.engine})</span></div>` +
+      `<div class="fleet-stat-badge" style="border-color:rgba(192,132,252,0.3)"><span style="color:#c084fc">🧲 Salvage Magnet:</span> <b>+${curLoadout.magnetBonus}px</b> <span style="opacity:0.75;font-size:0.70rem">(${curUpgShip.magnet || 0}px Base + Lv ${curShipUpg.magnet})</span></div>` +
+    `</div>` +
+    `<div style="margin-top:10px;padding-top:8px;border-top:1px dashed rgba(255,255,255,0.12);display:flex;flex-wrap:wrap;gap:12px;font-size:0.76rem">` +
+      `<div><b>🟢 Gadget [Q]:</b> ${curUpgShip.gadgetName} — ${hasGadget(activeUpgradeShip) ? '<span style="color:#34d399;font-weight:bold">✔ READY (3 Charges)</span>' : '<span style="color:#94a3b8">🔒 Reach Lv 8 on any upgrade</span>'}</div>` +
+      `<div><b>🌟 Super [E]:</b> ${curUpgShip.superName} — ${hasSuper(activeUpgradeShip) ? '<span style="color:#fde047;font-weight:bold">✔ READY (100% Charge)</span>' : '<span style="color:#94a3b8">🔒 Reach Lv 10 on any upgrade</span>'}</div>` +
+    `</div>` +
+  `</div>`;
+
+  // 4 Upgrades for this Active Ship
   for (const key in UPG) {
-    const u = UPG[key], lv = SAVE.data.upg[key], maxed = lv >= u.max;
+    const u = UPG[key], lv = curShipUpg[key] || 0, maxed = lv >= u.max;
     const cost = maxed ? 0 : u.cost(lv);
     const can = !maxed && SAVE.data.coins >= cost;
     let brawlBadge = '';
     if (lv >= 10) {
-      brawlBadge = `<div style="color:#fde047;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(253,224,71,0.5)">🌟 SUPER &amp; HYPERCHARGE UNLOCKED! Press [E] ⚡</div>`;
+      brawlBadge = `<div style="color:#fde047;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(253,224,71,0.5)">🌟 SUPER &amp; HYPERCHARGE UNLOCKED for ${curUpgShip.name.split(' (')[0]}! [E] ⚡</div>`;
     } else if (lv >= 8) {
-      brawlBadge = `<div style="color:#34d399;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(52,211,153,0.5)">🟢 GADGET UNLOCKED! Press [Q] (3/3 Charges)</div>`;
+      brawlBadge = `<div style="color:#34d399;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(52,211,153,0.5)">🟢 GADGET UNLOCKED for ${curUpgShip.name.split(' (')[0]}! [Q] (3/3 Charges)</div>`;
     } else {
       brawlBadge = `<div style="color:#8fa6cb;font-size:0.70rem;margin-top:2px">Reach Lv 8 for 🟢 Gadget [Q] • Lv 10 for 🌟 Super [E]</div>`;
     }
 
+    const pct = Math.round((lv / u.max) * 100);
+
     h += `<div class="shopitem"><div class="ic">${u.icon}</div>` +
       `<div class="info"><div class="t">${u.name}</div><div class="d">${u.desc}</div>` +
-      `<div class="lv">Engineering Level ${lv}/${u.max}</div>` +
+      `<div class="lv">Engineering Level ${lv}/${u.max} (${pct}%)</div>` +
+      `<div class="upg-bar-track"><div class="upg-bar-fill" style="width:${pct}%;"></div></div>` +
       brawlBadge + `</div>` +
-      (maxed ? `<span class="maxed">✔ MAXED</span>` : `<button data-buy="upg" data-key="${key}"${can ? '' : ' disabled'}>🪙 ${cost}</button>`) +
+      (maxed ? `<span class="maxed">✔ MAXED</span>` : `<button data-buy="ship-upg" data-ship="${activeUpgradeShip}" data-key="${key}"${can ? '' : ' disabled'}>🪙 ${cost}</button>`) +
       `</div>`;
   }
 
@@ -5492,16 +5705,25 @@ function buildShop() {
   for (const s of SHIPS) {
     const owned = SAVE.data.ships.includes(s.id), sel = SAVE.data.sel === s.id;
     const can = SAVE.data.tokens >= s.cost;
+    const uShip = getShipUpg(s.id);
+    const totLv = (uShip.hull || 0) + (uShip.cannon || 0) + (uShip.engine || 0) + (uShip.magnet || 0);
+    const shipLo = computeLoadout(s.id);
+
     let btn;
     if (sel) btn = `<button class="sel" disabled>✔ IN SERVICE</button>`;
     else if (owned) btn = `<button data-buy="sel" data-key="${s.id}">SELECT</button>`;
     else btn = `<button class="locked" data-buy="ship" data-key="${s.id}"${can ? '' : ' disabled'}>🎟️ ${s.cost}</button>`;
     const shipSvg = getShipSvg(s.id, s.cols);
+    
     h += `<div class="shopitem" style="border-left: 3px solid ${s.cols[0] || '#ffd23c'};"><div class="ic">${shipSvg}</div>` +
       `<div class="info"><div class="t">${s.name}</div><div class="d">${s.power}</div>` +
       `<div style="margin-top:4px;padding:4px 8px;background:rgba(16,185,129,0.12);border-radius:6px;border:1px solid rgba(16,185,129,0.3);font-size:0.72rem;color:#34d399"><b>🟢 Unique Gadget (Press Q):</b> ${s.gadgetName} — <i>${s.gadgetDesc}</i></div>` +
       `<div style="margin-top:3px;padding:4px 8px;background:rgba(234,179,8,0.12);border-radius:6px;border:1px solid rgba(234,179,8,0.3);font-size:0.72rem;color:#fde047"><b>🌟 Unique Super (Press E):</b> ${s.superName} — <i>${s.superDesc}</i></div>` +
-      `<div class="lv" style="margin-top:4px">🛡️ ${s.hp} Base HP · ⚡ ${(1 / s.cool).toFixed(1)} rps · 🚀 ${s.spd.toFixed(2)}x Speed${s.gold > 1 ? ' · 🪙 x' + s.gold : ''}${s.magnet ? ' · 🧲' : ''}</div></div>` +
+      `<div class="lv" style="margin-top:4px">🛡️ ${shipLo.maxHp} HP (${s.hp} Base + ${uShip.hull} Upg) · ⚡ ${(1 / shipLo.baseCool).toFixed(1)} rps · 🚀 ${shipLo.spdMul.toFixed(2)}x Spd${s.gold > 1 ? ' · 🪙 x' + s.gold : ''} · 🧲 +${shipLo.magnetBonus}px</div>` +
+      `<div style="margin-top:4px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">` +
+        `<span style="font-size:0.72rem;color:#ffd23c;font-family:'Orbitron',sans-serif">⚙️ Upgrades: 🛡️ Lv ${uShip.hull} · 💥 Lv ${uShip.cannon} · ⚙️ Lv ${uShip.engine} · 🧲 Lv ${uShip.magnet} (${totLv === 40 ? '👑 MAXED' : totLv + '/40'})</span>` +
+        `<button data-select-upg-ship="${s.id}" style="font-size:0.74rem;padding:4px 10px;background:rgba(255,210,60,0.15);border:1px solid #ffd23c;color:#ffd23c;border-radius:6px;cursor:pointer">🔧 UPGRADE SHIP</button>` +
+      `</div></div>` +
       btn + `</div>`;
   }
   
@@ -5528,16 +5750,43 @@ function buildShop() {
 }
 
 document.getElementById('shopBody').addEventListener('click', e => {
+  const tabBtn = e.target.closest('[data-select-upg-ship]');
+  if (tabBtn) {
+    const targetShip = tabBtn.dataset.selectUpgShip;
+    if (targetShip) {
+      activeUpgradeShip = targetShip;
+      buildShop();
+      sfx('coin');
+      const shopEl = document.getElementById('shop');
+      if (shopEl) {
+        const upgHeader = shopEl.querySelector('h2');
+        if (upgHeader && tabBtn.textContent.includes('UPGRADE SHIP')) {
+          upgHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+      return;
+    }
+  }
+
   const btn = e.target.closest('button[data-buy]'); if (!btn) return;
   const kind = btn.dataset.buy, key = btn.dataset.key;
-  if (kind === 'upg') {
-    const u = UPG[key], lv = SAVE.data.upg[key];
+  if (kind === 'ship-upg' || kind === 'upg') {
+    const shipId = btn.dataset.ship || activeUpgradeShip || (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
+    const u = UPG[key];
+    const uShip = getShipUpg(shipId);
+    const lv = uShip[key] || 0;
     if (lv < u.max && SAVE.data.coins >= u.cost(lv)) {
       SAVE.data.coins -= u.cost(lv);
-      SAVE.data.upg[key]++;
+      uShip[key] = lv + 1;
+      SAVE.data.shipUpg[shipId] = uShip;
+      if (shipId === SAVE.data.sel) {
+        SAVE.data.upg = { ...uShip };
+      }
       SAVE.save();
       applyLoadout();
       sfx('coin');
+      buildShop();
+      return;
     }
   } else if (kind === 'ship') {
     const s = shipById(key);
@@ -5545,6 +5794,8 @@ document.getElementById('shopBody').addEventListener('click', e => {
       SAVE.data.tokens -= s.cost;
       SAVE.data.ships.push(key);
       SAVE.data.sel = key;
+      activeUpgradeShip = key;
+      SAVE.data.upg = { ...getShipUpg(key) };
       SAVE.save();
       applyLoadout();
       sfx('map');
@@ -5552,6 +5803,8 @@ document.getElementById('shopBody').addEventListener('click', e => {
   } else if (kind === 'sel') {
     if (SAVE.data.ships.includes(key)) {
       SAVE.data.sel = key;
+      activeUpgradeShip = key;
+      SAVE.data.upg = { ...getShipUpg(key) };
       SAVE.save();
       applyLoadout();
       sfx('coin');
