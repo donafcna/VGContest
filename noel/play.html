@@ -1154,18 +1154,18 @@
   <h1>🏴‍☠️ SPACE PIRATES</h1>
   <div style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(0,229,255,0.2),rgba(126,34,206,0.3));border:1.5px solid #00e5ff;color:#00ffee;padding:5px 16px;border-radius:20px;font-size:0.82rem;font-weight:900;letter-spacing:1.5px;margin-bottom:10px;font-family:'Orbitron',sans-serif;box-shadow:0 0 16px rgba(0,229,255,0.4)">🚀 STAR WARS FLEET EDITION • ONLINE LIVE</div>
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
-  Sail through deep cosmic space and blast <b>Star Wars starfighter squadrons &amp; 9 Flagship Bosses</b> with heavy naval broadsides!</p>
+  Sail through deep cosmic space and blast <b>Star Wars starfighter squadrons &amp; 10 Flagship Bosses (Weakest to Strongest)</b> with heavy naval broadsides!</p>
   <div class="keys">
     🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM</b> • <b>CLICK</b> to Shoot Broadside 💥<br>
     🎮 <b>PC Abilities</b>: <b>[Q]</b> = 🟢 <b>Gadget</b> (3 Charges) • <b>[E]</b> = 🌟 <b>Super &amp; Hypercharge</b> (100% Charge)<br>
     🚀 <b>Flight Movement</b>: <b>W A S D</b> or <b>Arrow Keys</b> • 📱 <b>Mobile</b>: D-Pad &amp; On-Screen Buttons
   </div>
-  <input id="pname" placeholder="Enter Callsign (e.g. Captain Noel)" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
+  <input id="pname" placeholder="Enter Callsign (e.g. Captain Noel)" maxlength="14" value="Captain Noël" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="btnrow">
-    <button id="startbtn" type="button" class="action-btn">⚓ SET SOLAR SAIL!</button>
-    <button id="hangarbtn" type="button" class="action-btn"  style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ GALACTIC SHIPYARD &amp; ARSENAL</button>
-    <button id="dailybtn" type="button" class="action-btn"  style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(255,94,98,0.55);position:relative;cursor:pointer">🎁 DAILY REWARDS <span id="dailyBadge" class="daily-badge hidden">!</span></button>
-    <button id="bossbtn" type="button" class="action-btn"  style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">👾 BOSS & FLEET INTEL</button>
+    <button id="startbtn" type="button" class="action-btn" onclick="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
+    <button id="hangarbtn" type="button" class="action-btn" onclick="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ GALACTIC SHIPYARD &amp; ARSENAL</button>
+    <button id="dailybtn" type="button" class="action-btn" onclick="openDailyModal(event)" style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(255,94,98,0.55);position:relative;cursor:pointer">🎁 DAILY REWARDS <span id="dailyBadge" class="daily-badge hidden">!</span></button>
+    <button id="bossbtn" type="button" class="action-btn" onclick="openBossIntelModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">👾 BOSS & FLEET INTEL</button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.1rem; color:#ffd23c; font-weight:bold"></p>
   <p id="bestline" style="margin-top:0.2rem; font-size:1rem; color:#ffd23c; font-weight:bold; min-height:1.2em"></p>
@@ -1200,7 +1200,7 @@
   <p id="shopwallet"></p>
   <p style="font-size:0.92rem;color:#9fb4d4;margin-bottom:0.6rem;max-width:560px">Loot 🪙 gold dubloons from destroyed UFOs and 🎟️ alien plasma cores from UFO motherships.</p>
   <div id="shopBody"></div>
-  <button id="shopclose" style="margin-top:1.3rem">⬅ RETURN TO QUARTERDECK</button>
+  <button id="shopclose" onclick="closeShop(event)" style="margin-top:1.3rem">⬅ RETURN TO QUARTERDECK</button>
 </div>
 
 <!-- Captain's Tactical Fleet Dossier Modal -->
@@ -1280,7 +1280,8 @@
 
 <!-- Pirate 7-Day Voyage Daily Rewards Modal -->
 <div id="dailyModal" class="overlay hidden" style="z-index: 125;">
-  <div class="daily-card">
+  <div class="daily-card" style="position:relative">
+    <button onclick="closeDailyModal(event)" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem">✖ CLOSE</button>
     <span class="daily-badge-tag">🎁 PIRATE DAILY VOYAGE REWARDS ⚓</span>
     <h1 class="daily-title">7-DAY VOYAGE REWARDS</h1>
     <div id="dailyStreakText" class="daily-streak-info">⚓ Start your 7-Day Voyage Streak today!</div>
@@ -4869,9 +4870,9 @@ function renderBossIntelModalUI() {
   grid.innerHTML = BOSS_INTEL.map((b, idx) => {
     const svg = getBossSvg(b.id);
     const rankNum = idx + 1;
-    const rankLabel = rankNum === 1 ? '👑 RANK #1 (APEX / STRONGEST)' : rankNum === 10 ? '⭐ RANK #10 (ENTRY / WEAKEST)' : `⭐ RANK #${rankNum}`;
-    const rankBg = rankNum === 1 ? 'linear-gradient(135deg, #ff4500, #a855f7)' : rankNum <= 3 ? 'linear-gradient(135deg, #ef4444, #f59e0b)' : rankNum <= 6 ? 'rgba(56,189,248,0.2)' : 'rgba(255,255,255,0.08)';
-    const rankCol = rankNum === 1 ? '#ffffff' : rankNum <= 3 ? '#ffd23c' : rankNum <= 6 ? '#38bdf8' : '#94a3b8';
+    const rankLabel = rankNum === 1 ? '⭐ SECTOR 1 (ENTRY · WEAKEST · 60 HP)' : rankNum === 10 ? '👑 SECTOR 10 (APEX · STRONGEST · 120 HP)' : `⭐ SECTOR ${rankNum} (${b.hp} HP)`;
+    const rankBg = rankNum === 10 ? 'linear-gradient(135deg, #ff4500, #a855f7)' : rankNum >= 7 ? 'linear-gradient(135deg, #ef4444, #f59e0b)' : rankNum >= 4 ? 'rgba(56,189,248,0.2)' : 'rgba(255,255,255,0.08)';
+    const rankCol = rankNum === 10 ? '#ffffff' : rankNum >= 7 ? '#ffd23c' : rankNum >= 4 ? '#38bdf8' : '#94a3b8';
 
     return `
       <div class="boss-card-item" style="border-color:${b.col}44;box-shadow:0 4px 18px ${b.col}22">
@@ -6444,12 +6445,14 @@ if (document.readyState === 'loading') {
     if (n) {
       if (i) i.value = n;
       playerName = n;
-    } else if (vip) {
+    } else {
+      // Default to Captain Noël with VIP Creator Pass active
       if (i) i.value = 'Captain Noël';
       playerName = 'Captain Noël';
-      try { localStorage.setItem('sp_name', 'Captain Noël'); } catch(e) {}
-    } else {
-      playerName = 'Captain';
+      try {
+        localStorage.setItem('sp_name', 'Captain Noël');
+        localStorage.setItem('sp_creator_pass', 'true');
+      } catch(e) {}
     }
 
     SAVE.load();
@@ -7556,7 +7559,7 @@ function update(dt) {
 
   let currentAcc = ACC;
   if (boss && boss.tractorT > 0 && ax < 0) {
-    currentAcc *= 1.85; // High reverse thruster boost to actively overpower Death Star tractor beam!
+    currentAcc *= 2.2; // 2.2x reverse thruster boost to effortlessly resist Death Star tractor pull!
   }
   ship.vx += ax * currentAcc * dt;
   ship.vy += ay * currentAcc * dt;
@@ -7991,7 +7994,7 @@ function update(dt) {
       const tdy = captureY - ship.y;
       const tdist = Math.hypot(tdx, tdy) || 1;
 
-      const pullSpeed = Math.min(130, tdist * 0.45);
+      const pullSpeed = Math.min(95, tdist * 0.30);
       ship.x += (tdx / tdist) * pullSpeed * dt;
       ship.y += (tdy / tdist) * pullSpeed * 0.50 * dt;
 
