@@ -1375,7 +1375,7 @@
       <div class="dos-panel">
         <div class="dos-title">⚔️ COMBAT SERVICE RECORD</div>
         <div class="dos-stat-row"><span>🚀 Max Sector Reached</span><strong id="dosSector" class="gold">Sector 1</strong></div>
-        <div class="dos-stat-row"><span>🪙 All-Time Score</span><strong id="dosScore" class="gold">🪙 0</strong></div>
+        <div class="dos-stat-row"><span>🏆 Cosmic Trophies</span><strong id="dosScore" class="gold">🏆 0</strong></div>
         <div class="dos-stat-row"><span>☠️ Confirmed UFO Kills</span><strong id="dosKills" class="cyan">0</strong></div>
         <div class="dos-stat-row"><span>🎟️ Plasma Cores</span><strong id="dosTokens" class="purple">0</strong></div>
       </div>
@@ -3260,6 +3260,7 @@ const LB = {
     entry.kills = typeof entry.kills === 'number' ? entry.kills : SAVE.data.kills;
     entry.tokens = typeof entry.tokens === 'number' ? entry.tokens : SAVE.data.tokens;
     entry.spins = typeof entry.spins === 'number' ? entry.spins : SAVE.data.spins;
+    entry.trophies = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : (entry.trophies || entry.score || 0);
     entry.created_at = entry.created_at || Date.now();
 
     // 1. ALWAYS persist immediately to local storage
@@ -3458,6 +3459,7 @@ const LB = {
       let maxCoins = latest.coins || 0;
       let maxKills = 0;
       let maxTokens = 0;
+      let maxTrophies = 0;
       let maxSpins = 0;
       let bestCreatedAt = latest.created_at || Date.now();
       
@@ -3470,6 +3472,7 @@ const LB = {
         }
         maxKills = Math.max(maxKills, e.kills || 0);
         maxTokens = Math.max(maxTokens, e.tokens || 0);
+        maxTrophies = Math.max(maxTrophies, e.trophies || e.score || 0);
         maxSpins = Math.max(maxSpins, e.spins || 0);
       }
       
@@ -3478,6 +3481,7 @@ const LB = {
       latest.coins = maxCoins;
       latest.kills = maxKills;
       latest.tokens = maxTokens;
+      latest.trophies = maxTrophies;
       latest.spins = maxSpins;
       latest.created_at = bestCreatedAt;
       combined.push(latest);
@@ -5185,7 +5189,10 @@ function openDossier(pilotIndex) {
   const secEl = document.getElementById('dosSector');
   if (secEl) secEl.textContent = `Sector ${p.level || 1}`;
   const scEl = document.getElementById('dosScore');
-  if (scEl) scEl.textContent = `🪙 ${p.score || 0}`;
+  const trCount = (typeof getPlayerTrophies === 'function' && ((p.uid && p.uid === SAVE.data.uid) || (p.name || '').toLowerCase() === (playerName || '').toLowerCase()))
+    ? Math.max(getPlayerTrophies(), p.trophies || p.score || 0)
+    : (p.trophies || p.score || 0);
+  if (scEl) scEl.textContent = `🏆 ${trCount.toLocaleString()} Trophies`;
   const klEl = document.getElementById('dosKills');
   if (klEl) klEl.textContent = `☠️ ${p.kills || 0} UFOs`;
   const tkEl = document.getElementById('dosTokens');
@@ -5238,21 +5245,24 @@ async function renderLeaderboard(cid, myScore, myName) {
       html += '<div class="empty">No pirate flight logs registered yet. Be the first space captain! 🏴‍☠️</div>';
     } else {
       html += '<ol>';
+      const myTr = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : 0;
       items.forEach((r, i) => {
         const isMe = (r.uid && r.uid === SAVE.data.uid) || ((r.name || '').trim().toLowerCase() === curName.trim().toLowerCase());
         const rk = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
         const sh = shipById(r.ship || 'cutter');
+        const trVal = (isMe && myTr > 0) ? Math.max(myTr, r.trophies || r.score || 0) : (r.trophies || r.score || 0);
         html += `<li class="${isMe ? 'me' : ''}" onclick="openDossier(${i})" title="Click to view Captain ${esc(r.name)}'s stats and fleet!">` +
                 `<span class="rk">${rk}</span>` +
                 `<span class="nm">${esc(r.name)} <span style="font-size:0.75rem; opacity:0.75; color:#7fdcff">(${sh.name})</span></span>` +
-                `<span class="sc">🪙 ${r.score}</span>` +
+                `<span class="sc" style="color:#ffd23c;font-weight:900;font-family:'Orbitron',sans-serif">🏆 ${trVal.toLocaleString()}</span>` +
                 `<span class="lv">Sector ${r.level || 1}</span>` +
                 `<span class="inspect">🔍</span></li>`;
       });
       html += '</ol>';
     }
     if (myScore >= 0 && rankVal) {
-      html += '<div class="myrank">⭐ Pirate Rank: #' + rankVal + ' — ' + esc(curName) + ' · 🪙 ' + myScore + '</div>';
+      const myTr = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : myScore;
+      html += '<div class="myrank">⭐ Cosmic Rank: #' + rankVal + ' — ' + esc(curName) + ' · 🏆 ' + myTr.toLocaleString() + ' Trophies</div>';
     }
     el.innerHTML = html;
   };
