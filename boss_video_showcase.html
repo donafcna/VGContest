@@ -406,9 +406,9 @@
       if (boss.type === 'trio') {
         const cxPos = boss.x, cyPos = boss.y;
         boss.trio = [
-          { id: 'ignis', name: 'Darth Ignis (Lava)', x: cxPos - 45, y: cyPos - 55, baseY: cyPos - 55, w: 220, h: 110, hp: 40, maxhp: 40, shootT: 0.8, col: '#ff4500' },
-          { id: 'glacies', name: 'Inquisitor Glacies (Ice)', x: cxPos + 25, y: cyPos, baseY: cyPos, w: 210, h: 105, hp: 40, maxhp: 40, shootT: 1.4, col: '#38bdf8' },
-          { id: 'fulgur', name: 'Sovereign Fulgur (Electric)', x: cxPos - 45, y: cyPos + 55, baseY: cyPos + 55, w: 200, h: 100, hp: 40, maxhp: 40, shootT: 0.28, col: '#c084fc' }
+          { id: 'ignis', name: 'Darth Ignis (Lava)', x: cxPos - 80, y: cyPos - 110, baseY: cyPos - 110, w: 220, h: 110, hp: 40, maxhp: 40, shootT: 0.8, col: '#ff4500' },
+          { id: 'glacies', name: 'Inquisitor Glacies (Ice)', x: cxPos, y: cyPos, baseY: cyPos, w: 210, h: 105, hp: 40, maxhp: 40, shootT: 1.4, col: '#38bdf8' },
+          { id: 'fulgur', name: 'Sovereign Fulgur (Electric)', x: cxPos + 80, y: cyPos + 110, baseY: cyPos + 110, w: 200, h: 100, hp: 40, maxhp: 40, shootT: 0.28, col: '#c084fc' }
         ];
       } else if (boss.type === 'pathogen') {
         for (let i = 0; i < 5; i++) {
@@ -942,9 +942,15 @@
               showCombatBanner('💥 OVERLORD TRINITY EMERGES! COMPOSITE SUPERLASER FIRING!');
             }
           } else if (!boss.isMerged && boss.trio) {
-            // Update individual sub-ships
+            // Update individual sub-ships with organic flight weaving and strict non-overlap corridors
             boss.trio.forEach((sub, sIdx) => {
-              sub.y = sub.baseY + Math.sin(animTime * 2.5 + sIdx * 1.5) * 18;
+              const freq = sIdx === 0 ? 1.4 : (sIdx === 1 ? 1.8 : 2.2);
+              const xRange = sIdx === 0 ? 25 : (sIdx === 1 ? 35 : 20);
+              const yRange = sIdx === 0 ? 22 : (sIdx === 1 ? 26 : 24);
+              
+              sub.x = (boss.x + (sIdx === 0 ? -80 : (sIdx === 1 ? 0 : 80))) + Math.cos(animTime * (freq * 0.8) + sIdx) * xRange;
+              sub.y = sub.baseY + Math.sin(animTime * freq + sIdx * 1.6) * yRange;
+              
               sub.shootT -= dt;
               if (sub.shootT <= 0) {
                 if (sub.id === 'ignis') {
@@ -980,6 +986,14 @@
                 showCombatBanner('⚡ CRITICAL DAMAGE DETECTED: TRI-ELEMENTAL FUSION ENGAGED!');
               }
             });
+
+            // Enforce minimum vertical separation barrier (No overlapping)
+            if (boss.trio[0] && boss.trio[1] && boss.trio[0].y > boss.trio[1].y - 100) {
+              boss.trio[0].y = boss.trio[1].y - 100;
+            }
+            if (boss.trio[1] && boss.trio[2] && boss.trio[1].y > boss.trio[2].y - 100) {
+              boss.trio[1].y = boss.trio[2].y - 100;
+            }
           }
         }
 
