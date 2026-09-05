@@ -4152,76 +4152,60 @@ function getBossSvg(id) {
 
 const BOSS_INTEL = [
   {
-    id: 'trio',
-    name: 'The Sith Elemental Triumvirate (Ignis, Glacies & Fulgur)',
-    sector: 'Sector 1 Apex · Tri-Elemental Sith Flagship Squadron',
-    col: '#ff4500',
-    hp: 120,
+    id: 'dread',
+    name: 'Grand Admiral Vex: The Imperial Eclipse',
+    sector: 'Sector 1 Flagship · Imperial II-Class Star Destroyer',
+    col: '#00ffaa',
+    hp: 60,
     powers: [
-      '🔥 Left Flank: Darth Ignis Magma Dreadnought (Lava mortars inflicting Burn DoT)',
-      '❄️ Center Core: Inquisitor Glacies Cryo Cruiser (Glacial crystal lances freezing ship for 2s)',
-      '⚡ Right Flank: Sovereign Fulgur Kyber Frigate (Ultra rapid-fire Kyber lightning storm)',
-      '💥 Tri-Elemental Fusion Singularity (Merges into OVERLORD TRINITY with 3-tributary composite superlaser at <=25% HP!)'
+      '⚡ Axial Planet-Killer Death Ray (Continuous piercing emerald superlaser)',
+      '🛸 Ventral TIE Carrier Launch (Deploys Imperial TIE/ln escorts)',
+      '⚡ Dual Sponson Heavy Tachyon Railguns & 5-Round Turbolaser Salvos'
     ],
-    loot: '👑 +6 🎟️ Plasma Cores · +3 🎡 Wheel Spins · +300 🪙 + 50 Gold Coins Cascade',
-    tactic: 'Damage any of the 3 ships to 25% HP to trigger the Fusion Singularity, then dodge the converging 3-color composite superlaser!'
+    loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +75 🪙',
+    tactic: 'Dodge the charging green axial superlaser by staying above or below the center flight axis!'
   },
   {
-    id: 'titan',
-    name: 'General Veers: Imperial AT-AT Siege Colossus',
-    sector: 'Sector 1 Flagship · Heavy Armored All-Terrain Siege Titan',
-    col: '#ef4444',
-    hp: 95,
+    id: 'hive',
+    name: 'Overlord Chronos: DS-1 Death Star',
+    sector: 'Sector 2 Flagship · Orbital Planet-Siege Battlestation',
+    col: '#00e5ff',
+    hp: 65,
     powers: [
-      '🦶 Colossal Hydraulic Blitz Stomp (Locks onto player galleon; giant AT-AT footpad slams down to crush hull and erupts 360° seismic magma shockwaves!)',
-      '💥 Heavy Chin MS-1 Turbolaser Barrage (Dual piercing heavy red laser cannons)',
-      '⚡ Temple Repeating Blaster Sweeping Flurry (Rapid 8-shot suppressive fire)',
-      '💣 Orbital Seismic Artillery Bombardment & Stomp Shockwaves (Massive gold rain upon defeat)'
+      '💥 360° Equatorial Turbolaser Trench Burst (12 radiating EMP plasma shells)',
+      '🧲 Gravitational Magnetic Tractor Beam (Pulls player ship irresistibly toward the trench while firing)',
+      '⚡ 8-Tributary Kyber Dish Superlaser Convergence'
     ],
-    loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +250 🪙 + 36 Gold Coins Cascade',
-    tactic: 'Weave between the heavy chin blaster barrels and target the mechanical neck swivel joint with heavy broadsides!'
+    loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +100 🪙',
+    tactic: 'Survive the intense tractor beam lock and evade continuous turbolaser bombardments, then fire broadsides into the Kyber dish!'
   },
   {
-    id: 'pathogen',
-    name: 'Overlord Pathogen: The Imperial Bio-Spore Carrier',
-    sector: 'Sector 2 Flagship · Replicating Imperial Spore Frigate',
-    col: '#10b981',
-    hp: 90,
-    powers: [
-      '🧬 Bacterial Mitosis & Hyper-Mutation (Spawns 5 sub-clones; killing clones makes survivors grow bigger & stronger!)',
-      '🦠 Micro & Macro Bacteria Bits (Variable-sized pulsating bacteria spores & massive splitting bio-blobs)',
-      '☣️ Corrosive Toxic Acid Mortars (Deploys radiating bio-chemical spore zones)'
-    ],
-    loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +230 🪙 + 30 Gold Coins Cascade',
-    tactic: 'Focus fire directly on the Original Alpha Prime Carrier! Destroying clones makes the survivors mutate and grow larger!'
-  },
-  {
-    id: 'ataraxia',
-    name: 'Master Avar Kriss: Jedi Starcruiser Ataraxia',
-    sector: 'Sector 3 Flagship · High Republic Jedi Star Cruiser',
-    col: '#e0e7ff',
-    hp: 92,
-    powers: [
-      '⚡ Twin Kyber Convergence Lances & Radiant Force Pulse (Colossal piercing Kyber lances + deflecting Force ring)',
-      '💫 High Republic Longbeam Precision Barrage (6 hyper-accelerated azure plasma bolts with radiant trails)',
-      '🛸 Jedi Vector Starfighter Escort Sortie (Deploys twin High Republic Jedi Vectors)'
-    ],
-    loot: '👑 +4 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +210 🪙 + 25 Gold Coins Cascade',
-    tactic: 'Dodge the converging twin Kyber laser lances emitted from the forward longbeam cannons, and destroy the escorting Jedi Vectors!'
-  },
-  {
-    id: 'fondor',
-    name: 'Luthen Rael: The Fondor Haulcraft',
-    sector: 'Sector 4 Flagship · Heavily Modified Armed Haulcraft Cruiser',
+    id: 'ram',
+    name: 'Admiral Raddus: Mon Calamari MC85 Star Cruiser',
+    sector: 'Sector 3 Flagship · Heavy Mon Calamari Command Cruiser (The Profundity)',
     col: '#38bdf8',
-    hp: 88,
+    hp: 70,
     powers: [
-      '⚔️ Twin Lateral Plasma Scythes (Colossal vertical laser blade arcs slicing flight lanes)',
-      '💥 Heavy Droid Flak Countermeasure Barrage (Deploys 12 radiating explosive flak pods)',
-      '⚡ Dorsal Swivel Turbolaser & Void Torpedo Salvos (High-velocity ionized plasma tracking fire)'
+      '🌊 Ventral Spire Heavy Ion Ray (Piercing azure continuous beam sweeping flight lanes)',
+      '🚀 Dual Guided Concussion Torpedo Volleys & Deflector Shield Bubbles',
+      '⚡ Mon Calamari 8-Gun Broadside Turbolaser Salvo (High-speed azure blue plasma fire)'
     ],
-    loot: '👑 +4 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +190 🪙',
-    tactic: 'Stay clear of the vertical flight lane when the lateral plasma scythes ignite, and shoot down incoming flak pods with cannon broadsides!'
+    loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +125 🪙',
+    tactic: 'Stay above the deep ventral command fin to avoid the downward ion beam, and target the dorsal shield blister domes!'
+  },
+  {
+    id: 'void',
+    name: 'Captain Solo: The Rogue Millennium Falcon',
+    sector: 'Sector 4 Flagship · Legendary Modified Corellian YT-1300 Gunship',
+    col: '#00ffee',
+    hp: 75,
+    powers: [
+      '⚡ Kessel Run Hyperdrive Overdrive (Fast hyperspace drift & quad-laser burst)',
+      '🚀 Dual Forward Concussion Proton Torpedoes & Magnetic Decoy Mines',
+      '🔥 360° Dorsal & Ventral Rotating Quad-Laser Cannon Strafe'
+    ],
+    loot: '👑 +3 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +150 🪙',
+    tactic: 'Avoid the rotating quad-laser tracking line and fire full broadsides into the forward mandibles when the hyperdrive cools down!'
   },
   {
     id: 'cryo',
@@ -4238,60 +4222,76 @@ const BOSS_INTEL = [
     tactic: 'Weave between the 4 swept outrigger stabilizer wings to target the central bridge superstructure with concentrated cannon broadsides!'
   },
   {
-    id: 'void',
-    name: 'Captain Solo: The Rogue Millennium Falcon',
-    sector: 'Sector 6 Flagship · Legendary Modified Corellian YT-1300 Gunship',
-    col: '#00ffee',
-    hp: 75,
-    powers: [
-      '⚡ Kessel Run Hyperdrive Overdrive (Fast hyperspace drift & quad-laser burst)',
-      '🚀 Dual Forward Concussion Proton Torpedoes & Magnetic Decoy Mines',
-      '🔥 360° Dorsal & Ventral Rotating Quad-Laser Cannon Strafe'
-    ],
-    loot: '👑 +3 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +150 🪙',
-    tactic: 'Avoid the rotating quad-laser tracking line and fire full broadsides into the forward mandibles when the hyperdrive cools down!'
-  },
-  {
-    id: 'ram',
-    name: 'Admiral Raddus: Mon Calamari MC85 Star Cruiser',
-    sector: 'Sector 7 Flagship · Heavy Mon Calamari Command Cruiser (The Profundity)',
+    id: 'fondor',
+    name: 'Luthen Rael: The Fondor Haulcraft',
+    sector: 'Sector 6 Flagship · Heavily Modified Armed Haulcraft Cruiser',
     col: '#38bdf8',
-    hp: 70,
+    hp: 88,
     powers: [
-      '🌊 Ventral Spire Heavy Ion Ray (Piercing azure continuous beam sweeping flight lanes)',
-      '🚀 Dual Guided Concussion Torpedo Volleys & Deflector Shield Bubbles',
-      '⚡ Mon Calamari 8-Gun Broadside Turbolaser Salvo (High-speed azure blue plasma fire)'
+      '⚔️ Twin Lateral Plasma Scythes (Colossal vertical laser blade arcs slicing flight lanes)',
+      '💥 Heavy Droid Flak Countermeasure Barrage (Deploys 12 radiating explosive flak pods)',
+      '⚡ Dorsal Swivel Turbolaser & Void Torpedo Salvos (High-velocity ionized plasma tracking fire)'
     ],
-    loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +125 🪙',
-    tactic: 'Stay above the deep ventral command fin to avoid the downward ion beam, and target the dorsal shield blister domes!'
+    loot: '👑 +4 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +190 🪙',
+    tactic: 'Stay clear of the vertical flight lane when the lateral plasma scythes ignite, and shoot down incoming flak pods with cannon broadsides!'
   },
   {
-    id: 'hive',
-    name: 'Overlord Chronos: DS-1 Death Star',
-    sector: 'Sector 8 Flagship · Orbital Planet-Siege Battlestation',
-    col: '#00e5ff',
-    hp: 65,
+    id: 'ataraxia',
+    name: 'Master Avar Kriss: Jedi Starcruiser Ataraxia',
+    sector: 'Sector 7 Flagship · High Republic Jedi Star Cruiser',
+    col: '#e0e7ff',
+    hp: 92,
     powers: [
-      '💥 360° Equatorial Turbolaser Trench Burst (12 radiating EMP plasma shells)',
-      '🧲 Gravitational Magnetic Tractor Beam (Pulls player ship irresistibly toward the trench while firing)',
-      '⚡ 8-Tributary Kyber Dish Superlaser Convergence'
+      '⚡ Twin Kyber Convergence Lances & Radiant Force Pulse (Colossal piercing Kyber lances + deflecting Force ring)',
+      '💫 High Republic Longbeam Precision Barrage (6 hyper-accelerated azure plasma bolts with radiant trails)',
+      '🛸 Jedi Vector Starfighter Escort Sortie (Deploys twin High Republic Jedi Vectors)'
     ],
-    loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +100 🪙',
-    tactic: 'Survive the intense tractor beam lock and evade continuous turbolaser bombardments, then fire broadsides into the Kyber dish!'
+    loot: '👑 +4 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +210 🪙 + 25 Gold Coins Cascade',
+    tactic: 'Dodge the converging twin Kyber laser lances emitted from the forward longbeam cannons, and destroy the escorting Jedi Vectors!'
   },
   {
-    id: 'dread',
-    name: 'Grand Admiral Vex: The Imperial Eclipse',
-    sector: 'Sector 9 Flagship · Imperial II-Class Star Destroyer',
-    col: '#00ffaa',
-    hp: 60,
+    id: 'pathogen',
+    name: 'Overlord Pathogen: The Imperial Bio-Spore Carrier',
+    sector: 'Sector 8 Flagship · Replicating Imperial Spore Frigate',
+    col: '#10b981',
+    hp: 90,
     powers: [
-      '⚡ Axial Planet-Killer Death Ray (Continuous piercing emerald superlaser)',
-      '🛸 Ventral TIE Carrier Launch (Deploys Imperial TIE/ln escorts)',
-      '⚡ Dual Sponson Heavy Tachyon Railguns & 5-Round Turbolaser Salvos'
+      '🧬 Bacterial Mitosis & Hyper-Mutation (Spawns 5 sub-clones; killing clones makes survivors grow bigger & stronger!)',
+      '🦠 Micro & Macro Bacteria Bits (Variable-sized pulsating bacteria spores & massive splitting bio-blobs)',
+      '☣️ Corrosive Toxic Acid Mortars (Deploys radiating bio-chemical spore zones)'
     ],
-    loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +75 🪙',
-    tactic: 'Dodge the charging green axial superlaser by staying above or below the center flight axis!'
+    loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +230 🪙 + 30 Gold Coins Cascade',
+    tactic: 'Focus fire directly on the Original Alpha Prime Carrier! Destroying clones makes the survivors mutate and grow larger!'
+  },
+  {
+    id: 'titan',
+    name: 'General Veers: Imperial AT-AT Siege Colossus',
+    sector: 'Sector 9 Flagship · Heavy Armored All-Terrain Siege Titan',
+    col: '#ef4444',
+    hp: 95,
+    powers: [
+      '🦶 Colossal Hydraulic Blitz Stomp (Locks onto player galleon; giant AT-AT footpad slams down to crush hull and erupts 360° seismic magma shockwaves!)',
+      '💥 Heavy Chin MS-1 Turbolaser Barrage (Dual piercing heavy red laser cannons)',
+      '⚡ Temple Repeating Blaster Sweeping Flurry (Rapid 8-shot suppressive fire)',
+      '💣 Orbital Seismic Artillery Bombardment & Stomp Shockwaves (Massive gold rain upon defeat)'
+    ],
+    loot: '👑 +5 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +250 🪙 + 36 Gold Coins Cascade',
+    tactic: 'Weave between the heavy chin blaster barrels and target the mechanical neck swivel joint with heavy broadsides!'
+  },
+  {
+    id: 'trio',
+    name: 'The Sith Elemental Triumvirate (Ignis, Glacies & Fulgur)',
+    sector: 'Sector 10 Apex · Tri-Elemental Sith Flagship Squadron & Overlord Trinity',
+    col: '#ff4500',
+    hp: 120,
+    powers: [
+      '🔥 Top Flank: Darth Ignis Magma Dreadnought (Lava mortars inflicting Burn DoT)',
+      '❄️ Center Core: Inquisitor Glacies Cryo Cruiser (Glacial crystal lances freezing ship for 2s)',
+      '⚡ Bottom Flank: Sovereign Fulgur Kyber Frigate (Ultra rapid-fire Kyber lightning storm)',
+      '💥 Tri-Elemental Fusion Singularity (Merges into OVERLORD TRINITY with 3-tributary composite superlaser at <=25% HP!)'
+    ],
+    loot: '👑 +6 🎟️ Plasma Cores · +3 🎡 Wheel Spins · +300 🪙 + 50 Gold Coins Cascade',
+    tactic: 'Damage any of the 3 ships to 25% HP to trigger the Fusion Singularity, then dodge the converging 3-color composite superlaser!'
   }
 ];
 
@@ -5118,20 +5118,20 @@ function spawnMine() {
 }
 
 const BTYPES = [
-  { id: 'trio',     name: 'The Sith Elemental Triumvirate (Ignis, Glacies & Fulgur)', col: '#ff4500', w: 320, h: 180, hp: 120, spd: 46, atk: 'tri_elemental' },
-  { id: 'titan',    name: 'General Veers: Imperial AT-AT Siege Colossus', col: '#ef4444', w: 310, h: 180, hp: 95, spd: 48, atk: 'heavy_chin_blasters' },
-  { id: 'pathogen', name: 'Overlord Pathogen: The Imperial Bio-Spore Carrier', col: '#10b981', w: 325, h: 165, hp: 90, spd: 46, atk: 'pathogen_mitosis' },
-  { id: 'ataraxia', name: 'Master Avar Kriss: Jedi Starcruiser Ataraxia', col: '#e0e7ff', w: 330, h: 165, hp: 92, spd: 48, atk: 'ataraxia_kyber' },
-  { id: 'fondor',   name: "Luthen Rael: Fondor Haulcraft (Armed Custom Cruiser)", col: '#38bdf8', w: 320, h: 175, hp: 88, spd: 50, atk: 'fondor_scythes' },
-  { id: 'cryo',     name: 'Admiral Sloane: Imperial Cantwell Battlecruiser', col: '#00ffaa', w: 305, h: 175, hp: 80, spd: 44, atk: 'outrigger_turbolasers' },
-  { id: 'void',     name: 'Captain Solo: The Rogue Millennium Falcon (YT-1300)', col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52, atk: 'quad_laser_barrage' },
-  { id: 'ram',      name: 'Admiral Raddus: Mon Calamari MC85 Star Cruiser', col: '#38bdf8', w: 305, h: 185, hp: 70, spd: 46, atk: 'mon_cal_broadside' },
+  { id: 'dread',    name: 'Grand Admiral Vex: Imperial Star Destroyer (The Eclipse)', col: '#00ffaa', w: 305, h: 165, hp: 60, spd: 44, atk: 'tachyon' },
   { id: 'hive',     name: 'Overlord Chronos: DS-1 Death Star Orbital Battlestation', col: '#00e5ff', w: 290, h: 165, hp: 65, spd: 40, atk: 'emp_cascade' },
-  { id: 'dread',    name: 'Grand Admiral Vex: Imperial Star Destroyer (The Eclipse)', col: '#00ffaa', w: 305, h: 165, hp: 60, spd: 44, atk: 'tachyon' }
+  { id: 'ram',      name: 'Admiral Raddus: Mon Calamari MC85 Star Cruiser', col: '#38bdf8', w: 305, h: 185, hp: 70, spd: 46, atk: 'mon_cal_broadside' },
+  { id: 'void',     name: 'Captain Solo: The Rogue Millennium Falcon (YT-1300)', col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52, atk: 'quad_laser_barrage' },
+  { id: 'cryo',     name: 'Admiral Sloane: Imperial Cantwell Battlecruiser', col: '#00ffaa', w: 305, h: 175, hp: 80, spd: 44, atk: 'outrigger_turbolasers' },
+  { id: 'fondor',   name: 'Luthen Rael: Fondor Haulcraft (Armed Custom Cruiser)', col: '#38bdf8', w: 320, h: 175, hp: 88, spd: 50, atk: 'fondor_scythes' },
+  { id: 'ataraxia', name: 'Master Avar Kriss: Jedi Starcruiser Ataraxia', col: '#e0e7ff', w: 330, h: 165, hp: 92, spd: 48, atk: 'ataraxia_kyber' },
+  { id: 'pathogen', name: 'Overlord Pathogen: The Imperial Bio-Spore Carrier', col: '#10b981', w: 325, h: 165, hp: 90, spd: 46, atk: 'pathogen_mitosis' },
+  { id: 'titan',    name: 'General Veers: Imperial AT-AT Siege Colossus', col: '#ef4444', w: 310, h: 180, hp: 95, spd: 48, atk: 'heavy_chin_blasters' },
+  { id: 'trio',     name: 'The Sith Elemental Triumvirate (Ignis, Glacies & Fulgur)', col: '#ff4500', w: 320, h: 180, hp: 120, spd: 46, atk: 'tri_elemental' }
 ];
 
 function spawnBoss() {
-  // Sector Progression: Bosses fight in order from STRONGEST (#1 Sith Elemental Triumvirate) to WEAKEST (#10 Grand Admiral Vex)
+  // Sector Progression: Bosses fight in order from WEAKEST (#1 Grand Admiral Vex) to STRONGEST (#10 The Sith Elemental Triumvirate)
   const bossIndex = (Math.max(1, level) - 1) % BTYPES.length;
   const b = BTYPES[bossIndex];
   
