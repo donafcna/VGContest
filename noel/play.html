@@ -1103,7 +1103,7 @@
   }
 
   /* ==========================================================================
-     COSMIC TRAIL (BRAWL STARS STYLE TROPHY ROAD)
+     COSMIC TRAIL (BRAWL STARS STYLE 100,000 TROPHY ROAD)
      ========================================================================== */
   .trail-card {
     background: radial-gradient(circle at 50% 0%, #172554 0%, #0b1120 65%, #020617 100%);
@@ -1475,7 +1475,7 @@
   <div class="trail-card">
     <div class="trail-header">
       <div style="text-align:left">
-        <span style="font-size:0.75rem;font-weight:bold;color:#ffd23c;letter-spacing:1.5px;text-transform:uppercase">🏆 BRAWL STARS STYLE TROPHY ROAD</span>
+        <span style="font-size:0.75rem;font-weight:bold;color:#ffd23c;letter-spacing:1.5px;text-transform:uppercase">🏆 BRAWL STARS STYLE 100,000 TROPHY ROAD</span>
         <h1 style="font-family:'Orbitron',sans-serif;font-size:1.45rem;color:#ffffff;margin:2px 0">🌌 COSMIC TRAIL</h1>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
@@ -2543,9 +2543,9 @@ function killBoss() {
   const bScore = 50 + bLevel * 25;
   addScore(bScore, boss.x, boss.y);
   tokensRun += bTokens;
-  SAVE.data.trophies = (SAVE.data.trophies || 0) + 30;
+  SAVE.data.trophies = (SAVE.data.trophies || 0) + 100;
   SAVE.save();
-  popup(W/2, H*0.48, `+30 🏆 COSMIC TROPHIES!`, '#ffd23c');
+  popup(W/2, H*0.48, `+100 🏆 COSMIC TROPHIES!`, '#ffd23c');
   spinsRun += 1;
   popup(W / 2, H * 0.35, `${boss.name.toUpperCase()} DESTROYED! +${bTokens} 🎟️ +1 🎡`, '#ffd23c');
   
@@ -6568,38 +6568,46 @@ window.activateSuper = activateSuper;
 
 
 // ==========================================================================
-// COSMIC TRAIL (BRAWL STARS STYLE TROPHY ROAD LOGIC)
+// COSMIC TRAIL (BRAWL STARS STYLE 100,000 TROPHY ROAD LOGIC)
 // ==========================================================================
 const COSMIC_TRAIL = [
-  { id: 1, trophies: 50, name: 'Starter Stardust Cache', desc: '+250 Gold Dubloons', icon: '🪙', type: 'coins', amount: 250, league: 'Bronze' },
-  { id: 2, trophies: 150, name: 'Plasma Energy Pod', desc: '+5 Plasma Cores', icon: '🎟️', type: 'tokens', amount: 5, league: 'Bronze' },
-  { id: 3, trophies: 300, name: 'Lucky Prize Bundle', desc: '+2 Lucky Wheel Spins', icon: '🎡', type: 'spins', amount: 2, league: 'Bronze' },
-  { id: 4, trophies: 500, name: 'T-65B X-Wing Starfighter', desc: '🚀 Unlock X-Wing + 500 🪙', icon: '🚀', type: 'ship_coins', ship: 'runner', amount: 500, league: 'Silver' },
-  { id: 5, trophies: 750, name: 'High-Energy Fuel Core', desc: '+10 Cores + 2 Spins', icon: '⚡', type: 'tokens_spins', tokens: 10, spins: 2, league: 'Silver' },
-  { id: 6, trophies: 1000, name: 'Treasury Vault Chest', desc: '+1,000 Gold Dubloons', icon: '💰', type: 'coins', amount: 1000, league: 'Silver' },
-  { id: 7, trophies: 1500, name: 'Nebula Corsair Skin', desc: '🎨 Exclusive Nebula Skin', icon: '🎨', type: 'skin', skin: 'legend', league: 'Gold' },
-  { id: 8, trophies: 2000, name: 'Heavy Warhead Package', desc: '+20 Cores + 1,500 🪙', icon: '💣', type: 'tokens_coins', tokens: 20, coins: 1500, league: 'Gold' },
-  { id: 9, trophies: 2500, name: 'Golden Hind Dreadnought', desc: '🚀 Unlock Golden Hind + 5 🎡', icon: '🚀', type: 'ship_spins', ship: 'hind', spins: 5, league: 'Diamond' },
-  { id: 10, trophies: 3500, name: 'Supernova Bounty Cache', desc: '+3,000 🪙 + 25 Cores', icon: '💎', type: 'tokens_coins', tokens: 25, coins: 3000, league: 'Diamond' },
-  { id: 11, trophies: 5000, name: 'Solar Storm Flagship', desc: '🚀 Unlock Solar Storm Carrier', icon: '🚀', type: 'ship', ship: 'storm', league: 'Mythic' },
-  { id: 12, trophies: 6500, name: 'Obsidian Kyber Skin', desc: '🔮 Ultra-Rare Dark Armor', icon: '🔮', type: 'skin', skin: 'legend', league: 'Mythic' },
-  { id: 13, trophies: 8000, name: 'Grand Cosmic Champion', desc: '👑 Grand Bounty: 10k 🪙 + 50 🎟️ + 10 🎡', icon: '👑', type: 'grand', coins: 10000, tokens: 50, spins: 10, league: 'Master' }
+  { id: 1,  trophies: 50,     name: 'Starter Stardust Cache', desc: '+250 Gold Dubloons', icon: '🪙', type: 'coins', amount: 250, league: 'Bronze' },
+  { id: 2,  trophies: 150,    name: 'Plasma Energy Pod', desc: '+5 Plasma Cores', icon: '🎟️', type: 'tokens', amount: 5, league: 'Bronze' },
+  { id: 3,  trophies: 300,    name: 'Lucky Prize Bundle', desc: '+2 Lucky Wheel Spins', icon: '🎡', type: 'spins', amount: 2, league: 'Bronze' },
+  { id: 4,  trophies: 500,    name: 'T-65B X-Wing Starfighter', desc: '🚀 Unlock X-Wing + 500 🪙', icon: '🚀', type: 'ship_coins', ship: 'runner', amount: 500, league: 'Bronze' },
+  { id: 5,  trophies: 750,    name: 'High-Energy Fuel Core', desc: '+10 Cores + 2 Spins', icon: '⚡', type: 'tokens_spins', tokens: 10, spins: 2, league: 'Bronze' },
+  { id: 6,  trophies: 1000,   name: 'Treasury Vault Chest', desc: '+1,000 Gold Dubloons', icon: '💰', type: 'coins', amount: 1000, league: 'Silver' },
+  { id: 7,  trophies: 2000,   name: 'Heavy Warhead Package', desc: '+20 Cores + 1,500 🪙', icon: '💣', type: 'tokens_coins', tokens: 20, coins: 1500, league: 'Silver' },
+  { id: 8,  trophies: 3500,   name: 'Golden Hind Dreadnought', desc: '🚀 Unlock Golden Hind + 5 🎡', icon: '🚀', type: 'ship_spins', ship: 'hind', spins: 5, league: 'Silver' },
+  { id: 9,  trophies: 5000,   name: 'Solar Storm Flagship', desc: '🚀 Unlock Solar Storm Carrier', icon: '🚀', type: 'ship', ship: 'storm', league: 'Gold' },
+  { id: 10, trophies: 7500,   name: 'Nebula Corsair Skin', desc: '🎨 Exclusive Nebula Armor Skin', icon: '🎨', type: 'skin', skin: 'legend', league: 'Gold' },
+  { id: 11, trophies: 10000,  name: 'Galactic Treasury Vault', desc: '+5,000 🪙 + 35 Plasma Cores', icon: '💎', type: 'tokens_coins', tokens: 35, coins: 5000, league: 'Gold' },
+  { id: 12, trophies: 15000,  name: 'Supernova Mega Spin Cache', desc: '+15 Lucky Prize Wheel Spins', icon: '🎡', type: 'spins', amount: 15, league: 'Diamond' },
+  { id: 13, trophies: 20000,  name: 'Obsidian Kyber Skin', desc: '🔮 Ultra-Rare Dark Armor Skin', icon: '🔮', type: 'skin', skin: 'legend', league: 'Diamond' },
+  { id: 14, trophies: 25000,  name: 'Deep Orion Armory Cache', desc: '+10,000 🪙 + 50 Cores', icon: '📦', type: 'tokens_coins', tokens: 50, coins: 10000, league: 'Diamond' },
+  { id: 15, trophies: 35000,  name: 'Kyber Storm High Vault', desc: '+20,000 🪙 + 75 Cores + 25 🎡', icon: '⚡', type: 'grand', coins: 20000, tokens: 75, spins: 25, league: 'Mythic' },
+  { id: 16, trophies: 50000,  name: 'Grand Admiral Sovereign Pack', desc: '👑 50,000 🪙 + 150 Cores + 50 🎡', icon: '👑', type: 'grand', coins: 50000, tokens: 150, spins: 50, league: 'Titan' },
+  { id: 17, trophies: 65000,  name: 'Celestial Nova Armor Skin', desc: '🌟 Mythic Celestial Radiant Armor', icon: '🌟', type: 'skin', skin: 'legend', league: 'Titan' },
+  { id: 18, trophies: 75000,  name: 'Titan of Deep Space Vault', desc: '💎 100,000 🪙 + 300 Cores + 75 🎡', icon: '💎', type: 'grand', coins: 100000, tokens: 300, spins: 75, league: 'Master' },
+  { id: 19, trophies: 85000,  name: 'Eternal Void Emperor Skin', desc: '🌌 Supreme Void Emperor Coating', icon: '🌌', type: 'skin', skin: 'legend', league: 'Master' },
+  { id: 20, trophies: 100000, name: 'Universal Supreme Overlord (100k)', desc: '👑 100k Pinnacle: 250,000 🪙 + 1,000 🎟️ + 250 🎡', icon: '👑', type: 'grand', coins: 250000, tokens: 1000, spins: 250, league: 'Master' }
 ];
 
 function getPlayerTrophies() {
-  if (isCreator()) return Math.max(8000, SAVE.data.trophies || 8000);
-  const careerScoreTrophies = Math.floor((+localStorage.getItem('sp_best') || 0) / 12);
-  const killsTrophies = Math.floor((SAVE.data.kills || 0) * 3);
+  if (isCreator()) return Math.max(100000, SAVE.data.trophies || 100000);
+  const careerScoreTrophies = Math.floor((+localStorage.getItem('sp_best') || 0) / 8);
+  const killsTrophies = Math.floor((SAVE.data.kills || 0) * 5);
   return Math.max(SAVE.data.trophies || 0, careerScoreTrophies + killsTrophies);
 }
 
 function getCosmicLeague(tr) {
-  if (tr >= 7500) return { name: '👑 Master Cosmic Legend', bg: 'linear-gradient(135deg, #ff4500, #ffd23c)', col: '#ffffff', next: 8000 };
-  if (tr >= 4500) return { name: '🔮 Mythic Kyber League', bg: 'linear-gradient(135deg, #a855f7, #c084fc)', col: '#ffffff', next: 7500 };
-  if (tr >= 2500) return { name: '💎 Diamond Supernova League', bg: 'linear-gradient(135deg, #0284c7, #38bdf8)', col: '#ffffff', next: 4500 };
-  if (tr >= 1200) return { name: '🥇 Gold Solar League', bg: 'linear-gradient(135deg, #f59e0b, #ffd23c)', col: '#020617', next: 2500 };
-  if (tr >= 500)  return { name: '🥈 Silver Asteroid League', bg: 'linear-gradient(135deg, #94a3b8, #e2e8f0)', col: '#020617', next: 1200 };
-  return { name: '🥉 Bronze Stardust League', bg: 'linear-gradient(135deg, #b45309, #d97706)', col: '#ffffff', next: 500 };
+  if (tr >= 75000) return { name: '👑 Master Supreme Overlord (100k)', bg: 'linear-gradient(135deg, #ff4500, #ffd23c)', col: '#ffffff', next: 100000 };
+  if (tr >= 50000) return { name: '🌌 Cosmic Titan League', bg: 'linear-gradient(135deg, #e11d48, #fb7185)', col: '#ffffff', next: 75000 };
+  if (tr >= 30000) return { name: '🔮 Mythic Kyber League', bg: 'linear-gradient(135deg, #a855f7, #c084fc)', col: '#ffffff', next: 50000 };
+  if (tr >= 15000) return { name: '💎 Diamond Supernova League', bg: 'linear-gradient(135deg, #0284c7, #38bdf8)', col: '#ffffff', next: 30000 };
+  if (tr >= 5000)  return { name: '🥇 Gold Solar League', bg: 'linear-gradient(135deg, #f59e0b, #ffd23c)', col: '#020617', next: 15000 };
+  if (tr >= 1000)  return { name: '🥈 Silver Asteroid League', bg: 'linear-gradient(135deg, #94a3b8, #e2e8f0)', col: '#020617', next: 5000 };
+  return { name: '🥉 Bronze Stardust League', bg: 'linear-gradient(135deg, #b45309, #d97706)', col: '#ffffff', next: 1000 };
 }
 
 function getClaimableTrailCount() {
