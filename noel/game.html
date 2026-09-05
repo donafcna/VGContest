@@ -8,6 +8,14 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Space Pirates</title>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+if (typeof Peer === 'undefined') {
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js';
+  document.head.appendChild(s);
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
@@ -1311,6 +1319,253 @@
     color: #ffd23c;
   }
 
+
+  /* Online Multiplayer Modal & Holographic Lobby Styling */
+  .online-card {
+    background: radial-gradient(circle at 50% 0%, #032b43 0%, #06152d 60%, #020817 100%);
+    border: 2px solid #00e5ff;
+    border-radius: 24px;
+    padding: 22px 26px;
+    width: min(94vw, 860px);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 50px rgba(0, 229, 255, 0.45), inset 0 0 30px rgba(0, 229, 255, 0.15);
+    position: relative;
+    overflow-y: auto;
+    animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .online-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.25);
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .online-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 229, 255, 0.15);
+    border: 1.5px solid #00e5ff;
+    color: #00ffee;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+  }
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #00ffaa;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 8px #00ffaa;
+    animation: pulseDot 1.4s infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.5; }
+  }
+  .online-pilot-bar {
+    display: flex;
+    gap: 14px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .online-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 680px) {
+    .online-grid { grid-template-columns: 1fr; }
+  }
+  .online-box {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .room-code-badge {
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #ffd23c;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .room-code-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #ffd23c;
+    letter-spacing: 3px;
+    margin: 4px 0 8px;
+    text-shadow: 0 0 16px rgba(255, 210, 60, 0.6);
+  }
+  .copy-btn {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    padding: 6px 14px;
+    margin: 3px 4px;
+    background: #0284c7;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.15s, background 0.15s;
+  }
+  .copy-btn:active { transform: scale(0.95); }
+  .online-btn-gold {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    padding: 8px 18px;
+    background: linear-gradient(135deg, #ffd23c, #f59e0b);
+    color: #020617;
+    border: none;
+    border-radius: 8px;
+    font-weight: 900;
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+  .online-btn-cyan {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    padding: 8px 18px;
+    background: linear-gradient(135deg, #00e5ff, #0284c7);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 900;
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+  .online-btn-launch {
+    width: 100%;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.15rem;
+    padding: 14px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    letter-spacing: 1.5px;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+    animation: launchGlow 2s infinite alternate;
+  }
+  @keyframes launchGlow {
+    0% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+    100% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.85); }
+  }
+  .squad-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 6px;
+  }
+  @media (max-width: 680px) {
+    .squad-slots-grid { grid-template-columns: 1fr; }
+  }
+  .squad-slot-card {
+    background: rgba(15, 23, 42, 0.65);
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .squad-slot-card.active-slot {
+    background: rgba(30, 41, 59, 0.85);
+    border-color: #00e5ff;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.25);
+  }
+  .slot-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid #ffd23c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .slot-info { flex: 1; min-width: 0; }
+  .slot-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .slot-ship {
+    font-size: 0.72rem;
+    color: #93c5fd;
+    display: block;
+  }
+  .slot-status {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  .host-pill {
+    font-size: 0.6rem;
+    background: #ffd23c;
+    color: #020617;
+    padding: 1px 5px;
+    border-radius: 6px;
+    font-weight: 900;
+  }
+  .radio-log-wrap {
+    margin-top: 12px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .radio-feed {
+    max-height: 80px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: #7fdcff;
+    line-height: 1.4;
+    text-align: left;
+  }
+  .radio-msg { margin-bottom: 3px; }
+  .invite-toast {
+    background: rgba(16, 185, 129, 0.9);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
 </style>
 </head>
 <body>
@@ -1401,6 +1656,7 @@
   </div>
   <input id="pname" placeholder="Enter Callsign (e.g. NoelTheGoat)" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="btnrow">
+    <button id="onlinebtn" type="button" class="action-btn" onclick="openOnlineModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">🌐 ONLINE MULTIPLAYER (3P)</button>
     <button id="startbtn" type="button" class="action-btn" onclick="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" type="button" class="action-btn" onclick="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ GALACTIC SHIPYARD &amp; ARSENAL</button>
     <button id="trailbtn" type="button" class="action-btn" onclick="openTrailModal(event)" style="background:linear-gradient(135deg,#ffd23c,#f59e0b);color:#020617;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(255,210,60,0.55);position:relative;cursor:pointer">🏆 COSMIC TRAIL <span id="trailBadge" class="daily-badge hidden">!</span></button>
@@ -1558,6 +1814,145 @@
     </div>
   </div>
 </div>
+<!-- Cross-Device Online Fleet Multiplayer Modal -->
+<div id="onlineModal" class="overlay hidden" style="z-index: 129;">
+  <div class="online-card">
+    <div class="online-header">
+      <div style="text-align:left">
+        <span style="font-size:0.75rem;font-weight:bold;color:#00e5ff;letter-spacing:1.5px;text-transform:uppercase">🌐 WEBRTC REAL-TIME PEER-TO-PEER</span>
+        <h1 style="font-family:'Orbitron',sans-serif;font-size:1.45rem;color:#ffffff;margin:2px 0">🚀 CROSS-DEVICE ONLINE FLEET (3 PLAYERS)</h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="onlineNetStatus" class="online-status-pill"><span class="pulse-dot"></span> P2P READY</div>
+        <button onclick="closeOnlineModal(event)" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:8px 16px;cursor:pointer;font-family:'Orbitron',sans-serif">✖ CLOSE</button>
+      </div>
+    </div>
+
+    <p style="font-size:0.88rem;color:#93c5fd;margin:0 0 14px;text-align:left;line-height:1.4">
+      Play together from <b>separate phones, tablets, laptops, or PCs</b> anywhere in the world! Zero lag WebRTC connection with up to 3 pilots.
+    </p>
+
+    <!-- Pilot Callsign & Ship Select -->
+    <div class="online-pilot-bar">
+      <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:200px">
+        <label style="font-size:0.75rem;font-weight:bold;color:#ffd23c;text-transform:uppercase;letter-spacing:1px;text-align:left">Your Pilot Callsign:</label>
+        <input id="onlineCallsign" placeholder="Enter Callsign (e.g. NoelTheGoat)" maxlength="14" style="font-family:'Orbitron',sans-serif;font-size:0.95rem;padding:8px 12px;background:rgba(0,0,0,0.4);border:1.5px solid #00e5ff;border-radius:8px;color:#fff;font-weight:bold" oninput="updateOnlinePilotInfo()">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:200px">
+        <label style="font-size:0.75rem;font-weight:bold;color:#00ffaa;text-transform:uppercase;letter-spacing:1px;text-align:left">Selected Ship:</label>
+        <select id="onlineShipSelect" style="font-family:'Orbitron',sans-serif;font-size:0.95rem;padding:8px 12px;background:rgba(0,0,0,0.4);border:1.5px solid #00ffaa;border-radius:8px;color:#ffd23c;font-weight:bold" onchange="updateOnlinePilotInfo()">
+          <option value="cutter">⚡ Storm Cutter (Speed & Spread)</option>
+          <option value="runner">🚀 T-65B X-Wing (Nova Mega-Beam)</option>
+          <option value="galleon">🏴‍☠️ Solar Galleon (Heavy Broadside)</option>
+          <option value="hind">💣 Golden Hind Dreadnought (Armor Titan)</option>
+          <option value="storm">🛸 Fondor Haulcraft (Supreme Plasma)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Host vs Join Cards -->
+    <div class="online-grid">
+      <!-- Card 1: Host Room -->
+      <div class="online-box" id="hostBox">
+        <h3 style="color:#ffd23c;margin-bottom:8px;font-family:'Orbitron',sans-serif;font-size:1.05rem">👑 HOST A FLEET ROOM</h3>
+        <div id="hostSetupView">
+          <p style="font-size:0.8rem;color:#cfe4ff;margin-bottom:10px">Create a squadron room and invite up to 2 wingmen on their own devices.</p>
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px;flex-wrap:wrap">
+            <input id="customRoomCode" placeholder="Code (e.g. PIRATE-7)" maxlength="10" style="width:140px;font-family:'Orbitron',sans-serif;text-transform:uppercase;text-align:center;background:rgba(0,0,0,0.4);border:1px solid #ffd23c;border-radius:8px;color:#ffd23c;font-weight:bold;padding:6px">
+            <button class="online-btn-gold" onclick="createOnlineRoom()">📡 CREATE ROOM</button>
+          </div>
+        </div>
+
+        <div id="hostActiveView" class="hidden">
+          <div class="room-code-badge">
+            <span style="font-size:0.7rem;color:#8fa6cb">SQUADRON ROOM CODE:</span>
+            <div id="displayRoomCode" class="room-code-text">PIRATE-77</div>
+            <button class="copy-btn" onclick="copyOnlineRoomCode()">📋 COPY CODE</button>
+            <button class="copy-btn" onclick="copyOnlineInviteLink()" style="background:#0284c7">🔗 COPY INVITE LINK</button>
+          </div>
+          <div id="inviteLinkToast" class="invite-toast hidden">Link copied to clipboard! Share with friends!</div>
+          <button id="launchMissionBtn" class="online-btn-launch" onclick="launchOnlineMission()">🚀 LAUNCH FLEET MISSION</button>
+        </div>
+      </div>
+
+      <!-- Card 2: Join Room -->
+      <div class="online-box" id="joinBox">
+        <h3 style="color:#00e5ff;margin-bottom:8px;font-family:'Orbitron',sans-serif;font-size:1.05rem">🛸 JOIN A FLEET ROOM</h3>
+        <div id="joinSetupView">
+          <p style="font-size:0.8rem;color:#cfe4ff;margin-bottom:10px">Enter the 5-digit room code from your squad leader or friend.</p>
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px;flex-wrap:wrap">
+            <input id="joinRoomCode" placeholder="ENTER CODE (e.g. PIRATE-7)" maxlength="12" style="width:180px;font-family:'Orbitron',sans-serif;text-transform:uppercase;text-align:center;background:rgba(0,0,0,0.4);border:1.5px solid #00e5ff;border-radius:8px;color:#00ffee;font-weight:bold;padding:8px">
+            <button class="online-btn-cyan" onclick="joinOnlineRoom()">🔗 JOIN ROOM</button>
+          </div>
+        </div>
+
+        <div id="joinActiveView" class="hidden">
+          <div class="client-connected-badge" style="background:rgba(0,255,170,0.15);border:1px solid #00ffaa;padding:10px;border-radius:10px">
+            <span class="pulse-dot" style="background:#00ffaa"></span>
+            <span id="joinStatusText" style="font-weight:bold;color:#00ffaa;margin-left:6px">CONNECTED TO SQUADRON!</span>
+          </div>
+          <p style="font-size:0.82rem;color:#93c5fd;margin-top:8px">Waiting for the Host to launch the mission...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Pilot Slots in Squadron Lobby (1-3 Players) -->
+    <div style="margin-top:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:0.78rem;font-weight:bold;color:#ffd23c;letter-spacing:1px;text-transform:uppercase">👥 FLEET SQUADRON ROSTER (UP TO 3 PILOTS):</span>
+        <span id="lobbyCountBadge" style="font-size:0.75rem;color:#93c5fd;font-family:'Orbitron',sans-serif">1 / 3 CONNECTED</span>
+      </div>
+
+      <div class="squad-slots-grid">
+        <!-- Slot 1 -->
+        <div id="slotCard1" class="squad-slot-card active-slot">
+          <div class="slot-avatar" style="border-color:#ffd23c;background:rgba(255,210,60,0.15);color:#ffd23c">👑</div>
+          <div class="slot-info">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span id="slotName1" class="slot-name">Captain Noel</span>
+              <span class="host-pill">HOST</span>
+            </div>
+            <span id="slotShip1" class="slot-ship">🏴‍☠️ Solar Galleon</span>
+          </div>
+          <div class="slot-status" style="color:#00ffaa"><span class="pulse-dot"></span> READY</div>
+        </div>
+
+        <!-- Slot 2 -->
+        <div id="slotCard2" class="squad-slot-card">
+          <div class="slot-avatar" style="border-color:#00ffaa;background:rgba(0,255,170,0.15);color:#00ffaa">🚀</div>
+          <div class="slot-info">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span id="slotName2" class="slot-name">Waiting for Wingman...</span>
+            </div>
+            <span id="slotShip2" class="slot-ship">T-65B X-Wing</span>
+          </div>
+          <div id="slotStatus2" class="slot-status" style="color:#8fa6cb">⏳ OPEN</div>
+        </div>
+
+        <!-- Slot 3 -->
+        <div id="slotCard3" class="squad-slot-card">
+          <div class="slot-avatar" style="border-color:#ff5500;background:rgba(255,85,0,0.15);color:#ff5500">💣</div>
+          <div class="slot-info">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span id="slotName3" class="slot-name">Waiting for Gunner...</span>
+            </div>
+            <span id="slotShip3" class="slot-ship">Golden Hind Dreadnought</span>
+          </div>
+          <div id="slotStatus3" class="slot-status" style="color:#8fa6cb">⏳ OPEN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subspace Radio Log -->
+    <div class="radio-log-wrap">
+      <div style="font-size:0.72rem;color:#8fa6cb;font-weight:bold;margin-bottom:4px;text-align:left">📡 SUBSPACE RADIO COMMUNICATIONS:</div>
+      <div id="onlineRadioFeed" class="radio-feed">
+        <div class="radio-msg">[SYS] WebRTC Peer-to-Peer engine online. Create or join a room to sail together!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Cosmic Trail (Brawl Stars Style Trophy Road Modal) -->
 <div id="trailModal" class="overlay hidden" style="z-index: 128;">
   <div class="trail-card">
@@ -5645,6 +6040,608 @@ function startCombat() {
 }
 
 
+
+// ==========================================================================
+// 🌐 CROSS-DEVICE ONLINE MULTIPLAYER ENGINE (WEBRTC VIA PEERJS)
+// ==========================================================================
+const OnlineFleetNet = {
+  mode: 'solo', // 'solo' | 'online_host' | 'online_client' | 'local_coop'
+  roomCode: '',
+  peer: null,
+  hostConn: null,
+  clientConns: [], // array of { conn, slot, name, shipType, ping, lastSeen }
+  mySlot: 1, // 1=Host/P1, 2=P2, 3=P3
+  connectedPilots: [
+    { slot: 1, name: 'Captain Noel', shipType: 'cutter', ready: true, ping: 0 }
+  ],
+  syncTimer: 0,
+  lastStateSentT: 0,
+  ping: 28,
+
+  init() {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      const rm = p.get('room') || p.get('join');
+      if (rm) {
+        setTimeout(() => {
+          openOnlineModal();
+          const jInp = document.getElementById('joinRoomCode');
+          if (jInp) jInp.value = rm.toUpperCase();
+          this.logRadio(`Auto-detected squad room ${rm.toUpperCase()} from URL! Connecting...`);
+          this.joinRoom(rm.toUpperCase());
+        }, 700);
+      }
+    } catch(e) {}
+  },
+
+  logRadio(msg) {
+    const feed = document.getElementById('onlineRadioFeed');
+    if (!feed) return;
+    const line = document.createElement('div');
+    line.className = 'radio-msg';
+    const now = new Date();
+    const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+    line.innerHTML = `<span style="color:#ffd23c">[${time}]</span> ${msg}`;
+    feed.appendChild(line);
+    feed.scrollTop = feed.scrollHeight;
+  },
+
+  updatePilotInfo() {
+    const nmInp = document.getElementById('onlineCallsign');
+    const shSel = document.getElementById('onlineShipSelect');
+    const name = (nmInp && nmInp.value.trim()) || localStorage.getItem('sp_name') || 'Captain Noel';
+    const shipType = (shSel && shSel.value) || SAVE.data.sel || 'cutter';
+
+    if (this.mode === 'online_host' || this.mode === 'solo') {
+      this.connectedPilots[0] = { slot: 1, name: name.slice(0, 14), shipType: shipType, ready: true, ping: 0 };
+      this.renderLobby();
+      if (this.mode === 'online_host') {
+        this.broadcast({ type: 'lobby_update', pilots: this.connectedPilots });
+      }
+    } else if (this.mode === 'online_client' && this.hostConn && this.hostConn.open) {
+      this.hostConn.send({ type: 'update_profile', name: name.slice(0, 14), shipType: shipType });
+    }
+  },
+
+  createRoom(customCode) {
+    if (this.peer) {
+      try { this.peer.destroy(); } catch(e) {}
+    }
+
+    let code = (customCode || (document.getElementById('customRoomCode') && document.getElementById('customRoomCode').value) || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (!code) {
+      const randN = Math.floor(100 + Math.random() * 900);
+      const prefixes = ['PIRATE', 'FLEET', 'NOEL', 'STAR', 'APEX', 'TITAN'];
+      code = prefixes[Math.floor(Math.random() * prefixes.length)] + '-' + randN;
+    }
+    this.roomCode = code;
+
+    const callsign = (document.getElementById('onlineCallsign').value || localStorage.getItem('sp_name') || 'Captain Noel').slice(0, 14);
+    const shipType = (document.getElementById('onlineShipSelect').value || SAVE.data.sel || 'cutter');
+    
+    this.mode = 'online_host';
+    this.mySlot = 1;
+    this.clientConns = [];
+    this.connectedPilots = [
+      { slot: 1, name: callsign, shipType: shipType, ready: true, ping: 0 }
+    ];
+
+    const cleanCode = code.replace(/[^A-Z0-9]/g, '');
+    const hostPeerId = `vgcontest-fleet-${cleanCode}-host`;
+    this.logRadio(`Initializing Host Beacon: <b style="color:#ffd23c">${hostPeerId}</b>`);
+
+    try {
+      if (typeof Peer === 'undefined') {
+        this.logRadio(`⚠️ PeerJS WebRTC library loading... please wait 1 second and retry.`);
+        return;
+      }
+
+      this.peer = new Peer(hostPeerId, {
+        debug: 1,
+        config: {
+          iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' },
+            { urls: 'stun:stun2.l.google.com:19302' }
+          ]
+        }
+      });
+
+      this.peer.on('open', (id) => {
+        this.logRadio(`🟢 Host Beacon Broadcast Active! Room Code: <b style="color:#00ffaa">${code}</b>`);
+        const dCode = document.getElementById('displayRoomCode');
+        if (dCode) dCode.textContent = code;
+        const hSetup = document.getElementById('hostSetupView');
+        const hActive = document.getElementById('hostActiveView');
+        if (hSetup) hSetup.classList.add('hidden');
+        if (hActive) hActive.classList.remove('hidden');
+        this.renderLobby();
+      });
+
+      this.peer.on('connection', (conn) => {
+        this.handleIncomingClient(conn);
+      });
+
+      this.peer.on('error', (err) => {
+        this.logRadio(`⚠️ Peer Host notice: ${err.type || err.message}`);
+        if (err.type === 'unavailable-id') {
+          this.logRadio(`Room code ${code} is already hosted. Switching code...`);
+          this.createRoom(code + 'X');
+        }
+      });
+
+    } catch(err) {
+      this.logRadio(`Error creating room: ${err.message}`);
+    }
+  },
+
+  handleIncomingClient(conn) {
+    if (this.clientConns.length >= 2) {
+      this.logRadio(`⚠️ Squadron Full (3/3). Incoming connection rejected.`);
+      conn.close();
+      return;
+    }
+
+    const assignedSlot = this.clientConns.length === 0 ? 2 : 3;
+    this.logRadio(`🛸 Incoming Pilot connecting from remote device... Assigned Slot ${assignedSlot}`);
+
+    conn.on('open', () => {
+      const clientRecord = {
+        conn: conn,
+        slot: assignedSlot,
+        name: `Pilot ${assignedSlot}`,
+        shipType: assignedSlot === 2 ? 'runner' : 'hind',
+        ping: 28,
+        lastSeen: Date.now()
+      };
+      this.clientConns.push(clientRecord);
+
+      conn.send({
+        type: 'welcome',
+        slot: assignedSlot,
+        roomCode: this.roomCode,
+        pilots: this.connectedPilots
+      });
+
+      this.logRadio(`🟢 Wingman (Slot ${assignedSlot}) joined the Squadron!`);
+      this.renderLobby();
+      this.broadcast({ type: 'lobby_update', pilots: this.connectedPilots });
+    });
+
+    conn.on('data', (data) => {
+      this.handleHostReceivedData(conn, assignedSlot, data);
+    });
+
+    conn.on('close', () => {
+      this.logRadio(`🔴 Pilot in Slot ${assignedSlot} disconnected.`);
+      this.clientConns = this.clientConns.filter(c => c.conn !== conn);
+      this.connectedPilots = this.connectedPilots.filter(p => p.slot !== assignedSlot);
+      this.renderLobby();
+      this.broadcast({ type: 'lobby_update', pilots: this.connectedPilots });
+    });
+  },
+
+  handleHostReceivedData(conn, slot, data) {
+    if (!data || !data.type) return;
+
+    if (data.type === 'join' || data.type === 'update_profile') {
+      const existing = this.connectedPilots.find(p => p.slot === slot);
+      if (existing) {
+        existing.name = (data.name || `Pilot ${slot}`).slice(0, 14);
+        existing.shipType = data.shipType || (slot === 2 ? 'runner' : 'hind');
+        existing.ready = true;
+      } else {
+        this.connectedPilots.push({
+          slot: slot,
+          name: (data.name || `Pilot ${slot}`).slice(0, 14),
+          shipType: data.shipType || (slot === 2 ? 'runner' : 'hind'),
+          ready: true,
+          ping: 28
+        });
+      }
+      this.logRadio(`✨ Pilot ${data.name || 'Wingman'} ready with ${data.shipType || 'Starfighter'}!`);
+      this.renderLobby();
+      this.broadcast({ type: 'lobby_update', pilots: this.connectedPilots });
+    }
+
+    else if (data.type === 'client_input' && state === 'play') {
+      const pIdx = slot - 1;
+      if (players && players[pIdx]) {
+        const p = players[pIdx];
+        p.x = data.x;
+        p.y = data.y;
+        p.vx = data.vx;
+        p.vy = data.vy;
+        p.pitch = data.pitch;
+        if (data.hp !== undefined) p.hp = data.hp;
+        p.alive = data.alive;
+        p.respawnT = data.respawnT;
+
+        if (data.shoot) {
+          p.shootCool = 0.22;
+          p.recoil = 1.0;
+          sfx('shot');
+          const shootCol = p.col || (p.shipType === 'runner' ? '#00ffee' : '#ff5500');
+          balls.push({
+            x: p.x + 40, y: p.y - 8,
+            vx: 900, vy: (Math.random() - 0.5) * 40,
+            r: 10, col: shootCol, dmg: 1
+          });
+          balls.push({
+            x: p.x + 40, y: p.y + 8,
+            vx: 900, vy: (Math.random() - 0.5) * 40,
+            r: 10, col: shootCol, dmg: 1
+          });
+        }
+
+        if (data.gadget) {
+          if (slot === 2) activateP2Gadget();
+          else if (slot === 3) activateP3Gadget();
+        }
+
+        if (data.super) {
+          if (slot === 2) activateP2Super();
+          else if (slot === 3) activateP3Super();
+        }
+      }
+    }
+  },
+
+  joinRoom(customCode) {
+    if (this.peer) {
+      try { this.peer.destroy(); } catch(e) {}
+    }
+
+    const inp = document.getElementById('joinRoomCode');
+    const code = (customCode || (inp && inp.value) || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (!code) {
+      this.logRadio(`⚠️ Please enter a valid room code.`);
+      return;
+    }
+    this.roomCode = code;
+
+    const callsign = (document.getElementById('onlineCallsign').value || localStorage.getItem('sp_name') || 'First Mate').slice(0, 14);
+    const shipType = (document.getElementById('onlineShipSelect').value || 'runner');
+
+    this.mode = 'online_client';
+    const cleanCode = code.replace(/[^A-Z0-9]/g, '');
+    const clientPeerId = `vgcontest-fleet-${cleanCode}-client-${Math.random().toString(36).substring(2, 6)}`;
+    const hostPeerId = `vgcontest-fleet-${cleanCode}-host`;
+
+    this.logRadio(`Connecting to Squadron Host: <b style="color:#00ffee">${code}</b>...`);
+
+    try {
+      if (typeof Peer === 'undefined') {
+        this.logRadio(`⚠️ PeerJS WebRTC library loading... please wait 1 second and retry.`);
+        return;
+      }
+
+      this.peer = new Peer(clientPeerId, {
+        debug: 1,
+        config: {
+          iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' },
+            { urls: 'stun:stun2.l.google.com:19302' }
+          ]
+        }
+      });
+
+      this.peer.on('open', (id) => {
+        this.logRadio(`📡 Subspace channel open. Linking to Host beacon...`);
+        const conn = this.peer.connect(hostPeerId, { reliable: false });
+        this.hostConn = conn;
+
+        conn.on('open', () => {
+          this.logRadio(`🟢 CONNECTED TO HOST SQUADRON!`);
+          const jSetup = document.getElementById('joinSetupView');
+          const jActive = document.getElementById('joinActiveView');
+          if (jSetup) jSetup.classList.add('hidden');
+          if (jActive) jActive.classList.remove('hidden');
+
+          conn.send({
+            type: 'join',
+            name: callsign,
+            shipType: shipType
+          });
+        });
+
+        conn.on('data', (data) => {
+          this.handleClientReceivedData(data);
+        });
+
+        conn.on('close', () => {
+          this.logRadio(`🔴 Disconnected from Host.`);
+          const jSetup = document.getElementById('joinSetupView');
+          const jActive = document.getElementById('joinActiveView');
+          if (jSetup) jSetup.classList.remove('hidden');
+          if (jActive) jActive.classList.add('hidden');
+        });
+      });
+
+      this.peer.on('error', (err) => {
+        this.logRadio(`⚠️ Connection Notice: ${err.message || err.type}`);
+        if (err.type === 'peer-unavailable') {
+          this.logRadio(`❌ Host not found for room "${code}". Make sure the Host has created the room first!`);
+        }
+      });
+
+    } catch(err) {
+      this.logRadio(`Error connecting to room: ${err.message}`);
+    }
+  },
+
+  handleClientReceivedData(data) {
+    if (!data || !data.type) return;
+
+    if (data.type === 'welcome') {
+      this.mySlot = data.slot;
+      this.logRadio(`🎖️ Assigned Squadron Slot: <b style="color:#00ffaa">P${this.mySlot}</b>`);
+      if (data.pilots) {
+        this.connectedPilots = data.pilots;
+        this.renderLobby();
+      }
+    }
+
+    else if (data.type === 'lobby_update') {
+      if (data.pilots) {
+        this.connectedPilots = data.pilots;
+        this.renderLobby();
+      }
+    }
+
+    else if (data.type === 'start_game') {
+      this.logRadio(`🚀 SQUADRON MISSION LAUNCHED BY HOST!`);
+      numPlayers = data.pilots ? data.pilots.length : 2;
+      closeOnlineModal();
+      startSolarSail();
+    }
+
+    else if (data.type === 'host_state' && state === 'play') {
+      score = data.score;
+      level = data.level;
+
+      if (data.players && players) {
+        data.players.forEach((hp, idx) => {
+          if (idx !== this.mySlot - 1 && players[idx]) {
+            const p = players[idx];
+            p.x = hp.x;
+            p.y = hp.y;
+            p.vx = hp.vx;
+            p.vy = hp.vy;
+            p.pitch = hp.pitch;
+            p.hp = hp.hp;
+            p.alive = hp.alive;
+            p.respawnT = hp.respawnT;
+            p.inv = hp.inv;
+          }
+        });
+      }
+
+      if (data.boss) {
+        if (!boss) {
+          boss = {
+            type: data.boss.type,
+            name: data.boss.name,
+            hp: data.boss.hp,
+            maxHp: data.boss.maxHp,
+            x: data.boss.x,
+            y: data.boss.y,
+            w: 180, h: 100,
+            phase: data.boss.phase,
+            alive: data.boss.alive,
+            laserActive: data.boss.laserActive,
+            laserAngle: data.boss.laserAngle,
+            laserWidth: data.boss.laserWidth,
+            trio: data.boss.trio
+          };
+        } else {
+          boss.hp = data.boss.hp;
+          boss.maxHp = data.boss.maxHp;
+          boss.x = data.boss.x;
+          boss.y = data.boss.y;
+          boss.phase = data.boss.phase;
+          boss.alive = data.boss.alive;
+          boss.laserActive = data.boss.laserActive;
+          boss.laserAngle = data.boss.laserAngle;
+          boss.laserWidth = data.boss.laserWidth;
+          boss.trio = data.boss.trio;
+        }
+      } else {
+        boss = null;
+      }
+    }
+  },
+
+  broadcast(data) {
+    this.clientConns.forEach(c => {
+      if (c.conn && c.conn.open) {
+        try { c.conn.send(data); } catch(e) {}
+      }
+    });
+  },
+
+  sendClientInput(p) {
+    if (this.mode === 'online_client' && this.hostConn && this.hostConn.open) {
+      try {
+        this.hostConn.send({
+          type: 'client_input',
+          slot: this.mySlot,
+          x: Math.round(p.x),
+          y: Math.round(p.y),
+          vx: Math.round(p.vx),
+          vy: Math.round(p.vy),
+          pitch: +(p.pitch.toFixed(3)),
+          hp: p.hp,
+          alive: p.alive,
+          respawnT: +(p.respawnT.toFixed(1)),
+          shoot: p.keys.shoot,
+          gadget: p.keys.gadget,
+          super: p.keys.super
+        });
+        p.keys.gadget = false;
+        p.keys.super = false;
+      } catch(e) {}
+    }
+  },
+
+  broadcastHostState() {
+    if (this.mode === 'online_host' && this.clientConns.length > 0) {
+      const statePacket = {
+        type: 'host_state',
+        score: score,
+        level: level,
+        players: players.map(p => ({
+          id: p.id,
+          x: Math.round(p.x),
+          y: Math.round(p.y),
+          vx: Math.round(p.vx),
+          vy: Math.round(p.vy),
+          pitch: +(p.pitch.toFixed(3)),
+          hp: p.hp,
+          maxHp: p.maxHp,
+          alive: p.alive,
+          respawnT: +(p.respawnT.toFixed(1)),
+          inv: +(p.inv.toFixed(2))
+        })),
+        boss: boss ? {
+          type: boss.type,
+          name: boss.name,
+          hp: boss.hp,
+          maxHp: boss.maxHp,
+          x: Math.round(boss.x),
+          y: Math.round(boss.y),
+          phase: boss.phase,
+          alive: boss.alive,
+          laserActive: boss.laserActive,
+          laserAngle: +(boss.laserAngle || 0).toFixed(3),
+          laserWidth: boss.laserWidth,
+          trio: boss.trio ? boss.trio.map(s => ({ id: s.id, x: Math.round(s.x), y: Math.round(s.y), hp: s.hp, maxHp: s.maxHp, alive: s.alive })) : null
+        } : null
+      };
+      this.broadcast(statePacket);
+    }
+  },
+
+  renderLobby() {
+    const countBadge = document.getElementById('lobbyCountBadge');
+    if (countBadge) {
+      const numActive = (this.connectedPilots && this.connectedPilots.length) || 1;
+      countBadge.textContent = `${numActive} / 3 CONNECTED`;
+    }
+
+    const shipNames = {
+      cutter: '⚡ Storm Cutter',
+      runner: '🚀 T-65B X-Wing',
+      galleon: '🏴‍☠️ Solar Galleon',
+      hind: '💣 Golden Hind Dreadnought',
+      storm: '🛸 Fondor Haulcraft'
+    };
+
+    for (let slot = 1; slot <= 3; slot++) {
+      const card = document.getElementById(`slotCard${slot}`);
+      const nameEl = document.getElementById(`slotName${slot}`);
+      const shipEl = document.getElementById(`slotShip${slot}`);
+      const statusEl = document.getElementById(`slotStatus${slot}`);
+      const pilot = this.connectedPilots ? this.connectedPilots.find(p => p.slot === slot) : null;
+
+      if (pilot) {
+        if (card) card.className = 'squad-slot-card active-slot';
+        if (nameEl) nameEl.textContent = pilot.name + (slot === this.mySlot ? ' (YOU)' : '');
+        if (shipEl) shipEl.textContent = shipNames[pilot.shipType] || pilot.shipType || 'Starfighter';
+        if (statusEl) statusEl.innerHTML = '<span class="pulse-dot"></span> READY';
+      } else {
+        if (card) card.className = 'squad-slot-card';
+        if (nameEl) nameEl.textContent = slot === 2 ? 'Waiting for Wingman...' : 'Waiting for Heavy Gunner...';
+        if (shipEl) shipEl.textContent = slot === 2 ? 'T-65B X-Wing' : 'Golden Hind Dreadnought';
+        if (statusEl) statusEl.innerHTML = '<span style="color:#8fa6cb">⏳ OPEN</span>';
+      }
+    }
+  }
+};
+
+function openOnlineModal(e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const m = document.getElementById('onlineModal');
+  if (m) m.classList.remove('hidden');
+
+  const cInp = document.getElementById('onlineCallsign');
+  if (cInp) cInp.value = playerName || localStorage.getItem('sp_name') || 'Captain Noel';
+
+  const sSel = document.getElementById('onlineShipSelect');
+  if (sSel) sSel.value = SAVE.data.sel || 'cutter';
+
+  OnlineFleetNet.updatePilotInfo();
+  try { sfx('click'); } catch(err) {}
+}
+
+function closeOnlineModal(e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  const m = document.getElementById('onlineModal');
+  if (m) m.classList.add('hidden');
+}
+
+function createOnlineRoom() {
+  OnlineFleetNet.createRoom();
+}
+
+function joinOnlineRoom() {
+  OnlineFleetNet.joinRoom();
+}
+
+function launchOnlineMission() {
+  if (OnlineFleetNet.mode !== 'online_host') return;
+  numPlayers = OnlineFleetNet.connectedPilots.length;
+  OnlineFleetNet.broadcast({
+    type: 'start_game',
+    pilots: OnlineFleetNet.connectedPilots
+  });
+  closeOnlineModal();
+  startSolarSail();
+}
+
+function copyOnlineRoomCode() {
+  const code = OnlineFleetNet.roomCode;
+  if (code && navigator.clipboard) {
+    navigator.clipboard.writeText(code);
+    OnlineFleetNet.logRadio(`📋 Room code <b>${code}</b> copied to clipboard!`);
+  }
+}
+
+function copyOnlineInviteLink() {
+  const code = OnlineFleetNet.roomCode;
+  const link = `${window.location.origin}${window.location.pathname}?room=${code}`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(link);
+    const toast = document.getElementById('inviteLinkToast');
+    if (toast) {
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3500);
+    }
+    OnlineFleetNet.logRadio(`🔗 Direct invite link copied to clipboard! Send to your friends.`);
+  }
+}
+
+function updateOnlinePilotInfo() {
+  OnlineFleetNet.updatePilotInfo();
+}
+
+window.openOnlineModal = openOnlineModal;
+window.closeOnlineModal = closeOnlineModal;
+window.createOnlineRoom = createOnlineRoom;
+window.joinOnlineRoom = joinOnlineRoom;
+window.launchOnlineMission = launchOnlineMission;
+window.copyOnlineRoomCode = copyOnlineRoomCode;
+window.copyOnlineInviteLink = copyOnlineInviteLink;
+window.updateOnlinePilotInfo = updateOnlinePilotInfo;
+window.OnlineFleetNet = OnlineFleetNet;
+
+// Initialize online detection from URL on DOM load
+document.addEventListener('DOMContentLoaded', () => {
+  OnlineFleetNet.init();
+});
+setTimeout(() => OnlineFleetNet.init(), 800);
+
 // ==========================================================================
 // 1 - 3 PLAYERS MULTIPLAYER CO-OP FLEET ENGINE
 // ==========================================================================
@@ -5672,28 +6669,43 @@ window.setPlayerCount = setPlayerCount;
 
 function initMultiplayerFleet() {
   players = [];
-  const startYs = (numPlayers === 1) ? [H * 0.5] : (numPlayers === 2) ? [H * 0.38, H * 0.62] : [H * 0.28, H * 0.50, H * 0.72];
-  const pConfigs = [
-    { id: 1, name: playerName || 'Captain Noel', col: '#ffd23c', shipType: SAVE.data.sel || 'cutter', maxHp: maxHp },
-    { id: 2, name: 'First Mate', col: '#00ffaa', shipType: 'runner', maxHp: maxHp },
-    { id: 3, name: 'Heavy Gunner', col: '#ff5500', shipType: 'hind', maxHp: maxHp }
-  ];
+  const count = (OnlineFleetNet && OnlineFleetNet.mode && OnlineFleetNet.mode.startsWith('online')) 
+    ? Math.max(1, OnlineFleetNet.connectedPilots.length) 
+    : numPlayers;
+  numPlayers = count;
 
+  const startYs = (numPlayers === 1) ? [H * 0.5] : (numPlayers === 2) ? [H * 0.38, H * 0.62] : [H * 0.28, H * 0.50, H * 0.72];
+  
   for (let i = 0; i < numPlayers; i++) {
-    const cfg = pConfigs[i];
+    let pName = `Pilot ${i + 1}`;
+    let pShip = 'cutter';
+    let pCol = i === 0 ? '#ffd23c' : i === 1 ? '#00ffaa' : '#ff5500';
+
+    if (OnlineFleetNet && OnlineFleetNet.mode && OnlineFleetNet.mode.startsWith('online')) {
+      const pilot = OnlineFleetNet.connectedPilots[i];
+      if (pilot) {
+        pName = pilot.name || pName;
+        pShip = pilot.shipType || (i === 0 ? (SAVE.data.sel || 'cutter') : i === 1 ? 'runner' : 'hind');
+      }
+    } else {
+      if (i === 0) { pName = playerName || 'Captain Noel'; pShip = SAVE.data.sel || 'cutter'; }
+      else if (i === 1) { pName = 'First Mate'; pShip = 'runner'; }
+      else if (i === 2) { pName = 'Heavy Gunner'; pShip = 'hind'; }
+    }
+
     players.push({
       id: i + 1,
-      name: cfg.name,
-      col: cfg.col,
-      shipType: cfg.shipType,
+      name: pName,
+      col: pCol,
+      shipType: pShip,
       x: W * 0.20,
       y: startYs[i],
       vx: 0,
       vy: 0,
       pitch: 0,
-      hp: cfg.maxHp,
-      maxHp: cfg.maxHp,
-      inv: 1.0,
+      hp: maxHp,
+      maxHp: maxHp,
+      inv: 1.5,
       recoil: 0,
       flagWave: 0,
       sailGlow: 0,
@@ -5708,17 +6720,44 @@ function initMultiplayerFleet() {
     });
   }
 
-  // Primary pointer alias
-  ship = players[0];
-  window.ship = players[0];
+  // Primary pointer alias for local ship
+  const localIdx = (OnlineFleetNet && OnlineFleetNet.mode === 'online_client') ? (OnlineFleetNet.mySlot - 1) : 0;
+  ship = players[localIdx] || players[0];
+  window.ship = ship;
   window.players = players;
 }
 
-// Multi-Key Listener for P1, P2, P3
+// Multi-Key Listener for P1, P2, P3 and Cross-Device Online
 window.addEventListener('keydown', (e) => {
   const k = e.key.toLowerCase();
 
-  // P1 Controls: W A S D / Space / Q / E
+  // If playing in Online Multiplayer, standard controls control YOUR ship on YOUR device!
+  if (OnlineFleetNet && OnlineFleetNet.mode && OnlineFleetNet.mode.startsWith('online')) {
+    const mySlotIdx = OnlineFleetNet.mySlot - 1;
+    const myP = players[mySlotIdx];
+    if (myP && myP.alive) {
+      if (k === 'w' || e.key === 'ArrowUp') myP.keys.up = true;
+      if (k === 's' || e.key === 'ArrowDown') myP.keys.down = true;
+      if (k === 'a' || e.key === 'ArrowLeft') myP.keys.left = true;
+      if (k === 'd' || e.key === 'ArrowRight') myP.keys.right = true;
+      if (k === ' ' || k === 'f' || k === 'k' || k === 'b') myP.keys.shoot = true;
+      if (k === 'q' || k === 'i' || k === 'y') {
+        myP.keys.gadget = true;
+        if (mySlotIdx === 0) activateGadget();
+        else if (mySlotIdx === 1) activateP2Gadget();
+        else if (mySlotIdx === 2) activateP3Gadget();
+      }
+      if (k === 'e' || k === 'o' || k === 'u') {
+        myP.keys.super = true;
+        if (mySlotIdx === 0) activateSuper();
+        else if (mySlotIdx === 1) activateP2Super();
+        else if (mySlotIdx === 2) activateP3Super();
+      }
+    }
+    return;
+  }
+
+  // Local Shared-Screen Split Controls:
   if (players[0] && players[0].alive) {
     if (k === 'w') players[0].keys.up = true;
     if (k === 's') players[0].keys.down = true;
@@ -5729,7 +6768,6 @@ window.addEventListener('keydown', (e) => {
     if (k === 'e') activateSuper();
   }
 
-  // P2 Controls: Arrow Keys / K / L / I / O
   if (numPlayers >= 2 && players[1] && players[1].alive) {
     if (e.key === 'ArrowUp') players[1].keys.up = true;
     if (e.key === 'ArrowDown') players[1].keys.down = true;
@@ -5740,7 +6778,6 @@ window.addEventListener('keydown', (e) => {
     if (k === 'o') activateP2Super();
   }
 
-  // P3 Controls: T F G H / B / V / Y / U
   if (numPlayers >= 3 && players[2] && players[2].alive) {
     if (k === 't' || e.key === '8') players[2].keys.up = true;
     if (k === 'g' || e.key === '5' || e.key === '2') players[2].keys.down = true;
@@ -5754,6 +6791,20 @@ window.addEventListener('keydown', (e) => {
 
 window.addEventListener('keyup', (e) => {
   const k = e.key.toLowerCase();
+
+  if (OnlineFleetNet && OnlineFleetNet.mode && OnlineFleetNet.mode.startsWith('online')) {
+    const mySlotIdx = OnlineFleetNet.mySlot - 1;
+    const myP = players[mySlotIdx];
+    if (myP) {
+      if (k === 'w' || e.key === 'ArrowUp') myP.keys.up = false;
+      if (k === 's' || e.key === 'ArrowDown') myP.keys.down = false;
+      if (k === 'a' || e.key === 'ArrowLeft') myP.keys.left = false;
+      if (k === 'd' || e.key === 'ArrowRight') myP.keys.right = false;
+      if (k === ' ' || k === 'f' || k === 'k' || k === 'b') myP.keys.shoot = false;
+    }
+    return;
+  }
+
   if (players[0]) {
     if (k === 'w') players[0].keys.up = false;
     if (k === 's') players[0].keys.down = false;
@@ -5778,23 +6829,25 @@ window.addEventListener('keyup', (e) => {
 });
 
 function activateP2Gadget() {
-  if (!players[1] || !players[1].alive) return;
-  players[1].inv = 2.0;
-  players[1].hp = Math.min(players[1].maxHp, players[1].hp + 1);
-  popup(players[1].x, players[1].y - 35, '⚡ P2 GADGET: PROTON SHIELD!', '#00ffaa');
-  explode(players[1].x, players[1].y, '#00ffaa', 35);
+  const p = players[1];
+  if (!p || !p.alive) return;
+  p.inv = 2.0;
+  p.hp = Math.min(p.maxHp, p.hp + 1);
+  popup(p.x, p.y - 35, '⚡ P2 GADGET: PROTON SHIELD!', '#00ffaa');
+  explode(p.x, p.y, '#00ffaa', 35);
   sfx('super');
 }
 
 function activateP2Super() {
-  if (!players[1] || !players[1].alive) return;
-  players[1].inv = 3.5;
-  popup(players[1].x, players[1].y - 45, '🌟 P2 SUPER: X-WING NOVA BEAM!', '#00ffee');
+  const p = players[1];
+  if (!p || !p.alive) return;
+  p.inv = 3.5;
+  popup(p.x, p.y - 45, '🌟 P2 SUPER: X-WING NOVA BEAM!', '#00ffee');
   addShake(28);
   for (let k = -2; k <= 2; k++) {
     balls.push({
-      x: players[1].x + 40,
-      y: players[1].y + k * 18,
+      x: p.x + 40,
+      y: p.y + k * 18,
       vx: 1100,
       vy: k * 60,
       r: 16,
@@ -5807,23 +6860,25 @@ function activateP2Super() {
 }
 
 function activateP3Gadget() {
-  if (!players[2] || !players[2].alive) return;
-  players[2].inv = 2.0;
-  players[2].hp = Math.min(players[2].maxHp, players[2].hp + 1);
-  popup(players[2].x, players[2].y - 35, '💣 P3 GADGET: DREADNOUGHT REPAIR!', '#ff5500');
-  explode(players[2].x, players[2].y, '#ff5500', 35);
+  const p = players[2];
+  if (!p || !p.alive) return;
+  p.inv = 2.0;
+  p.hp = Math.min(p.maxHp, p.hp + 1);
+  popup(p.x, p.y - 35, '💣 P3 GADGET: DREADNOUGHT REPAIR!', '#ff5500');
+  explode(p.x, p.y, '#ff5500', 35);
   sfx('super');
 }
 
 function activateP3Super() {
-  if (!players[2] || !players[2].alive) return;
-  players[2].inv = 3.5;
-  popup(players[2].x, players[2].y - 45, '🌟 P3 SUPER: TITAN BROADSIDE!', '#ff5500');
+  const p = players[2];
+  if (!p || !p.alive) return;
+  p.inv = 3.5;
+  popup(p.x, p.y - 45, '🌟 P3 SUPER: TITAN BROADSIDE!', '#ff5500');
   addShake(32);
   for (let k = -3; k <= 3; k++) {
     balls.push({
-      x: players[2].x + 45,
-      y: players[2].y + k * 20,
+      x: p.x + 45,
+      y: p.y + k * 20,
       vx: 1200,
       vy: k * 75,
       r: 18,
@@ -5836,13 +6891,17 @@ function activateP3Super() {
 }
 
 function updateMultiplayerFleet(dt) {
+  if (!players || !players.length) return;
   let anyAlive = false;
+
+  const isOnlineClient = (OnlineFleetNet && OnlineFleetNet.mode === 'online_client');
+  const isOnlineHost = (OnlineFleetNet && OnlineFleetNet.mode === 'online_host');
+  const myLocalSlot = (OnlineFleetNet && OnlineFleetNet.mode && OnlineFleetNet.mode.startsWith('online')) ? OnlineFleetNet.mySlot : 1;
 
   players.forEach((p, idx) => {
     if (!p.alive) {
       p.respawnT -= dt;
       if (p.respawnT <= 0) {
-        // Respawn player near surviving team!
         p.alive = true;
         p.hp = Math.round(p.maxHp * 0.6);
         p.inv = 2.5;
@@ -5858,58 +6917,76 @@ function updateMultiplayerFleet(dt) {
     p.inv = Math.max(0, p.inv - dt);
     p.recoil = Math.max(0, p.recoil - dt * 8);
 
-    // Player Movement Acceleration
-    let ax = 0, ay = 0;
-    if (p.keys.up) ay -= 1;
-    if (p.keys.down) ay += 1;
-    if (p.keys.left) ax -= 1;
-    if (p.keys.right) ax += 1;
+    const isLocalControllable = (!isOnlineClient && idx === 0) || (isOnlineClient && (idx + 1 === myLocalSlot)) || (!OnlineFleetNet.mode.startsWith('online'));
 
-    // P1 touch stick integration
-    if (idx === 0 && touchStick.active) {
-      ax += touchStick.ax;
-      ay += touchStick.ay;
-    }
+    if (isLocalControllable) {
+      let ax = 0, ay = 0;
+      if (p.keys.up) ay -= 1;
+      if (p.keys.down) ay += 1;
+      if (p.keys.left) ax -= 1;
+      if (p.keys.right) ax += 1;
 
-    const mag = Math.hypot(ax, ay);
-    if (mag > 1) { ax /= mag; ay /= mag; }
+      if ((idx === 0 || idx + 1 === myLocalSlot) && touchStick && touchStick.active) {
+        ax += touchStick.ax;
+        ay += touchStick.ay;
+      }
 
-    p.vx += ax * ACC * dt;
-    p.vy += ay * ACC * dt;
-    p.vx *= Math.pow(0.025, dt);
-    p.vy *= Math.pow(0.025, dt);
+      const mag = Math.hypot(ax, ay);
+      if (mag > 1) { ax /= mag; ay /= mag; }
 
-    p.x = Math.max(50, Math.min(W - 80, p.x + p.vx * dt));
-    p.y = Math.max(60, Math.min(H - 60, p.y + p.vy * dt));
-    p.pitch = Math.max(-0.25, Math.min(0.25, p.vy * 0.0006));
+      const moveAcc = 1450;
+      p.vx += ax * moveAcc * dt;
+      p.vy += ay * moveAcc * dt;
+      p.vx *= Math.pow(0.025, dt);
+      p.vy *= Math.pow(0.025, dt);
 
-    // Player Shooting
-    p.shootCool -= dt;
-    if ((p.keys.shoot || (idx === 0 && (mouseShootHeld || autoShootActive))) && p.shootCool <= 0) {
-      p.shootCool = 0.22;
-      p.recoil = 1.0;
-      sfx('shot');
-      const shootCol = p.col || '#ffd23c';
-      balls.push({
-        x: p.x + 40,
-        y: p.y - 8,
-        vx: 850,
-        vy: (Math.random() - 0.5) * 40,
-        r: 10,
-        col: shootCol,
-        dmg: 1
-      });
-      balls.push({
-        x: p.x + 40,
-        y: p.y + 8,
-        vx: 850,
-        vy: (Math.random() - 0.5) * 40,
-        r: 10,
-        col: shootCol,
-        dmg: 1
-      });
+      p.x = Math.max(50, Math.min(W - 80, p.x + p.vx * dt));
+      p.y = Math.max(60, Math.min(H - 60, p.y + p.vy * dt));
+      p.pitch = Math.max(-0.25, Math.min(0.25, p.vy * 0.0006));
+
+      // Shooting
+      p.shootCool -= dt;
+      const isShooting = p.keys.shoot || ((idx === 0 || idx + 1 === myLocalSlot) && (mouseShootHeld || autoShootActive));
+      if (isShooting && p.shootCool <= 0) {
+        p.shootCool = 0.20;
+        p.recoil = 1.0;
+        sfx('shot');
+        const shootCol = p.col || '#ffd23c';
+        balls.push({
+          x: p.x + 40,
+          y: p.y - 8,
+          vx: 900,
+          vy: (Math.random() - 0.5) * 40,
+          r: 10,
+          col: shootCol,
+          dmg: 1
+        });
+        balls.push({
+          x: p.x + 40,
+          y: p.y + 8,
+          vx: 900,
+          vy: (Math.random() - 0.5) * 40,
+          r: 10,
+          col: shootCol,
+          dmg: 1
+        });
+      }
+
+      // If client, send input to Host
+      if (isOnlineClient && idx + 1 === myLocalSlot) {
+        OnlineFleetNet.sendClientInput(p);
+      }
+    } else {
+      // Remote player interpolation
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
     }
   });
+
+  // Host state broadcast
+  if (isOnlineHost) {
+    OnlineFleetNet.broadcastHostState();
+  }
 
   if (!anyAlive && state === 'play') {
     lose();
@@ -6044,7 +7121,7 @@ function returnToMenu(e) {
   state = 'menu';
   
   // Hide all modals & overlays except #menu
-  const overlays = ['pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal'];
+  const overlays = ['pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal'];
   overlays.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.add('hidden');
@@ -8238,6 +9315,7 @@ function update(dt) {
   updateBrawlControlsVisibility();
 
   // Space Pirate Galleon Navigation & Solar Ether Inertia
+  updateMultiplayerFleet(dt);
   slowT = Math.max(0, slowT - dt);
 
   // Status Effect 1: Burning Lava Inferno (Damage over Time)
@@ -10263,16 +11341,21 @@ function drawGalleonForward(cx, x, y, scale=1.0) {
 function drawCoopPlayers(cx) {
   if (numPlayers < 2 || !players || !players.length) return;
 
-  for (let pi = 1; pi < players.length; pi++) {
+  const localIdx = (OnlineFleetNet && OnlineFleetNet.mode === 'online_client') ? (OnlineFleetNet.mySlot - 1) : 0;
+
+  for (let pi = 0; pi < players.length; pi++) {
+    if (pi === localIdx) continue; // Skip local player (drawn in main loop)
     const p = players[pi];
+    if (!p) continue;
+
     if (!p.alive) {
       // Draw respawn ghost / escape pod
       cx.save();
       cx.translate(p.x, p.y);
-      cx.globalAlpha = 0.5 + Math.sin(t * 8) * 0.25;
-      cx.strokeStyle = p.col; cx.lineWidth = 2;
+      cx.globalAlpha = 0.6 + Math.sin(t * 8) * 0.3;
+      cx.strokeStyle = p.col || '#00ffee'; cx.lineWidth = 2;
       cx.beginPath(); cx.arc(0, 0, 24, 0, Math.PI * 2); cx.stroke();
-      cx.fillStyle = 'rgba(255,255,255,0.85)';
+      cx.fillStyle = 'rgba(255,255,255,0.9)';
       cx.font = 'bold 11px Orbitron, sans-serif';
       cx.textAlign = 'center';
       cx.fillText(`RESPAWN IN ${Math.ceil(p.respawnT)}s`, 0, -32);
@@ -10291,27 +11374,22 @@ function drawCoopPlayers(cx) {
 
     if (p.shipType === 'runner' || p.id === 2) {
       // P2: T-65B X-Wing Fighter
-      // 4 Wing Ion Exhaust Jets
       for (const ey of [-18, -8, 8, 18]) {
         cx.fillStyle = '#00ffee';
         cx.beginPath();
         cx.arc(-32, ey, 4 + Math.sin(t * 20 + ey) * 1.5, 0, Math.PI * 2);
         cx.fill();
       }
-
-      // X-Wing Wings
       cx.fillStyle = '#1e293b';
       cx.strokeStyle = '#00ffee';
       cx.lineWidth = 2;
       cx.beginPath();
       cx.moveTo(15, -6); cx.lineTo(-20, -32); cx.lineTo(-32, -30); cx.lineTo(-10, -6);
       cx.closePath(); cx.fill(); cx.stroke();
-
       cx.beginPath();
       cx.moveTo(15, 6); cx.lineTo(-20, 32); cx.lineTo(-32, 30); cx.lineTo(-10, 6);
       cx.closePath(); cx.fill(); cx.stroke();
 
-      // Fuselage & Nose
       const fus = cx.createLinearGradient(35, 0, -35, 0);
       fus.addColorStop(0, '#ffffff'); fus.addColorStop(0.5, '#0284c7'); fus.addColorStop(1, '#0f172a');
       cx.fillStyle = fus;
@@ -10319,19 +11397,15 @@ function drawCoopPlayers(cx) {
       cx.moveTo(35, 0); cx.lineTo(-32, -10); cx.lineTo(-32, 10); cx.closePath();
       cx.fill(); cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.5; cx.stroke();
 
-      // Cockpit Glow
       cx.fillStyle = '#38bdf8';
       cx.beginPath(); cx.ellipse(6, 0, 10, 4, 0, 0, Math.PI * 2); cx.fill();
 
-    } else {
+    } else if (p.shipType === 'hind' || p.id === 3) {
       // P3: Golden Hind Heavy Escort
-      // Engine Glow
       for (const ey of [-14, 14]) {
         cx.fillStyle = '#ff5500';
         cx.beginPath(); cx.arc(-34, ey, 5 + Math.sin(t * 18 + ey) * 2, 0, Math.PI * 2); cx.fill();
       }
-
-      // Armored Galleon Hull
       const hg = cx.createLinearGradient(38, 0, -38, 0);
       hg.addColorStop(0, '#ffd23c'); hg.addColorStop(0.5, '#ea580c'); hg.addColorStop(1, '#431407');
       cx.fillStyle = hg;
@@ -10339,17 +11413,31 @@ function drawCoopPlayers(cx) {
       cx.moveTo(38, 0); cx.lineTo(10, -22); cx.lineTo(-34, -18); cx.lineTo(-34, 18); cx.lineTo(10, 22); cx.closePath();
       cx.fill(); cx.strokeStyle = '#ff5500'; cx.lineWidth = 2; cx.stroke();
 
-      // Heavy Battery Turrets
       cx.fillStyle = '#ffd23c';
       for (const ty of [-12, 12]) {
         cx.fillRect(6, ty - 3, 16, 6);
       }
+    } else {
+      // P1 or custom: Solar Pirate Galleon
+      for (const ey of [-12, 12]) {
+        cx.fillStyle = '#ffd23c';
+        cx.beginPath(); cx.arc(-34, ey, 5 + Math.sin(t * 18 + ey) * 2, 0, Math.PI * 2); cx.fill();
+      }
+      const hg = cx.createLinearGradient(40, 0, -40, 0);
+      hg.addColorStop(0, '#ffd23c'); hg.addColorStop(0.4, '#c88a55'); hg.addColorStop(1, '#3b1c06');
+      cx.fillStyle = hg;
+      cx.beginPath();
+      cx.moveTo(40, 0); cx.lineTo(12, -20); cx.lineTo(-36, -16); cx.lineTo(-36, 16); cx.lineTo(12, 20); cx.closePath();
+      cx.fill(); cx.strokeStyle = '#ffd23c'; cx.lineWidth = 2; cx.stroke();
+
+      cx.fillStyle = '#38bdf8';
+      cx.fillRect(-10, -8, 20, 16);
     }
 
-    // Overhead Health Gauge for Co-op Teammate
+    // Overhead Health Gauge for Teammate
     const pBarW = 54, pBarH = 5, pBarY = -46;
-    const pHpRatio = Math.max(0, Math.min(1, p.hp / p.maxHp));
-    const hpCol = pHpRatio > 0.5 ? p.col : pHpRatio > 0.25 ? '#ffd23c' : '#ff2255';
+    const pHpRatio = Math.max(0, Math.min(1, p.hp / (p.maxHp || maxHp)));
+    const hpCol = pHpRatio > 0.5 ? (p.col || '#00ffaa') : pHpRatio > 0.25 ? '#ffd23c' : '#ff2255';
     
     cx.fillStyle = 'rgba(2, 6, 23, 0.85)';
     cx.beginPath(); cx.roundRect(-pBarW * 0.5 - 1, pBarY - 1, pBarW + 2, pBarH + 2, 2); cx.fill();
@@ -15017,6 +16105,67 @@ function draw() {
     cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, barX, statY3);
     cx.restore();
     
+    
+    // -------------------------------------------------------------
+    // ONLINE SQUADRON TELEMETRY OVERLAY (1-3 PILOTS)
+    // -------------------------------------------------------------
+    if ((OnlineFleetNet.mode.startsWith('online') || numPlayers > 1) && (state === 'play' || state === 'pause')) {
+      const isMobile = W < 800;
+      const sqW = isMobile ? 220 : 260;
+      const sqH = 34 + (players.length * 24);
+      const sqX = W - sqW - (isMobile ? 10 : 14);
+      const sqY = isMobile ? 10 : 14;
+
+      cx.save();
+      cx.fillStyle = 'rgba(6, 14, 30, 0.85)';
+      cx.strokeStyle = OnlineFleetNet.mode.startsWith('online') ? '#00e5ff' : '#ffd23c';
+      cx.lineWidth = 1.5;
+      cx.beginPath();
+      cx.roundRect(sqX, sqY, sqW, sqH, 10);
+      cx.fill(); cx.stroke();
+
+      cx.fillStyle = '#ffffff';
+      cx.font = isMobile ? 'bold 9px "Orbitron", sans-serif' : 'bold 11px "Orbitron", sans-serif';
+      cx.textAlign = 'left';
+      const modeLabel = OnlineFleetNet.mode === 'online_host' ? '🌐 ONLINE FLEET (HOST)' : OnlineFleetNet.mode === 'online_client' ? `🌐 ONLINE FLEET (P${OnlineFleetNet.mySlot})` : '👥 LOCAL CO-OP SQUAD';
+      cx.fillText(modeLabel, sqX + 10, sqY + 18);
+
+      cx.fillStyle = '#00ffaa';
+      cx.font = isMobile ? 'bold 8px "Orbitron", sans-serif' : 'bold 10px "Orbitron", sans-serif';
+      cx.textAlign = 'right';
+      cx.fillText(`🟢 28ms`, sqX + sqW - 10, sqY + 18);
+
+      players.forEach((p, idx) => {
+        const rowY = sqY + 34 + idx * 24;
+        const isMe = OnlineFleetNet.mode.startsWith('online') ? (idx + 1 === OnlineFleetNet.mySlot) : (idx === 0);
+
+        cx.fillStyle = p.col || '#ffd23c';
+        cx.font = isMe ? (isMobile ? 'bold 9px "Orbitron", sans-serif' : 'bold 11px "Orbitron", sans-serif') : (isMobile ? '8px "Orbitron", sans-serif' : '10px "Orbitron", sans-serif');
+        cx.textAlign = 'left';
+        const slotIcon = idx === 0 ? '👑' : idx === 1 ? '🚀' : '💣';
+        cx.fillText(`${slotIcon} ${p.name.slice(0, 8)}${isMe ? ' (YOU)' : ''}`, sqX + 10, rowY + 10);
+
+        const mBarX = sqX + sqW - (isMobile ? 65 : 75), mBarY = rowY + 2, mBarW = (isMobile ? 55 : 65), mBarH = 8;
+        cx.fillStyle = 'rgba(0,0,0,0.6)';
+        cx.fillRect(mBarX, mBarY, mBarW, mBarH);
+        cx.strokeStyle = 'rgba(255,255,255,0.2)';
+        cx.strokeRect(mBarX, mBarY, mBarW, mBarH);
+
+        if (p.alive && p.hp > 0) {
+          const pRatio = Math.max(0, Math.min(1, p.hp / (p.maxHp || maxHp)));
+          cx.fillStyle = pRatio > 0.5 ? '#00ffaa' : pRatio > 0.25 ? '#ffd23c' : '#ff3344';
+          cx.fillRect(mBarX + 1, mBarY + 1, (mBarW - 2) * pRatio, mBarH - 2);
+        } else {
+          cx.fillStyle = '#ff3344';
+          cx.font = 'bold 8px "Orbitron", sans-serif';
+          cx.textAlign = 'center';
+          cx.fillText(`RESPAWN ${Math.ceil(p.respawnT)}s`, mBarX + mBarW / 2, mBarY + 7);
+        }
+      });
+
+      cx.restore();
+    }
+
     if (combo >= 2 && comboT > 0) {
       cx.fillStyle = '#00d2ff'; cx.font = 'bold 24px "Orbitron", sans-serif';
       cx.fillText(`🔥 STREAK x${Math.min(5, combo)}`, 22, 185);
