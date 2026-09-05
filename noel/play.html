@@ -5307,7 +5307,8 @@ function spawnBoss() {
     spinRing: 0,
     atkCycle: 0,
     enraged: false,
-    beamActive: 0,
+    beamActive: b.id === 'dread' ? 3.5 : 0,
+    beamAng: Math.PI,
     tractorT: 0,
     isRamming: false, ramChargeT: 0, ramStartX: 0,
     isCloaked: false, cloakT: 0,
@@ -8325,9 +8326,9 @@ function update(dt) {
 
       if (boss.type === 'dread') {
         // Boss 1: GRAND ADMIRAL VEX: OMEGA DREADNOUGHT
-        if (boss.atkCycle === 2) {
-          // ULTIMATE: Axial Planet-Killer Continuous Death Ray + Ventral TIE Carrier Launch!
-          boss.beamActive = 2.2;
+        if (boss.atkCycle === 0 || boss.atkCycle === 2) {
+          // ULTIMATE: Axial Planet-Killer Continuous Emerald Death Ray + Ventral TIE Carrier Launch!
+          boss.beamActive = 3.5;
           if (gliders.length < 3) {
             gliders.push({
               variant: 'tie', name: 'VEX ESCORT TIE', col: '#ff0033', maxHp: 2, hp: 2,
@@ -8338,21 +8339,21 @@ function update(dt) {
           addShake(28);
           popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: AXIAL PLANET-KILLER BEAM!', '#00ffaa');
           sfx('laser');
-        } else if (boss.atkCycle === 1) {
-          // Dual Sponson Heavy Railguns (Aimed directly at player)
+          // Twin sponson emerald railgun fire
+          for (const cy of [-36, 36]) {
+            eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.40, y: boss.y + cy, vx: (dx / dist) * 660 * spdBonus, vy: (dy / dist) * 660 * spdBonus, r: 19 });
+          }
+        } else {
+          // Dual Sponson Heavy Tachyon Railguns + 5-Round Emerald Turbolaser Salvo
           for (const cy of [-36, 36]) {
             eballs.push({ type: 'emp', col: '#00ffaa', x: boss.x - boss.w * 0.40, y: boss.y + cy, vx: (dx / dist) * 640 * spdBonus, vy: (dy / dist) * 640 * spdBonus, r: 19 });
           }
-          popup(boss.x - 40, boss.y - 45, '⚡ DUAL TACHYON RAILGUNS!', '#00ffaa');
-          sfx('laser');
-        } else {
-          // Orbital Turbolaser 5-Round Salvo (Aimed spread at player)
           for (const ang of [-0.28, -0.14, 0, 0.14, 0.28]) {
             const shootAng = aimAng + ang;
             eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.42, y: boss.y, vx: Math.cos(shootAng) * 640 * spdBonus, vy: Math.sin(shootAng) * 640 * spdBonus, r: 18 });
           }
+          popup(boss.x - 40, boss.y - 45, '⚡ DUAL TACHYON RAILGUNS & TURBOLASERS!', '#00ffaa');
           sfx('laser');
-          popup(boss.x - 40, boss.y - 45, 'TACHYON BEAM BARRAGE!', '#00ffaa');
         }
 
       } else if (boss.type === 'hive') {
@@ -11047,23 +11048,42 @@ function draw() {
       if (boss.beamActive > 0) {
         const bAng = boss.beamAng !== undefined ? boss.beamAng : Math.PI;
         const muzzleX = -boss.w * 0.48, muzzleY = 0;
-        const beamLen = 2200;
+        const beamLen = 2600;
         const endX = muzzleX + Math.cos(bAng) * beamLen;
         const endY = muzzleY + Math.sin(bAng) * beamLen;
 
         cx.save();
-        cx.shadowColor = '#00ffaa'; cx.shadowBlur = 24;
-        cx.strokeStyle = 'rgba(0, 255, 170, 0.85)'; cx.lineWidth = 32;
+        // Layer 1: Wide Emerald Ambient Aura
+        cx.shadowColor = '#00ffaa'; cx.shadowBlur = 36;
+        cx.strokeStyle = 'rgba(0, 255, 170, 0.45)'; cx.lineWidth = 46;
         cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
+
+        // Layer 2: Searing Emerald Plasma Ray
+        cx.strokeStyle = 'rgba(0, 255, 170, 0.95)'; cx.lineWidth = 26;
+        cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
+
+        // Layer 3: Ultra-Bright White Energy Core
         cx.strokeStyle = '#ffffff'; cx.lineWidth = 12;
         cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
-        // Electric Tachyon Arc Rings along the beam
-        cx.strokeStyle = '#00ffee'; cx.lineWidth = 2.5;
-        for (let d = 75; d < 1800; d += 75) {
+
+        // Layer 4: Electric Tachyon Arc Rings pulsing down the beam
+        cx.strokeStyle = '#00ffee'; cx.lineWidth = 3.0;
+        for (let d = 75; d < 2200; d += 75) {
           const rx = muzzleX + Math.cos(bAng) * d;
           const ry = muzzleY + Math.sin(bAng) * d;
-          cx.beginPath(); cx.ellipse(rx, ry, 8, 22 + Math.sin(t * 20 + d) * 6, bAng + Math.PI * 0.5, 0, Math.PI * 2); cx.stroke();
+          cx.beginPath();
+          cx.ellipse(rx, ry, 10, 26 + Math.sin(t * 22 + d) * 8, bAng + Math.PI * 0.5, 0, Math.PI * 2);
+          cx.stroke();
         }
+
+        // Layer 5: Prow Emitter Core Flare
+        const fg = cx.createRadialGradient(muzzleX, muzzleY, 4, muzzleX, muzzleY, 44);
+        fg.addColorStop(0, '#ffffff');
+        fg.addColorStop(0.4, '#00ffaa');
+        fg.addColorStop(0.8, 'rgba(0,255,170,0.6)');
+        fg.addColorStop(1, 'rgba(0,255,170,0)');
+        cx.fillStyle = fg;
+        cx.beginPath(); cx.arc(muzzleX, muzzleY, 40 + Math.sin(t * 28) * 8, 0, Math.PI * 2); cx.fill();
         cx.restore();
       }
 
