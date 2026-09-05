@@ -1510,6 +1510,166 @@ if (typeof Peer === 'undefined') {
     margin-bottom: 8px;
   }
 
+
+  /* Brawl Stars Style Top-of-Screen Cosmic Trail Banner */
+  .top-trail-bar {
+    width: min(94vw, 780px);
+    background: linear-gradient(90deg, rgba(15, 23, 42, 0.95), rgba(30, 58, 138, 0.92), rgba(15, 23, 42, 0.95));
+    border: 2px solid #ffd23c;
+    border-radius: 18px;
+    padding: 10px 18px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    box-shadow: 0 4px 25px rgba(255, 210, 60, 0.35), inset 0 0 15px rgba(255, 210, 60, 0.12);
+    cursor: pointer;
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s, border-color 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+    position: relative;
+  }
+  .top-trail-bar:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 6px 32px rgba(255, 210, 60, 0.6), inset 0 0 20px rgba(255, 210, 60, 0.25);
+    border-color: #ffffff;
+  }
+  .top-trail-bar:active {
+    transform: scale(0.98);
+  }
+  .top-trail-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .top-trail-trophy-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1.5px solid #ffd23c;
+    padding: 6px 14px;
+    border-radius: 12px;
+  }
+  .top-trail-trophy-icon {
+    font-size: 1.6rem;
+    filter: drop-shadow(0 0 6px rgba(255, 210, 60, 0.7));
+  }
+  .top-trail-trophy-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+  .top-trail-label {
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: #ffd23c;
+    letter-spacing: 1.5px;
+    font-family: 'Orbitron', sans-serif;
+  }
+  .top-trail-count {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
+    line-height: 1.1;
+    text-shadow: 0 0 10px rgba(255, 210, 60, 0.5);
+  }
+  .top-trail-center {
+    flex: 1;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .top-trail-league-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+  }
+  .top-trail-league-name {
+    color: #93c5fd;
+    letter-spacing: 0.5px;
+  }
+  .top-trail-next-hint {
+    color: #ffd23c;
+  }
+  .top-trail-meter-wrap {
+    width: 100%;
+    height: 12px;
+    background: rgba(2, 6, 23, 0.85);
+    border: 1px solid rgba(255, 210, 60, 0.35);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .top-trail-meter-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f59e0b, #ffd23c, #00ffee);
+    border-radius: 5px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 10px rgba(255, 210, 60, 0.8);
+  }
+  .top-trail-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .top-trail-reward-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.25), rgba(126, 34, 206, 0.35));
+    border: 1.5px solid #00e5ff;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+  }
+  .top-trail-reward-icon {
+    font-size: 1.1rem;
+  }
+  .top-trail-claim-badge {
+    position: absolute;
+    top: -8px;
+    right: -6px;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 900;
+    font-family: 'Orbitron', sans-serif;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 12px #ef4444;
+    animation: pulseDot 1.2s infinite;
+  }
+  @media (max-width: 640px) {
+    .top-trail-bar {
+      flex-direction: column;
+      padding: 10px 14px;
+      gap: 8px;
+    }
+    .top-trail-left, .top-trail-center, .top-trail-right {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -1560,6 +1720,36 @@ if (typeof Peer === 'undefined') {
 </div>
 
 <div id="menu" class="overlay">
+  <!-- Brawl Stars Style Top-of-Screen Cosmic Trail (Trophy Road) Banner -->
+  <div id="topTrailBar" class="top-trail-bar" onclick="openTrailModal(event)" role="button" tabindex="0" title="Tap to open Cosmic Trail Trophy Road">
+    <div class="top-trail-left">
+      <div class="top-trail-trophy-badge">
+        <span class="top-trail-trophy-icon">🏆</span>
+        <div class="top-trail-trophy-info">
+          <span class="top-trail-label">COSMIC TRAIL</span>
+          <span id="topTrailTrophies" class="top-trail-count">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="top-trail-center">
+      <div class="top-trail-league-row">
+        <span id="topTrailLeague" class="top-trail-league-name">🥉 Bronze Stardust League</span>
+        <span id="topTrailNextText" class="top-trail-next-hint">Next: 50 🏆</span>
+      </div>
+      <div class="top-trail-meter-wrap">
+        <div id="topTrailMeter" class="top-trail-meter-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <div class="top-trail-right">
+      <div id="topTrailRewardPreview" class="top-trail-reward-pill">
+        <span id="topTrailNextIcon" class="top-trail-reward-icon">🎁</span>
+        <span id="topTrailRewardName" class="top-trail-reward-text">500 🪙</span>
+      </div>
+      <span id="topTrailClaimBadge" class="top-trail-claim-badge hidden">!</span>
+    </div>
+  </div>
   <h1>🏴‍☠️ SPACE PIRATES</h1>
   <div style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(0,229,255,0.2),rgba(126,34,206,0.3));border:1.5px solid #00e5ff;color:#00ffee;padding:5px 16px;border-radius:20px;font-size:0.82rem;font-weight:900;letter-spacing:1.5px;margin-bottom:10px;font-family:'Orbitron',sans-serif;box-shadow:0 0 16px rgba(0,229,255,0.4)">🚀 STAR WARS FLEET EDITION • ONLINE LIVE</div>
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
@@ -7034,11 +7224,63 @@ function lose() {
 }
 
 // ---------- HANGAR UI & DAILY REWARDS ----------
+
+function updateTopTrailBar() {
+  const tr = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : 0;
+  const topTrophies = document.getElementById('topTrailTrophies');
+  const topLeague = document.getElementById('topTrailLeague');
+  const topNextText = document.getElementById('topTrailNextText');
+  const topMeter = document.getElementById('topTrailMeter');
+  const topNextIcon = document.getElementById('topTrailNextIcon');
+  const topRewardName = document.getElementById('topTrailRewardName');
+  const topClaimBadge = document.getElementById('topTrailClaimBadge');
+
+  if (topTrophies) topTrophies.textContent = tr.toLocaleString();
+
+  if (typeof getCosmicLeague === 'function') {
+    const league = getCosmicLeague(tr);
+    if (topLeague) {
+      topLeague.textContent = league.name;
+      topLeague.style.color = league.col === '#020617' ? '#ffd23c' : league.col;
+    }
+  }
+
+  // Find next milestone
+  if (typeof COSMIC_TRAIL !== 'undefined') {
+    const nextNode = COSMIC_TRAIL.find(n => tr < n.trophies);
+    if (nextNode) {
+      if (topNextText) topNextText.textContent = `${tr.toLocaleString()} / ${nextNode.trophies.toLocaleString()} 🏆`;
+      const pct = Math.min(100, Math.max(0, (tr / nextNode.trophies) * 100));
+      if (topMeter) topMeter.style.width = `${pct}%`;
+      if (topNextIcon) topNextIcon.textContent = nextNode.icon || '🎁';
+      if (topRewardName) topRewardName.textContent = nextNode.name;
+    } else {
+      if (topNextText) topNextText.textContent = '👑 100k MAX REACHED!';
+      if (topMeter) topMeter.style.width = '100%';
+      if (topNextIcon) topNextIcon.textContent = '👑';
+      if (topRewardName) topRewardName.textContent = 'Master Overlord';
+    }
+  }
+
+  if (typeof getClaimableTrailCount === 'function' && topClaimBadge) {
+    const claimCount = getClaimableTrailCount();
+    if (claimCount > 0) {
+      topClaimBadge.textContent = claimCount > 9 ? '9+' : claimCount;
+      topClaimBadge.classList.remove('hidden');
+    } else {
+      topClaimBadge.classList.add('hidden');
+    }
+  }
+}
+window.updateTopTrailBar = updateTopTrailBar;
+
 function renderWallet() {
   const w = `🪙 ${SAVE.data.coins}  🎟️ ${SAVE.data.tokens}  🎡 ${SAVE.data.spins}  ☠️ ${SAVE.data.kills}`;
   const ml = document.getElementById('walletline'); if (ml) ml.textContent = w;
   const sw = document.getElementById('shopwallet'); if (sw) sw.textContent = w;
   updateDailyBadge();
+  if (typeof updateTopTrailBar === "function") updateTopTrailBar();
+  if (typeof updateTrailBadge === "function") updateTrailBadge();
 }
 
 // ---------- DAILY REWARDS SYSTEM (7-DAY PIRATE VOYAGE STREAK & TOKEN RECOVERY) ----------
@@ -7232,6 +7474,8 @@ function claimDailyReward() {
 
   renderWallet();
   updateDailyBadge();
+  if (typeof updateTopTrailBar === "function") updateTopTrailBar();
+  if (typeof updateTrailBadge === "function") updateTrailBadge();
   renderDailyModalUI();
 }
 window.claimDailyReward = claimDailyReward;
@@ -7255,6 +7499,8 @@ function repairDailyStreak() {
 
   renderWallet();
   updateDailyBadge();
+  if (typeof updateTopTrailBar === "function") updateTopTrailBar();
+  if (typeof updateTrailBadge === "function") updateTrailBadge();
   renderDailyModalUI();
 }
 window.repairDailyStreak = repairDailyStreak;
@@ -7270,6 +7516,8 @@ function resetDailyStreak() {
 
   renderWallet();
   updateDailyBadge();
+  if (typeof updateTopTrailBar === "function") updateTopTrailBar();
+  if (typeof updateTrailBadge === "function") updateTrailBadge();
   renderDailyModalUI();
 }
 window.resetDailyStreak = resetDailyStreak;
@@ -7291,6 +7539,8 @@ function closeDailyModal() {
   if (modal) modal.classList.add('hidden');
   renderWallet();
   updateDailyBadge();
+  if (typeof updateTopTrailBar === "function") updateTopTrailBar();
+  if (typeof updateTrailBadge === "function") updateTrailBadge();
 }
 window.closeDailyModal = closeDailyModal;
 
@@ -7988,6 +8238,7 @@ function claimTrailReward(nodeId) {
 
   renderTrailModalUI();
   updateTrailBadge();
+  if (typeof updateTopTrailBar === "function") updateTopTrailBar();
   renderWallet();
 }
 window.claimTrailReward = claimTrailReward;
