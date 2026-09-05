@@ -1101,6 +1101,157 @@
       height: 70px !important;
     }
   }
+
+  /* ==========================================================================
+     COSMIC TRAIL (BRAWL STARS STYLE TROPHY ROAD)
+     ========================================================================== */
+  .trail-card {
+    background: radial-gradient(circle at 50% 0%, #172554 0%, #0b1120 65%, #020617 100%);
+    border: 2px solid #3b82f6;
+    border-radius: 24px;
+    padding: 22px 26px;
+    width: min(94vw, 860px);
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 50px rgba(59, 130, 246, 0.45), inset 0 0 30px rgba(59, 130, 246, 0.15);
+    position: relative;
+    overflow: hidden;
+    animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .trail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .trail-league-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .trail-progress-bar-wrap {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    height: 18px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .trail-progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #00ffee, #ffd23c);
+    border-radius: 12px;
+    transition: width 0.5s ease-out;
+    box-shadow: 0 0 14px rgba(0, 255, 238, 0.6);
+  }
+  .trail-track-container {
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-top: 6px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .trail-node-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    gap: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+  .trail-node-card.ready {
+    border-color: #ffd23c;
+    background: linear-gradient(135deg, rgba(255, 210, 60, 0.18), rgba(59, 130, 246, 0.18));
+    box-shadow: 0 0 20px rgba(255, 210, 60, 0.35);
+  }
+  .trail-node-card.claimed {
+    border-color: #22c55e44;
+    opacity: 0.78;
+    background: rgba(34, 197, 94, 0.08);
+  }
+  .trail-node-card.locked {
+    opacity: 0.60;
+  }
+  .trail-trophy-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-width: 95px;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1.5px solid #ffd23c;
+    border-radius: 999px;
+    color: #ffd23c;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 0.85rem;
+  }
+  .trail-claim-btn {
+    background: linear-gradient(135deg, #ffd23c, #f59e0b);
+    color: #020617;
+    border: none;
+    border-radius: 12px;
+    padding: 9px 18px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 0.85rem;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(255, 210, 60, 0.45);
+    transition: all 0.2s;
+    animation: claimPulse 1.8s infinite;
+  }
+  .trail-claim-btn:hover {
+    transform: scale(1.06);
+    box-shadow: 0 6px 24px rgba(255, 210, 60, 0.7);
+  }
+  .trail-claimed-badge {
+    background: rgba(34, 197, 94, 0.2);
+    border: 1px solid #22c55e;
+    color: #4ade80;
+    border-radius: 12px;
+    padding: 6px 14px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .trail-locked-badge {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #94a3b8;
+    border-radius: 12px;
+    padding: 6px 14px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
 </style>
 </head>
 <body>
@@ -1164,6 +1315,7 @@
   <div class="btnrow">
     <button id="startbtn" type="button" class="action-btn" onclick="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" type="button" class="action-btn" onclick="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ GALACTIC SHIPYARD &amp; ARSENAL</button>
+    <button id="trailbtn" type="button" class="action-btn" onclick="openTrailModal(event)" style="background:linear-gradient(135deg,#ffd23c,#f59e0b);color:#020617;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(255,210,60,0.55);position:relative;cursor:pointer">🏆 COSMIC TRAIL <span id="trailBadge" class="daily-badge hidden">!</span></button>
     <button id="dailybtn" type="button" class="action-btn" onclick="openDailyModal(event)" style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(255,94,98,0.55);position:relative;cursor:pointer">🎁 DAILY REWARDS <span id="dailyBadge" class="daily-badge hidden">!</span></button>
     <button id="bossbtn" type="button" class="action-btn" onclick="openBossIntelModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">👾 BOSS & FLEET INTEL</button>
   </div>
@@ -1318,6 +1470,34 @@
     </div>
   </div>
 </div>
+<!-- Cosmic Trail (Brawl Stars Style Trophy Road Modal) -->
+<div id="trailModal" class="overlay hidden" style="z-index: 128;">
+  <div class="trail-card">
+    <div class="trail-header">
+      <div style="text-align:left">
+        <span style="font-size:0.75rem;font-weight:bold;color:#ffd23c;letter-spacing:1.5px;text-transform:uppercase">🏆 BRAWL STARS STYLE TROPHY ROAD</span>
+        <h1 style="font-family:'Orbitron',sans-serif;font-size:1.45rem;color:#ffffff;margin:2px 0">🌌 COSMIC TRAIL</h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="trailTrophiesCount" class="trail-trophy-pill">🏆 0</div>
+        <button onclick="closeTrailModal(event)" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:8px 16px;cursor:pointer;font-family:'Orbitron',sans-serif">✖ CLOSE</button>
+      </div>
+    </div>
+
+    <!-- League Banner & Progress to Next Milestone -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:8px">
+      <div id="trailLeagueBadge" class="trail-league-badge">🥉 BRONZE STARDUST LEAGUE</div>
+      <div id="trailNextText" style="font-size:0.82rem;color:#93c5fd;font-family:'Orbitron',sans-serif">Next Milestone in 50 🏆</div>
+    </div>
+    <div class="trail-progress-bar-wrap">
+      <div id="trailProgressBar" class="trail-progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <!-- Scrollable Trophy Road Nodes -->
+    <div id="trailNodesContainer" class="trail-track-container"></div>
+  </div>
+</div>
+
 
 <script>
 'use strict';
@@ -2363,6 +2543,9 @@ function killBoss() {
   const bScore = 50 + bLevel * 25;
   addScore(bScore, boss.x, boss.y);
   tokensRun += bTokens;
+  SAVE.data.trophies = (SAVE.data.trophies || 0) + 30;
+  SAVE.save();
+  popup(W/2, H*0.48, `+30 🏆 COSMIC TROPHIES!`, '#ffd23c');
   spinsRun += 1;
   popup(W / 2, H * 0.35, `${boss.name.toUpperCase()} DESTROYED! +${bTokens} 🎟️ +1 🎡`, '#ffd23c');
   
@@ -2679,6 +2862,7 @@ function activateVipPass(code) {
     SAVE.load();
     applyLoadout();
     renderWallet();
+    updateTrailBadge();
     buildShop();
     renderLeaderboard('lbMenu', -1, playerName);
     return true;
@@ -6382,7 +6566,205 @@ window.advanceStory = advanceStory;
 window.activateGadget = activateGadget;
 window.activateSuper = activateSuper;
 
+
+// ==========================================================================
+// COSMIC TRAIL (BRAWL STARS STYLE TROPHY ROAD LOGIC)
+// ==========================================================================
+const COSMIC_TRAIL = [
+  { id: 1, trophies: 50, name: 'Starter Stardust Cache', desc: '+250 Gold Dubloons', icon: '🪙', type: 'coins', amount: 250, league: 'Bronze' },
+  { id: 2, trophies: 150, name: 'Plasma Energy Pod', desc: '+5 Plasma Cores', icon: '🎟️', type: 'tokens', amount: 5, league: 'Bronze' },
+  { id: 3, trophies: 300, name: 'Lucky Prize Bundle', desc: '+2 Lucky Wheel Spins', icon: '🎡', type: 'spins', amount: 2, league: 'Bronze' },
+  { id: 4, trophies: 500, name: 'T-65B X-Wing Starfighter', desc: '🚀 Unlock X-Wing + 500 🪙', icon: '🚀', type: 'ship_coins', ship: 'runner', amount: 500, league: 'Silver' },
+  { id: 5, trophies: 750, name: 'High-Energy Fuel Core', desc: '+10 Cores + 2 Spins', icon: '⚡', type: 'tokens_spins', tokens: 10, spins: 2, league: 'Silver' },
+  { id: 6, trophies: 1000, name: 'Treasury Vault Chest', desc: '+1,000 Gold Dubloons', icon: '💰', type: 'coins', amount: 1000, league: 'Silver' },
+  { id: 7, trophies: 1500, name: 'Nebula Corsair Skin', desc: '🎨 Exclusive Nebula Skin', icon: '🎨', type: 'skin', skin: 'legend', league: 'Gold' },
+  { id: 8, trophies: 2000, name: 'Heavy Warhead Package', desc: '+20 Cores + 1,500 🪙', icon: '💣', type: 'tokens_coins', tokens: 20, coins: 1500, league: 'Gold' },
+  { id: 9, trophies: 2500, name: 'Golden Hind Dreadnought', desc: '🚀 Unlock Golden Hind + 5 🎡', icon: '🚀', type: 'ship_spins', ship: 'hind', spins: 5, league: 'Diamond' },
+  { id: 10, trophies: 3500, name: 'Supernova Bounty Cache', desc: '+3,000 🪙 + 25 Cores', icon: '💎', type: 'tokens_coins', tokens: 25, coins: 3000, league: 'Diamond' },
+  { id: 11, trophies: 5000, name: 'Solar Storm Flagship', desc: '🚀 Unlock Solar Storm Carrier', icon: '🚀', type: 'ship', ship: 'storm', league: 'Mythic' },
+  { id: 12, trophies: 6500, name: 'Obsidian Kyber Skin', desc: '🔮 Ultra-Rare Dark Armor', icon: '🔮', type: 'skin', skin: 'legend', league: 'Mythic' },
+  { id: 13, trophies: 8000, name: 'Grand Cosmic Champion', desc: '👑 Grand Bounty: 10k 🪙 + 50 🎟️ + 10 🎡', icon: '👑', type: 'grand', coins: 10000, tokens: 50, spins: 10, league: 'Master' }
+];
+
+function getPlayerTrophies() {
+  if (isCreator()) return Math.max(8000, SAVE.data.trophies || 8000);
+  const careerScoreTrophies = Math.floor((+localStorage.getItem('sp_best') || 0) / 12);
+  const killsTrophies = Math.floor((SAVE.data.kills || 0) * 3);
+  return Math.max(SAVE.data.trophies || 0, careerScoreTrophies + killsTrophies);
+}
+
+function getCosmicLeague(tr) {
+  if (tr >= 7500) return { name: '👑 Master Cosmic Legend', bg: 'linear-gradient(135deg, #ff4500, #ffd23c)', col: '#ffffff', next: 8000 };
+  if (tr >= 4500) return { name: '🔮 Mythic Kyber League', bg: 'linear-gradient(135deg, #a855f7, #c084fc)', col: '#ffffff', next: 7500 };
+  if (tr >= 2500) return { name: '💎 Diamond Supernova League', bg: 'linear-gradient(135deg, #0284c7, #38bdf8)', col: '#ffffff', next: 4500 };
+  if (tr >= 1200) return { name: '🥇 Gold Solar League', bg: 'linear-gradient(135deg, #f59e0b, #ffd23c)', col: '#020617', next: 2500 };
+  if (tr >= 500)  return { name: '🥈 Silver Asteroid League', bg: 'linear-gradient(135deg, #94a3b8, #e2e8f0)', col: '#020617', next: 1200 };
+  return { name: '🥉 Bronze Stardust League', bg: 'linear-gradient(135deg, #b45309, #d97706)', col: '#ffffff', next: 500 };
+}
+
+function getClaimableTrailCount() {
+  const tr = getPlayerTrophies();
+  const claimed = SAVE.data.trailClaimed || [];
+  let count = 0;
+  for (const node of COSMIC_TRAIL) {
+    if (tr >= node.trophies && !claimed.includes(node.id)) {
+      count++;
+    }
+  }
+  return count;
+}
+
+function updateTrailBadge() {
+  const badge = document.getElementById('trailBadge');
+  if (!badge) return;
+  const count = getClaimableTrailCount();
+  if (count > 0) {
+    badge.textContent = count > 9 ? '9+' : count;
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+}
+
+function openTrailModal(e) {
+  if (e) { try { e.stopPropagation(); } catch(err) {} }
+  try { initAudio(); } catch(err) {}
+  const m = document.getElementById('trailModal');
+  if (m) m.classList.remove('hidden');
+  renderTrailModalUI();
+}
+window.openTrailModal = openTrailModal;
+
+function closeTrailModal(e) {
+  if (e) { try { e.stopPropagation(); } catch(err) {} }
+  const m = document.getElementById('trailModal');
+  if (m) m.classList.add('hidden');
+  updateTrailBadge();
+  renderWallet();
+}
+window.closeTrailModal = closeTrailModal;
+
+function claimTrailReward(nodeId) {
+  const node = COSMIC_TRAIL.find(n => n.id === nodeId);
+  if (!node) return;
+  const tr = getPlayerTrophies();
+  if (tr < node.trophies) return;
+
+  SAVE.data.trailClaimed = SAVE.data.trailClaimed || [];
+  if (SAVE.data.trailClaimed.includes(nodeId)) return;
+
+  SAVE.data.trailClaimed.push(nodeId);
+
+  // Award rewards
+  if (node.type === 'coins') {
+    SAVE.data.coins += node.amount;
+  } else if (node.type === 'tokens') {
+    SAVE.data.tokens += node.amount;
+  } else if (node.type === 'spins') {
+    SAVE.data.spins += node.amount;
+  } else if (node.type === 'ship_coins') {
+    if (!SAVE.data.ships.includes(node.ship)) SAVE.data.ships.push(node.ship);
+    SAVE.data.coins += node.amount;
+  } else if (node.type === 'tokens_spins') {
+    SAVE.data.tokens += node.tokens;
+    SAVE.data.spins += node.spins;
+  } else if (node.type === 'tokens_coins') {
+    SAVE.data.tokens += node.tokens;
+    SAVE.data.coins += node.coins;
+  } else if (node.type === 'ship_spins') {
+    if (!SAVE.data.ships.includes(node.ship)) SAVE.data.ships.push(node.ship);
+    SAVE.data.spins += node.spins;
+  } else if (node.type === 'ship') {
+    if (!SAVE.data.ships.includes(node.ship)) SAVE.data.ships.push(node.ship);
+  } else if (node.type === 'skin') {
+    SAVE.data.skin = node.skin;
+  } else if (node.type === 'grand') {
+    SAVE.data.coins += node.coins;
+    SAVE.data.tokens += node.tokens;
+    SAVE.data.spins += node.spins;
+  }
+
+  SAVE.save();
+  try { sfx('boom'); sfx('shot'); } catch(e) {}
+  addSuperCharge(100);
+  popup(W * 0.5, H * 0.45, `🎁 CLAIMED: ${node.name.toUpperCase()}!`, '#ffd23c');
+
+  renderTrailModalUI();
+  updateTrailBadge();
+  renderWallet();
+}
+window.claimTrailReward = claimTrailReward;
+
+function renderTrailModalUI() {
+  const container = document.getElementById('trailNodesContainer');
+  const countEl = document.getElementById('trailTrophiesCount');
+  const leagueEl = document.getElementById('trailLeagueBadge');
+  const nextTextEl = document.getElementById('trailNextText');
+  const progressEl = document.getElementById('trailProgressBar');
+  if (!container) return;
+
+  const trophies = getPlayerTrophies();
+  const claimed = SAVE.data.trailClaimed || [];
+  const league = getCosmicLeague(trophies);
+
+  if (countEl) countEl.textContent = `🏆 ${trophies.toLocaleString()}`;
+  if (leagueEl) {
+    leagueEl.textContent = league.name;
+    leagueEl.style.background = league.bg;
+    leagueEl.style.color = league.col;
+  }
+
+  // Find next unclaimed milestone
+  const nextNode = COSMIC_TRAIL.find(n => trophies < n.trophies);
+  if (nextNode) {
+    const diff = nextNode.trophies - trophies;
+    if (nextTextEl) nextTextEl.textContent = `Next Reward: ${nextNode.name} in ${diff} 🏆`;
+    const prevTrophies = 0;
+    const pct = Math.min(100, Math.max(0, (trophies / nextNode.trophies) * 100));
+    if (progressEl) progressEl.style.width = `${pct}%`;
+  } else {
+    if (nextTextEl) nextTextEl.textContent = '👑 MAXIMUM COSMIC TRAIL COMPLETED!';
+    if (progressEl) progressEl.style.width = '100%';
+  }
+
+  container.innerHTML = COSMIC_TRAIL.map((node) => {
+    const isUnlocked = trophies >= node.trophies;
+    const isClaimed = claimed.includes(node.id);
+    let cardClass = 'trail-node-card';
+    let actionBtn = '';
+
+    if (isClaimed) {
+      cardClass += ' claimed';
+      actionBtn = '<span class="trail-claimed-badge">✔ CLAIMED</span>';
+    } else if (isUnlocked) {
+      cardClass += ' ready';
+      actionBtn = `<button class="trail-claim-btn" onclick="claimTrailReward(${node.id})">🎁 CLAIM!</button>`;
+    } else {
+      cardClass += ' locked';
+      const needed = node.trophies - trophies;
+      actionBtn = `<span class="trail-locked-badge">🔒 +${needed} 🏆</span>`;
+    }
+
+    return `
+      <div class="${cardClass}">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div class="trail-trophy-pill">🏆 ${node.trophies}</div>
+          <div style="font-size:2rem">${node.icon}</div>
+          <div>
+            <div style="font-family:'Orbitron',sans-serif;font-weight:900;color:#ffffff;font-size:0.95rem">${node.name}</div>
+            <div style="font-size:0.8rem;color:#38bdf8;font-weight:bold;margin-top:2px">${node.desc}</div>
+          </div>
+        </div>
+        <div>
+          ${actionBtn}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
 function bindActionButtons() {
+  bind('trailbtn', openTrailModal);
   const bind = (id, handler) => {
     const el = document.getElementById(id);
     if (!el) return;
