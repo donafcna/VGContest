@@ -1621,33 +1621,7 @@ if (typeof Peer === 'undefined') {
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
   Sail through deep cosmic space and blast <b>Star Wars starfighter squadrons &amp; 10 Flagship Bosses (Weakest to Strongest)</b> with heavy naval broadsides!</p>
   
-  <!-- 1 - 3 Player Co-op Mode Selector -->
-  <div class="player-mode-selector">
-    <button id="mode1p" type="button" class="player-mode-btn active" onclick="setPlayerCount(1)">👤 1P SOLO</button>
-    <button id="mode2p" type="button" class="player-mode-btn" onclick="setPlayerCount(2)">👥 2P CO-OP</button>
-    <button id="mode3p" type="button" class="player-mode-btn" onclick="setPlayerCount(3)">🚀 3P ARMADA SQUAD</button>
-  </div>
 
-  <div id="coopGuide" class="coop-controls-guide">
-    <div class="coop-guide-card" style="border-color:#38bdf8">
-      <b style="color:#38bdf8">🎮 P1 (CAPTAIN NOEL):</b><br>
-      • Move: <b>W A S D</b> or Touch D-Pad<br>
-      • Shoot: <b>Mouse Click</b> or <b>[Space] / [F]</b><br>
-      • Gadget: <b>[Q]</b> • Super: <b>[E]</b>
-    </div>
-    <div id="p2Guide" class="coop-guide-card hidden" style="border-color:#00ffaa">
-      <b style="color:#00ffaa">🚀 P2 (FIRST MATE):</b><br>
-      • Move: <b>Arrow Keys (↑ ← ↓ →)</b><br>
-      • Shoot: <b>[K]</b> or <b>[L]</b> or <b>[Numpad 0]</b><br>
-      • Gadget: <b>[I]</b> • Super: <b>[O]</b>
-    </div>
-    <div id="p3Guide" class="coop-guide-card hidden" style="border-color:#ff5500">
-      <b style="color:#ff5500">💣 P3 (HEAVY GUNNER):</b><br>
-      • Move: <b>[T] [F] [G] [H]</b> or <b>Numpad 8 4 5 6</b><br>
-      • Shoot: <b>[B]</b> or <b>[V]</b> or <b>[Enter]</b><br>
-      • Gadget: <b>[Y]</b> • Super: <b>[U]</b>
-    </div>
-  </div>
 
   <div class="keys">
     🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM</b> • <b>CLICK</b> to Shoot Broadside 💥<br>
@@ -6648,24 +6622,7 @@ setTimeout(() => OnlineFleetNet.init(), 800);
 let numPlayers = 1;
 let players = [];
 
-function setPlayerCount(n) {
-  numPlayers = Math.max(1, Math.min(3, n));
-  ['mode1p', 'mode2p', 'mode3p'].forEach((id, idx) => {
-    const btn = document.getElementById(id);
-    if (btn) {
-      if (idx + 1 === numPlayers) btn.classList.add('active');
-      else btn.classList.remove('active');
-    }
-  });
 
-  const p2g = document.getElementById('p2Guide');
-  const p3g = document.getElementById('p3Guide');
-  if (p2g) p2g.classList.toggle('hidden', numPlayers < 2);
-  if (p3g) p3g.classList.toggle('hidden', numPlayers < 3);
-
-  try { sfx('click'); } catch(e) {}
-}
-window.setPlayerCount = setPlayerCount;
 
 function initMultiplayerFleet() {
   players = [];
@@ -6727,104 +6684,44 @@ function initMultiplayerFleet() {
   window.players = players;
 }
 
-// Multi-Key Listener for P1, P2, P3 and Cross-Device Online
+// Unified Device Key Listeners (Each player controls their ship on their own device)
 window.addEventListener('keydown', (e) => {
   const k = e.key.toLowerCase();
+  const mySlotIdx = (OnlineFleetNet && OnlineFleetNet.mode && OnlineFleetNet.mode.startsWith('online')) ? (OnlineFleetNet.mySlot - 1) : 0;
+  const myP = (players && players[mySlotIdx]) || ship;
 
-  // If playing in Online Multiplayer, standard controls control YOUR ship on YOUR device!
-  if (OnlineFleetNet && OnlineFleetNet.mode && OnlineFleetNet.mode.startsWith('online')) {
-    const mySlotIdx = OnlineFleetNet.mySlot - 1;
-    const myP = players[mySlotIdx];
-    if (myP && myP.alive) {
-      if (k === 'w' || e.key === 'ArrowUp') myP.keys.up = true;
-      if (k === 's' || e.key === 'ArrowDown') myP.keys.down = true;
-      if (k === 'a' || e.key === 'ArrowLeft') myP.keys.left = true;
-      if (k === 'd' || e.key === 'ArrowRight') myP.keys.right = true;
-      if (k === ' ' || k === 'f' || k === 'k' || k === 'b') myP.keys.shoot = true;
-      if (k === 'q' || k === 'i' || k === 'y') {
-        myP.keys.gadget = true;
-        if (mySlotIdx === 0) activateGadget();
-        else if (mySlotIdx === 1) activateP2Gadget();
-        else if (mySlotIdx === 2) activateP3Gadget();
-      }
-      if (k === 'e' || k === 'o' || k === 'u') {
-        myP.keys.super = true;
-        if (mySlotIdx === 0) activateSuper();
-        else if (mySlotIdx === 1) activateP2Super();
-        else if (mySlotIdx === 2) activateP3Super();
-      }
+  if (myP && myP.alive) {
+    if (k === 'w' || e.key === 'ArrowUp') myP.keys.up = true;
+    if (k === 's' || e.key === 'ArrowDown') myP.keys.down = true;
+    if (k === 'a' || e.key === 'ArrowLeft') myP.keys.left = true;
+    if (k === 'd' || e.key === 'ArrowRight') myP.keys.right = true;
+    if (k === ' ' || k === 'f') myP.keys.shoot = true;
+    if (k === 'q') {
+      myP.keys.gadget = true;
+      if (mySlotIdx === 0) activateGadget();
+      else if (mySlotIdx === 1) activateP2Gadget();
+      else if (mySlotIdx === 2) activateP3Gadget();
     }
-    return;
-  }
-
-  // Local Shared-Screen Split Controls:
-  if (players[0] && players[0].alive) {
-    if (k === 'w') players[0].keys.up = true;
-    if (k === 's') players[0].keys.down = true;
-    if (k === 'a') players[0].keys.left = true;
-    if (k === 'd') players[0].keys.right = true;
-    if (k === ' ' || k === 'f') players[0].keys.shoot = true;
-    if (k === 'q') activateGadget();
-    if (k === 'e') activateSuper();
-  }
-
-  if (numPlayers >= 2 && players[1] && players[1].alive) {
-    if (e.key === 'ArrowUp') players[1].keys.up = true;
-    if (e.key === 'ArrowDown') players[1].keys.down = true;
-    if (e.key === 'ArrowLeft') players[1].keys.left = true;
-    if (e.key === 'ArrowRight') players[1].keys.right = true;
-    if (k === 'k' || k === 'l' || e.key === '0' || e.key === 'Insert') players[1].keys.shoot = true;
-    if (k === 'i') activateP2Gadget();
-    if (k === 'o') activateP2Super();
-  }
-
-  if (numPlayers >= 3 && players[2] && players[2].alive) {
-    if (k === 't' || e.key === '8') players[2].keys.up = true;
-    if (k === 'g' || e.key === '5' || e.key === '2') players[2].keys.down = true;
-    if (k === 'f' || e.key === '4') players[2].keys.left = true;
-    if (k === 'h' || e.key === '6') players[2].keys.right = true;
-    if (k === 'b' || k === 'v' || e.key === 'Enter') players[2].keys.shoot = true;
-    if (k === 'y') activateP3Gadget();
-    if (k === 'u') activateP3Super();
+    if (k === 'e') {
+      myP.keys.super = true;
+      if (mySlotIdx === 0) activateSuper();
+      else if (mySlotIdx === 1) activateP2Super();
+      else if (mySlotIdx === 2) activateP3Super();
+    }
   }
 });
 
 window.addEventListener('keyup', (e) => {
   const k = e.key.toLowerCase();
+  const mySlotIdx = (OnlineFleetNet && OnlineFleetNet.mode && OnlineFleetNet.mode.startsWith('online')) ? (OnlineFleetNet.mySlot - 1) : 0;
+  const myP = (players && players[mySlotIdx]) || ship;
 
-  if (OnlineFleetNet && OnlineFleetNet.mode && OnlineFleetNet.mode.startsWith('online')) {
-    const mySlotIdx = OnlineFleetNet.mySlot - 1;
-    const myP = players[mySlotIdx];
-    if (myP) {
-      if (k === 'w' || e.key === 'ArrowUp') myP.keys.up = false;
-      if (k === 's' || e.key === 'ArrowDown') myP.keys.down = false;
-      if (k === 'a' || e.key === 'ArrowLeft') myP.keys.left = false;
-      if (k === 'd' || e.key === 'ArrowRight') myP.keys.right = false;
-      if (k === ' ' || k === 'f' || k === 'k' || k === 'b') myP.keys.shoot = false;
-    }
-    return;
-  }
-
-  if (players[0]) {
-    if (k === 'w') players[0].keys.up = false;
-    if (k === 's') players[0].keys.down = false;
-    if (k === 'a') players[0].keys.left = false;
-    if (k === 'd') players[0].keys.right = false;
-    if (k === ' ' || k === 'f') players[0].keys.shoot = false;
-  }
-  if (numPlayers >= 2 && players[1]) {
-    if (e.key === 'ArrowUp') players[1].keys.up = false;
-    if (e.key === 'ArrowDown') players[1].keys.down = false;
-    if (e.key === 'ArrowLeft') players[1].keys.left = false;
-    if (e.key === 'ArrowRight') players[1].keys.right = false;
-    if (k === 'k' || k === 'l' || e.key === '0' || e.key === 'Insert') players[1].keys.shoot = false;
-  }
-  if (numPlayers >= 3 && players[2]) {
-    if (k === 't' || e.key === '8') players[2].keys.up = false;
-    if (k === 'g' || e.key === '5' || e.key === '2') players[2].keys.down = false;
-    if (k === 'f' || e.key === '4') players[2].keys.left = false;
-    if (k === 'h' || e.key === '6') players[2].keys.right = false;
-    if (k === 'b' || k === 'v' || e.key === 'Enter') players[2].keys.shoot = false;
+  if (myP) {
+    if (k === 'w' || e.key === 'ArrowUp') myP.keys.up = false;
+    if (k === 's' || e.key === 'ArrowDown') myP.keys.down = false;
+    if (k === 'a' || e.key === 'ArrowLeft') myP.keys.left = false;
+    if (k === 'd' || e.key === 'ArrowRight') myP.keys.right = false;
+    if (k === ' ' || k === 'f') myP.keys.shoot = false;
   }
 });
 
