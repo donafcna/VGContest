@@ -1160,7 +1160,7 @@
     🎮 <b>PC Abilities</b>: <b>[Q]</b> = 🟢 <b>Gadget</b> (3 Charges) • <b>[E]</b> = 🌟 <b>Super &amp; Hypercharge</b> (100% Charge)<br>
     🚀 <b>Flight Movement</b>: <b>W A S D</b> or <b>Arrow Keys</b> • 📱 <b>Mobile</b>: D-Pad &amp; On-Screen Buttons
   </div>
-  <input id="pname" placeholder="Enter Callsign (e.g. Captain Noel)" maxlength="14" value="Captain Noël" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
+  <input id="pname" placeholder="Enter Callsign (e.g. NoelTheGoat)" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="btnrow">
     <button id="startbtn" type="button" class="action-btn" onclick="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" type="button" class="action-btn" onclick="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ GALACTIC SHIPYARD &amp; ARSENAL</button>
@@ -3063,6 +3063,7 @@ const LB = {
     } catch (e) {}
   },
   async submit(entry) {
+    if (!entry || typeof entry.score !== 'number' || entry.score <= 0) return;
     entry.uid = entry.uid || SAVE.data.uid;
     entry.name = (entry.name || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || localStorage.getItem('sp_name') || 'Captain').slice(0, 14);
     if ((entry.name || '').trim().toLowerCase() === 'louis the goat') {
@@ -3219,7 +3220,7 @@ const LB = {
           for (const n of cloudNotes) {
             try {
               const b = (typeof n.body === 'string') ? JSON.parse(n.body) : n.body;
-              if (b && typeof b.score === 'number') {
+              if (b && typeof b.score === 'number' && b.score > 0) {
                 b.name = (b.name || n.author || 'Captain').slice(0, 14);
                 if (b.name.trim().toLowerCase() === 'louis the goat') {
                   b.name = 'DodoDad';
@@ -3248,7 +3249,7 @@ const LB = {
     const noUid = [];
     
     for (const r of rows) {
-      if (!r || typeof r.score !== 'number') continue;
+      if (!r || typeof r.score !== 'number' || r.score <= 0) continue;
       r.name = (r.name || 'Captain').trim().slice(0, 14);
       if (r.name.toLowerCase() === 'louis the goat') r.name = 'DodoDad';
       if (!r.name) continue;
@@ -6447,13 +6448,8 @@ if (document.readyState === 'loading') {
       if (i) i.value = n;
       playerName = n;
     } else {
-      // Default to Captain Noël with VIP Creator Pass active
-      if (i) i.value = 'Captain Noël';
-      playerName = 'Captain Noël';
-      try {
-        localStorage.setItem('sp_name', 'Captain Noël');
-        localStorage.setItem('sp_creator_pass', 'true');
-      } catch(e) {}
+      playerName = 'NoelTheGoat';
+      if (i) i.value = '';
     }
 
     SAVE.load();
