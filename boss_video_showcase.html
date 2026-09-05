@@ -777,7 +777,7 @@
     // 60 FPS Game Physics & Update Loop
     let lastTime = performance.now();
     function gameLoop(now) {
-      const dt = Math.min(0.1, ((now - lastTime) / 1000) * gameSpeed);
+      const dt = (window.fixedDt || Math.min(0.05, ((now - lastTime) / 1000))) * gameSpeed;
       lastTime = now;
       animTime += dt;
 
