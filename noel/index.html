@@ -1252,6 +1252,65 @@
     gap: 4px;
   }
 
+
+  /* ==========================================================================
+     MULTIPLAYER (1 - 3 PLAYERS CO-OP FLEET)
+     ========================================================================== */
+  .player-mode-selector {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px 0 16px;
+    flex-wrap: wrap;
+  }
+  .player-mode-btn {
+    background: rgba(15, 23, 42, 0.85);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: #cfe4ff;
+    padding: 10px 18px;
+    border-radius: 14px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 0.92rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  }
+  .player-mode-btn:hover {
+    transform: translateY(-2px);
+    border-color: #ffd23c;
+    color: #ffffff;
+  }
+  .player-mode-btn.active {
+    background: linear-gradient(135deg, #0284c7, #38bdf8);
+    border-color: #ffffff;
+    color: #ffffff;
+    box-shadow: 0 0 22px rgba(56, 189, 248, 0.65);
+    transform: scale(1.04);
+  }
+  .coop-controls-guide {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+    width: 100%;
+    max-width: 820px;
+    margin: 8px 0 14px;
+    text-align: left;
+  }
+  .coop-guide-card {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 10px 14px;
+    font-size: 0.78rem;
+    color: #cfe4ff;
+    line-height: 1.45;
+  }
+  .coop-guide-card b {
+    color: #ffd23c;
+  }
+
 </style>
 </head>
 <body>
@@ -1306,6 +1365,35 @@
   <div style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(0,229,255,0.2),rgba(126,34,206,0.3));border:1.5px solid #00e5ff;color:#00ffee;padding:5px 16px;border-radius:20px;font-size:0.82rem;font-weight:900;letter-spacing:1.5px;margin-bottom:10px;font-family:'Orbitron',sans-serif;box-shadow:0 0 16px rgba(0,229,255,0.4)">🚀 STAR WARS FLEET EDITION • ONLINE LIVE</div>
   <p>Captain Noel! Take the helm of your <b>legendary wooden Solar Pirate Galleon</b>.<br>
   Sail through deep cosmic space and blast <b>Star Wars starfighter squadrons &amp; 10 Flagship Bosses (Weakest to Strongest)</b> with heavy naval broadsides!</p>
+  
+  <!-- 1 - 3 Player Co-op Mode Selector -->
+  <div class="player-mode-selector">
+    <button id="mode1p" type="button" class="player-mode-btn active" onclick="setPlayerCount(1)">👤 1P SOLO</button>
+    <button id="mode2p" type="button" class="player-mode-btn" onclick="setPlayerCount(2)">👥 2P CO-OP</button>
+    <button id="mode3p" type="button" class="player-mode-btn" onclick="setPlayerCount(3)">🚀 3P ARMADA SQUAD</button>
+  </div>
+
+  <div id="coopGuide" class="coop-controls-guide">
+    <div class="coop-guide-card" style="border-color:#38bdf8">
+      <b style="color:#38bdf8">🎮 P1 (CAPTAIN NOEL):</b><br>
+      • Move: <b>W A S D</b> or Touch D-Pad<br>
+      • Shoot: <b>Mouse Click</b> or <b>[Space] / [F]</b><br>
+      • Gadget: <b>[Q]</b> • Super: <b>[E]</b>
+    </div>
+    <div id="p2Guide" class="coop-guide-card hidden" style="border-color:#00ffaa">
+      <b style="color:#00ffaa">🚀 P2 (FIRST MATE):</b><br>
+      • Move: <b>Arrow Keys (↑ ← ↓ →)</b><br>
+      • Shoot: <b>[K]</b> or <b>[L]</b> or <b>[Numpad 0]</b><br>
+      • Gadget: <b>[I]</b> • Super: <b>[O]</b>
+    </div>
+    <div id="p3Guide" class="coop-guide-card hidden" style="border-color:#ff5500">
+      <b style="color:#ff5500">💣 P3 (HEAVY GUNNER):</b><br>
+      • Move: <b>[T] [F] [G] [H]</b> or <b>Numpad 8 4 5 6</b><br>
+      • Shoot: <b>[B]</b> or <b>[V]</b> or <b>[Enter]</b><br>
+      • Gadget: <b>[Y]</b> • Super: <b>[U]</b>
+    </div>
+  </div>
+
   <div class="keys">
     🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM</b> • <b>CLICK</b> to Shoot Broadside 💥<br>
     🎮 <b>PC Abilities</b>: <b>[Q]</b> = 🟢 <b>Gadget</b> (3 Charges) • <b>[E]</b> = 🌟 <b>Super &amp; Hypercharge</b> (100% Charge)<br>
@@ -5556,6 +5644,278 @@ function startCombat() {
   fortT = 3.5;
 }
 
+
+// ==========================================================================
+// 1 - 3 PLAYERS MULTIPLAYER CO-OP FLEET ENGINE
+// ==========================================================================
+let numPlayers = 1;
+let players = [];
+
+function setPlayerCount(n) {
+  numPlayers = Math.max(1, Math.min(3, n));
+  ['mode1p', 'mode2p', 'mode3p'].forEach((id, idx) => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      if (idx + 1 === numPlayers) btn.classList.add('active');
+      else btn.classList.remove('active');
+    }
+  });
+
+  const p2g = document.getElementById('p2Guide');
+  const p3g = document.getElementById('p3Guide');
+  if (p2g) p2g.classList.toggle('hidden', numPlayers < 2);
+  if (p3g) p3g.classList.toggle('hidden', numPlayers < 3);
+
+  try { sfx('click'); } catch(e) {}
+}
+window.setPlayerCount = setPlayerCount;
+
+function initMultiplayerFleet() {
+  players = [];
+  const startYs = (numPlayers === 1) ? [H * 0.5] : (numPlayers === 2) ? [H * 0.38, H * 0.62] : [H * 0.28, H * 0.50, H * 0.72];
+  const pConfigs = [
+    { id: 1, name: playerName || 'Captain Noel', col: '#ffd23c', shipType: SAVE.data.sel || 'cutter', maxHp: maxHp },
+    { id: 2, name: 'First Mate', col: '#00ffaa', shipType: 'runner', maxHp: maxHp },
+    { id: 3, name: 'Heavy Gunner', col: '#ff5500', shipType: 'hind', maxHp: maxHp }
+  ];
+
+  for (let i = 0; i < numPlayers; i++) {
+    const cfg = pConfigs[i];
+    players.push({
+      id: i + 1,
+      name: cfg.name,
+      col: cfg.col,
+      shipType: cfg.shipType,
+      x: W * 0.20,
+      y: startYs[i],
+      vx: 0,
+      vy: 0,
+      pitch: 0,
+      hp: cfg.maxHp,
+      maxHp: cfg.maxHp,
+      inv: 1.0,
+      recoil: 0,
+      flagWave: 0,
+      sailGlow: 0,
+      r: 44,
+      aimAngle: 0,
+      alive: true,
+      respawnT: 0,
+      gadgetCharges: 3,
+      superCharge: 0,
+      shootCool: 0,
+      keys: { up: false, down: false, left: false, right: false, shoot: false, gadget: false, super: false }
+    });
+  }
+
+  // Primary pointer alias
+  ship = players[0];
+  window.ship = players[0];
+  window.players = players;
+}
+
+// Multi-Key Listener for P1, P2, P3
+window.addEventListener('keydown', (e) => {
+  const k = e.key.toLowerCase();
+
+  // P1 Controls: W A S D / Space / Q / E
+  if (players[0] && players[0].alive) {
+    if (k === 'w') players[0].keys.up = true;
+    if (k === 's') players[0].keys.down = true;
+    if (k === 'a') players[0].keys.left = true;
+    if (k === 'd') players[0].keys.right = true;
+    if (k === ' ' || k === 'f') players[0].keys.shoot = true;
+    if (k === 'q') activateGadget();
+    if (k === 'e') activateSuper();
+  }
+
+  // P2 Controls: Arrow Keys / K / L / I / O
+  if (numPlayers >= 2 && players[1] && players[1].alive) {
+    if (e.key === 'ArrowUp') players[1].keys.up = true;
+    if (e.key === 'ArrowDown') players[1].keys.down = true;
+    if (e.key === 'ArrowLeft') players[1].keys.left = true;
+    if (e.key === 'ArrowRight') players[1].keys.right = true;
+    if (k === 'k' || k === 'l' || e.key === '0' || e.key === 'Insert') players[1].keys.shoot = true;
+    if (k === 'i') activateP2Gadget();
+    if (k === 'o') activateP2Super();
+  }
+
+  // P3 Controls: T F G H / B / V / Y / U
+  if (numPlayers >= 3 && players[2] && players[2].alive) {
+    if (k === 't' || e.key === '8') players[2].keys.up = true;
+    if (k === 'g' || e.key === '5' || e.key === '2') players[2].keys.down = true;
+    if (k === 'f' || e.key === '4') players[2].keys.left = true;
+    if (k === 'h' || e.key === '6') players[2].keys.right = true;
+    if (k === 'b' || k === 'v' || e.key === 'Enter') players[2].keys.shoot = true;
+    if (k === 'y') activateP3Gadget();
+    if (k === 'u') activateP3Super();
+  }
+});
+
+window.addEventListener('keyup', (e) => {
+  const k = e.key.toLowerCase();
+  if (players[0]) {
+    if (k === 'w') players[0].keys.up = false;
+    if (k === 's') players[0].keys.down = false;
+    if (k === 'a') players[0].keys.left = false;
+    if (k === 'd') players[0].keys.right = false;
+    if (k === ' ' || k === 'f') players[0].keys.shoot = false;
+  }
+  if (numPlayers >= 2 && players[1]) {
+    if (e.key === 'ArrowUp') players[1].keys.up = false;
+    if (e.key === 'ArrowDown') players[1].keys.down = false;
+    if (e.key === 'ArrowLeft') players[1].keys.left = false;
+    if (e.key === 'ArrowRight') players[1].keys.right = false;
+    if (k === 'k' || k === 'l' || e.key === '0' || e.key === 'Insert') players[1].keys.shoot = false;
+  }
+  if (numPlayers >= 3 && players[2]) {
+    if (k === 't' || e.key === '8') players[2].keys.up = false;
+    if (k === 'g' || e.key === '5' || e.key === '2') players[2].keys.down = false;
+    if (k === 'f' || e.key === '4') players[2].keys.left = false;
+    if (k === 'h' || e.key === '6') players[2].keys.right = false;
+    if (k === 'b' || k === 'v' || e.key === 'Enter') players[2].keys.shoot = false;
+  }
+});
+
+function activateP2Gadget() {
+  if (!players[1] || !players[1].alive) return;
+  players[1].inv = 2.0;
+  players[1].hp = Math.min(players[1].maxHp, players[1].hp + 1);
+  popup(players[1].x, players[1].y - 35, '⚡ P2 GADGET: PROTON SHIELD!', '#00ffaa');
+  explode(players[1].x, players[1].y, '#00ffaa', 35);
+  sfx('super');
+}
+
+function activateP2Super() {
+  if (!players[1] || !players[1].alive) return;
+  players[1].inv = 3.5;
+  popup(players[1].x, players[1].y - 45, '🌟 P2 SUPER: X-WING NOVA BEAM!', '#00ffee');
+  addShake(28);
+  for (let k = -2; k <= 2; k++) {
+    balls.push({
+      x: players[1].x + 40,
+      y: players[1].y + k * 18,
+      vx: 1100,
+      vy: k * 60,
+      r: 16,
+      col: '#00ffee',
+      dmg: 4,
+      isSuper: true
+    });
+  }
+  sfx('laser');
+}
+
+function activateP3Gadget() {
+  if (!players[2] || !players[2].alive) return;
+  players[2].inv = 2.0;
+  players[2].hp = Math.min(players[2].maxHp, players[2].hp + 1);
+  popup(players[2].x, players[2].y - 35, '💣 P3 GADGET: DREADNOUGHT REPAIR!', '#ff5500');
+  explode(players[2].x, players[2].y, '#ff5500', 35);
+  sfx('super');
+}
+
+function activateP3Super() {
+  if (!players[2] || !players[2].alive) return;
+  players[2].inv = 3.5;
+  popup(players[2].x, players[2].y - 45, '🌟 P3 SUPER: TITAN BROADSIDE!', '#ff5500');
+  addShake(32);
+  for (let k = -3; k <= 3; k++) {
+    balls.push({
+      x: players[2].x + 45,
+      y: players[2].y + k * 20,
+      vx: 1200,
+      vy: k * 75,
+      r: 18,
+      col: '#ff5500',
+      dmg: 5,
+      isSuper: true
+    });
+  }
+  sfx('boom');
+}
+
+function updateMultiplayerFleet(dt) {
+  let anyAlive = false;
+
+  players.forEach((p, idx) => {
+    if (!p.alive) {
+      p.respawnT -= dt;
+      if (p.respawnT <= 0) {
+        // Respawn player near surviving team!
+        p.alive = true;
+        p.hp = Math.round(p.maxHp * 0.6);
+        p.inv = 2.5;
+        p.x = W * 0.15;
+        p.y = H * 0.35 + idx * 120;
+        popup(p.x, p.y - 30, `✨ ${p.name.toUpperCase()} RESPAWNED!`, p.col);
+        explode(p.x, p.y, p.col, 35);
+      }
+      return;
+    }
+
+    anyAlive = true;
+    p.inv = Math.max(0, p.inv - dt);
+    p.recoil = Math.max(0, p.recoil - dt * 8);
+
+    // Player Movement Acceleration
+    let ax = 0, ay = 0;
+    if (p.keys.up) ay -= 1;
+    if (p.keys.down) ay += 1;
+    if (p.keys.left) ax -= 1;
+    if (p.keys.right) ax += 1;
+
+    // P1 touch stick integration
+    if (idx === 0 && touchStick.active) {
+      ax += touchStick.ax;
+      ay += touchStick.ay;
+    }
+
+    const mag = Math.hypot(ax, ay);
+    if (mag > 1) { ax /= mag; ay /= mag; }
+
+    p.vx += ax * ACC * dt;
+    p.vy += ay * ACC * dt;
+    p.vx *= Math.pow(0.025, dt);
+    p.vy *= Math.pow(0.025, dt);
+
+    p.x = Math.max(50, Math.min(W - 80, p.x + p.vx * dt));
+    p.y = Math.max(60, Math.min(H - 60, p.y + p.vy * dt));
+    p.pitch = Math.max(-0.25, Math.min(0.25, p.vy * 0.0006));
+
+    // Player Shooting
+    p.shootCool -= dt;
+    if ((p.keys.shoot || (idx === 0 && (mouseShootHeld || autoShootActive))) && p.shootCool <= 0) {
+      p.shootCool = 0.22;
+      p.recoil = 1.0;
+      sfx('shot');
+      const shootCol = p.col || '#ffd23c';
+      balls.push({
+        x: p.x + 40,
+        y: p.y - 8,
+        vx: 850,
+        vy: (Math.random() - 0.5) * 40,
+        r: 10,
+        col: shootCol,
+        dmg: 1
+      });
+      balls.push({
+        x: p.x + 40,
+        y: p.y + 8,
+        vx: 850,
+        vy: (Math.random() - 0.5) * 40,
+        r: 10,
+        col: shootCol,
+        dmg: 1
+      });
+    }
+  });
+
+  if (!anyAlive && state === 'play') {
+    lose();
+  }
+}
+
 function startSolarSail(e) {
   if (e) {
     try { e.stopPropagation(); } catch(err) {}
@@ -5566,6 +5926,7 @@ function startSolarSail(e) {
   try { localStorage.setItem('sp_name', playerName); } catch (e) {}
   scoreSubmitted = false;
   applyLoadout();
+  initMultiplayerFleet();
   ship.hp = maxHp; ship.inv = 0; ship.x = W * 0.22; ship.y = H * 0.5;
   ship.vx = 0; ship.vy = 0; ship.pitch = 0;
 
@@ -9787,12 +10148,22 @@ function update(dt) {
   if (coins.length > 40) coins.splice(0, coins.length - 40);
 }
 
-function damageShip() {
-  ship.hp--; ship.inv = 1.7;
+function damageShip(targetPlayer) {
+  const p = targetPlayer || ship;
+  if (!p || p.inv > 0) return;
+  p.hp--;
+  p.inv = 1.7;
   sfx('hit'); addShake(20); hurtFlash = 0.7;
   combo = 0; comboT = 0;
-  explode(ship.x, ship.y, '#ffd23c', 28);
-  if (ship.hp <= 0) lose();
+  explode(p.x, p.y, p.col || '#ffd23c', 28);
+  if (p.hp <= 0) {
+    p.alive = false;
+    p.respawnT = 6.0; // 6 second respawn timer in Co-op!
+    popup(p.x, p.y - 25, `💥 ${p.name.toUpperCase()} DOWN!`, '#ff3344');
+    explode(p.x, p.y, '#ff3344', 45);
+    const aliveCount = players.filter(pl => pl.alive).length;
+    if (aliveCount === 0) lose();
+  }
 }
 
 // Draw Solar Pirate Galleon in Forward 3D Perspective (View from Behind)
@@ -9888,6 +10259,115 @@ function drawGalleonForward(cx, x, y, scale=1.0) {
 // -------------------------------------------------------------
 // PHOTOREALISTIC RENDERING (PIRATE GALLEON VS STAR WARS UFOS)
 // -------------------------------------------------------------
+
+function drawCoopPlayers(cx) {
+  if (numPlayers < 2 || !players || !players.length) return;
+
+  for (let pi = 1; pi < players.length; pi++) {
+    const p = players[pi];
+    if (!p.alive) {
+      // Draw respawn ghost / escape pod
+      cx.save();
+      cx.translate(p.x, p.y);
+      cx.globalAlpha = 0.5 + Math.sin(t * 8) * 0.25;
+      cx.strokeStyle = p.col; cx.lineWidth = 2;
+      cx.beginPath(); cx.arc(0, 0, 24, 0, Math.PI * 2); cx.stroke();
+      cx.fillStyle = 'rgba(255,255,255,0.85)';
+      cx.font = 'bold 11px Orbitron, sans-serif';
+      cx.textAlign = 'center';
+      cx.fillText(`RESPAWN IN ${Math.ceil(p.respawnT)}s`, 0, -32);
+      cx.fillText('🛸', 0, 6);
+      cx.restore();
+      continue;
+    }
+
+    cx.save();
+    cx.translate(p.x, p.y);
+    cx.rotate(p.pitch || 0);
+
+    if (p.inv > 0 && Math.floor(t * 14) % 2 === 0) {
+      cx.globalAlpha = 0.45;
+    }
+
+    if (p.shipType === 'runner' || p.id === 2) {
+      // P2: T-65B X-Wing Fighter
+      // 4 Wing Ion Exhaust Jets
+      for (const ey of [-18, -8, 8, 18]) {
+        cx.fillStyle = '#00ffee';
+        cx.beginPath();
+        cx.arc(-32, ey, 4 + Math.sin(t * 20 + ey) * 1.5, 0, Math.PI * 2);
+        cx.fill();
+      }
+
+      // X-Wing Wings
+      cx.fillStyle = '#1e293b';
+      cx.strokeStyle = '#00ffee';
+      cx.lineWidth = 2;
+      cx.beginPath();
+      cx.moveTo(15, -6); cx.lineTo(-20, -32); cx.lineTo(-32, -30); cx.lineTo(-10, -6);
+      cx.closePath(); cx.fill(); cx.stroke();
+
+      cx.beginPath();
+      cx.moveTo(15, 6); cx.lineTo(-20, 32); cx.lineTo(-32, 30); cx.lineTo(-10, 6);
+      cx.closePath(); cx.fill(); cx.stroke();
+
+      // Fuselage & Nose
+      const fus = cx.createLinearGradient(35, 0, -35, 0);
+      fus.addColorStop(0, '#ffffff'); fus.addColorStop(0.5, '#0284c7'); fus.addColorStop(1, '#0f172a');
+      cx.fillStyle = fus;
+      cx.beginPath();
+      cx.moveTo(35, 0); cx.lineTo(-32, -10); cx.lineTo(-32, 10); cx.closePath();
+      cx.fill(); cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.5; cx.stroke();
+
+      // Cockpit Glow
+      cx.fillStyle = '#38bdf8';
+      cx.beginPath(); cx.ellipse(6, 0, 10, 4, 0, 0, Math.PI * 2); cx.fill();
+
+    } else {
+      // P3: Golden Hind Heavy Escort
+      // Engine Glow
+      for (const ey of [-14, 14]) {
+        cx.fillStyle = '#ff5500';
+        cx.beginPath(); cx.arc(-34, ey, 5 + Math.sin(t * 18 + ey) * 2, 0, Math.PI * 2); cx.fill();
+      }
+
+      // Armored Galleon Hull
+      const hg = cx.createLinearGradient(38, 0, -38, 0);
+      hg.addColorStop(0, '#ffd23c'); hg.addColorStop(0.5, '#ea580c'); hg.addColorStop(1, '#431407');
+      cx.fillStyle = hg;
+      cx.beginPath();
+      cx.moveTo(38, 0); cx.lineTo(10, -22); cx.lineTo(-34, -18); cx.lineTo(-34, 18); cx.lineTo(10, 22); cx.closePath();
+      cx.fill(); cx.strokeStyle = '#ff5500'; cx.lineWidth = 2; cx.stroke();
+
+      // Heavy Battery Turrets
+      cx.fillStyle = '#ffd23c';
+      for (const ty of [-12, 12]) {
+        cx.fillRect(6, ty - 3, 16, 6);
+      }
+    }
+
+    // Overhead Health Gauge for Co-op Teammate
+    const pBarW = 54, pBarH = 5, pBarY = -46;
+    const pHpRatio = Math.max(0, Math.min(1, p.hp / p.maxHp));
+    const hpCol = pHpRatio > 0.5 ? p.col : pHpRatio > 0.25 ? '#ffd23c' : '#ff2255';
+    
+    cx.fillStyle = 'rgba(2, 6, 23, 0.85)';
+    cx.beginPath(); cx.roundRect(-pBarW * 0.5 - 1, pBarY - 1, pBarW + 2, pBarH + 2, 2); cx.fill();
+    cx.strokeStyle = 'rgba(255, 255, 255, 0.3)'; cx.lineWidth = 1; cx.stroke();
+    
+    if (pHpRatio > 0) {
+      cx.fillStyle = hpCol;
+      cx.beginPath(); cx.roundRect(-pBarW * 0.5, pBarY, pBarW * pHpRatio, pBarH, 1.5); cx.fill();
+    }
+    cx.font = 'bold 9px Orbitron, sans-serif';
+    cx.fillStyle = '#ffffff';
+    cx.textAlign = 'center';
+    cx.fillText(`${p.name.toUpperCase()}`, 0, pBarY - 4);
+
+    cx.restore();
+  }
+}
+
 function draw() {
   // 1. Deep Space Cosmic Canvas (Instant Pre-Rendered Off-Screen Background)
   cx.drawImage(bgCv, 0, 0);
@@ -14417,6 +14897,10 @@ function draw() {
     }
 
     cx.restore();
+
+    // Draw Co-op Teammate Ships (P2 & P3)
+    drawCoopPlayers(cx);
+
   }
 
   // Tactical Popups
