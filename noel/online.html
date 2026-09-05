@@ -1160,7 +1160,7 @@
     🎮 <b>PC Abilities</b>: <b>[Q]</b> = 🟢 <b>Gadget</b> (3 Charges) • <b>[E]</b> = 🌟 <b>Super &amp; Hypercharge</b> (100% Charge)<br>
     🚀 <b>Flight Movement</b>: <b>W A S D</b> or <b>Arrow Keys</b> • 📱 <b>Mobile</b>: D-Pad &amp; On-Screen Buttons
   </div>
-  <input id="pname" placeholder="Captain Noel" maxlength="14" value="Noël" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
+  <input id="pname" placeholder="Enter Callsign (e.g. Captain Noel)" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="btnrow">
     <button id="startbtn" type="button" class="action-btn">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" type="button" class="action-btn"  style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ GALACTIC SHIPYARD &amp; ARSENAL</button>
@@ -2235,11 +2235,13 @@ let fondorScythesT = 0;
 let flakPods = []; // [{x, y, vx, vy, fuse, maxFuse, exploded, radius, col}]
 
 function hasGadget(shipId) {
+  if (isCreator()) return true;
   const u = getShipUpg(shipId);
   return (u.hull >= 8 || u.cannon >= 8 || u.engine >= 8 || u.magnet >= 8);
 }
 
 function hasSuper(shipId) {
+  if (isCreator()) return true;
   const u = getShipUpg(shipId);
   return (u.hull >= 10 || u.cannon >= 10 || u.engine >= 10 || u.magnet >= 10);
 }
@@ -2617,18 +2619,77 @@ const ALL_SHIP_IDS = ['cutter', 'galleon', 'runner', 'hind', 'storm'];
 let activeUpgradeShip = 'cutter';
 
 function isCreator() {
-  const nm = (playerName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || localStorage.getItem('sp_name') || '').trim().toLowerCase();
-  return (
-    nm === 'noel' ||
-    nm === 'noël' ||
-    nm === 'noelthegoat' ||
-    nm === 'noel the goat' ||
-    nm === 'captain noel' ||
-    nm === 'captain noël' ||
-    nm.startsWith('noel') ||
-    nm.startsWith('noël')
-  );
+  try {
+    if (localStorage.getItem('sp_creator_pass') === 'true') return true;
+    const inp = document.getElementById('pname');
+    const inputVal = (inp && inp.value) ? inp.value.trim() : '';
+    const storedName = localStorage.getItem('sp_name') || '';
+    const nameToCheck = (inputVal || playerName || storedName || '').trim().toLowerCase();
+    if (!nameToCheck) return false;
+    const norm = nameToCheck.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return (
+      norm === 'noel' ||
+      norm === 'captain noel' ||
+      norm === 'noel peigne' ||
+      norm === 'noel the goat' ||
+      norm === 'noelthegoat' ||
+      norm === 'donatien' ||
+      norm === 'donatien peigne' ||
+      norm.startsWith('noel') ||
+      norm.startsWith('captain noel')
+    );
+  } catch (e) {
+    return false;
+  }
 }
+window.isCreator = isCreator;
+
+function activateVipPass(code) {
+  const c = (code || '').trim().toUpperCase();
+  const norm = (code || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const valid = (
+    c === 'NOEL' ||
+    c === 'NOËL' ||
+    c === 'NOEL2026' ||
+    c === 'GOAT' ||
+    c === 'CREATOR' ||
+    c === 'DONATIEN' ||
+    norm === 'noel' ||
+    norm === 'captain noel' ||
+    norm === 'donatien' ||
+    isCreator()
+  );
+  if (valid) {
+    try {
+      localStorage.setItem('sp_creator_pass', 'true');
+      localStorage.setItem('sp_name', 'Captain Noël');
+    } catch(e) {}
+    playerName = 'Captain Noël';
+    const inp = document.getElementById('pname');
+    if (inp) inp.value = 'Captain Noël';
+    SAVE.load();
+    applyLoadout();
+    renderWallet();
+    buildShop();
+    renderLeaderboard('lbMenu', -1, playerName);
+    return true;
+  }
+  return false;
+}
+window.activateVipPass = activateVipPass;
+
+function promptVipPass() {
+  const pin = prompt("👑 ENTER CREATOR KEY OR CALLSIGN (Exclusive to Noël):");
+  if (pin) {
+    const ok = activateVipPass(pin);
+    if (ok) {
+      alert("👑 GAME CREATOR VIP PASS ACTIVATED!\nWelcome back, Captain Noël!\n\n✔ All 5 Ships Unlocked\n✔ All Lv 10 Arsenal Upgrades Maxed\n✔ 99,999 Gold Coins & 999 Cores\n✔ All Skins & Brawl Abilities Active");
+    } else {
+      alert("❌ Access Denied: VIP Pass is strictly exclusive to Noël.");
+    }
+  }
+}
+window.promptVipPass = promptVipPass;
 
 function getFreshRegularSave() {
   return {
@@ -2694,10 +2755,10 @@ const SAVE = {
       if (isCreator()) {
         const d = JSON.parse(localStorage.getItem('sp_creator_save') || 'null');
         this.data = Object.assign(getCreatorSave(), d || {});
-        this.data.coins = Math.max(this.data.coins, 99999);
-        this.data.tokens = Math.max(this.data.tokens, 999);
-        this.data.spins = Math.max(this.data.spins, 99);
-        this.data.kills = Math.max(this.data.kills, 2500);
+        this.data.coins = Math.max(this.data.coins || 0, 99999);
+        this.data.tokens = Math.max(this.data.tokens || 0, 999);
+        this.data.spins = Math.max(this.data.spins || 0, 99);
+        this.data.kills = Math.max(this.data.kills || 0, 2500);
         this.data.ships = ['cutter', 'galleon', 'runner', 'hind', 'storm'];
         this.data.shipUpg = this.data.shipUpg || {};
         for (const sid of ALL_SHIP_IDS) {
@@ -6006,11 +6067,17 @@ function buildShop() {
   renderWallet();
   let h = '';
   
-  // VIP Creator Banner — ONLY shown for Noel (The Game Creator)
+  // VIP Creator Banner — EXCLUSIVE TO NOËL
   if (isCreator()) {
-    h += `<div style="background:linear-gradient(135deg,rgba(255,210,60,0.22),rgba(168,85,247,0.18));border:2px solid #ffd23c;border-radius:14px;padding:12px 16px;margin-bottom:16px;text-align:center;box-shadow:0 0 20px rgba(255,210,60,0.3)">` +
-      `<div style="color:#ffd23c;font-weight:900;font-size:1.1rem;font-family:'Orbitron',sans-serif;letter-spacing:1px">👑 GAME CREATOR VIP PASS ACTIVE 👑</div>` +
-      `<div style="color:#cfe4ff;font-size:0.86rem;margin-top:4px">Welcome Captain Noel! All 5 Fleet Ships, 7 Skins &amp; Max Shipyard Arsenal Upgrades Unlocked!</div></div>`;
+    h += `<div class="vip-creator-banner" style="background:linear-gradient(135deg,rgba(255,210,60,0.25),rgba(168,85,247,0.22));border:2px solid #ffd23c;border-radius:14px;padding:14px 18px;margin-bottom:16px;text-align:center;box-shadow:0 0 25px rgba(255,210,60,0.4)">` +
+      `<div style="color:#ffd23c;font-weight:900;font-size:1.15rem;font-family:'Orbitron',sans-serif;letter-spacing:1.5px">👑 GAME CREATOR VIP PASS ACTIVE — EXCLUSIVE TO NOËL 👑</div>` +
+      `<div style="color:#cfe4ff;font-size:0.88rem;margin-top:4px">Welcome Captain Noël! All 5 Fleet Ships, Max Lv 10 Arsenal Upgrades, 7 Skins &amp; Unlimited Fortune Unlocked!</div></div>`;
+  } else {
+    h += `<div class="vip-locked-banner" style="background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,210,60,0.35);border-radius:12px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">` +
+      `<div style="display:flex;align-items:center;gap:10px"><span style="font-size:1.5rem">🔒</span>` +
+      `<div><div style="color:#ffd23c;font-weight:bold;font-size:0.92rem;font-family:'Orbitron',sans-serif">👑 GAME CREATOR VIP PASS (Exclusive to Noël)</div>` +
+      `<div style="color:#8fa6cb;font-size:0.75rem">Reserved for the game creator. Change callsign to Noël or enter creator key to unlock.</div></div></div>` +
+      `<button onclick="promptVipPass()" style="font-size:0.78rem;padding:6px 14px;background:linear-gradient(135deg,#ffd23c,#f59e0b);color:#000;font-weight:bold;border-radius:8px;cursor:pointer">🔑 UNLOCK VIP</button></div>`;
   }
 
   // 0. DAILY REWARDS VOYAGE SHORTCUT
@@ -6057,7 +6124,7 @@ function buildShop() {
   const curShipUpg = getShipUpg(activeUpgradeShip);
   const curLoadout = computeLoadout(activeUpgradeShip);
   const isCurrentlyInFlight = SAVE.data.sel === activeUpgradeShip;
-  const isShipOwned = SAVE.data.ships.includes(activeUpgradeShip);
+  const isShipOwned = isCreator() || SAVE.data.ships.includes(activeUpgradeShip);
   const curSvg = getShipSvg(curUpgShip.id, curUpgShip.cols);
 
   h += `<div class="fleet-upg-ship-banner" style="border-color:${curUpgShip.cols[0] || '#ffd23c'};">` +
@@ -6126,7 +6193,7 @@ function buildShop() {
   
   h += '<h2>🚢 PIRATE FLEET SHIPS — Spend Plasma Cores 🎟️</h2>';
   for (const s of SHIPS) {
-    const owned = SAVE.data.ships.includes(s.id), sel = SAVE.data.sel === s.id;
+    const owned = isCreator() || SAVE.data.ships.includes(s.id), sel = SAVE.data.sel === s.id;
     const can = SAVE.data.tokens >= s.cost;
     const uShip = getShipUpg(s.id);
     const totLv = (uShip.hull || 0) + (uShip.cannon || 0) + (uShip.engine || 0) + (uShip.magnet || 0);
@@ -6152,7 +6219,7 @@ function buildShop() {
   
   h += '<h2>🎨 GALLEON SKINS — Unlocked by Confirmed UFO Kills ☠️</h2>';
   for (const k of SKINS) {
-    const unlocked = SAVE.data.kills >= k.kills, sel = SAVE.data.skin === k.id;
+    const unlocked = isCreator() || SAVE.data.kills >= k.kills, sel = SAVE.data.skin === k.id;
     const curShipId = SAVE.data.sel || 'cutter';
     const curShip = shipById(curShipId);
     const skinCols = k.cols ? k.cols : curShip.cols;
@@ -6355,10 +6422,31 @@ if (document.readyState === 'loading') {
   try {
     const i = document.getElementById('pname');
     const n = localStorage.getItem('sp_name');
-    if (i && n) {
-      i.value = n;
+    const vip = localStorage.getItem('sp_creator_pass') === 'true';
+
+    // Query param unlock e.g. ?vip=1 or ?creator=noel
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('vip') === '1' || params.get('creator') === 'noel') {
+        localStorage.setItem('sp_creator_pass', 'true');
+        localStorage.setItem('sp_name', 'Captain Noël');
+      }
+    } catch(e) {}
+
+    if (n) {
+      if (i) i.value = n;
       playerName = n;
+    } else if (vip) {
+      if (i) i.value = 'Captain Noël';
+      playerName = 'Captain Noël';
+      try { localStorage.setItem('sp_name', 'Captain Noël'); } catch(e) {}
+    } else {
+      playerName = 'Captain';
     }
+
+    SAVE.load();
+    applyLoadout();
+
     best = +localStorage.getItem('sp_best') || 0;
     const bl = document.getElementById('bestline');
     if (bl && best > 0) bl.textContent = '🏅 Sector Record: ' + best;
@@ -6368,7 +6456,7 @@ if (document.readyState === 'loading') {
       const updateName = (immediate = false) => {
         const val = i.value.trim().slice(0, 14);
         if (val) {
-          localStorage.setItem('sp_name', val);
+          try { localStorage.setItem('sp_name', val); } catch(e) {}
           playerName = val;
           SAVE.load();
           applyLoadout();
