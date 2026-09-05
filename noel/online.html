@@ -4177,7 +4177,7 @@ const BOSS_INTEL = [
       '⚡ 8-Tributary Kyber Dish Superlaser Convergence'
     ],
     loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +100 🪙',
-    tactic: 'Survive the intense tractor beam lock and evade continuous turbolaser bombardments, then fire broadsides into the Kyber dish!'
+    tactic: 'Hold [A] or steer left to engage reverse ion thrusters against the magnetic tractor beam, then fire broadsides into the Kyber dish!'
   },
   {
     id: 'ram',
@@ -7413,8 +7413,7 @@ function update(dt) {
   }
 
   const curSpdMul = spdMul * (hyperchargeActiveT > 0 ? 1.55 : 1.0) * (slowT > 0 ? 0.55 : 1.0);
-  const isTractorLocked = boss && boss.tractorT > 0;
-  const isImmobilized = isTractorLocked || isFrozen;
+  const isImmobilized = isFrozen;
   const ACC = (isImmobilized ? 0 : 1450) * curSpdMul;
   const MAX_SPD = (isImmobilized ? 0 : 480) * curSpdMul;
   let ax = 0, ay = 0;
@@ -7427,6 +7426,12 @@ function update(dt) {
     if (touchStick.active) {
       ax += touchStick.ax;
       ay += touchStick.ay;
+    }
+
+    // Active resistance against Overlord Chronos tractor beam: boost reverse/lateral thrusters!
+    if (boss && boss.tractorT > 0) {
+      if (ax < 0) ax *= 1.65; // High reverse thrust power to pull away from the Death Star
+      if (Math.abs(ay) > 0) ay *= 1.45; // Enhanced vertical maneuvering to break beam lock
     }
   }
 
@@ -7867,30 +7872,39 @@ function update(dt) {
 
     if (boss.tractorT > 0) {
       boss.tractorT -= dt;
-      // Irresistible Colossal Gravitational Tractor Singularity - Inescapable Pull!
+      // Gentle, counterable magnetic tractor pull (Player can actively steer and resist!)
       const dishWorldX = boss.x - boss.w * 0.12;
       const dishWorldY = boss.y - boss.h * 0.15;
-      const captureX = dishWorldX - 120;
+      const captureX = dishWorldX - 140;
       const captureY = dishWorldY;
       const tdx = captureX - ship.x;
       const tdy = captureY - ship.y;
       const tdist = Math.hypot(tdx, tdy) || 1;
 
-      // Inescapable Gravitational Suction (Rapidly accelerates and firmly locks the player galleon)
-      const pullSpeed = Math.max(720, tdist * 4.2);
+      const pullSpeed = Math.min(220, tdist * 0.85);
       ship.x += (tdx / tdist) * pullSpeed * dt;
-      ship.y += (tdy / tdist) * pullSpeed * dt;
-      ship.vx = (tdx / tdist) * pullSpeed * 0.2;
-      ship.vy = (tdy / tdist) * pullSpeed * 0.2;
+      ship.y += (tdy / tdist) * pullSpeed * 0.65 * dt;
 
-      // Violently shake and vibrate captured ship
-      ship.pitch = (Math.random() - 0.5) * 0.35;
-      addShake(4.5);
+      // Ion thruster trail sparks when player ship resists the tractor pull
+      if (Math.random() < 0.6) {
+        parts.push({
+          x: ship.x - 20,
+          y: ship.y + (Math.random() - 0.5) * 16,
+          vx: -240 - Math.random() * 120,
+          vy: (Math.random() - 0.5) * 40,
+          life: 0.35,
+          col: '#00ffee',
+          size: 4 + Math.random() * 3
+        });
+      }
 
-      // Continuous Rapid-Fire Shooting while tractor beam is actively dragging/holding player!
+      ship.pitch = (Math.random() - 0.5) * 0.15;
+      addShake(1.5);
+
+      // Spaced turbolaser firing during tractor beam
       boss.tractorShootT = (boss.tractorShootT || 0) - dt;
       if (boss.tractorShootT <= 0) {
-        boss.tractorShootT = 0.26; // Rapid-fire barrage every 0.26s!
+        boss.tractorShootT = 0.48; // Spaced out barrage
         const aimAtShip = Math.atan2(ship.y - boss.y, ship.x - boss.x);
         
         // 1. Dual Turbolaser Blasts from Equatorial Trench
@@ -7900,25 +7914,26 @@ function update(dt) {
             col: '#00e5ff',
             x: boss.x - boss.w * 0.35,
             y: boss.y + cy,
-            vx: Math.cos(aimAtShip) * 780 * spdBonus,
-            vy: Math.sin(aimAtShip) * 780 * spdBonus,
-            r: 16
+            vx: Math.cos(aimAtShip) * 620 * spdBonus,
+            vy: Math.sin(aimAtShip) * 620 * spdBonus,
+            r: 14
           });
         }
 
-        // 2. High-Energy Kyber Superlaser Core Plasma Pulse accelerated down the beam
+        // 2. Kyber Superlaser Core Plasma Pulse
         eballs.push({
           type: 'emp',
           col: '#00ffee',
           x: dishWorldX,
           y: dishWorldY,
-          vx: (ship.x - dishWorldX) / (Math.hypot(ship.x - dishWorldX, ship.y - dishWorldY) || 1) * 720 * spdBonus,
-          vy: (ship.y - dishWorldY) / (Math.hypot(ship.x - dishWorldX, ship.y - dishWorldY) || 1) * 720 * spdBonus,
-          r: 22
+          vx: (ship.x - dishWorldX) / (Math.hypot(ship.x - dishWorldX, ship.y - dishWorldY) || 1) * 580 * spdBonus,
+          vy: (ship.y - dishWorldY) / (Math.hypot(ship.x - dishWorldX, ship.y - dishWorldY) || 1) * 580 * spdBonus,
+          r: 18
         });
 
         sfx('laser');
       }
+    }
 
       // Space debris & magnetic plasma shards sucked into the singularity dish
       if (Math.random() < 0.8) {
@@ -8240,11 +8255,11 @@ function update(dt) {
           popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: 360° EQUATORIAL TRENCH BURST!', '#00e5ff');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          // Gravitational Magnetic Tractor Beam (Powerful Event Horizon Singularity)
-          boss.tractorT = 3.2;
-          popup(boss.x - 40, boss.y - 45, '🧲 GRAVITATIONAL TRACTOR BEAM ACTIVATED!', '#00e5ff');
-          addAlert('⚠️ [EVENT HORIZON] OVERLORD CHRONOS HAS ENGAGED GRAVITATIONAL TRACTOR BEAM!', 'incoming');
-          addShake(20);
+          // Gravitational Magnetic Tractor Beam (Player can hold [A] / steer away to resist)
+          boss.tractorT = 2.4;
+          popup(boss.x - 40, boss.y - 45, '🧲 TRACTOR BEAM ACTIVATED! STEER AWAY TO RESIST!', '#00e5ff');
+          addAlert('⚠️ [TRACTOR BEAM] OVERLORD CHRONOS HAS ENGAGED TRACTOR PULL — ENGAGE REVERSE THRUSTERS [A]!', 'incoming');
+          addShake(12);
           sfx('incoming');
         } else {
           // 8-Beam Kyber Dish Superlaser Convergence (Aimed directly at player!)
