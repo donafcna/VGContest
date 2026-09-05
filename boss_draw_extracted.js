@@ -299,7 +299,7 @@
         }
       }
     } else if (boss.type === 'dread') {
-      // BOSS 1: GRAND ADMIRAL VEX: IMPERIAL ECLIPSE SUPER-DREADNOUGHT (Star Wars Imperial Star Destroyer)
+      // BOSS 1: GRAND ADMIRAL VEX: IMPERIAL ECLIPSE SUPER-DREADNOUGHT (Cosmic Alien Imperial Star Destroyer)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.55);
       bg.addColorStop(0, 'rgba(0, 255, 170, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.54, boss.h * 0.50, 0, 0, Math.PI * 2); cx.fill();
@@ -389,7 +389,7 @@
       }
 
     } else if (boss.type === 'hive') {
-      // BOSS 2: OVERLORD CHRONOS: DEATH STAR ORBITAL CITADEL (Star Wars Death Star Battlestation)
+      // BOSS 2: OVERLORD CHRONOS: DEATH STAR ORBITAL CITADEL (Cosmic Alien Death Star Battlestation)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.54, 0, Math.PI * 2); cx.fill();

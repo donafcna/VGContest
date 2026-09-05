@@ -1,7 +1,7 @@
 # 🚀🏴‍☠️ Space Pirates
 
 Noel's game for the family video game contest! (vgcontest.vercel.app)
-Command your authentic wooden Solar Pirate Galleon through deep space, blast Star Wars-style alien UFO squadrons & colossal Death Saucers, loot gold dubloons & alien plasma cores, and climb the galaxy leaderboard! ⚓🌌
+Command your authentic wooden Solar Pirate Galleon through deep space, blast Cosmic Alien-style alien UFO squadrons & colossal Death Saucers, loot gold dubloons & alien plasma cores, and climb the galaxy leaderboard! ⚓🌌
 
 ## How to play
 - **Move**: WASD / Arrow keys or Mouse
@@ -19,7 +19,7 @@ Command your authentic wooden Solar Pirate Galleon through deep space, blast Sta
 - 🪙 **Golden Hind**: +60% Gold & powerful salvage hook
 - 🔱 **Solar Dreadnought**: Twin heavy broadside battery
 
-## 👾 10 Colossal Star Wars Flagship Bosses (Ranked Strongest to Weakest)
+## 👾 10 Colossal Cosmic Alien Flagship Bosses (Ranked Strongest to Weakest)
 - 👑 **Sector 1 Apex**: **The Sith Elemental Triumvirate** (Ignis, Glacies & Fulgur) & **Overlord Trinity Fusion Colossus**
 - 🦿 **Sector 1**: **General Veers** (Imperial AT-AT All-Terrain Heavy Siege Colossus)
 - 🧬 **Sector 2**: **Overlord Pathogen** (Imperial Bio-Spore Carrier & Mutating Clones)

@@ -2125,7 +2125,7 @@ const ship = {
 // Collections for Space Pirate Combat
 let balls = [];       // player fiery cannonballs moving right
 let eballs = [];      // enemy UFO green laser bolts moving left
-let forts = [];       // enemy heavy UFO battle cruisers (Star Wars style)
+let forts = [];       // enemy heavy UFO battle cruisers (Cosmic Alien style)
 let gliders = [];     // fast UFO scout saucers / TIE-style fighters
 let mines = [];       // glowing alien plasma mines
 let coins = [];       // gold dubloons
@@ -2730,7 +2730,7 @@ function initAudio() {
   }
 }
 
-function playStarWarsIntroFanfare() {
+function playCosmicIntroFanfare() {
   if (!ac || !musicOn) return;
   const t0 = ac.currentTime + 0.05;
   const F4 = 349.23, Bb4 = 466.16, C5 = 523.25, D5 = 587.33, Eb5 = 622.25, F5 = 698.46, Bb5 = 932.33;
@@ -2758,7 +2758,7 @@ function playStarWarsIntroFanfare() {
     o.start(time); o.stop(time + 0.37);
   }
 
-  // Star Wars Opening Fanfare: Triplets F4-F4-F4 -> Bb4 -> F5 -> Eb5-D5-C5 -> Bb5 -> F5
+  // Cosmic Alien Opening Fanfare: Triplets F4-F4-F4 -> Bb4 -> F5 -> Eb5-D5-C5 -> Bb5 -> F5
   playTimpani(t0);
   playHorn(t0, F4, 0.12, 0.25);
   playHorn(t0 + 0.14, F4, 0.12, 0.25);
@@ -2822,7 +2822,7 @@ function sfx(type) {
       const g = ac.createGain(); g.gain.value = 0.38;
       s.connect(f); f.connect(g); g.connect(masterG); s.start(t0);
     } else if (type === 'laser') {
-      // Star Wars Alien TIE Turbo-Laser Dual-Frequency Pulse
+      // Cosmic Alien Alien TIE Turbo-Laser Dual-Frequency Pulse
       const o1 = ac.createOscillator(), g1 = ac.createGain();
       o1.type = 'sawtooth'; o1.frequency.setValueAtTime(1600, t0);
       o1.frequency.exponentialRampToValueAtTime(140, t0 + 0.14);
@@ -5883,7 +5883,7 @@ async function renderLeaderboard(cid, myScore, myName) {
   } catch (e) {}
 }
 
-// ---------- SPAWN STAR WARS ENEMY ARCHETYPES WITH UNIQUE POWERS & SECTOR PROGRESSION ----------
+// ---------- SPAWN Cosmic Alien ENEMY ARCHETYPES WITH UNIQUE POWERS & SECTOR PROGRESSION ----------
 function spawnFort() {
   const roll = Math.random();
   let variant = 'cruiser', col = '#f59e0b', name = 'SS-54 ASSAULT GUNSHIP', hp = 5, w = 128, h = 68, shield = 2;
@@ -11426,7 +11426,7 @@ function drawGalleonForward(cx, x, y, scale=1.0) {
 }
 
 // -------------------------------------------------------------
-// PHOTOREALISTIC RENDERING (PIRATE GALLEON VS STAR WARS UFOS)
+// PHOTOREALISTIC RENDERING (PIRATE GALLEON VS Cosmic Alien UFOS)
 // -------------------------------------------------------------
 
 function drawCoopPlayers(cx) {
@@ -11682,7 +11682,7 @@ function draw() {
     cx.restore();
   }
 
-  // 4. Render Heavy Star Wars Warships (5 Distinct Classes with Multi-Layer Armor & Realistic Shaders)
+  // 4. Render Heavy Cosmic Alien Warships (5 Distinct Classes with Multi-Layer Armor & Realistic Shaders)
   for (const f of forts) {
     cx.save(); cx.translate(f.x, f.y);
     
@@ -12143,7 +12143,7 @@ function draw() {
     cx.restore();
   }
 
-  // 5. Render Star Wars Starfighters (5 Distinct Classes with Photovoltaic Solar Arrays & Lasers)
+  // 5. Render Cosmic Alien Starfighters (5 Distinct Classes with Photovoltaic Solar Arrays & Lasers)
   for (const g of gliders) {
     cx.save(); cx.translate(g.x, g.y);
 
@@ -12360,7 +12360,7 @@ function draw() {
   }
 
   // 5.5 Render Intro UFO Scouts & Fractured Wreckage
-  // 5.5 Render Intro Imperial Star Wars Fighters & Fractured Wreckage
+  // 5.5 Render Intro Imperial Cosmic Alien Fighters & Fractured Wreckage
   if (state === 'intro' && storyStage >= 1) {
     for (const u of introUfos) {
       if (!u.dead) {
@@ -13094,7 +13094,7 @@ function draw() {
         }
       }
     } else if (boss.type === 'dread') {
-      // BOSS 1: GRAND ADMIRAL VEX: IMPERIAL ECLIPSE SUPER-DREADNOUGHT (Star Wars Imperial Star Destroyer)
+      // BOSS 1: GRAND ADMIRAL VEX: IMPERIAL ECLIPSE SUPER-DREADNOUGHT (Cosmic Alien Imperial Star Destroyer)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.55);
       bg.addColorStop(0, 'rgba(0, 255, 170, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.54, boss.h * 0.50, 0, 0, Math.PI * 2); cx.fill();
@@ -13211,7 +13211,7 @@ function draw() {
       }
 
     } else if (boss.type === 'hive') {
-      // BOSS 2: OVERLORD CHRONOS: DEATH STAR ORBITAL CITADEL (Star Wars Death Star Battlestation)
+      // BOSS 2: OVERLORD CHRONOS: DEATH STAR ORBITAL CITADEL (Cosmic Alien Death Star Battlestation)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.54, 0, Math.PI * 2); cx.fill();
@@ -14605,7 +14605,7 @@ function draw() {
     }
     cx.restore();
   }
-  // Enemy Projectiles (Authentic Star Wars Turbolasers, Concussion Torpedoes, EMP Waves)
+  // Enemy Projectiles (Authentic Cosmic Alien Turbolasers, Concussion Torpedoes, EMP Waves)
   for (const eb of eballs) {
     cx.save();
     cx.translate(eb.x, eb.y);
@@ -14693,7 +14693,7 @@ function draw() {
       cx.beginPath(); cx.arc(0, 0, eb.r * 0.55, 0, Math.PI * 2); cx.fill();
 
     } else {
-      // Authentic Star Wars Turbolaser Bolt (Aerodynamic plasma capsule, aligned to trajectory)
+      // Authentic Cosmic Alien Turbolaser Bolt (Aerodynamic plasma capsule, aligned to trajectory)
       const laserCol = eb.col || '#ff0033';
       const boltLen = Math.max(22, (eb.r || 12) * 1.9);
       const boltThick = Math.max(5, (eb.r || 12) * 0.52);
