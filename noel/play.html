@@ -1768,7 +1768,7 @@
     🎮 <b>PC Abilities</b>: <b>[Q]</b> = 🟢 <b>Gadget</b> (3 Charges) • <b>[E]</b> = 🌟 <b>Super &amp; Hypercharge</b> (100% Charge)<br>
     🚀 <b>Flight Movement</b>: <b>W A S D</b> or <b>Arrow Keys</b> • 📱 <b>Mobile</b>: D-Pad &amp; On-Screen Buttons
   </div>
-  <input id="pname" placeholder="Enter Callsign (e.g. NoelTheGoat)" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
+  <input id="pname" placeholder="Enter Captain Name (e.g. NoelTheGoat)" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="btnrow">
     <button id="onlinebtn" type="button" class="action-btn" onclick="openOnlineModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">🌐 ONLINE MULTIPLAYER (3P)</button>
     <button id="startbtn" type="button" class="action-btn" onclick="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
@@ -1818,7 +1818,7 @@
     <div class="dossier-header">
       <span id="dosRank" class="dos-badge">🥇 RANK #1</span>
       <h1 id="dosName">Captain Noel</h1>
-      <div id="dosCallsign" class="dos-sub">PILOT ID: pilot_xxxx</div>
+      <div id="dosCallsign" class="dos-sub">CAPTAIN ID: captain_xxxx</div>
     </div>
 
     <div class="dos-grid">
@@ -1945,11 +1945,11 @@
       Play together from <b>separate phones, tablets, laptops, or PCs</b> anywhere in the world! Zero lag WebRTC connection with up to 3 pilots.
     </p>
 
-    <!-- Pilot Callsign & Ship Select -->
+    <!-- Captain Name & Ship Select -->
     <div class="online-pilot-bar">
       <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:200px">
-        <label style="font-size:0.75rem;font-weight:bold;color:#ffd23c;text-transform:uppercase;letter-spacing:1px;text-align:left">Your Pilot Callsign:</label>
-        <input id="onlineCallsign" placeholder="Enter Callsign (e.g. NoelTheGoat)" maxlength="14" style="font-family:'Orbitron',sans-serif;font-size:0.95rem;padding:8px 12px;background:rgba(0,0,0,0.4);border:1.5px solid #00e5ff;border-radius:8px;color:#fff;font-weight:bold" oninput="updateOnlinePilotInfo()">
+        <label style="font-size:0.75rem;font-weight:bold;color:#ffd23c;text-transform:uppercase;letter-spacing:1px;text-align:left">Your Captain Name:</label>
+        <input id="onlineCallsign" placeholder="Enter Captain Name (e.g. NoelTheGoat)" maxlength="14" style="font-family:'Orbitron',sans-serif;font-size:0.95rem;padding:8px 12px;background:rgba(0,0,0,0.4);border:1.5px solid #00e5ff;border-radius:8px;color:#fff;font-weight:bold" oninput="updateOnlinePilotInfo()">
       </div>
       <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:200px">
         <label style="font-size:0.75rem;font-weight:bold;color:#00ffaa;text-transform:uppercase;letter-spacing:1px;text-align:left">Selected Ship:</label>
@@ -3489,7 +3489,7 @@ function activateVipPass(code) {
 window.activateVipPass = activateVipPass;
 
 function promptVipPass() {
-  const pin = prompt("👑 ENTER CREATOR KEY OR CALLSIGN (Exclusive to Noël):");
+  const pin = prompt("👑 ENTER CREATOR KEY OR CAPTAIN NAME (Exclusive to Noël):");
   if (pin) {
     const ok = activateVipPass(pin);
     if (ok) {
@@ -5772,7 +5772,7 @@ function openDossier(pilotIndex) {
 
   const callsignEl = document.getElementById('dosCallsign');
   if (callsignEl) {
-    callsignEl.textContent = `PILOT UID: ${p.uid ? p.uid.slice(0, 18) : 'PIRATE'}`;
+    callsignEl.textContent = `CAPTAIN UID: ${p.uid ? p.uid.slice(0, 18) : 'PIRATE'}`;
   }
 
   // Active Flagship Details
@@ -7846,7 +7846,7 @@ function buildShop() {
     h += `<div class="vip-locked-banner" style="background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,210,60,0.35);border-radius:12px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">` +
       `<div style="display:flex;align-items:center;gap:10px"><span style="font-size:1.5rem">🔒</span>` +
       `<div><div style="color:#ffd23c;font-weight:bold;font-size:0.92rem;font-family:'Orbitron',sans-serif">👑 GAME CREATOR VIP PASS (Exclusive to Noël)</div>` +
-      `<div style="color:#8fa6cb;font-size:0.75rem">Reserved for the game creator. Change callsign to Noël or enter creator key to unlock.</div></div></div>` +
+      `<div style="color:#8fa6cb;font-size:0.75rem">Reserved for the game creator. Change Captain Name to Noël or enter creator key to unlock.</div></div></div>` +
       `<button onclick="promptVipPass()" style="font-size:0.78rem;padding:6px 14px;background:linear-gradient(135deg,#ffd23c,#f59e0b);color:#000;font-weight:bold;border-radius:8px;cursor:pointer">🔑 UNLOCK VIP</button></div>`;
   }
 
