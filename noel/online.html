@@ -2115,7 +2115,7 @@ let introUfos = [], introShot1 = false, introShot2 = false;
 let wreckage = [], shieldShards = [], introLasers = [], introShieldFlare = 0, introArmada = [];
 
 // High-fidelity Real Space Pirate Galleon
-const ship = {
+let ship = {
   x: 180, y: H * 0.5, vx: 0, vy: 0,
   pitch: 0, hp: 5, inv: 0, recoil: 0,
   flagWave: 0, sailGlow: 0, r: 46,
@@ -3799,7 +3799,7 @@ function applyLoadout() {
   goldMult = lo.goldMult;
   baseSpread = lo.baseSpread;
   shipCols = lo.cols;
-  ship.hp = maxHp;
+  if (ship) ship.hp = maxHp;
 }
 applyLoadout();
 
@@ -7034,7 +7034,7 @@ function startSolarSail(e) {
   scoreSubmitted = false;
   applyLoadout();
   initMultiplayerFleet();
-  ship.hp = maxHp; ship.inv = 0; ship.x = W * 0.22; ship.y = H * 0.5;
+  if (ship) ship.hp = maxHp; ship.inv = 0; ship.x = W * 0.22; ship.y = H * 0.5;
   ship.vx = 0; ship.vy = 0; ship.pitch = 0;
 
   // Initialize Brawl Stars Gadget & Super Loadout
@@ -8311,7 +8311,6 @@ function renderTrailModalUI() {
 }
 
 function bindActionButtons() {
-  bind('trailbtn', openTrailModal);
   const bind = (id, handler) => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -8326,13 +8325,14 @@ function bindActionButtons() {
     };
     el.addEventListener('click', execute);
     el.addEventListener('touchend', (e) => {
-      // Direct instant mobile touch reaction
       try { e.preventDefault(); } catch(err) {}
       execute(e);
     }, { passive: false });
   };
 
+  bind('topTrailBar', openTrailModal);
   bind('startbtn', startSolarSail);
+  bind('onlinebtn', openOnlineModal);
   bind('hangarbtn', openHangar);
   bind('dailybtn', openDailyModal);
   bind('bossbtn', openBossIntelModal);
