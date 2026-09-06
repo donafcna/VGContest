@@ -7078,8 +7078,15 @@ function startSolarSail(e) {
   scoreSubmitted = false;
   applyLoadout();
   initMultiplayerFleet();
-  if (ship) ship.hp = maxHp; ship.inv = 0; ship.x = W * 0.22; ship.y = H * 0.5;
-  ship.vx = 0; ship.vy = 0; ship.pitch = 0;
+  if (ship) {
+    ship.hp = maxHp;
+    ship.inv = 2.0;
+    ship.x = W * 0.22;
+    ship.y = H * 0.5;
+    ship.vx = 0;
+    ship.vy = 0;
+    ship.pitch = 0;
+  }
 
   // Initialize Brawl Stars Gadget & Super Loadout
   gadgetCharges = 3;
@@ -7099,48 +7106,30 @@ function startSolarSail(e) {
   nebulaScythesT = 0;
   flakPods = [];
 
-  introT = 0;
-  storyStage = 0;
-  storyCooldown = 0.5;
-  introShot1 = false;
-  introShot2 = false;
-  introLasers = [];
-  introShieldFlare = 0;
-  introArmada = [];
-  wreckage = [];
-  shieldShards = [];
-  introUfos = [
-    {
-      variant: 'tie',
-      type: 'tie_fighter',
-      name: 'Imperial TIE/ln Starfighter',
-      x: W * 1.45, y: H * 0.28, targetX: W * 0.62, targetY: H * 0.34,
-      vx: -260, vy: 30, pitch: 0.16, roll: 0.2,
-      col: '#ff0033', w: 80, h: 60, saucerSpin: 0,
-      shield: 1.0, dead: false, engineGlow: 1.0, shotFired: false
-    },
-    {
-      variant: 'stalker',
-      type: 'vulture_droid',
-      name: 'Separatist Vulture Droid',
-      x: W * 1.55, y: H * 0.72, targetX: W * 0.68, targetY: H * 0.66,
-      vx: -280, vy: -30, pitch: -0.16, roll: -0.2,
-      col: '#a855f7', w: 64, h: 44, saucerSpin: 0,
-      shield: 1.0, dead: false, engineGlow: 1.0, shotFired: false
-    }
-  ];
-  storySectorAnnounced = 1;
   tokensRun = 0; killsRun = 0; spinsRun = 0;
   balls = []; eballs = []; forts = []; gliders = []; mines = []; coins = []; powerups = []; parts = [];
-  boss = null; bossT = 12; score = 0; coinsN = 0; level = 1; t = 0;
+  boss = null; bossT = 10; score = 0; coinsN = 0; level = 1; t = 0;
   
-  const m = document.getElementById('menu');
-  if (m) m.classList.add('hidden');
-  initAudio();
-  state = 'intro';
+  // Hide all overlays and menu
+  const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal'];
+  overlays.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+
+  try { initAudio(); } catch(err) {}
+  state = 'play';
+  try { sfx('incoming'); } catch(err) {}
+  addShake(18);
+  addAlert('🚨 RED ALERT: COSMIC ARMADA INBOUND!', 'incoming');
   updateDpadVisibility();
   updatePauseBtnVisibility();
   updateBrawlControlsVisibility();
+  
+  try {
+    spawnGlider(W + 50, H * 0.28, 'tie');
+    spawnGlider(W + 80, H * 0.72, 'stalker');
+  } catch(err) {}
 }
 window.startSolarSail = startSolarSail;
 
