@@ -1949,10 +1949,10 @@ if (typeof Peer === 'undefined') {
         <label style="font-size:0.75rem;font-weight:bold;color:#00ffaa;text-transform:uppercase;letter-spacing:1px;text-align:left">Selected Ship:</label>
         <select id="onlineShipSelect" style="font-family:'Orbitron',sans-serif;font-size:0.95rem;padding:8px 12px;background:rgba(0,0,0,0.4);border:1.5px solid #00ffaa;border-radius:8px;color:#ffd23c;font-weight:bold" onchange="updateOnlinePilotInfo()">
           <option value="cutter">⚡ Storm Cutter (Speed & Spread)</option>
-          <option value="runner">🚀 T-65B X-Wing (Nova Mega-Beam)</option>
+          <option value="runner">🚀 Nova Strikefighter (Nova Mega-Beam)</option>
           <option value="galleon">🏴‍☠️ Solar Galleon (Heavy Broadside)</option>
           <option value="hind">💣 Golden Hind Dreadnought (Armor Titan)</option>
-          <option value="storm">🛸 Fondor Haulcraft (Supreme Plasma)</option>
+          <option value="storm">🛸 Nebula Cruiser (Supreme Plasma)</option>
         </select>
       </div>
     </div>
@@ -2031,7 +2031,7 @@ if (typeof Peer === 'undefined') {
             <div style="display:flex;align-items:center;gap:6px">
               <span id="slotName2" class="slot-name">Waiting for Wingman...</span>
             </div>
-            <span id="slotShip2" class="slot-ship">T-65B X-Wing</span>
+            <span id="slotShip2" class="slot-ship">Nova Strikefighter</span>
           </div>
           <div id="slotStatus2" class="slot-status" style="color:#8fa6cb">⏳ OPEN</div>
         </div>
@@ -2126,7 +2126,7 @@ let ship = {
 let balls = [];       // player fiery cannonballs moving right
 let eballs = [];      // enemy UFO green laser bolts moving left
 let forts = [];       // enemy heavy UFO battle cruisers (Cosmic Alien style)
-let gliders = [];     // fast UFO scout saucers / TIE-style fighters
+let gliders = [];     // fast UFO scout saucers / Void Interceptor style fighters
 let mines = [];       // glowing alien plasma mines
 let coins = [];       // gold dubloons
 let powerups = [];    // space supply chests
@@ -2989,10 +2989,10 @@ let hyperchargeActiveT = 0;
 let superBeamActiveT = 0;
 
 // Ship-Specific Custom Ability States
-let falconTurretT = 0;
-let falconAngle = 0;
+let corsairTurretT = 0;
+let corsairAngle = 0;
 
-let xwingSuperT = 0;
+let novaSuperT = 0;
 let protonTorpedoes = []; // [{x, y, vx, vy, target, life, maxLife, dmg, col}]
 
 let stealthCloakT = 0;
@@ -3002,7 +3002,7 @@ let singularities = []; // [{x, y, life, maxLife, radius, col}]
 let rammingProwT = 0;
 let meteorStrikes = []; // [{x, y, targetY, vy, delay, size, col}]
 
-let fondorScythesT = 0;
+let nebulaScythesT = 0;
 let flakPods = []; // [{x, y, vx, vy, fuse, maxFuse, exploded, radius, col}]
 
 function hasGadget(shipId) {
@@ -3139,7 +3139,7 @@ function killBoss() {
   spinsRun += 1;
   popup(W / 2, H * 0.35, `${boss.name.toUpperCase()} DESTROYED! +${bTokens} 🎟️ +1 🎡`, '#ffd23c');
   
-  const coinCount = (boss.type === 'titan' || boss.type === 'ataraxia' || boss.type === 'pathogen') ? 36 : 18;
+  const coinCount = (boss.type === 'titan' || boss.type === 'solaris' || boss.type === 'pathogen') ? 36 : 18;
   for (let k = 0; k < coinCount; k++) {
     coins.push({
       x: boss.x + (Math.random() - 0.5) * 140,
@@ -3217,7 +3217,7 @@ function activateGadget(e) {
   popup(ship.x, ship.y - 45, `🟢 ${gName}!`, '#10b981');
 
   if (curShipId === 'cutter') {
-    // 1. Millennium Falcon (Tier 1 Starter, Cost 0 Cores): Hyperdrive Kessel Drift
+    // 1. Solar Skiff (Tier 1 Starter, Cost 0 Cores): Hyperdrive Kessel Drift
     ship.inv = 1.2;
     ship.hp = Math.min(maxHp, ship.hp + 1);
     shieldT = Math.max(shieldT, 1.5);
@@ -3254,7 +3254,7 @@ function activateGadget(e) {
       }
     }
   } else if (curShipId === 'runner') {
-    // 2. T-65B X-Wing (Tier 2, Cost 5 Cores): Proton Torpedo Lock-On (4 smart homing torpedoes)
+    // 2. Nova Strikefighter (Tier 2, Cost 5 Cores): Proton Torpedo Lock-On (4 smart homing torpedoes)
     ship.inv = 1.0;
     explode(ship.x, ship.y, '#00ffee', 45);
     for (let i = 0; i < 4; i++) {
@@ -3305,8 +3305,8 @@ function activateGadget(e) {
     explode(ship.x, ship.y, '#ef4444', 75);
     popup(ship.x, ship.y - 30, '🛡️ RAMMING PROW ENGAGED!', '#ef4444');
   } else if (curShipId === 'storm') {
-    // 5. Fondor Haulcraft (Tier 5 - The Best Ship, Cost 10 Cores): Colossal Twin Laser Scythes
-    fondorScythesT = 5.0;
+    // 5. Nebula Cruiser (Tier 5 - The Best Ship, Cost 10 Cores): Colossal Twin Laser Scythes
+    nebulaScythesT = 5.0;
     ship.inv = 1.5;
     explode(ship.x, ship.y, '#00ffee', 80);
     popup(ship.x, ship.y - 30, '⚔️ SUPREME PLASMA SCYTHES IGNITED!', '#00ffee');
@@ -3336,13 +3336,13 @@ function activateSuper(e) {
   popup(ship.x, ship.y - 55, `🌟 ${sName}!`, '#ffd23c');
 
   if (curShipId === 'cutter') {
-    // 1. Millennium Falcon (Tier 1 Starter, Cost 0 Cores): Coaxium Quad-Turret Tempest
-    falconTurretT = 3.5;
-    falconAngle = 0;
+    // 1. Solar Skiff (Tier 1 Starter, Cost 0 Cores): Coaxium Quad-Turret Tempest
+    corsairTurretT = 3.5;
+    corsairAngle = 0;
     superBeamActiveT = 0;
   } else if (curShipId === 'runner') {
-    // 2. T-65B X-Wing (Tier 2, Cost 5 Cores): S-Foil Attack Stance: Proton Nova (Piercing Mega-Beam)
-    xwingSuperT = 4.0;
+    // 2. Nova Strikefighter (Tier 2, Cost 5 Cores): S-Foil Attack Stance: Proton Nova (Piercing Mega-Beam)
+    novaSuperT = 4.0;
     superBeamActiveT = 4.0;
   } else if (curShipId === 'galleon') {
     // 3. Rogue Shadow (Tier 3, Cost 6 Cores): Tachyon Gravitational Singularity
@@ -3373,7 +3373,7 @@ function activateSuper(e) {
       });
     }
   } else if (curShipId === 'storm') {
-    // 5. Fondor Haulcraft (Tier 5 - The Best Ship, Cost 10 Cores): Armada Flak Countermeasure Storm (24 Pods)
+    // 5. Nebula Cruiser (Tier 5 - The Best Ship, Cost 10 Cores): Armada Flak Countermeasure Storm (24 Pods)
     for (let f = 0; f < 24; f++) {
       const ang = (f / 24) * Math.PI * 2 + (Math.random() - 0.5) * 0.25;
       const spd = 350 + Math.random() * 450;
@@ -3598,7 +3598,7 @@ SAVE.load();
 const SHIPS = [
   {
     id: 'cutter',
-    name: 'Millennium Falcon (YT-1300) ⚓',
+    name: 'Solar Skiff (YT-1300 Star Corsair) ⚓',
     cost: 0,
     cols: ['#f59e0b', '#b45309', '#451a03'],
     hp: 6, cool: 0.20, spd: 1.15, gold: 1.25, magnet: 45, spread: [0],
@@ -3610,7 +3610,7 @@ const SHIPS = [
   },
   {
     id: 'runner',
-    name: 'T-65B X-Wing Starfighter ⚡',
+    name: 'Nova Strikefighter ⚡',
     cost: 5,
     cols: ['#00ffee', '#0284c7', '#082f49'],
     hp: 6, cool: 0.14, spd: 1.50, gold: 1.30, magnet: 90, spread: [0],
@@ -3646,7 +3646,7 @@ const SHIPS = [
   },
   {
     id: 'storm',
-    name: 'Fondor Haulcraft (Luthen\'s Starship) 🌌',
+    name: 'Nebula Cruiser (Nebula\'s Starship) 🌌',
     cost: 10,
     cols: ['#38bdf8', '#64748b', '#0f172a'],
     hp: 8, cool: 0.22, spd: 1.20, gold: 1.50, magnet: 75, spread: [-0.15, 0.15],
@@ -3719,7 +3719,7 @@ const SKINS = [
     aura: '#ff0033',
     bulletCol: '#ff0033',
     desc: 'Cursed dark matter phantom warship. Cloaked in shadowy void tendrils and sinister crimson runes.',
-    perk: '🌑 Cursed Dark Mist & Sith Crimson Beams'
+    perk: '🌑 Cursed Dark Mist & Void Crimson Beams'
   },
   {
     id: 'cyber',
@@ -4167,7 +4167,7 @@ function getShipSvg(shipId, cols) {
   `;
 
   if (shipId === 'runner') {
-    // 1. T-65B X-WING STARFIGHTER (4 Deployed S-Foil Attack Wings, Long Blasters, Astromech Droid)
+    // 1. Nova Apex Starfighter (4 Deployed S-Foil Attack Wings, Long Blasters, Astromech Droid)
     return `<svg viewBox="0 0 110 65" width="105" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${filterBlock}
       <!-- 4 Quad Sub-Light Ion Thruster Plumes -->
@@ -4298,7 +4298,7 @@ function getShipSvg(shipId, cols) {
   }
 
   if (shipId === 'storm') {
-    // 4. FONDOR HAULCRAFT (Luthen Rael's Mobile Command Starship): Rugged Hull, Quad Articulated Turbines, Plasma Scythes
+    // 4. NEBULA CRUISER (Nebula Vanguard's Mobile Command Starship): Rugged Hull, Quad Articulated Turbines, Plasma Scythes
     return `<svg viewBox="0 0 110 65" width="105" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${filterBlock}
       <!-- Quad Articulated Turbine Ion Plumes -->
@@ -4345,7 +4345,7 @@ function getShipSvg(shipId, cols) {
     </svg>`;
   }
 
-  // 5. THE MILLENNIUM FALCON (YT-1300 LIGHT FREIGHTER): Saucer Hull, Cargo Mandibles, Offset Starboard Cockpit
+  // 5. THE SOLAR SKIFF (YT-1300 LIGHT FREIGHTER): Saucer Hull, Cargo Mandibles, Offset Starboard Cockpit
   return `<svg viewBox="0 0 110 65" width="105" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
     ${filterBlock}
     <!-- Glowing Sub-Light Ion Engine Strip across Stern -->
@@ -4379,7 +4379,7 @@ function getShipSvg(shipId, cols) {
 function getBossSvg(id) {
   const uid = 'b' + Math.random().toString(36).substr(2, 6);
   if (id === 'trio') {
-    // 0. SITH ELEMENTAL TRIUMVIRATE (Ignis, Glacies, Fulgur & Overlord Trinity)
+    // 0. VOID ELEMENTAL TRIUMVIRATE (Ignis, Glacies, Fulgur & Overlord Trinity)
     return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <filter id="glow_trio_${uid}" x="-20%" y="-20%" width="140%" height="140%">
@@ -4407,7 +4407,7 @@ function getBossSvg(id) {
       <line x1="30" y1="46" x2="80" y2="38" stroke="#ff4500" stroke-width="1" opacity="0.6"/>
       <line x1="80" y1="38" x2="130" y2="46" stroke="#c084fc" stroke-width="1" opacity="0.6"/>
 
-      <!-- 1. LEFT: DARTH IGNIS - GOTHIC MAGMA DREADNOUGHT -->
+      <!-- 1. LEFT: WARLORD IGNIS - GOTHIC MAGMA DREADNOUGHT -->
       <g transform="translate(10, 24)">
         <polygon points="2,22 18,6 28,12 28,32 18,38" fill="url(#ignis_grad_${uid})" stroke="#ff8844" stroke-width="1.2"/>
         <line x1="12" y1="12" x2="12" y2="32" stroke="#ffcc00" stroke-width="1.5" filter="url(#glow_trio_${uid})"/>
@@ -4558,7 +4558,7 @@ function getBossSvg(id) {
       <circle cx="62" cy="25" r="3.5" fill="#ffffff" stroke="#00e5ff" stroke-width="1.5" filter="url(#glow_ds_${uid})"/>
     </svg>`;
   } else if (id === 'ram') {
-    // 3. ADMIRAL RADDUS: MON CALAMARI MC85 STAR CRUISER (THE PROFUNDITY / RADDUS)
+    // 3. ADMIRAL VORTEX: TITAN CITADEL CRUISER MC-85 (THE CITADEL FLAGSHIP)
     return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <filter id="glow_moncal_${uid}" x="-20%" y="-20%" width="140%" height="140%">
@@ -4583,7 +4583,7 @@ function getBossSvg(id) {
 
       <!-- Main Curved Organic Whale-like Oval Upper Hull -->
       <path d="M8 26 Q40 8 136 12 Q152 24 148 38 Q100 44 8 26 Z" fill="url(#moncal_hull_${uid})" stroke="#94a3b8" stroke-width="2"/>
-      <!-- Mon Calamari Organic Hull Blister Domes -->
+      <!-- Heavy Citadel Organic Hull Blister Domes -->
       <ellipse cx="48" cy="18" rx="14" ry="5" fill="#475569" stroke="#cbd5e1" stroke-width="1"/>
       <ellipse cx="88" cy="19" rx="18" ry="6" fill="#475569" stroke="#cbd5e1" stroke-width="1"/>
       <ellipse cx="120" cy="22" rx="12" ry="5" fill="#334155" stroke="#cbd5e1" stroke-width="1"/>
@@ -4614,14 +4614,14 @@ function getBossSvg(id) {
       <circle cx="144" cy="35" r="2" fill="#ffffff"/>
     </svg>`;
   } else if (id === 'void') {
-    // 4. CAPTAIN SOLO: THE ROGUE MILLENNIUM FALCON (YT-1300 CORELLIAN GUNSHIP)
+    // 4. CAPTAIN NOEL: THE ROGUE SOLAR SKIFF (YT-1300 STAR CORSAIR)
     return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <filter id="glow_falcon_${uid}" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="glow_skiff_${uid}" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="2" result="blur"/>
           <feComposite in="SourceGraphic" in2="blur" operator="over"/>
         </filter>
-        <linearGradient id="falcon_hull_${uid}" x1="0" y1="42" x2="160" y2="42" gradientUnits="userSpaceOnUse">
+        <linearGradient id="skiff_hull_${uid}" x1="0" y1="42" x2="160" y2="42" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stop-color="#f8fafc"/>
           <stop offset="35%" stop-color="#cbd5e1"/>
           <stop offset="70%" stop-color="#64748b"/>
@@ -4629,11 +4629,11 @@ function getBossSvg(id) {
         </linearGradient>
       </defs>
       <!-- Glowing Cyan Sub-Light Ion Engine Strip along Stern -->
-      <path d="M136 24 Q152 42 136 60" stroke="#00ffee" stroke-width="5" fill="none" filter="url(#glow_falcon_${uid})"/>
+      <path d="M136 24 Q152 42 136 60" stroke="#00ffee" stroke-width="5" fill="none" filter="url(#glow_skiff_${uid})"/>
       <path d="M136 26 Q150 42 136 58" stroke="#ffffff" stroke-width="2.5" fill="none"/>
 
       <!-- Main Circular Saucer Hull -->
-      <ellipse cx="80" cy="42" rx="48" ry="34" fill="url(#falcon_hull_${uid})" stroke="#94a3b8" stroke-width="2.4"/>
+      <ellipse cx="80" cy="42" rx="48" ry="34" fill="url(#skiff_hull_${uid})" stroke="#94a3b8" stroke-width="2.4"/>
       
       <!-- Forward Cargo Docking Mandibles -->
       <polygon points="40,24 10,22 10,34 38,36" fill="#1e293b" stroke="#94a3b8" stroke-width="1.8"/>
@@ -4644,7 +4644,7 @@ function getBossSvg(id) {
       <!-- Offset Starboard Cockpit Corridor Tube & Conical Viewport -->
       <rect x="52" y="10" width="32" height="10" fill="#334155" stroke="#94a3b8" stroke-width="1.4" rx="2"/>
       <polygon points="84,8 102,12 102,18 84,22" fill="#0f172a" stroke="#00ffee" stroke-width="1.4"/>
-      <circle cx="94" cy="15" r="2.5" fill="#00ffee" filter="url(#glow_falcon_${uid})"/>
+      <circle cx="94" cy="15" r="2.5" fill="#00ffee" filter="url(#glow_skiff_${uid})"/>
 
       <!-- Dorsal Center Rotating Quad-Laser Blaster Turret -->
       <circle cx="80" cy="42" r="11" fill="#0f172a" stroke="#ffd23c" stroke-width="1.8"/>
@@ -4702,7 +4702,7 @@ function getBossSvg(id) {
       <polygon points="85,32 115,30 118,42 115,54 85,52" fill="#334155" stroke="#ffffff" stroke-width="1.5"/>
       <rect x="94" y="38" width="16" height="8" fill="#00ffaa" filter="url(#glow_cant_${uid})"/>
 
-      <!-- Accompanying Imperial TIE Fighter Escort -->
+      <!-- Accompanying Void Swarm Interceptor Escort -->
       <g transform="translate(18, 12) scale(0.65)">
         <line x1="0" y1="0" x2="0" y2="16" stroke="#64748b" stroke-width="2"/>
         <line x1="14" y1="0" x2="14" y2="16" stroke="#64748b" stroke-width="2"/>
@@ -4795,8 +4795,8 @@ function getBossSvg(id) {
       <circle cx="28" cy="18" r="3.5" fill="#0f172a" stroke="#ffd23c" stroke-width="1"/>
       <line x1="28" y1="18" x2="20" y2="15" stroke="#ffd23c" stroke-width="1.8"/>
     </svg>`;
-  } else if (id === 'fondor') {
-    // 7. LUTHEN RAEL: THE FONDOR HAULCRAFT (Armed Custom Haulcraft Cruiser)
+  } else if (id === 'nebula') {
+    // 7. COMMANDER NEBULA: THE VOID CRUISER (Armed Custom Cruiser Cruiser)
     return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <filter id="glow_fond_${uid}" x="-25%" y="-25%" width="150%" height="150%">
@@ -4869,8 +4869,8 @@ function getBossSvg(id) {
       <line x1="84" y1="20" x2="84" y2="4" stroke="#00ffee" stroke-width="2.5" filter="url(#glow_fond_${uid})"/>
       <line x1="84" y1="64" x2="84" y2="80" stroke="#00ffee" stroke-width="2.5" filter="url(#glow_fond_${uid})"/>
     </svg>`;
-  } else if (id === 'ataraxia') {
-    // 8. MASTER AVAR KRISS: JEDI STARCRUISER ATARAXIA (High Republic Jedi Star Cruiser)
+  } else if (id === 'solaris') {
+    // 8. ARCHON VALERIUS: RADIANT ASTRAL CRUISER SOLARIS (Apex Solar Sentinel Flagship)
     return `<svg viewBox="0 0 160 84" width="144" height="76" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <filter id="glow_ata_${uid}" x="-25%" y="-25%" width="150%" height="150%">
@@ -4920,7 +4920,7 @@ function getBossSvg(id) {
       <rect x="18" y="64.5" width="55" height="4" rx="1.5" fill="#94a3b8" stroke="#0f172a" stroke-width="1"/>
       <circle cx="18" cy="66.5" r="2.5" fill="#00ffee" filter="url(#glow_ata_${uid})"/>
 
-      <!-- Main High Republic Pearl-White Aerodynamic Cruiser Fuselage -->
+      <!-- Main Cosmic Federation Pearl-White Aerodynamic Cruiser Fuselage -->
       <polygon points="10,42 42,18 126,20 144,42 126,64 42,66" fill="url(#ata_hull_${uid})" stroke="#ffffff" stroke-width="2"/>
 
       <!-- Central Dorsal Crimson & Gold Royal Accent Stripes -->
@@ -4932,7 +4932,7 @@ function getBossSvg(id) {
       <polygon points="50,34 78,32 82,42 78,52 50,50" fill="#1e293b" stroke="#e2e8f0" stroke-width="1.4"/>
       <rect x="56" y="39" width="18" height="6" rx="1.5" fill="#00ffee" stroke="#ffffff" stroke-width="0.8" filter="url(#glow_ata_${uid})"/>
 
-      <!-- Accompanying High Republic Jedi Vector Escort Fighter -->
+      <!-- Accompanying Solar Sentinel Escort Fighter -->
       <g transform="translate(18, 2) scale(0.65)">
         <polygon points="0,8 14,0 10,8 14,16" fill="#ffd23c" stroke="#ffffff" stroke-width="1"/>
         <circle cx="6" cy="8" r="2" fill="#00ffee" filter="url(#glow_ata_${uid})"/>
@@ -5029,7 +5029,7 @@ const BOSS_INTEL = [
   },
   {
     id: 'hive',
-    name: 'Overlord Chronos: DS-1 Death Star',
+    name: 'Overlord Chronos: DS-1 Orbital Citadel',
     sector: 'Sector 2 Flagship (65 HP) · Orbital Planet-Siege Battlestation',
     col: '#00e5ff',
     hp: 65,
@@ -5043,21 +5043,21 @@ const BOSS_INTEL = [
   },
   {
     id: 'ram',
-    name: 'Admiral Raddus: Mon Calamari MC85 Star Cruiser',
-    sector: 'Sector 3 Flagship (70 HP) · Heavy Mon Calamari Command Cruiser (The Profundity)',
+    name: 'Admiral Vortex: Heavy Citadel MC85 Star Cruiser',
+    sector: 'Sector 3 Flagship (70 HP) · Heavy Heavy Citadel Command Cruiser (The Profundity)',
     col: '#38bdf8',
     hp: 70,
     powers: [
       '🌊 Ventral Spire Heavy Ion Ray (Piercing azure continuous beam sweeping flight lanes)',
       '🚀 Dual Guided Concussion Torpedo Volleys & Deflector Shield Bubbles',
-      '⚡ Mon Calamari 8-Gun Broadside Turbolaser Salvo (High-speed azure blue plasma fire)'
+      '⚡ Heavy Citadel 8-Gun Broadside Turbolaser Salvo (High-speed azure blue plasma fire)'
     ],
     loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +125 🪙',
     tactic: 'Stay above the deep ventral command fin to avoid the downward ion beam, and target the dorsal shield blister domes!'
   },
   {
     id: 'void',
-    name: 'Captain Solo: The Rogue Millennium Falcon',
+    name: 'Captain Noel: The Rogue Solar Skiff',
     sector: 'Sector 4 Flagship (75 HP) · Legendary Modified Corellian YT-1300 Gunship',
     col: '#00ffee',
     hp: 75,
@@ -5084,9 +5084,9 @@ const BOSS_INTEL = [
     tactic: 'Weave between the 4 swept outrigger stabilizer wings to target the central bridge superstructure with concentrated cannon broadsides!'
   },
   {
-    id: 'fondor',
-    name: 'Luthen Rael: The Fondor Haulcraft',
-    sector: 'Sector 6 Flagship (88 HP) · Heavily Modified Armed Haulcraft Cruiser',
+    id: 'nebula',
+    name: 'Nebula Vanguard: The Nebula Cruiser',
+    sector: 'Sector 6 Flagship (88 HP) · Heavily Modified Armed Cruiser Cruiser',
     col: '#38bdf8',
     hp: 88,
     powers: [
@@ -5112,18 +5112,18 @@ const BOSS_INTEL = [
     tactic: 'Focus fire directly on the Original Alpha Prime Carrier! Destroying clones makes the survivors mutate and grow larger!'
   },
   {
-    id: 'ataraxia',
-    name: 'Master Avar Kriss: Jedi Starcruiser Ataraxia',
-    sector: 'Sector 8 Flagship (92 HP) · High Republic Jedi Star Cruiser',
+    id: 'solaris',
+    name: 'Archon Valerius: Radiant Astral Cruiser Solaris',
+    sector: 'Sector 8 Flagship (92 HP) · Apex Solar Sentinel Flagship',
     col: '#e0e7ff',
     hp: 92,
     powers: [
       '⚡ Twin Kyber Convergence Lances & Radiant Force Pulse (Colossal piercing Kyber lances + deflecting Force ring)',
-      '💫 High Republic Longbeam Precision Barrage (6 hyper-accelerated azure plasma bolts with radiant trails)',
-      '🛸 Jedi Vector Starfighter Escort Sortie (Deploys twin High Republic Jedi Vectors)'
+      '💫 Cosmic Federation Longbeam Precision Barrage (6 hyper-accelerated azure plasma bolts with radiant trails)',
+      '🛸 Astral Vector Starfighter Escort Sortie (Deploys twin Cosmic Federation Astral Vectors)'
     ],
     loot: '👑 +4 🎟️ Plasma Cores · +2 🎡 Wheel Spins · +210 🪙 + 25 Gold Coins Cascade',
-    tactic: 'Dodge the converging twin Kyber laser lances emitted from the forward longbeam cannons, and destroy the escorting Jedi Vectors!'
+    tactic: 'Dodge the converging twin Kyber laser lances emitted from the forward longbeam cannons, and destroy the escorting Astral Vectors!'
   },
   {
     id: 'titan',
@@ -5142,12 +5142,12 @@ const BOSS_INTEL = [
   },
   {
     id: 'trio',
-    name: 'The Sith Elemental Triumvirate (Ignis, Glacies & Fulgur)',
-    sector: 'Sector 10 Apex (Strongest · 120 HP) · Tri-Elemental Sith Flagship Squadron & Overlord Trinity',
+    name: 'The Void Elemental Triumvirate (Ignis, Glacies & Fulgur)',
+    sector: 'Sector 10 Apex (Strongest · 120 HP) · Tri-Elemental Void Flagship Squadron & Overlord Trinity',
     col: '#ff4500',
     hp: 120,
     powers: [
-      '🔥 Top Flank: Darth Ignis Magma Dreadnought (Lava mortars inflicting Burn DoT)',
+      '🔥 Top Flank: Warlord Ignis Magma Dreadnought (Lava mortars inflicting Burn DoT)',
       '❄️ Center Core: Inquisitor Glacies Cryo Cruiser (Glacial crystal lances freezing ship for 2s)',
       '⚡ Bottom Flank: Sovereign Fulgur Kyber Frigate (Ultra rapid-fire Kyber lightning storm)',
       '💥 Tri-Elemental Fusion Singularity (Merges into OVERLORD TRINITY with 3-tributary composite superlaser at <=25% HP!)'
@@ -5354,10 +5354,10 @@ function getEnemySvg(id) {
     </svg>`;
 
   } else if (id === 'tesla') {
-    // 7. THE RAZOR CREST (ST-70 ASSAULT GUNSHIP)
+    // 7. THE TITAN GUNSHIP (ST-70 HEAVY ASSAULT GUNSHIP)
     return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${glowFilter}
-      <!-- Twin Giant Cylindrical Flank Engine Turbines (Signature Razor Crest Feature) -->
+      <!-- Twin Giant Cylindrical Flank Engine Turbines (Signature Titan Gunship Feature) -->
       <!-- Port Turbine Engine -->
       <ellipse cx="68" cy="16" rx="20" ry="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
       <ellipse cx="62" cy="16" rx="14" ry="9" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
@@ -5517,12 +5517,12 @@ const ENEMY_INTEL = [
     col: '#ff5500',
     hp: '7 - 13 HP',
     spd: '135 - 250 km/s',
-    weapons: 'Dorsal Double Turbolaser Turret, Homing Concussion Missiles & Escort TIE Deployment',
+    weapons: 'Dorsal Double Turbolaser Turret, Homing Concussion Missiles & Escort Interceptor Deployment',
     tactic: 'Target the central spherical TIE cockpit ball while evading the rotating top turret and flank turbine exhaust!'
   },
   {
     id: 'tesla',
-    name: 'The Razor Crest (ST-70 Assault Gunship)',
+    name: 'The Titan Gunship (ST-70 Assault Gunship)',
     type: 'Heavy Gunship · Sector 2+',
     col: '#38bdf8',
     hp: '6 - 12 HP',
@@ -5892,8 +5892,8 @@ function spawnFort() {
     // 1. SS-54 Light Assault Gunship (The Halo / Bounty Hunter Assault Ship)
     variant = 'cruiser'; col = '#f59e0b'; name = 'SS-54 ASSAULT GUNSHIP'; hp = 5 + Math.floor(level * 0.7); w = 128; h = 68; shield = 2;
   } else if (roll < 0.52) {
-    // 2. The Razor Crest (ST-70 Assault Gunship - Twin Flank Turbines & Beskar Armor)
-    variant = 'tesla'; col = '#38bdf8'; name = 'THE RAZOR CREST (ST-70)'; hp = 6 + Math.floor(level * 0.8); w = 126; h = 72; shield = 2;
+    // 2. The Titan Gunship (ST-70 Assault Gunship - Twin Flank Turbines & Beskar Armor)
+    variant = 'tesla'; col = '#38bdf8'; name = 'THE TITAN GUNSHIP (ST-70)'; hp = 6 + Math.floor(level * 0.8); w = 126; h = 72; shield = 2;
   } else if (roll < 0.72) {
     // 3. Pirate "Ugly" Heavy Hybrid Gunship (TYE-Wing / Deathseed Gunship)
     variant = 'brood'; col = '#ff5500'; name = 'PIRATE "UGLY" HYBRID GUNSHIP'; hp = 7 + Math.floor(level * 0.9); w = 128; h = 70; shield = 0;
@@ -5935,7 +5935,7 @@ function spawnGlider(xPos, yPos, forceType) {
     else roll = 'phantom';
   }
 
-  let col = '#ff2255', name = 'IMPERIAL TIE FIGHTER', spd = 270 + level * 35, w = 76, h = 48, hp = 1, shield = 0;
+  let col = '#ff2255', name = 'VOID SWARM INTERCEPTOR', spd = 270 + level * 35, w = 76, h = 48, hp = 1, shield = 0;
   if (roll === 'stalker') {
     col = '#a855f7'; name = 'SEPARATIST VULTURE DROID'; spd = 260 + level * 35; w = 56; h = 36; hp = 1 + (level >= 3 ? 1 : 0); shield = 0;
   } else if (roll === 'rammer') {
@@ -5945,8 +5945,8 @@ function spawnGlider(xPos, yPos, forceType) {
   } else if (roll === 'phantom') {
     col = '#c084fc'; name = 'SEPARATIST TRI-FIGHTER'; spd = 310 + level * 40; w = 62; h = 38; hp = 2 + (level >= 4 ? 1 : 0); shield = 0;
   } else {
-    // THE TIE FIGHTER
-    name = 'IMPERIAL TIE FIGHTER';
+    // THE VOID INTERCEPTOR
+    name = 'VOID SWARM INTERCEPTOR';
     col = '#ff2255';
     hp = 1 + (level >= 3 ? 1 : 0);
     shield = 0;
@@ -5987,19 +5987,19 @@ function spawnMine() {
 
 const BTYPES = [
   { id: 'dread',    name: 'Grand Admiral Vex: Imperial Star Destroyer (The Eclipse)', col: '#00ffaa', w: 305, h: 165, hp: 60, spd: 44, atk: 'tachyon' },
-  { id: 'hive',     name: 'Overlord Chronos: DS-1 Death Star Orbital Battlestation', col: '#00e5ff', w: 290, h: 165, hp: 65, spd: 40, atk: 'emp_cascade' },
-  { id: 'ram',      name: 'Admiral Raddus: Mon Calamari MC85 Star Cruiser', col: '#38bdf8', w: 305, h: 185, hp: 70, spd: 46, atk: 'mon_cal_broadside' },
-  { id: 'void',     name: 'Captain Solo: The Rogue Millennium Falcon (YT-1300)', col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52, atk: 'quad_laser_barrage' },
+  { id: 'hive',     name: 'Overlord Chronos: DS-1 Orbital Citadel Battlestation', col: '#00e5ff', w: 290, h: 165, hp: 65, spd: 40, atk: 'emp_cascade' },
+  { id: 'ram',      name: 'Admiral Vortex: Heavy Citadel MC85 Star Cruiser', col: '#38bdf8', w: 305, h: 185, hp: 70, spd: 46, atk: 'mon_cal_broadside' },
+  { id: 'void',     name: 'Captain Noel: The Rogue Solar Skiff (YT-1300)', col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52, atk: 'quad_laser_barrage' },
   { id: 'cryo',     name: 'Admiral Sloane: Imperial Cantwell Battlecruiser', col: '#00ffaa', w: 305, h: 175, hp: 80, spd: 44, atk: 'outrigger_turbolasers' },
-  { id: 'fondor',   name: 'Luthen Rael: Fondor Haulcraft (Armed Custom Cruiser)', col: '#38bdf8', w: 320, h: 175, hp: 88, spd: 50, atk: 'fondor_scythes' },
+  { id: 'nebula',   name: 'Nebula Vanguard: Nebula Cruiser (Armed Custom Cruiser)', col: '#38bdf8', w: 320, h: 175, hp: 88, spd: 50, atk: 'nebula_scythes' },
   { id: 'pathogen', name: 'Overlord Pathogen: The Imperial Bio-Spore Carrier', col: '#10b981', w: 325, h: 165, hp: 90, spd: 46, atk: 'pathogen_mitosis' },
-  { id: 'ataraxia', name: 'Master Avar Kriss: Jedi Starcruiser Ataraxia', col: '#e0e7ff', w: 330, h: 165, hp: 92, spd: 48, atk: 'ataraxia_kyber' },
+  { id: 'solaris', name: 'Archon Valerius: Radiant Astral Cruiser Solaris', col: '#e0e7ff', w: 330, h: 165, hp: 92, spd: 48, atk: 'solaris_kyber' },
   { id: 'titan',    name: 'General Veers: Imperial AT-AT Siege Colossus', col: '#ef4444', w: 310, h: 180, hp: 95, spd: 48, atk: 'heavy_chin_blasters' },
-  { id: 'trio',     name: 'The Sith Elemental Triumvirate (Ignis, Glacies & Fulgur)', col: '#ff4500', w: 320, h: 180, hp: 120, spd: 46, atk: 'tri_elemental' }
+  { id: 'trio',     name: 'The Void Elemental Triumvirate (Ignis, Glacies & Fulgur)', col: '#ff4500', w: 320, h: 180, hp: 120, spd: 46, atk: 'tri_elemental' }
 ];
 
 function spawnBoss() {
-  // Sector Progression: Bosses fight in order from WEAKEST (#1 Grand Admiral Vex) to STRONGEST (#10 The Sith Elemental Triumvirate)
+  // Sector Progression: Bosses fight in order from WEAKEST (#1 Grand Admiral Vex) to STRONGEST (#10 The Void Elemental Triumvirate)
   const bossIndex = (Math.max(1, level) - 1) % BTYPES.length;
   const b = BTYPES[bossIndex];
   
@@ -6013,7 +6013,7 @@ function spawnBoss() {
     const subHp = Math.round(hp / 3);
     initialTrio.push({
       id: 'ignis',
-      name: 'Darth Ignis: Sith Magma Siege Dreadnought',
+      name: 'Warlord Ignis: Void Magma Siege Dreadnought',
       element: 'lava',
       col: '#ff4500',
       x: W + 150, targetX: W - 370,
@@ -6037,7 +6037,7 @@ function spawnBoss() {
     });
     initialTrio.push({
       id: 'fulgur',
-      name: 'Sovereign Fulgur: Sith Kyber Storm Frigate',
+      name: 'Sovereign Fulgur: Void Kyber Storm Frigate',
       element: 'electric',
       col: '#c084fc',
       x: W + 290, targetX: W - 120,
@@ -6504,7 +6504,16 @@ const OnlineFleetNet = {
       startSolarSail();
     }
 
-    else if (data.type === 'host_state' && state === 'play') {
+    else if (data.type === 'game_over' && state === 'play') {
+      lose();
+    }
+
+    else if (data.type === 'host_state') {
+      if (data.gameState === 'over' && state === 'play') {
+        lose();
+        return;
+      }
+      if (state !== 'play') return;
       score = data.score;
       level = data.level;
 
@@ -6596,6 +6605,7 @@ const OnlineFleetNet = {
     if (this.mode === 'online_host' && this.clientConns.length > 0) {
       const statePacket = {
         type: 'host_state',
+        gameState: state,
         score: score,
         level: level,
         players: players.map(p => ({
@@ -6639,10 +6649,10 @@ const OnlineFleetNet = {
 
     const shipNames = {
       cutter: '⚡ Storm Cutter',
-      runner: '🚀 T-65B X-Wing',
+      runner: '🚀 Nova Strikefighter',
       galleon: '🏴‍☠️ Solar Galleon',
       hind: '💣 Golden Hind Dreadnought',
-      storm: '🛸 Fondor Haulcraft'
+      storm: '🛸 Nebula Cruiser'
     };
 
     for (let slot = 1; slot <= 3; slot++) {
@@ -6660,7 +6670,7 @@ const OnlineFleetNet = {
       } else {
         if (card) card.className = 'squad-slot-card';
         if (nameEl) nameEl.textContent = slot === 2 ? 'Waiting for Wingman...' : 'Waiting for Heavy Gunner...';
-        if (shipEl) shipEl.textContent = slot === 2 ? 'T-65B X-Wing' : 'Golden Hind Dreadnought';
+        if (shipEl) shipEl.textContent = slot === 2 ? 'Nova Strikefighter' : 'Golden Hind Dreadnought';
         if (statusEl) statusEl.innerHTML = '<span style="color:#8fa6cb">⏳ OPEN</span>';
       }
     }
@@ -6872,7 +6882,7 @@ function activateP2Super() {
   const p = players[1];
   if (!p || !p.alive) return;
   p.inv = 3.5;
-  popup(p.x, p.y - 45, '🌟 P2 SUPER: X-WING NOVA BEAM!', '#00ffee');
+  popup(p.x, p.y - 45, '🌟 P2 SUPER: APEX STARFIGHTER NOVA BEAM!', '#00ffee');
   addShake(28);
   for (let k = -2; k <= 2; k++) {
     balls.push({
@@ -7027,6 +7037,14 @@ function startSolarSail(e) {
   if (e) {
     try { e.stopPropagation(); } catch(err) {}
   }
+  if (typeof OnlineFleetNet !== 'undefined' && OnlineFleetNet && OnlineFleetNet.mode === 'online_host' && OnlineFleetNet.clientConns && OnlineFleetNet.clientConns.length > 0) {
+    try {
+      OnlineFleetNet.broadcast({
+        type: 'start_game',
+        pilots: OnlineFleetNet.connectedPilots
+      });
+    } catch(err) {}
+  }
   const inp = document.getElementById('pname');
   let nm = (inp && inp.value.trim()) || localStorage.getItem('sp_name') || 'Captain';
   playerName = nm.slice(0, 14);
@@ -7043,16 +7061,16 @@ function startSolarSail(e) {
   superCharge = 0;
   hyperchargeActiveT = 0;
   superBeamActiveT = 0;
-  falconTurretT = 0;
-  falconAngle = 0;
-  xwingSuperT = 0;
+  corsairTurretT = 0;
+  corsairAngle = 0;
+  novaSuperT = 0;
   protonTorpedoes = [];
   stealthCloakT = 0;
   stealthDecoys = [];
   singularities = [];
   rammingProwT = 0;
   meteorStrikes = [];
-  fondorScythesT = 0;
+  nebulaScythesT = 0;
   flakPods = [];
 
   introT = 0;
@@ -7208,6 +7226,9 @@ function saveBest() {
 
 function lose() {
   state = 'over';
+  if (typeof OnlineFleetNet !== 'undefined' && OnlineFleetNet && OnlineFleetNet.mode === 'online_host') {
+    try { OnlineFleetNet.broadcast({ type: 'game_over', score: score, level: level }); } catch(e) {}
+  }
   sfx('boom');
   updateDpadVisibility();
   updatePauseBtnVisibility();
@@ -7828,7 +7849,7 @@ function buildShop() {
   h += `<div class="shopitem" style="border: 1.5px solid #00e5ff; background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(168, 85, 247, 0.1));">` +
     `<div class="ic" style="font-size:2rem;display:flex;align-items:center;justify-content:center">🔬</div>` +
     `<div class="info"><div class="t" style="color:#00ffee">Tactical Flagship Boss Database</div>` +
-    `<div class="d">Inspect all 9 Sector Bosses: Grand Admiral Vex, Death Star Chronos, Admiral Raddus, Captain Solo, Admiral Sloane, General Veers AT-AT, Luthen Rael Fondor, Jedi Ataraxia &amp; Overlord Pathogen!</div>` +
+    `<div class="d">Inspect all 9 Sector Bosses: Grand Admiral Vex, Chronos Orbital Citadel, Admiral Vortex, Captain Noel, Admiral Sloane, General Veers AT-AT, Nebula Vanguard Nebula, Astral Solaris &amp; Overlord Pathogen!</div>` +
     `<div class="lv" style="color:#c084fc">9 Sector Flagships Documented 👾</div></div>` +
     `<button style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;box-shadow:0 0 15px rgba(0,229,255,0.5)" onclick="openBossIntelModal(event)">🔬 INSPECT</button></div>`;
 
@@ -8112,7 +8133,7 @@ const COSMIC_TRAIL = [
   { id: 1,  trophies: 50,     name: 'Starter Stardust Cache', desc: '+250 Gold Dubloons', icon: '🪙', type: 'coins', amount: 250, league: 'Bronze' },
   { id: 2,  trophies: 150,    name: 'Plasma Energy Pod', desc: '+5 Plasma Cores', icon: '🎟️', type: 'tokens', amount: 5, league: 'Bronze' },
   { id: 3,  trophies: 300,    name: 'Lucky Prize Bundle', desc: '+2 Lucky Wheel Spins', icon: '🎡', type: 'spins', amount: 2, league: 'Bronze' },
-  { id: 4,  trophies: 500,    name: 'T-65B X-Wing Starfighter', desc: '🚀 Unlock X-Wing + 500 🪙', icon: '🚀', type: 'ship_coins', ship: 'runner', amount: 500, league: 'Bronze' },
+  { id: 4,  trophies: 500,    name: 'Nova Strikefighter Starfighter', desc: '🚀 Unlock Nova Strikefighter + 500 🪙', icon: '🚀', type: 'ship_coins', ship: 'runner', amount: 500, league: 'Bronze' },
   { id: 5,  trophies: 750,    name: 'High-Energy Fuel Core', desc: '+10 Cores + 2 Spins', icon: '⚡', type: 'tokens_spins', tokens: 10, spins: 2, league: 'Bronze' },
   { id: 6,  trophies: 1000,   name: 'Treasury Vault Chest', desc: '+1,000 Gold Dubloons', icon: '💰', type: 'coins', amount: 1000, league: 'Silver' },
   { id: 7,  trophies: 2000,   name: 'Heavy Warhead Package', desc: '+20 Cores + 1,500 🪙', icon: '💣', type: 'tokens_coins', tokens: 20, coins: 1500, league: 'Silver' },
@@ -8860,11 +8881,11 @@ function update(dt) {
     }
   }
 
-  // 1. MILLENNIUM FALCON (Tier 1 Starter, Cost 0 Cores): Coaxium Quad-Turret Tempest
-  if (falconTurretT > 0) {
-    falconTurretT -= dt;
-    falconAngle += Math.PI * 1.6 * dt;
-    for (const sweepAng of [falconAngle, falconAngle + Math.PI]) {
+  // 1. SOLAR SKIFF (Tier 1 Starter, Cost 0 Cores): Coaxium Quad-Turret Tempest
+  if (corsairTurretT > 0) {
+    corsairTurretT -= dt;
+    corsairAngle += Math.PI * 1.6 * dt;
+    for (const sweepAng of [corsairAngle, corsairAngle + Math.PI]) {
       const bCos = Math.cos(sweepAng), bSin = Math.sin(sweepAng);
       const startX = ship.x, startY = ship.y;
       // Gliders (Tier 1: 2.8 dmg/s)
@@ -8934,7 +8955,7 @@ function update(dt) {
     }
   }
 
-  // 2. T-65B X-WING (Tier 2, Cost 5 Cores): S-Foil Proton Nova Mega-Beam & Proton Torpedoes
+  // 2. Nova Strikefighter APEX STARFIGHTER (Tier 2, Cost 5 Cores): S-Foil Proton Nova Mega-Beam & Proton Torpedoes
   if (superBeamActiveT > 0) {
     superBeamActiveT -= dt;
     const beamAngle = ship.aimAngle || 0;
@@ -9014,7 +9035,7 @@ function update(dt) {
     }
   }
 
-  // X-Wing Smart Homing Proton Torpedoes (Tier 2 Gadget: 4.5 dmg each)
+  // Nova Strikefighter Smart Homing Proton Torpedoes (Tier 2 Gadget: 4.5 dmg each)
   for (let i = protonTorpedoes.length - 1; i >= 0; i--) {
     const torp = protonTorpedoes[i];
     torp.life -= dt;
@@ -9321,9 +9342,9 @@ function update(dt) {
     }
   }
 
-  // 5. FONDOR HAULCRAFT (Tier 5 - The Best Ship, Cost 10 Cores): Supreme Twin Plasma Scythes & Armada Flak Storm
-  if (fondorScythesT > 0) {
-    fondorScythesT -= dt;
+  // 5. NEBULA CRUISER (Tier 5 - The Best Ship, Cost 10 Cores): Supreme Twin Plasma Scythes & Armada Flak Storm
+  if (nebulaScythesT > 0) {
+    nebulaScythesT -= dt;
     const scytheTopY = ship.y - 450, scytheBotY = ship.y + 450;
     const scytheX = ship.x;
     // Continuous Scythe Cutting Power (Tier 5: 18.0 dmg/s)
@@ -9473,7 +9494,7 @@ function update(dt) {
 
     // Active resistance against Overlord Chronos tractor beam: boost reverse/lateral thrusters!
     if (boss && boss.tractorT > 0) {
-      if (ax < 0) ax *= 1.65; // High reverse thrust power to pull away from the Death Star
+      if (ax < 0) ax *= 1.65; // High reverse thrust power to pull away from the Orbital Citadel
       if (Math.abs(ay) > 0) ay *= 1.45; // Enhanced vertical maneuvering to break beam lock
     }
   }
@@ -9486,7 +9507,7 @@ function update(dt) {
 
   let currentAcc = ACC;
   if (boss && boss.tractorT > 0 && ax < 0) {
-    currentAcc *= 2.2; // 2.2x reverse thruster boost to effortlessly resist Death Star tractor pull!
+    currentAcc *= 2.2; // 2.2x reverse thruster boost to effortlessly resist Orbital Citadel tractor pull!
   }
   ship.vx += ax * currentAcc * dt;
   ship.vy += ay * currentAcc * dt;
@@ -9661,7 +9682,7 @@ function update(dt) {
       boss.y += (targetY - boss.y) * Math.min(1.0, dt * trackSpeed);
     }
 
-    // TRIO BOSS: THE SITH ELEMENTAL TRIUMVIRATE (IGNIS, GLACIES, FULGUR)
+    // TRIO BOSS: THE VOID ELEMENTAL TRIUMVIRATE (IGNIS, GLACIES, FULGUR)
     if (boss.type === 'trio') {
       if (!boss.isMerged && !boss.isMerging && boss.trio) {
         let totalHp = 0;
@@ -9680,7 +9701,7 @@ function update(dt) {
 
           let laneY, destX, destY;
           if (sIdx === 0) {
-            // 1. Darth Ignis (Top Flank Magma Siege Dreadnought)
+            // 1. Warlord Ignis (Top Flank Magma Siege Dreadnought)
             laneY = H * 0.22;
             const waveY = Math.sin(sub.phase * 1.1) * 34;
             const playerBiasY = (ship.y - H * 0.5) * 0.18;
@@ -9720,7 +9741,7 @@ function update(dt) {
           sub.shootT -= dt;
           if (sub.shootT <= 0) {
             if (sub.id === 'ignis') {
-              // 1. Darth Ignis: Molten Lava Mortars (Inflicts 3.0s Burn DoT on contact!)
+              // 1. Warlord Ignis: Molten Lava Mortars (Inflicts 3.0s Burn DoT on contact!)
               sub.shootT = 1.45;
               for (const offY of [-14, 14]) {
                 eballs.push({
@@ -9827,7 +9848,7 @@ function update(dt) {
           boss.mergeT = 2.5;
           addShake(35);
           sfx('incoming');
-          addAlert('⚠️ CRITICAL HULL DETECTED! TRIUMVIRATE FUSING INTO SITH SINGULARITY!', 'incoming');
+          addAlert('⚠️ CRITICAL HULL DETECTED! TRIUMVIRATE FUSING INTO VOID SINGULARITY!', 'incoming');
           popup(W * 0.5, H * 0.35, '💥 TRIUMVIRATE FUSION SEQUENCE INITIATED!', '#ff5500');
         }
       } else if (boss.isMerging) {
@@ -9852,7 +9873,7 @@ function update(dt) {
         if (boss.mergeT <= 0) {
           boss.isMerging = false;
           boss.isMerged = true;
-          boss.name = 'OVERLORD TRINITY: SITH TRI-ELEMENTAL ECLIPSE COLOSSUS';
+          boss.name = 'OVERLORD TRINITY: VOID TRI-ELEMENTAL ECLIPSE COLOSSUS';
           boss.col = '#ff4500';
           boss.w = 340;
           boss.h = 190;
@@ -9867,8 +9888,8 @@ function update(dt) {
           explode(boss.x, boss.y, '#c084fc', 95);
           sfx('boom');
           addShake(45);
-          addAlert('👑 [SITH APEX] OVERLORD TRINITY EMERGES WITH TRI-ELEMENTAL SUPERLASER!', 'incoming');
-          popup(W * 0.5, H * 0.35, '⚡ SITH TRI-ELEMENTAL COLOSSUS BORN!', '#ffd23c');
+          addAlert('👑 [VOID APEX] OVERLORD TRINITY EMERGES WITH TRI-ELEMENTAL SUPERLASER!', 'incoming');
+          popup(W * 0.5, H * 0.35, '⚡ VOID TRI-ELEMENTAL COLOSSUS BORN!', '#ffd23c');
         }
       } else if (boss.isMerged) {
         if (boss.compositeBeamActive > 0) {
@@ -10017,7 +10038,7 @@ function update(dt) {
         boss.x -= 720 * dt;
         if (Math.hypot(ship.x - boss.x, ship.y - boss.y) < 85 && ship.inv <= 0) {
           damageShip();
-          popup(ship.x, ship.y - 25, '💥 SITH RAM COLLISION!', '#ff0033');
+          popup(ship.x, ship.y - 25, '💥 VOID RAM COLLISION!', '#ff0033');
           addShake(28);
         }
       } else if (boss.ramChargeT > 0) {
@@ -10283,7 +10304,7 @@ function update(dt) {
         }
 
       } else if (boss.type === 'hive') {
-        // Boss 2: OVERLORD CHRONOS: DEATH STAR ORBITAL CITADEL
+        // Boss 2: OVERLORD CHRONOS: COSMIC ORBITAL CITADEL
         if (boss.atkCycle === 2) {
           // ULTIMATE: 360° Equatorial Turbolaser Trench Burst (12 radial EMP plasma shells)!
           for (let k = 0; k < 12; k++) {
@@ -10308,7 +10329,7 @@ function update(dt) {
         }
 
       } else if (boss.type === 'ram') {
-        // Boss 3: ADMIRAL RADDUS: MON CALAMARI MC85 STAR CRUISER (THE PROFUNDITY)
+        // Boss 3: ADMIRAL VORTEX: TITAN CITADEL CRUISER MC-85 (THE PROFUNDITY)
         if (boss.atkCycle === 2) {
           // ULTIMATE: Ventral Spire Heavy Ion Ray (Aimed 8-shot fan at player)
           for (let k = 0; k < 8; k++) {
@@ -10327,17 +10348,17 @@ function update(dt) {
           popup(boss.x - 40, boss.y - 45, '🚀 GUIDED CONCUSSION TORPEDOES!', '#38bdf8');
           sfx('incoming');
         } else {
-          // Mon Calamari 8-Gun Broadside Turbolaser Salvo (Aimed broadside spread at player)
+          // Heavy Citadel 8-Gun Broadside Turbolaser Salvo (Aimed broadside spread at player)
           for (const ang of [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36]) {
             const shootAng = aimAng + ang;
             eballs.push({ type: 'laser', col: '#00ffee', x: boss.x - boss.w * 0.40, y: boss.y - 12, vx: Math.cos(shootAng) * 660 * spdBonus, vy: Math.sin(shootAng) * 660 * spdBonus, r: 18 });
           }
           sfx('laser');
-          popup(boss.x - 40, boss.y - 45, '💥 MON CALAMARI BROADSIDE!', '#00ffee');
+          popup(boss.x - 40, boss.y - 45, '💥 TITAN CITADEL BROADSIDE!', '#00ffee');
         }
 
       } else if (boss.type === 'void') {
-        // Boss 4: CAPTAIN SOLO: THE ROGUE MILLENNIUM FALCON (YT-1300)
+        // Boss 4: CAPTAIN NOEL: THE ROGUE SOLAR SKIFF (YT-1300)
         if (boss.atkCycle === 2) {
           // ULTIMATE: Kessel Run Hyperdrive Overdrive! (Hyperspace warp & quad-laser ambush!)
           boss.isCloaked = true;
@@ -10369,7 +10390,7 @@ function update(dt) {
       } else if (boss.type === 'cryo') {
         // Boss 5: ADMIRAL SLOANE: IMPERIAL CANTWELL-CLASS ARRESTOR BATTLECRUISER (OUTRIGGER SIEGE DREADNOUGHT)
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Quad Outrigger Emerald Turbolaser Barrage + TIE Fighter Squadron Sortie!
+          // ULTIMATE: Quad Outrigger Emerald Turbolaser Barrage + Void Swarm Interceptor Squadron Sortie!
           boss.iceShards = 4;
           for (const cy of [-65, -35, 35, 65]) {
             eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.35, y: boss.y + cy, vx: (dx / dist) * 750 * spdBonus, vy: (dy / dist) * 750 * spdBonus, r: 22 });
@@ -10397,8 +10418,8 @@ function update(dt) {
           sfx('incoming');
         }
 
-      } else if (boss.type === 'fondor') {
-        // Boss 6: LUTHEN RAEL: FONDOR HAULCRAFT (ARMED CUSTOM CRUISER)
+      } else if (boss.type === 'nebula') {
+        // Boss 6: COMMANDER NEBULA: NEBULA CRUISER (ARMED CUSTOM CRUISER)
         if (boss.atkCycle === 2) {
           // ULTIMATE: Twin Lateral Plasma Scythes & Smart Droid Flak Salvo (Aimed at player)
           boss.scytheActive = 3.0;
@@ -10428,29 +10449,29 @@ function update(dt) {
           popup(boss.x - 40, boss.y - 45, '⚡ SWIVEL TURBOLASER SALVO!', '#38bdf8');
         }
 
-      } else if (boss.type === 'ataraxia') {
-        // Boss 8: MASTER AVAR KRISS: JEDI STARCRUISER ATARAXIA (HIGH REPUBLIC JEDI CRUISER)
+      } else if (boss.type === 'solaris') {
+        // Boss 8: ARCHON VALERIUS: ASTRAL CRUISER SOLARIS (APEX SOLAR SENTINEL FLAGSHIP)
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Twin Kyber Convergence Lances & Radiant Force Pulse + Jedi Vector Sortie!
+          // ULTIMATE: Twin Kyber Convergence Lances & Radiant Force Pulse + Astral Vector Sortie!
           boss.lanceActive = 3.0;
           boss.forcePulseT = 2.2;
           boss.forcePulseRadius = 25;
           addShake(28);
           popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: TWIN KYBER LANCES & FORCE PULSE!', '#e0e7ff');
           sfx('laser');
-          // Launch 2 High Republic Jedi Vectors
+          // Launch 2 Cosmic Federation Astral Vectors
           if (gliders.length < 3) {
             gliders.push({
-              variant: 'vector', type: 'jedi_vector', name: 'High Republic Jedi Vector', col: '#ffd23c',
+              variant: 'vector', type: 'jedi_vector', name: 'Cosmic Federation Astral Vector', col: '#ffd23c',
               x: boss.x - 40, y: boss.y - 75, vx: -(240 + level * 15), vy: -30, r: 16, maxHp: 3, hp: 3, shootT: 1.0, isVector: true
             });
             gliders.push({
-              variant: 'vector', type: 'jedi_vector', name: 'High Republic Jedi Vector', col: '#ffd23c',
+              variant: 'vector', type: 'jedi_vector', name: 'Cosmic Federation Astral Vector', col: '#ffd23c',
               x: boss.x - 40, y: boss.y + 75, vx: -(240 + level * 15), vy: 30, r: 16, maxHp: 3, hp: 3, shootT: 1.0, isVector: true
             });
           }
         } else if (boss.atkCycle === 1) {
-          // High Republic Longbeam Precision Barrage (6 hyper-accelerated azure plasma bolts aimed at player)
+          // Cosmic Federation Longbeam Precision Barrage (6 hyper-accelerated azure plasma bolts aimed at player)
           for (let k = 0; k < 6; k++) {
             const spr = ((k - 2.5) / 5) * 0.40;
             const shootAng = aimAng + spr;
@@ -10580,15 +10601,15 @@ function update(dt) {
         }
 
       } else if (boss.type === 'trio' && boss.isMerged) {
-        // OVERLORD TRINITY: COMBINED SITH TRI-ELEMENTAL ARSENAL (LAVA, ICE, LIGHTNING)
+        // OVERLORD TRINITY: COMBINED VOID TRI-ELEMENTAL ARSENAL (LAVA, ICE, LIGHTNING)
         if (boss.atkCycle === 3) {
           // ULTIMATE: 3-Tributary Composite Superlaser (Image 3 inspired)
           boss.atkT = 4.0;
           boss.compositeBeamActive = 3.0;
           addShake(36);
           sfx('incoming');
-          popup(boss.x - 40, boss.y - 45, '👑 SITH COMPOSITE SUPERLASER FIRING!', '#ffd23c');
-          addAlert('☠️ CRITICAL! SITH COMPOSITE SUPERLASER SWEEPING FLIGHT LANES!', 'incoming');
+          popup(boss.x - 40, boss.y - 45, '👑 VOID COMPOSITE SUPERLASER FIRING!', '#ffd23c');
+          addAlert('☠️ CRITICAL! VOID COMPOSITE SUPERLASER SWEEPING FLIGHT LANES!', 'incoming');
         } else if (boss.atkCycle === 2) {
           // Rapid-fire Kyber Lightning Storm
           boss.atkT = 2.0;
@@ -10881,7 +10902,7 @@ function update(dt) {
       const spdBonus = 1 + Math.min(0.8, (level - 1) * 0.07);
 
       if (f.variant === 'tesla') {
-        // 2. THE RAZOR CREST (ST-70 ASSAULT GUNSHIP): Dual Heavy Chin Blasters & Twin Turbine EMP Shockwaves!
+        // 2. THE TITAN GUNSHIP (ST-70 HEAVY ASSAULT GUNSHIP): Dual Heavy Chin Blasters & Twin Turbine EMP Shockwaves!
         for (const cy of [-12, 12]) {
           eballs.push({
             type: 'laser',
@@ -10901,11 +10922,11 @@ function update(dt) {
             r: 14
           });
         }
-        popup(f.x, f.y - 28, '💥 RAZOR CREST CHIN CANNONS!', '#38bdf8');
+        popup(f.x, f.y - 28, '💥 TITAN GUNSHIP CHIN CANNONS!', '#38bdf8');
         sfx('laser');
 
       } else if (f.variant === 'brood') {
-        // 3. PIRATE "UGLY" HEAVY HYBRID GUNSHIP: Dorsal Double Turret Volley & Homing Torpedo + Escort TIE!
+        // 3. PIRATE "UGLY" HEAVY HYBRID GUNSHIP: Dorsal Double Turret Volley & Homing Torpedo + Escort Interceptor!
         f.altShot = !f.altShot;
         if (f.altShot) {
           eballs.push({
@@ -10928,7 +10949,7 @@ function update(dt) {
           sfx('laser');
         }
 
-        // Scramble Escort TIE Fighter when HP < 50%
+        // Scramble Escort Void Swarm Interceptor when HP < 50%
         if (f.hp <= f.maxHp * 0.5 && !f.deployedEscort && f.x > 200) {
           f.deployedEscort = true;
           spawnGlider(f.x, f.y + 35, 'tie');
@@ -11464,7 +11485,7 @@ function drawCoopPlayers(cx) {
     }
 
     if (p.shipType === 'runner' || p.id === 2) {
-      // P2: T-65B X-Wing Fighter
+      // P2: Nova Strikefighter Fighter
       for (const ey of [-18, -8, 8, 18]) {
         cx.fillStyle = '#00ffee';
         cx.beginPath();
@@ -11687,12 +11708,12 @@ function draw() {
     cx.save(); cx.translate(f.x, f.y);
     
     if (f.variant === 'tesla') {
-      // 2. THE RAZOR CREST: ST-70 ASSAULT GUNSHIP (From User Reference Photo)
+      // 2. THE TITAN GUNSHIP: ST-70 ASSAULT GUNSHIP (From User Reference Photo)
       const sg = cx.createRadialGradient(0, 0, 15, 0, 0, f.w * 0.54);
       sg.addColorStop(0, 'rgba(56, 189, 248, 0.40)'); sg.addColorStop(0.6, 'rgba(0, 150, 255, 0.15)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = sg; cx.beginPath(); cx.arc(0, 0, f.w * 0.52, 0, Math.PI * 2); cx.fill();
 
-      // TWIN GIANT FLANK CYLINDRICAL ION ENGINE TURBINES (Signature Razor Crest Feature)
+      // TWIN GIANT FLANK CYLINDRICAL ION ENGINE TURBINES (Signature Titan Gunship Feature)
       for (const ty of [-f.h * 0.38, f.h * 0.38]) {
         // Outer Engine Cowling
         cx.fillStyle = '#0f172a';
@@ -11736,7 +11757,7 @@ function draw() {
       cx.closePath(); cx.fill();
       cx.strokeStyle = '#94a3b8'; cx.lineWidth = 2.4; cx.stroke();
 
-      // Mandalorian Ochre / Yellow Weathering Paint Stripe
+      // Cosmic Mercenary Ochre / Yellow Weathering Paint Stripe
       cx.fillStyle = 'rgba(245, 158, 11, 0.75)';
       cx.beginPath();
       cx.moveTo(-f.w * 0.10, -f.h * 0.24);
@@ -12820,7 +12841,7 @@ function draw() {
           cx.translate(sub.x - boss.x, sub.y - boss.y);
 
           if (sub.id === 'ignis') {
-            // 1. DARTH IGNIS: SITH MAGMA SIEGE DREADNOUGHT (Image 1)
+            // 1. WARLORD IGNIS: VOID MAGMA SIEGE DREADNOUGHT (Image 1)
             const w = sub.w || 240, h = sub.h || 120;
             const mg = cx.createRadialGradient(0, 0, 10, 0, 0, w * 0.55);
             mg.addColorStop(0, 'rgba(255, 69, 0, 0.45)');
@@ -12935,7 +12956,7 @@ function draw() {
             }
 
           } else if (sub.id === 'fulgur') {
-            // 3. SOVEREIGN FULGUR: SITH KYBER STORM FRIGATE (Image 3)
+            // 3. SOVEREIGN FULGUR: VOID KYBER STORM FRIGATE (Image 3)
             const w = sub.w || 220, h = sub.h || 110;
             const eg = cx.createRadialGradient(0, 0, 10, 0, 0, w * 0.55);
             eg.addColorStop(0, 'rgba(192, 132, 252, 0.45)');
@@ -13008,7 +13029,7 @@ function draw() {
         }
 
       } else if (boss.isMerged) {
-        // OVERLORD TRINITY: SITH TRI-ELEMENTAL ECLIPSE COLOSSUS
+        // OVERLORD TRINITY: VOID TRI-ELEMENTAL ECLIPSE COLOSSUS
         const w = boss.w || 340, h = boss.h || 190;
         const tg = cx.createRadialGradient(0, 0, 20, 0, 0, w * 0.65);
         tg.addColorStop(0, 'rgba(255, 210, 60, 0.4)');
@@ -13171,7 +13192,7 @@ function draw() {
       cx.strokeStyle = '#00ffaa'; cx.lineWidth = 3;
       cx.beginPath(); cx.moveTo(-boss.w * 0.48, 0); cx.lineTo(-boss.w * 0.1, 0); cx.stroke();
 
-      // Death Star-Style Axial Superlaser Focus Core
+      // Orbital Citadel-Style Axial Superlaser Focus Core
       const cr = cx.createRadialGradient(-boss.w * 0.18, 0, 4, -boss.w * 0.18, 0, 36);
       cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.35, '#00ffaa'); cr.addColorStop(0.8, '#059669'); cr.addColorStop(1, '#022c22');
       cx.fillStyle = cr; cx.beginPath(); cx.arc(-boss.w * 0.18, 0, 22 + Math.sin(t * 12) * 2.5, 0, Math.PI * 2); cx.fill();
@@ -13211,7 +13232,7 @@ function draw() {
       }
 
     } else if (boss.type === 'hive') {
-      // BOSS 2: OVERLORD CHRONOS: DEATH STAR ORBITAL CITADEL (Cosmic Alien Death Star Battlestation)
+      // BOSS 2: OVERLORD CHRONOS: COSMIC ORBITAL CITADEL (Cosmic Alien Orbital Citadel Battlestation)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.54, 0, Math.PI * 2); cx.fill();
@@ -13325,7 +13346,7 @@ function draw() {
         }
       }
 
-      // Colossal Spherical Death Star Armored Hull
+      // Colossal Spherical Orbital Citadel Armored Hull
       const tg = cx.createLinearGradient(0, -boss.h * 0.44, 0, boss.h * 0.44);
       tg.addColorStop(0, '#38bdf8'); tg.addColorStop(0.35, '#0284c7'); tg.addColorStop(0.75, '#082f49'); tg.addColorStop(1, '#020617');
       cx.fillStyle = tg;
@@ -13338,7 +13359,7 @@ function draw() {
       cx.strokeStyle = '#00ffee'; cx.lineWidth = 2;
       cx.beginPath(); cx.moveTo(-boss.w * 0.36, 0); cx.lineTo(boss.w * 0.36, 0); cx.stroke();
 
-      // Death Star Concave Superlaser Focus Dish
+      // Orbital Citadel Concave Superlaser Focus Dish
       const dishX = -boss.w * 0.12, dishY = -boss.h * 0.15;
       const cr = cx.createRadialGradient(dishX, dishY, 3, dishX, dishY, 24);
       cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.35, '#00e5ff'); cr.addColorStop(0.8, '#0284c7'); cr.addColorStop(1, '#082f49');
@@ -13355,7 +13376,7 @@ function draw() {
       }
 
     } else if (boss.type === 'ram') {
-      // BOSS 3: ADMIRAL RADDUS: MON CALAMARI MC85 STAR CRUISER (THE PROFUNDITY / RADDUS)
+      // BOSS 3: ADMIRAL VORTEX: TITAN CITADEL CRUISER MC-85 (THE CITADEL FLAGSHIP)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(56, 189, 248, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.56, boss.h * 0.52, 0, 0, Math.PI * 2); cx.fill();
@@ -13380,7 +13401,7 @@ function draw() {
       cx.fillStyle = '#00e5ff';
       cx.beginPath(); cx.arc(finX, boss.h * 0.48, 4.5 + Math.sin(t * 12) * 1.5, 0, Math.PI * 2); cx.fill();
 
-      // Main Hydrodynamic Curved Whale-like Mon Calamari Upper Hull
+      // Main Hydrodynamic Curved Whale-like Heavy Citadel Upper Hull
       const mg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
       mg.addColorStop(0, '#0f172a'); mg.addColorStop(0.3, '#334155'); mg.addColorStop(0.65, '#94a3b8'); mg.addColorStop(0.9, '#e2e8f0'); mg.addColorStop(1, '#f8fafc');
       cx.fillStyle = mg;
@@ -13394,7 +13415,7 @@ function draw() {
       cx.fill();
       cx.strokeStyle = '#38bdf8'; cx.lineWidth = 3.6; cx.stroke();
 
-      // Mon Calamari Organic Hull Blister Domes & Shield Bulbs
+      // Heavy Citadel Organic Hull Blister Domes & Shield Bulbs
       const blisters = [
         { x: -boss.w * 0.28, y: -boss.h * 0.28, rx: 22, ry: 8 },
         { x: -boss.w * 0.05, y: -boss.h * 0.32, rx: 28, ry: 9 },
@@ -13437,7 +13458,7 @@ function draw() {
       }
 
     } else if (boss.type === 'void') {
-      // BOSS 4: CAPTAIN SOLO: THE ROGUE MILLENNIUM FALCON (YT-1300 CORELLIAN GUNSHIP)
+      // BOSS 4: CAPTAIN NOEL: THE ROGUE SOLAR SKIFF (YT-1300 STAR CORSAIR)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.56, boss.h * 0.52, 0, 0, Math.PI * 2); cx.fill();
@@ -13608,8 +13629,8 @@ function draw() {
         cx.strokeStyle = '#ffffff'; cx.lineWidth = 2; cx.stroke();
       }
 
-    } else if (boss.type === 'fondor') {
-      // BOSS 6: LUTHEN RAEL: THE FONDOR HAULCRAFT (ARMED CUSTOM CRUISER)
+    } else if (boss.type === 'nebula') {
+      // BOSS 6: COMMANDER NEBULA: THE VOID CRUISER (ARMED CUSTOM CRUISER)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(56, 189, 248, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.54, 0, Math.PI * 2); cx.fill();
@@ -13792,8 +13813,8 @@ function draw() {
         }
       }
 
-    } else if (boss.type === 'ataraxia') {
-      // BOSS 8: MASTER AVAR KRISS: JEDI STARCRUISER ATARAXIA (HIGH REPUBLIC JEDI CRUISER)
+    } else if (boss.type === 'solaris') {
+      // BOSS 8: ARCHON VALERIUS: ASTRAL CRUISER SOLARIS (APEX SOLAR SENTINEL FLAGSHIP)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.65);
       bg.addColorStop(0, 'rgba(224, 231, 255, 0.35)');
       bg.addColorStop(0.6, 'rgba(56, 189, 248, 0.20)');
@@ -13834,7 +13855,7 @@ function draw() {
         cx.closePath(); cx.fill();
         cx.strokeStyle = '#e2e8f0'; cx.lineWidth = 2.0; cx.stroke();
 
-        // High Republic Crimson Accent Strip along the wing outer edge
+        // Cosmic Federation Crimson Accent Strip along the wing outer edge
         cx.strokeStyle = '#dc2626'; cx.lineWidth = 4.0;
         cx.beginPath();
         cx.moveTo(-boss.w * 0.08, wy1 + wDir * 3);
@@ -13936,7 +13957,7 @@ function draw() {
         }
       }
 
-      // 3. Main Pristine High Republic Pearl-White Cruiser Hull
+      // 3. Main Pristine Cosmic Federation Pearl-White Cruiser Hull
       const hGrad = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
       hGrad.addColorStop(0, '#334155');
       hGrad.addColorStop(0.2, '#64748b');
@@ -13954,7 +13975,7 @@ function draw() {
       cx.closePath(); cx.fill();
       cx.strokeStyle = '#ffffff'; cx.lineWidth = 3.0; cx.stroke();
 
-      // 4. Central Crimson & Gold High Republic Royal Racing Stripes
+      // 4. Central Crimson & Gold Cosmic Federation Royal Racing Stripes
       cx.fillStyle = '#dc2626';
       cx.beginPath();
       cx.moveTo(-boss.w * 0.42, 0);
@@ -13984,7 +14005,7 @@ function draw() {
       cx.lineTo(boss.w * 0.38, 0);
       cx.stroke();
 
-      // 5. Elevated High Republic Command Bridge Superstructure
+      // 5. Elevated Cosmic Federation Command Bridge Superstructure
       const brGrad = cx.createLinearGradient(0, -boss.h * 0.10, 0, boss.h * 0.10);
       brGrad.addColorStop(0, '#ffffff');
       brGrad.addColorStop(0.5, '#94a3b8');
@@ -14752,10 +14773,10 @@ function draw() {
   }
   cx.globalAlpha = 1;
 
-  // 9b. Render Falcon Rotating Coaxium Quad-Turret Tempest
-  if (falconTurretT > 0) {
+  // 9b. Render Solar Skiff Rotating Coaxium Quad-Turret Tempest
+  if (corsairTurretT > 0) {
     cx.save();
-    for (const sweepAng of [falconAngle, falconAngle + Math.PI]) {
+    for (const sweepAng of [corsairAngle, corsairAngle + Math.PI]) {
       const bCos = Math.cos(sweepAng), bSin = Math.sin(sweepAng);
       const startX = ship.x, startY = ship.y;
       const endX = startX + bCos * 2200, endY = startY + bSin * 2200;
@@ -14786,7 +14807,7 @@ function draw() {
     cx.restore();
   }
 
-  // 9c. Render X-Wing Proton Nova Mega Doom Beam
+  // 9c. Render Nova Strikefighter Proton Nova Mega Doom Beam
   if (superBeamActiveT > 0) {
     const beamAngle = ship.aimAngle || 0;
     const bCos = Math.cos(beamAngle), bSin = Math.sin(beamAngle);
@@ -14847,7 +14868,7 @@ function draw() {
     cx.restore();
   }
 
-  // 9d. Render X-Wing Smart Proton Torpedoes
+  // 9d. Render Nova Strikefighter Smart Proton Torpedoes
   for (const torp of protonTorpedoes) {
     cx.save();
     cx.translate(torp.x, torp.y);
@@ -14922,8 +14943,8 @@ function draw() {
     cx.restore();
   }
 
-  // 9g. Render Fondor Haulcraft Twin Lateral Laser Scythes (Tier 5)
-  if (fondorScythesT > 0) {
+  // 9g. Render Nebula Cruiser Twin Lateral Laser Scythes (Tier 5)
+  if (nebulaScythesT > 0) {
     cx.save();
     for (const sDir of [-1, 1]) {
       const topY = ship.y + (sDir === -1 ? -450 : 20);
@@ -14960,7 +14981,7 @@ function draw() {
     cx.restore();
   }
 
-  // 9h. Render Fondor Droid Flak Pods
+  // 9h. Render Nebula Droid Flak Pods
   for (const pod of flakPods) {
     cx.save();
     cx.translate(pod.x, pod.y);
@@ -15082,7 +15103,7 @@ function draw() {
     cx.beginPath(); cx.ellipse(0, 16, 80, 52, 0, 0, Math.PI * 2); cx.fill();
 
     // -------------------------------------------------------------
-    // SHAPE 1: T-65B X-WING STARFIGHTER (runner)
+    // SHAPE 1: Nova Apex Starfighter (runner)
     // -------------------------------------------------------------
     if (curShip === 'runner') {
       // 4 Quad Sub-Light Ion Thruster Plumes with Mach Shock Diamonds
@@ -15564,7 +15585,7 @@ function draw() {
       cx.fillRect(44, 1.5, 3, 2);
 
     // -------------------------------------------------------------
-    // SHAPE 4: FONDOR HAULCRAFT (storm) - Luthen Rael's Command Ship
+    // SHAPE 4: NEBULA CRUISER (storm) - Nebula Vanguard's Command Ship
     // -------------------------------------------------------------
     } else if (curShip === 'storm') {
       // Quad Articulated Sublight Turbine Ion Plumes
@@ -15703,7 +15724,7 @@ function draw() {
       cx.fillRect(54, 3.5, 4, 3);
 
     // -------------------------------------------------------------
-    // SHAPE 5: THE MILLENNIUM FALCON YT-1300 (cutter)
+    // SHAPE 5: THE SOLAR SKIFF YT-1300 (cutter)
     // -------------------------------------------------------------
     } else {
       // Glowing Continuous Sub-Light Ion Engine Strip across Stern
@@ -15870,7 +15891,7 @@ function draw() {
         }
       }
     } else if (activeSkin === 'shadow') {
-      // 4. Cursed Phantom Sith Crimson Runes & Glowing Red Eyes
+      // 4. Cursed Phantom Void Crimson Runes & Glowing Red Eyes
       cx.fillStyle = '#ff003b';
       cx.beginPath(); cx.arc(46, 16, 2.8, 0, Math.PI * 2); cx.fill();
       cx.beginPath(); cx.arc(52, 16, 2.8, 0, Math.PI * 2); cx.fill();

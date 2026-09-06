@@ -71,9 +71,9 @@
       <div class="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-md border border-cyan-400/40 rounded-xl p-3 max-w-sm pointer-events-none shadow-xl">
         <div class="flex items-center justify-between gap-2">
           <span id="hudSectorBadge" class="text-[10px] font-orbitron font-extrabold px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-400/40 uppercase">SECTOR 1 APEX</span>
-          <span id="hudTierBadge" class="text-[10px] font-orbitron font-bold text-yellow-400">TRI-ELEMENTAL SITH</span>
+          <span id="hudTierBadge" class="text-[10px] font-orbitron font-bold text-yellow-400">TRI-ELEMENTAL VOID</span>
         </div>
-        <h3 id="hudBossName" class="text-sm font-bold text-white font-orbitron mt-1 leading-snug truncate">The Sith Elemental Triumvirate</h3>
+        <h3 id="hudBossName" class="text-sm font-bold text-white font-orbitron mt-1 leading-snug truncate">The Void Elemental Triumvirate</h3>
         
         <!-- Live Boss HP Bar -->
         <div class="mt-2">
@@ -147,12 +147,12 @@
           <div class="flex items-center justify-between gap-2 mb-1.5">
             <div class="flex items-center gap-2">
               <span class="text-xs font-orbitron font-extrabold text-yellow-400" id="dossierRank">RANK #1 (APEX STRONGEST)</span>
-              <h4 class="text-sm font-bold text-white font-orbitron" id="dossierTitle">The Sith Elemental Triumvirate</h4>
+              <h4 class="text-sm font-bold text-white font-orbitron" id="dossierTitle">The Void Elemental Triumvirate</h4>
             </div>
             <span class="text-[11px] font-mono text-cyan-300" id="dossierStats">120 Base HP · 50 Spd</span>
           </div>
           <p class="text-xs text-slate-300 leading-relaxed mb-2" id="dossierDesc">
-            Simultaneous 3-in-1 Sith Flagship Squadron: Left Lava Dreadnought (Burn DoT), Middle Ice Cruiser (2s Freeze), Right Kyber Lightning Frigate. Merges into OVERLORD TRINITY with a 3-tributary composite superlaser at <= 25% HP!
+            Simultaneous 3-in-1 Void Flagship Squadron: Left Lava Dreadnought (Burn DoT), Middle Ice Cruiser (2s Freeze), Right Kyber Lightning Frigate. Merges into OVERLORD TRINITY with a 3-tributary composite superlaser at <= 25% HP!
           </p>
           <div class="bg-slate-950/80 border border-slate-700/70 rounded-lg p-2 text-xs text-slate-200">
             <span class="text-[10px] font-orbitron font-bold text-cyan-400 uppercase block mb-0.5">🎯 Captain Noel's Combat Tactic:</span>
@@ -187,7 +187,7 @@
       },
       {
         id: 'hive', rank: 'Sector 2', sector: 'Sector 2', tier: 'Tier 3 Battlestation',
-        name: 'Overlord Chronos: DS-1 Death Star', shortName: '2. Chronos',
+        name: 'Overlord Chronos: DS-1 Orbital Citadel', shortName: '2. Chronos',
         col: '#00e5ff', w: 280, h: 280, hp: 65, spd: 30,
         desc: 'Orbital Planet-Siege Battlestation with 360° equatorial trench burst, irresistible gravitational magnetic tractor pull, and converging 8-tributary Kyber dish superlaser.',
         tactic: 'Hold [A] or steer left to engage reverse ion thrusters against the magnetic tractor beam, then blast the Kyber dish!',
@@ -201,9 +201,9 @@
       },
       {
         id: 'ram', rank: 'Sector 3', sector: 'Sector 3', tier: 'Tier 3 Battleship',
-        name: 'Admiral Raddus: Mon Calamari MC85 Cruiser', shortName: '3. Raddus',
+        name: 'Admiral Vortex: Heavy Citadel Cruiser MC-85', shortName: '3. Vortex',
         col: '#38bdf8', w: 320, h: 175, hp: 70, spd: 40,
-        desc: 'Heavy Mon Calamari Command Cruiser with ventral spire heavy ion ray, guided concussion torpedo volleys, and deflector shield bubble shells.',
+        desc: 'Heavy Heavy Citadel Command Cruiser with ventral spire heavy ion ray, guided concussion torpedo volleys, and deflector shield bubble shells.',
         tactic: 'Stay above the deep ventral command fin to avoid the downward ion beam, and target shield blisters!',
         loot: '👑 +2 Plasma Cores · +1 Wheel Spin · +125 🪙',
         specialName: 'Ventral Spire Ion Ray & Deflector Bubbles',
@@ -215,7 +215,7 @@
       },
       {
         id: 'void', rank: 'Sector 4', sector: 'Sector 4', tier: 'Tier 2 High-Agility',
-        name: 'Captain Solo: Rogue Millennium Falcon', shortName: '4. Falcon',
+        name: 'Captain Noel: Rogue Solar Skiff', shortName: '4. Solar Skiff',
         col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52,
         desc: 'Agile modified YT-1300 light freighter with hyperspace cloaking overdrive, rotating quad-laser turrets, and dropped seismic proton mines.',
         tactic: 'Watch for hyperspace shimmer exit points and shoot through cloaked evasion cycles!',
@@ -242,8 +242,8 @@
         ]
       },
       {
-        id: 'fondor', rank: 'Sector 6', sector: 'Sector 6', tier: 'Tier 2 Armed Cruiser',
-        name: 'Luthen Rael: Fondor Haulcraft', shortName: '6. Fondor',
+        id: 'nebula', rank: 'Sector 6', sector: 'Sector 6', tier: 'Tier 2 Armed Cruiser',
+        name: 'Nebula Vanguard: Nebula Cruiser', shortName: '6. Nebula',
         col: '#38bdf8', w: 320, h: 175, hp: 88, spd: 50,
         desc: 'Armed Custom Cruiser featuring lethal Twin Lateral Plasma Laser Scythes that sweep the entire vertical screen with electric crackling arcs and flak pods.',
         tactic: 'Back off into the far left quadrant when the lateral plasma scythes ignite!',
@@ -256,17 +256,17 @@
         ]
       },
       {
-        id: 'ataraxia', rank: 'Sector 7', sector: 'Sector 7', tier: 'Tier 1 Jedi Dreadnought',
-        name: 'Master Avar Kriss: Jedi Cruiser Ataraxia', shortName: '7. Ataraxia',
+        id: 'solaris', rank: 'Sector 7', sector: 'Sector 7', tier: 'Tier 1 Astral Dreadnought',
+        name: 'Archon Valerius: Astral Cruiser Solaris', shortName: '7. Solaris',
         col: '#e0e7ff', w: 330, h: 165, hp: 92, spd: 48,
-        desc: 'High Republic Jedi Cruiser with converging Kyber lances, projectile-deflecting Radiant Force Ring, Longbeam precision cannons, and twin Jedi Vectors.',
-        tactic: 'Dodge the converging twin Kyber laser lances and shoot down the escorting Jedi Vectors!',
+        desc: 'Cosmic Federation Astral Cruiser with converging Kyber lances, projectile-deflecting Radiant Force Ring, Longbeam precision cannons, and twin Astral Vectors.',
+        tactic: 'Dodge the converging twin Kyber laser lances and shoot down the escorting Astral Vectors!',
         loot: '👑 +4 Plasma Cores · +2 Wheel Spins · +210 🪙 + 25 Coin Cascade',
         specialName: 'Converging Kyber Lances & Radiant Force Ring',
         moves: [
           { name: 'Converging Twin Kyber Lances', key: 'kyber' },
           { name: 'Radiant Force Pulse Ring', key: 'force_pulse' },
-          { name: 'Jedi Vector Escort Sortie', key: 'vectors' }
+          { name: 'Astral Vector Escort Sortie', key: 'vectors' }
         ]
       },
       {
@@ -299,10 +299,10 @@
         ]
       },
       {
-        id: 'trio', rank: 'Sector 10 (Apex Final Boss)', sector: 'Sector 10 Apex', tier: 'Tri-Elemental Sith Apex',
-        name: 'The Sith Elemental Triumvirate', shortName: '10. Sith Trio',
+        id: 'trio', rank: 'Sector 10 (Apex Final Boss)', sector: 'Sector 10 Apex', tier: 'Tri-Elemental Void Apex',
+        name: 'The Void Elemental Triumvirate', shortName: '10. Void Trio',
         col: '#ff4500', w: 340, h: 190, hp: 120, spd: 50,
-        desc: 'Simultaneous 3-in-1 Sith Flagship Squadron: Darth Ignis (Left Lava dreadnought with Burn DoT), Inquisitor Glacies (Middle Ice cruiser with 2s Freeze), Sovereign Fulgur (Right Kyber lightning frigate). Merges into OVERLORD TRINITY with a 3-tributary composite superlaser at <= 25% HP!',
+        desc: 'Simultaneous 3-in-1 Void Flagship Squadron: Warlord Ignis (Left Lava dreadnought with Burn DoT), Inquisitor Glacies (Middle Ice cruiser with 2s Freeze), Sovereign Fulgur (Right Kyber lightning frigate). Merges into OVERLORD TRINITY with a 3-tributary composite superlaser at <= 25% HP!',
         tactic: 'Damage any of the 3 vessels below 25% HP to trigger the Fusion vortex, then evade the converging tri-color superlaser!',
         loot: '👑 +6 Plasma Cores · +3 Wheel Spins · +300 🪙 + 50 Coin Cascade',
         specialName: 'Tri-Elemental Fusion & Composite Superlaser',
@@ -406,7 +406,7 @@
       if (boss.type === 'trio') {
         const cxPos = boss.x, cyPos = boss.y;
         boss.trio = [
-          { id: 'ignis', name: 'Darth Ignis (Lava)', x: cxPos - 80, y: cyPos - 110, baseY: cyPos - 110, w: 220, h: 110, hp: 40, maxhp: 40, shootT: 0.8, col: '#ff4500' },
+          { id: 'ignis', name: 'Warlord Ignis (Lava)', x: cxPos - 80, y: cyPos - 110, baseY: cyPos - 110, w: 220, h: 110, hp: 40, maxhp: 40, shootT: 0.8, col: '#ff4500' },
           { id: 'glacies', name: 'Inquisitor Glacies (Ice)', x: cxPos, y: cyPos, baseY: cyPos, w: 210, h: 105, hp: 40, maxhp: 40, shootT: 1.4, col: '#38bdf8' },
           { id: 'fulgur', name: 'Sovereign Fulgur (Electric)', x: cxPos + 80, y: cyPos + 110, baseY: cyPos + 110, w: 200, h: 100, hp: 40, maxhp: 40, shootT: 0.28, col: '#c084fc' }
         ];
@@ -430,7 +430,7 @@
       if (boss.type === 'dread') {
         escorts.push({ x: boss.x - 60, y: boss.y - 70, type: 'tie' });
         escorts.push({ x: boss.x - 60, y: boss.y + 70, type: 'tie' });
-      } else if (boss.type === 'ataraxia') {
+      } else if (boss.type === 'solaris') {
         escorts.push({ x: boss.x - 70, y: boss.y - 60, type: 'vector' });
         escorts.push({ x: boss.x - 70, y: boss.y + 60, type: 'vector' });
       }
@@ -521,7 +521,7 @@
         if (!boss.isMerged) {
           boss.isMerging = true;
           boss.mergeT = 2.5;
-          popupText(boss.x, boss.y - 40, '💥 SITH FUSION SINGULARITY!', '#ff0033');
+          popupText(boss.x, boss.y - 40, '💥 VOID FUSION SINGULARITY!', '#ff0033');
         } else {
           boss.superlaser = 3.5;
           popupText(boss.x, boss.y - 40, '⚡ TRINITY COMPOSITE SUPERLASER!', '#ffd23c');
@@ -935,7 +935,7 @@
             if (boss.mergeT <= 0) {
               boss.isMerging = false;
               boss.isMerged = true;
-              boss.name = 'OVERLORD TRINITY: SITH TRI-ELEMENTAL ECLIPSE COLOSSUS';
+              boss.name = 'OVERLORD TRINITY: VOID TRI-ELEMENTAL ECLIPSE COLOSSUS';
               boss.w = 340;
               boss.h = 190;
               boss.superlaser = 3.5;
@@ -1023,8 +1023,8 @@
         pb.x += pb.vx * dt;
         pb.y += pb.vy * dt;
 
-        // Force deflection on Ataraxia
-        if (boss && boss.type === 'ataraxia' && boss.forcePulseT > 0) {
+        // Force deflection on Solaris
+        if (boss && boss.type === 'solaris' && boss.forcePulseT > 0) {
           const dx = pb.x - boss.x, dy = pb.y - boss.y;
           if (Math.hypot(dx, dy) < boss.forcePulseRadius + 10) {
             pb.vx = -pb.vx * 1.2;
@@ -1125,12 +1125,12 @@
           cx.save();
           cx.translate(esc.x, ey);
           if (esc.type === 'tie') {
-            // TIE Fighter Vector
+            // Void Swarm Interceptor Vector
             cx.fillStyle = '#1e293b'; cx.fillRect(-12, -10, 4, 20); cx.fillRect(8, -10, 4, 20);
             cx.fillStyle = '#64748b'; cx.beginPath(); cx.arc(0, 0, 6, 0, Math.PI * 2); cx.fill();
             cx.fillStyle = '#ff0033'; cx.beginPath(); cx.arc(0, 0, 2, 0, Math.PI * 2); cx.fill();
           } else if (esc.type === 'vector') {
-            // Jedi Vector Starfighter
+            // Astral Vector Starfighter
             cx.fillStyle = '#f8fafc';
             cx.beginPath(); cx.moveTo(-16, 0); cx.lineTo(14, -10); cx.lineTo(14, 10); cx.closePath(); cx.fill();
             cx.strokeStyle = '#dc2626'; cx.lineWidth = 1.2; cx.stroke();
@@ -1175,7 +1175,7 @@
           cx.translate(sub.x - boss.x, sub.y - boss.y);
 
           if (sub.id === 'ignis') {
-            // 1. DARTH IGNIS: SITH MAGMA SIEGE DREADNOUGHT (Image 1)
+            // 1. WARLORD IGNIS: VOID MAGMA SIEGE DREADNOUGHT (Image 1)
             const w = sub.w || 240, h = sub.h || 120;
             const mg = cx.createRadialGradient(0, 0, 10, 0, 0, w * 0.55);
             mg.addColorStop(0, 'rgba(255, 69, 0, 0.45)');
@@ -1290,7 +1290,7 @@
             }
 
           } else if (sub.id === 'fulgur') {
-            // 3. SOVEREIGN FULGUR: SITH KYBER STORM FRIGATE (Image 3)
+            // 3. SOVEREIGN FULGUR: VOID KYBER STORM FRIGATE (Image 3)
             const w = sub.w || 220, h = sub.h || 110;
             const eg = cx.createRadialGradient(0, 0, 10, 0, 0, w * 0.55);
             eg.addColorStop(0, 'rgba(192, 132, 252, 0.45)');
@@ -1363,7 +1363,7 @@
         }
 
       } else if (boss.isMerged) {
-        // OVERLORD TRINITY: SITH TRI-ELEMENTAL ECLIPSE COLOSSUS
+        // OVERLORD TRINITY: VOID TRI-ELEMENTAL ECLIPSE COLOSSUS
         const w = boss.w || 340, h = boss.h || 190;
         const tg = cx.createRadialGradient(0, 0, 20, 0, 0, w * 0.65);
         tg.addColorStop(0, 'rgba(255, 210, 60, 0.4)');
@@ -1507,7 +1507,7 @@
       cx.strokeStyle = '#00ffaa'; cx.lineWidth = 3;
       cx.beginPath(); cx.moveTo(-boss.w * 0.48, 0); cx.lineTo(-boss.w * 0.1, 0); cx.stroke();
 
-      // Death Star-Style Axial Superlaser Focus Core
+      // Orbital Citadel-Style Axial Superlaser Focus Core
       const cr = cx.createRadialGradient(-boss.w * 0.18, 0, 4, -boss.w * 0.18, 0, 36);
       cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.35, '#00ffaa'); cr.addColorStop(0.8, '#059669'); cr.addColorStop(1, '#022c22');
       cx.fillStyle = cr; cx.beginPath(); cx.arc(-boss.w * 0.18, 0, 22 + Math.sin(t * 12) * 2.5, 0, Math.PI * 2); cx.fill();
@@ -1547,7 +1547,7 @@
       }
 
     } else if (boss.type === 'hive') {
-      // BOSS 2: OVERLORD CHRONOS: DEATH STAR ORBITAL CITADEL (Cosmic Alien Death Star Battlestation)
+      // BOSS 2: OVERLORD CHRONOS: COSMIC ORBITAL CITADEL (Cosmic Alien Orbital Citadel Battlestation)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.54, 0, Math.PI * 2); cx.fill();
@@ -1661,7 +1661,7 @@
         }
       }
 
-      // Colossal Spherical Death Star Armored Hull
+      // Colossal Spherical Orbital Citadel Armored Hull
       const tg = cx.createLinearGradient(0, -boss.h * 0.44, 0, boss.h * 0.44);
       tg.addColorStop(0, '#38bdf8'); tg.addColorStop(0.35, '#0284c7'); tg.addColorStop(0.75, '#082f49'); tg.addColorStop(1, '#020617');
       cx.fillStyle = tg;
@@ -1674,7 +1674,7 @@
       cx.strokeStyle = '#00ffee'; cx.lineWidth = 2;
       cx.beginPath(); cx.moveTo(-boss.w * 0.36, 0); cx.lineTo(boss.w * 0.36, 0); cx.stroke();
 
-      // Death Star Concave Superlaser Focus Dish
+      // Orbital Citadel Concave Superlaser Focus Dish
       const dishX = -boss.w * 0.12, dishY = -boss.h * 0.15;
       const cr = cx.createRadialGradient(dishX, dishY, 3, dishX, dishY, 24);
       cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.35, '#00e5ff'); cr.addColorStop(0.8, '#0284c7'); cr.addColorStop(1, '#082f49');
@@ -1691,7 +1691,7 @@
       }
 
     } else if (boss.type === 'ram') {
-      // BOSS 3: ADMIRAL RADDUS: MON CALAMARI MC85 STAR CRUISER (THE PROFUNDITY / RADDUS)
+      // BOSS 3: ADMIRAL VORTEX: TITAN CITADEL CRUISER MC-85 (THE CITADEL FLAGSHIP)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(56, 189, 248, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.56, boss.h * 0.52, 0, 0, Math.PI * 2); cx.fill();
@@ -1716,7 +1716,7 @@
       cx.fillStyle = '#00e5ff';
       cx.beginPath(); cx.arc(finX, boss.h * 0.48, 4.5 + Math.sin(t * 12) * 1.5, 0, Math.PI * 2); cx.fill();
 
-      // Main Hydrodynamic Curved Whale-like Mon Calamari Upper Hull
+      // Main Hydrodynamic Curved Whale-like Heavy Citadel Upper Hull
       const mg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
       mg.addColorStop(0, '#0f172a'); mg.addColorStop(0.3, '#334155'); mg.addColorStop(0.65, '#94a3b8'); mg.addColorStop(0.9, '#e2e8f0'); mg.addColorStop(1, '#f8fafc');
       cx.fillStyle = mg;
@@ -1730,7 +1730,7 @@
       cx.fill();
       cx.strokeStyle = '#38bdf8'; cx.lineWidth = 3.6; cx.stroke();
 
-      // Mon Calamari Organic Hull Blister Domes & Shield Bulbs
+      // Heavy Citadel Organic Hull Blister Domes & Shield Bulbs
       const blisters = [
         { x: -boss.w * 0.28, y: -boss.h * 0.28, rx: 22, ry: 8 },
         { x: -boss.w * 0.05, y: -boss.h * 0.32, rx: 28, ry: 9 },
@@ -1773,7 +1773,7 @@
       }
 
     } else if (boss.type === 'void') {
-      // BOSS 4: CAPTAIN SOLO: THE ROGUE MILLENNIUM FALCON (YT-1300 CORELLIAN GUNSHIP)
+      // BOSS 4: CAPTAIN NOEL: THE ROGUE SOLAR SKIFF (YT-1300 STAR CORSAIR)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.56, boss.h * 0.52, 0, 0, Math.PI * 2); cx.fill();
@@ -1944,8 +1944,8 @@
         cx.strokeStyle = '#ffffff'; cx.lineWidth = 2; cx.stroke();
       }
 
-    } else if (boss.type === 'fondor') {
-      // BOSS 6: LUTHEN RAEL: THE FONDOR HAULCRAFT (ARMED CUSTOM CRUISER)
+    } else if (boss.type === 'nebula') {
+      // BOSS 6: COMMANDER NEBULA: THE VOID CRUISER (ARMED CUSTOM CRUISER)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(56, 189, 248, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.54, 0, Math.PI * 2); cx.fill();
@@ -2128,8 +2128,8 @@
         }
       }
 
-    } else if (boss.type === 'ataraxia') {
-      // BOSS 8: MASTER AVAR KRISS: JEDI STARCRUISER ATARAXIA (HIGH REPUBLIC JEDI CRUISER)
+    } else if (boss.type === 'solaris') {
+      // BOSS 8: ARCHON VALERIUS: ASTRAL CRUISER SOLARIS (APEX SOLAR SENTINEL FLAGSHIP)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.65);
       bg.addColorStop(0, 'rgba(224, 231, 255, 0.35)');
       bg.addColorStop(0.6, 'rgba(56, 189, 248, 0.20)');
@@ -2170,7 +2170,7 @@
         cx.closePath(); cx.fill();
         cx.strokeStyle = '#e2e8f0'; cx.lineWidth = 2.0; cx.stroke();
 
-        // High Republic Crimson Accent Strip along the wing outer edge
+        // Cosmic Federation Crimson Accent Strip along the wing outer edge
         cx.strokeStyle = '#dc2626'; cx.lineWidth = 4.0;
         cx.beginPath();
         cx.moveTo(-boss.w * 0.08, wy1 + wDir * 3);
@@ -2272,7 +2272,7 @@
         }
       }
 
-      // 3. Main Pristine High Republic Pearl-White Cruiser Hull
+      // 3. Main Pristine Cosmic Federation Pearl-White Cruiser Hull
       const hGrad = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
       hGrad.addColorStop(0, '#334155');
       hGrad.addColorStop(0.2, '#64748b');
@@ -2290,7 +2290,7 @@
       cx.closePath(); cx.fill();
       cx.strokeStyle = '#ffffff'; cx.lineWidth = 3.0; cx.stroke();
 
-      // 4. Central Crimson & Gold High Republic Royal Racing Stripes
+      // 4. Central Crimson & Gold Cosmic Federation Royal Racing Stripes
       cx.fillStyle = '#dc2626';
       cx.beginPath();
       cx.moveTo(-boss.w * 0.42, 0);
@@ -2320,7 +2320,7 @@
       cx.lineTo(boss.w * 0.38, 0);
       cx.stroke();
 
-      // 5. Elevated High Republic Command Bridge Superstructure
+      // 5. Elevated Cosmic Federation Command Bridge Superstructure
       const brGrad = cx.createLinearGradient(0, -boss.h * 0.10, 0, boss.h * 0.10);
       brGrad.addColorStop(0, '#ffffff');
       brGrad.addColorStop(0.5, '#94a3b8');

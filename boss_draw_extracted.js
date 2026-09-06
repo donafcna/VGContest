@@ -31,7 +31,7 @@
           cx.translate(sub.x - boss.x, sub.y - boss.y);
 
           if (sub.id === 'ignis') {
-            // 1. DARTH IGNIS: SITH MAGMA SIEGE DREADNOUGHT (Image 1)
+            // 1. WARLORD IGNIS: VOID MAGMA SIEGE DREADNOUGHT (Image 1)
             const w = sub.w || 240, h = sub.h || 120;
             const mg = cx.createRadialGradient(0, 0, 10, 0, 0, w * 0.55);
             mg.addColorStop(0, 'rgba(255, 69, 0, 0.45)');
@@ -146,7 +146,7 @@
             }
 
           } else if (sub.id === 'fulgur') {
-            // 3. SOVEREIGN FULGUR: SITH KYBER STORM FRIGATE (Image 3)
+            // 3. SOVEREIGN FULGUR: VOID KYBER STORM FRIGATE (Image 3)
             const w = sub.w || 220, h = sub.h || 110;
             const eg = cx.createRadialGradient(0, 0, 10, 0, 0, w * 0.55);
             eg.addColorStop(0, 'rgba(192, 132, 252, 0.45)');
@@ -219,7 +219,7 @@
         }
 
       } else if (boss.isMerged) {
-        // OVERLORD TRINITY: SITH TRI-ELEMENTAL ECLIPSE COLOSSUS
+        // OVERLORD TRINITY: VOID TRI-ELEMENTAL ECLIPSE COLOSSUS
         const w = boss.w || 340, h = boss.h || 190;
         const tg = cx.createRadialGradient(0, 0, 20, 0, 0, w * 0.65);
         tg.addColorStop(0, 'rgba(255, 210, 60, 0.4)');
@@ -349,7 +349,7 @@
       cx.strokeStyle = '#00ffaa'; cx.lineWidth = 3;
       cx.beginPath(); cx.moveTo(-boss.w * 0.48, 0); cx.lineTo(-boss.w * 0.1, 0); cx.stroke();
 
-      // Death Star-Style Axial Superlaser Focus Core
+      // Orbital Citadel-Style Axial Superlaser Focus Core
       const cr = cx.createRadialGradient(-boss.w * 0.18, 0, 4, -boss.w * 0.18, 0, 36);
       cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.35, '#00ffaa'); cr.addColorStop(0.8, '#059669'); cr.addColorStop(1, '#022c22');
       cx.fillStyle = cr; cx.beginPath(); cx.arc(-boss.w * 0.18, 0, 22 + Math.sin(t * 12) * 2.5, 0, Math.PI * 2); cx.fill();
@@ -389,7 +389,7 @@
       }
 
     } else if (boss.type === 'hive') {
-      // BOSS 2: OVERLORD CHRONOS: DEATH STAR ORBITAL CITADEL (Cosmic Alien Death Star Battlestation)
+      // BOSS 2: OVERLORD CHRONOS: COSMIC ORBITAL CITADEL (Cosmic Alien Orbital Citadel Battlestation)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.54, 0, Math.PI * 2); cx.fill();
@@ -503,7 +503,7 @@
         }
       }
 
-      // Colossal Spherical Death Star Armored Hull
+      // Colossal Spherical Orbital Citadel Armored Hull
       const tg = cx.createLinearGradient(0, -boss.h * 0.44, 0, boss.h * 0.44);
       tg.addColorStop(0, '#38bdf8'); tg.addColorStop(0.35, '#0284c7'); tg.addColorStop(0.75, '#082f49'); tg.addColorStop(1, '#020617');
       cx.fillStyle = tg;
@@ -516,7 +516,7 @@
       cx.strokeStyle = '#00ffee'; cx.lineWidth = 2;
       cx.beginPath(); cx.moveTo(-boss.w * 0.36, 0); cx.lineTo(boss.w * 0.36, 0); cx.stroke();
 
-      // Death Star Concave Superlaser Focus Dish
+      // Orbital Citadel Concave Superlaser Focus Dish
       const dishX = -boss.w * 0.12, dishY = -boss.h * 0.15;
       const cr = cx.createRadialGradient(dishX, dishY, 3, dishX, dishY, 24);
       cr.addColorStop(0, '#ffffff'); cr.addColorStop(0.35, '#00e5ff'); cr.addColorStop(0.8, '#0284c7'); cr.addColorStop(1, '#082f49');
@@ -533,7 +533,7 @@
       }
 
     } else if (boss.type === 'ram') {
-      // BOSS 3: ADMIRAL RADDUS: MON CALAMARI MC85 STAR CRUISER (THE PROFUNDITY / RADDUS)
+      // BOSS 3: ADMIRAL VORTEX: TITAN CITADEL CRUISER MC-85 (THE CITADEL FLAGSHIP)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(56, 189, 248, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.56, boss.h * 0.52, 0, 0, Math.PI * 2); cx.fill();
@@ -558,7 +558,7 @@
       cx.fillStyle = '#00e5ff';
       cx.beginPath(); cx.arc(finX, boss.h * 0.48, 4.5 + Math.sin(t * 12) * 1.5, 0, Math.PI * 2); cx.fill();
 
-      // Main Hydrodynamic Curved Whale-like Mon Calamari Upper Hull
+      // Main Hydrodynamic Curved Whale-like Heavy Citadel Upper Hull
       const mg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
       mg.addColorStop(0, '#0f172a'); mg.addColorStop(0.3, '#334155'); mg.addColorStop(0.65, '#94a3b8'); mg.addColorStop(0.9, '#e2e8f0'); mg.addColorStop(1, '#f8fafc');
       cx.fillStyle = mg;
@@ -572,7 +572,7 @@
       cx.fill();
       cx.strokeStyle = '#38bdf8'; cx.lineWidth = 3.6; cx.stroke();
 
-      // Mon Calamari Organic Hull Blister Domes & Shield Bulbs
+      // Heavy Citadel Organic Hull Blister Domes & Shield Bulbs
       const blisters = [
         { x: -boss.w * 0.28, y: -boss.h * 0.28, rx: 22, ry: 8 },
         { x: -boss.w * 0.05, y: -boss.h * 0.32, rx: 28, ry: 9 },
@@ -615,7 +615,7 @@
       }
 
     } else if (boss.type === 'void') {
-      // BOSS 4: CAPTAIN SOLO: THE ROGUE MILLENNIUM FALCON (YT-1300 CORELLIAN GUNSHIP)
+      // BOSS 4: CAPTAIN NOEL: THE ROGUE SOLAR SKIFF (YT-1300 STAR CORSAIR)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(0, 229, 255, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.56, boss.h * 0.52, 0, 0, Math.PI * 2); cx.fill();
@@ -786,8 +786,8 @@
         cx.strokeStyle = '#ffffff'; cx.lineWidth = 2; cx.stroke();
       }
 
-    } else if (boss.type === 'fondor') {
-      // BOSS 6: LUTHEN RAEL: THE FONDOR HAULCRAFT (ARMED CUSTOM CRUISER)
+    } else if (boss.type === 'nebula') {
+      // BOSS 6: COMMANDER NEBULA: THE VOID CRUISER (ARMED CUSTOM CRUISER)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.58);
       bg.addColorStop(0, 'rgba(56, 189, 248, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.arc(0, 0, boss.w * 0.54, 0, Math.PI * 2); cx.fill();
@@ -970,8 +970,8 @@
         }
       }
 
-    } else if (boss.type === 'ataraxia') {
-      // BOSS 8: MASTER AVAR KRISS: JEDI STARCRUISER ATARAXIA (HIGH REPUBLIC JEDI CRUISER)
+    } else if (boss.type === 'solaris') {
+      // BOSS 8: ARCHON VALERIUS: ASTRAL CRUISER SOLARIS (APEX SOLAR SENTINEL FLAGSHIP)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.65);
       bg.addColorStop(0, 'rgba(224, 231, 255, 0.35)');
       bg.addColorStop(0.6, 'rgba(56, 189, 248, 0.20)');
@@ -1012,7 +1012,7 @@
         cx.closePath(); cx.fill();
         cx.strokeStyle = '#e2e8f0'; cx.lineWidth = 2.0; cx.stroke();
 
-        // High Republic Crimson Accent Strip along the wing outer edge
+        // Cosmic Federation Crimson Accent Strip along the wing outer edge
         cx.strokeStyle = '#dc2626'; cx.lineWidth = 4.0;
         cx.beginPath();
         cx.moveTo(-boss.w * 0.08, wy1 + wDir * 3);
@@ -1108,7 +1108,7 @@
         }
       }
 
-      // 3. Main Pristine High Republic Pearl-White Cruiser Hull
+      // 3. Main Pristine Cosmic Federation Pearl-White Cruiser Hull
       const hGrad = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
       hGrad.addColorStop(0, '#334155');
       hGrad.addColorStop(0.2, '#64748b');
@@ -1126,7 +1126,7 @@
       cx.closePath(); cx.fill();
       cx.strokeStyle = '#ffffff'; cx.lineWidth = 3.0; cx.stroke();
 
-      // 4. Central Crimson & Gold High Republic Royal Racing Stripes
+      // 4. Central Crimson & Gold Cosmic Federation Royal Racing Stripes
       cx.fillStyle = '#dc2626';
       cx.beginPath();
       cx.moveTo(-boss.w * 0.42, 0);
@@ -1156,7 +1156,7 @@
       cx.lineTo(boss.w * 0.38, 0);
       cx.stroke();
 
-      // 5. Elevated High Republic Command Bridge Superstructure
+      // 5. Elevated Cosmic Federation Command Bridge Superstructure
       const brGrad = cx.createLinearGradient(0, -boss.h * 0.10, 0, boss.h * 0.10);
       brGrad.addColorStop(0, '#ffffff');
       brGrad.addColorStop(0.5, '#94a3b8');

@@ -20,15 +20,15 @@ Command your authentic wooden Solar Pirate Galleon through deep space, blast Cos
 - 🔱 **Solar Dreadnought**: Twin heavy broadside battery
 
 ## 👾 10 Colossal Cosmic Alien Flagship Bosses (Ranked Strongest to Weakest)
-- 👑 **Sector 1 Apex**: **The Sith Elemental Triumvirate** (Ignis, Glacies & Fulgur) & **Overlord Trinity Fusion Colossus**
+- 👑 **Sector 1 Apex**: **The Void Elemental Triumvirate** (Ignis, Glacies & Fulgur) & **Overlord Trinity Fusion Colossus**
 - 🦿 **Sector 1**: **General Veers** (Imperial AT-AT All-Terrain Heavy Siege Colossus)
 - 🧬 **Sector 2**: **Overlord Pathogen** (Imperial Bio-Spore Carrier & Mutating Clones)
-- ⚡ **Sector 3**: **Master Avar Kriss** (High Republic Jedi Cruiser Ataraxia)
-- ⚔️ **Sector 4**: **Luthen Rael** (The Fondor Haulcraft & Twin Lateral Plasma Scythes)
+- ⚡ **Sector 3**: **Archon Valerius** (Cosmic Federation Astral Cruiser Solaris)
+- ⚔️ **Sector 4**: **Nebula Vanguard** (The Nebula Cruiser & Twin Lateral Plasma Scythes)
 - 🛡️ **Sector 5**: **Admiral Sloane** (Imperial Cantwell-Class Arrestor Battlecruiser)
-- 🛸 **Sector 6**: **Captain Solo** (The Rogue Millennium Falcon YT-1300)
-- 🌊 **Sector 7**: **Admiral Raddus** (Mon Calamari MC85 Star Cruiser)
-- 🌕 **Sector 8**: **Overlord Chronos** (DS-1 Orbital Death Star Battlestation)
+- 🛸 **Sector 6**: **Captain Noel** (The Rogue Solar Skiff YT-1300)
+- 🌊 **Sector 7**: **Admiral Vortex** (Heavy Citadel MC85 Star Cruiser)
+- 🌕 **Sector 8**: **Overlord Chronos** (DS-1 Orbital Orbital Citadel Battlestation)
 - 🛸 **Sector 9**: **Grand Admiral Vex** (Omega-ISD Imperial Eclipse Super-Dreadnought)
 
 ## 🌐 Play Online
