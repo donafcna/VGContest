@@ -1912,7 +1912,7 @@
   <input id="pname" placeholder="Captain Name" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="btnrow">
     <button id="onlinebtn" type="button" class="action-btn" onclick="openOnlineModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">🌐 ONLINE MULTIPLAYER (3P)</button>
-    <button id="startbtn" type="button" class="action-btn" onclick="if(window.startSolarSail){window.startSolarSail(event);}else{document.getElementById('menu').style.display='none';state='play';}" onpointerdown="if(window.startSolarSail){window.startSolarSail(event);}else{document.getElementById('menu').style.display='none';state='play';}" style="background:linear-gradient(135deg,#ffb834,#ea6c10);color:#1a0c00;border:none;border-radius:14px;cursor:pointer;font-weight:900;box-shadow:0 8px 28px rgba(255,160,40,0.55);letter-spacing:1.5px;text-transform:uppercase;font-size:1.25rem;padding:15px 46px;margin-top:0.4rem;position:relative;z-index:9999;pointer-events:auto!important;-webkit-user-select:none;user-select:none">⚓ SET SOLAR SAIL!</button>
+    <button id="startbtn" type="button" class="action-btn" onclick="startSolarSail(event)" onpointerdown="startSolarSail(event)" style="background:linear-gradient(135deg,#ffb834,#ea6c10);color:#1a0c00;border:none;border-radius:14px;cursor:pointer;font-weight:900;box-shadow:0 8px 28px rgba(255,160,40,0.55);letter-spacing:1.5px;text-transform:uppercase;font-size:1.25rem;padding:15px 46px;margin-top:0.4rem;position:relative;z-index:9999;pointer-events:auto!important;-webkit-user-select:none;user-select:none">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" type="button" class="action-btn" onclick="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ SHIPYARD &amp; ARSENAL</button>
     <button id="dailybtn" type="button" class="action-btn" onclick="openDailyModal(event)" style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(255,94,98,0.55);position:relative;cursor:pointer">🎁 DAILY REWARDS <span id="dailyBadge" class="daily-badge hidden">!</span></button>
     <button id="bossbtn" type="button" class="action-btn" onclick="openBossIntelModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">👾 BOSS & FLEET INTEL</button>
@@ -7449,14 +7449,19 @@ function startSolarSail(e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
   }
   
-  // 1. IMMEDIATELY HIDE ALL OVERLAYS AND MENU
+  // 1. IMMEDIATELY FORCEFULLY HIDE ALL OVERLAYS AND MENU
   try {
     const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal'];
     overlays.forEach(id => hideOverlay(id));
+    const m = document.getElementById('menu');
+    if (m) { m.style.display = 'none'; m.classList.add('hidden'); m.style.pointerEvents = 'none'; }
   } catch(err) { console.error('Menu hide error:', err); }
 
   // 2. SET CINEMATIC STORYLINE PROLOGUE STATE
   state = 'intro'; if (typeof window !== 'undefined') window.state = 'intro';
+  updatePauseBtnVisibility();
+  try { updateTopBrawlBarVisibility(); } catch(e) {}
+  if (cv && cv.focus) { try { cv.focus(); } catch(err) {} }
 
   // 3. BROADCAST TO MULTIPLAYER HOST IF ACTIVE
   try {
@@ -7543,14 +7548,14 @@ const startBtnEl = document.getElementById('startbtn');
 if (startBtnEl) startBtnEl.addEventListener('click', startSolarSail);
 
 // Robust Overlay Helpers
-function showOverlay(id) {
+function showOverlay(id, displayType = 'flex') {
   const el = document.getElementById(id);
   if (!el) return;
   el.classList.remove('hidden');
-  el.style.display = '';
-  el.style.pointerEvents = '';
-  el.style.visibility = '';
-  el.style.opacity = '';
+  el.style.display = displayType;
+  el.style.pointerEvents = 'auto';
+  el.style.visibility = 'visible';
+  el.style.opacity = '1';
 }
 window.showOverlay = showOverlay;
 
@@ -7558,6 +7563,10 @@ function hideOverlay(id) {
   const el = document.getElementById(id);
   if (!el) return;
   el.classList.add('hidden');
+  el.style.display = 'none';
+  el.style.pointerEvents = 'none';
+  el.style.visibility = 'hidden';
+  el.style.opacity = '0';
 }
 window.hideOverlay = hideOverlay;
 
