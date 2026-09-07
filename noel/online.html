@@ -1773,7 +1773,7 @@
   <input id="pname" placeholder="Enter Captain Name (e.g. NoelTheGoat)" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="btnrow">
     <button id="onlinebtn" type="button" class="action-btn" onclick="openOnlineModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">🌐 ONLINE MULTIPLAYER (3P)</button>
-    <button id="startbtn" type="button" class="action-btn" onclick="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
+    <button id="startbtn" type="button" class="action-btn" onclick="startSolarSail(event)" onpointerdown="startSolarSail(event)" style="background:linear-gradient(135deg,#ffb834,#ea6c10);color:#1a0c00;border:none;border-radius:14px;cursor:pointer;font-weight:900;box-shadow:0 8px 28px rgba(255,160,40,0.55);letter-spacing:1.5px;text-transform:uppercase;font-size:1.25rem;padding:15px 46px;margin-top:0.4rem;position:relative;z-index:999;pointer-events:auto!important;-webkit-user-select:none;user-select:none">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" type="button" class="action-btn" onclick="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ SHIPYARD &amp; ARSENAL</button>
     <button id="dailybtn" type="button" class="action-btn" onclick="openDailyModal(event)" style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(255,94,98,0.55);position:relative;cursor:pointer">🎁 DAILY REWARDS <span id="dailyBadge" class="daily-badge hidden">!</span></button>
     <button id="bossbtn" type="button" class="action-btn" onclick="openBossIntelModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">👾 BOSS & FLEET INTEL</button>
@@ -2405,6 +2405,11 @@ function advanceStory() {
 window.advanceStory = advanceStory;
 
 addEventListener('keydown', e => {
+  if (state === 'menu' && (e.code === 'Space' || e.code === 'Enter') && document.activeElement !== document.getElementById('pname') && document.activeElement !== document.getElementById('onlineCallsign')) {
+    e.preventDefault();
+    startSolarSail(e);
+    return;
+  }
   initAudio();
   keys[e.code] = true;
   if (e.code === 'Space' || e.code === 'Enter') {
