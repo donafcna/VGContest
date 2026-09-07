@@ -1681,7 +1681,7 @@
 <body>
 <canvas id="cv"></canvas>
 <button id="musicbtn" onclick="toggleMusic(event)" aria-label="Toggle Audio">🔊</button>
-<button id="pausebtn" onclick="togglePause(event)" aria-label="Pause Game">⏸</button>
+<button id="pausebtn" onclick="togglePause(event)" aria-label="Pause Game (Press P or Esc)">⏸ PAUSE</button>
 <div id="touchHint" style="display:none;">🕹️ D-PAD: MOVE • TAP SCREEN: SHOOT 💥</div>
 
 <!-- Brawl Stars Style Gadget & Super Action Controls -->
@@ -1716,13 +1716,14 @@
 </div>
 
 <div id="pauseoverlay" class="overlay hidden" style="z-index: 150;">
-  <h1>⏸ WARP STASIS</h1>
-  <p>Solar sails reefed, Captain Noel…</p>
-  <div class="btnrow">
-    <button id="resumebtn" onclick="togglePause(event)">▶ RESUME BATTLE</button>
-    <button id="restartbtn" onclick="returnToMenu(event)" style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff">↻ RESTART TO MAIN MENU</button>
+  <h1>⏸ WARP STASIS (PAUSED)</h1>
+  <p style="font-size:1.05rem;color:#ffd23c;margin-bottom:1.2rem">Solar sails reefed, Captain Noel… Fleet on standby.</p>
+  <div class="btnrow" style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:0.6rem;">
+    <button id="resumebtn" onclick="togglePause(event)" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:1.15rem;padding:14px 34px;box-shadow:0 6px 24px rgba(34,197,94,0.5)">▶ RESUME BATTLE</button>
+    <button id="restartbtn" onclick="startSolarSail(event)" style="background:linear-gradient(135deg,#ffb834,#ea6c10);color:#1a0c00;font-size:1.15rem;padding:14px 30px;box-shadow:0 6px 24px rgba(255,160,40,0.5)">↻ RESTART RUN</button>
+    <button id="menubtn" onclick="returnToMenu(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;font-size:1.15rem;padding:14px 32px;box-shadow:0 6px 24px rgba(138,123,255,0.5)">🏴‍☠️ RETURN TO MENU</button>
   </div>
-  <a class="exitlink" href="../">🚪 EXIT TO CONTEST</a>
+  <p style="margin-top:1.4rem"><a class="exitlink" href="../" style="color:#8fa6cb;font-size:0.92rem;text-decoration:none">🚪 EXIT TO CONTEST HUB</a></p>
 </div>
 
 <div id="menu" class="overlay">
@@ -7075,16 +7076,10 @@ function startSolarSail(e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
   }
   
-  // 1. IMMEDIATELY HIDE ALL OVERLAYS AND MENU (Guaranteed First Action!)
+  // 1. IMMEDIATELY HIDE ALL OVERLAYS AND MENU
   try {
     const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal'];
-    overlays.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.classList.add('hidden');
-        el.style.cssText = 'display:none!important;pointer-events:none!important;visibility:hidden!important;opacity:0!important;';
-      }
-    });
+    overlays.forEach(id => hideOverlay(id));
   } catch(err) { console.error('Menu hide error:', err); }
 
   // 2. SET ACTIVE COMBAT STATE IMMEDIATELY
@@ -7165,11 +7160,31 @@ window.startSolarSail = startSolarSail;
 const startBtnEl = document.getElementById('startbtn');
 if (startBtnEl) startBtnEl.addEventListener('click', startSolarSail);
 
+// Robust Overlay Helpers
+function showOverlay(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('hidden');
+  el.style.display = '';
+  el.style.pointerEvents = '';
+  el.style.visibility = '';
+  el.style.opacity = '';
+}
+window.showOverlay = showOverlay;
+
+function hideOverlay(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('hidden');
+}
+window.hideOverlay = hideOverlay;
+
 function updatePauseBtnVisibility() {
   const pb = document.getElementById('pausebtn');
   if (!pb) return;
   if (state === 'play' || state === 'intro' || state === 'pause') {
     pb.style.display = 'inline-flex';
+    pb.innerHTML = (state === 'pause') ? '▶ RESUME' : '⏸ PAUSE';
   } else {
     pb.style.display = 'none';
   }
@@ -7180,58 +7195,60 @@ let prePauseState = 'play';
 let lastPauseToggleTime = 0;
 function togglePause(e) {
   if (e) {
-    try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
+    try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
   }
-  const now = performance.now();
+  const now = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
   if (now - lastPauseToggleTime < 180) return;
   lastPauseToggleTime = now;
-  
-  initAudio();
-  const po = document.getElementById('pauseoverlay');
+
+  try { initAudio(); } catch(err) {}
   if (state === 'pause') {
     state = prePauseState || 'play';
-    if (po) po.classList.add('hidden');
+    if (typeof window !== 'undefined') window.state = state;
+    hideOverlay('pauseoverlay');
     updateDpadVisibility();
     updatePauseBtnVisibility();
+    updateBrawlControlsVisibility();
   } else if (state === 'play' || state === 'intro') {
     prePauseState = state;
     state = 'pause';
-    if (po) po.classList.remove('hidden');
+    if (typeof window !== 'undefined') window.state = state;
+    showOverlay('pauseoverlay');
     updateDpadVisibility();
     updatePauseBtnVisibility();
   }
 }
 window.togglePause = togglePause;
+window.resumeGame = togglePause;
+window.resume = togglePause;
 
 function returnToMenu(e) {
   if (e) {
-    try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
+    try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
   }
   if (score > 0 && !scoreSubmitted) {
-    endGame('lbMenu');
+    try { endGame('lbMenu'); } catch(err) {}
   }
   state = 'menu';
-  
-  // Hide all modals & overlays except #menu
+  if (typeof window !== 'undefined') window.state = 'menu';
+
+  // Hide all gameplay overlays & modals
   const overlays = ['pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal'];
-  overlays.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.add('hidden');
-  });
-  
-  const menuEl = document.getElementById('menu');
-  if (menuEl) menuEl.classList.remove('hidden');
-  
+  overlays.forEach(id => hideOverlay(id));
+
+  // Show main menu quarterdeck
+  showOverlay('menu');
+
   // Reset active combat entities
   balls = []; eballs = []; forts = []; gliders = []; mines = []; coins = []; powerups = []; parts = [];
   boss = null; bossT = 12; score = 0; coinsN = 0; level = 1; t = 0;
   storyStage = 0; storySectorAnnounced = 1;
-  
+
   updatePauseBtnVisibility();
   updateDpadVisibility();
   updateBrawlControlsVisibility();
-  renderWallet();
-  renderLeaderboard('lbMenu', -1, null);
+  try { renderWallet(); } catch(err) {}
+  try { renderLeaderboard('lbMenu', -1, null); } catch(err) {}
 }
 window.returnToMenu = returnToMenu;
 window.restartGame = returnToMenu;
