@@ -2100,6 +2100,24 @@
 <script>
 'use strict';
 
+// Bulletproof Storage with in-memory fallback (prevents any SecurityError or Private Browsing crash)
+const memoryStore = {};
+const safeStorage = {
+  getItem: function(k) {
+    try { if (typeof localStorage !== 'undefined' && localStorage) return safeStorage.getItem(k); } catch(e) {}
+    return memoryStore[k] || null;
+  },
+  setItem: function(k, v) {
+    try { if (typeof localStorage !== 'undefined' && localStorage) safeStorage.setItem(k, String(v)); } catch(e) {}
+    memoryStore[k] = String(v);
+  },
+  removeItem: function(k) {
+    try { if (typeof localStorage !== 'undefined' && localStorage) safeStorage.removeItem(k); } catch(e) {}
+    delete memoryStore[k];
+  }
+};
+
+
 // Early Global Stubs & Handlers for Instant HTML onclick Reliability
 window.startSolarSail = function(e) { if (typeof startSolarSail === 'function' && startSolarSail !== window.startSolarSail) return startSolarSail(e); };
 window.openOnlineModal = function(e) { if (typeof openOnlineModal === 'function' && openOnlineModal !== window.openOnlineModal) return openOnlineModal(e); };
@@ -3436,10 +3454,10 @@ let activeUpgradeShip = 'cutter';
 
 function isCreator() {
   try {
-    if (localStorage.getItem('sp_creator_pass') === 'true') return true;
+    if (safeStorage.getItem('sp_creator_pass') === 'true') return true;
     const inp = document.getElementById('pname');
     const inputVal = (inp && inp.value) ? inp.value.trim() : '';
-    const storedName = localStorage.getItem('sp_name') || '';
+    const storedName = safeStorage.getItem('sp_name') || '';
     const nameToCheck = (inputVal || playerName || storedName || '').trim().toLowerCase();
     if (!nameToCheck) return false;
     const norm = nameToCheck.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -3477,8 +3495,8 @@ function activateVipPass(code) {
   );
   if (valid) {
     try {
-      localStorage.setItem('sp_creator_pass', 'true');
-      localStorage.setItem('sp_name', 'Captain Noël');
+      safeStorage.setItem('sp_creator_pass', 'true');
+      safeStorage.setItem('sp_name', 'Captain Noël');
     } catch(e) {}
     playerName = 'Captain Noël';
     const inp = document.getElementById('pname');
@@ -3510,7 +3528,7 @@ window.promptVipPass = promptVipPass;
 
 function getFreshRegularSave() {
   return {
-    uid: localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36)),
+    uid: safeStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36)),
     coins: 150,
     tokens: 0,
     kills: 0,
@@ -3531,7 +3549,7 @@ function getFreshRegularSave() {
 
 function getCreatorSave() {
   return {
-    uid: localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36)),
+    uid: safeStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36)),
     coins: 99999,
     tokens: 999,
     kills: 2500,
@@ -3570,7 +3588,7 @@ const SAVE = {
   load() {
     try {
       if (isCreator()) {
-        const d = JSON.parse(localStorage.getItem('sp_creator_save') || 'null');
+        const d = JSON.parse(safeStorage.getItem('sp_creator_save') || 'null');
         this.data = Object.assign(getCreatorSave(), d || {});
         this.data.coins = Math.max(this.data.coins || 0, 99999);
         this.data.tokens = Math.max(this.data.tokens || 0, 999);
@@ -3583,7 +3601,7 @@ const SAVE = {
         }
         this.data.upg = { hull: 10, cannon: 10, engine: 10, magnet: 10 };
       } else {
-        const d = JSON.parse(localStorage.getItem('sp_player_save') || localStorage.getItem('sp_save') || 'null');
+        const d = JSON.parse(safeStorage.getItem('sp_player_save') || safeStorage.getItem('sp_save') || 'null');
         if (d) {
           this.data = Object.assign(getFreshRegularSave(), d);
           // If this regular player profile previously had the creator test numbers forced on it, reset to clean player stats
@@ -3609,8 +3627,8 @@ const SAVE = {
         }
       }
       if (!this.data.uid) {
-        this.data.uid = localStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36));
-        localStorage.setItem('sp_uid', this.data.uid);
+        this.data.uid = safeStorage.getItem('sp_uid') || ('pilot_' + Math.random().toString(36).slice(2, 9) + '_' + Date.now().toString(36));
+        safeStorage.setItem('sp_uid', this.data.uid);
       }
       activeUpgradeShip = this.data.sel || 'cutter';
       this.save();
@@ -3619,11 +3637,11 @@ const SAVE = {
   save() {
     try {
       if (isCreator()) {
-        localStorage.setItem('sp_creator_save', JSON.stringify(this.data));
+        safeStorage.setItem('sp_creator_save', JSON.stringify(this.data));
       } else {
-        localStorage.setItem('sp_player_save', JSON.stringify(this.data));
+        safeStorage.setItem('sp_player_save', JSON.stringify(this.data));
       }
-      localStorage.setItem('sp_save', JSON.stringify(this.data));
+      safeStorage.setItem('sp_save', JSON.stringify(this.data));
     } catch (e) {}
   }
 };
@@ -3849,9 +3867,9 @@ function bankRun() {
 // ---------- LEADERBOARD (Reliable Persistent & Cloud Sync) ----------
 // Clean Leaderboard Reset
 try {
-  if (localStorage.getItem('sp_lb_v7') !== '1') {
-    localStorage.removeItem('sp_lb');
-    localStorage.setItem('sp_lb_v7', '1');
+  if (safeStorage.getItem('sp_lb_v7') !== '1') {
+    safeStorage.removeItem('sp_lb');
+    safeStorage.setItem('sp_lb_v7', '1');
   }
 } catch (e) {}
 
@@ -3867,13 +3885,13 @@ const LB = {
   },
   async clear() {
     try {
-      localStorage.removeItem('sp_lb');
+      safeStorage.removeItem('sp_lb');
     } catch (e) {}
   },
   async submit(entry) {
     if (!entry || typeof entry.score !== 'number' || entry.score <= 0) return;
     entry.uid = entry.uid || SAVE.data.uid;
-    entry.name = (entry.name || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || localStorage.getItem('sp_name') || 'Captain').slice(0, 14);
+    entry.name = (entry.name || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'Captain').slice(0, 14);
     if ((entry.name || '').trim().toLowerCase() === 'louis the goat') {
       entry.name = 'DodoDad';
     }
@@ -3907,7 +3925,7 @@ const LB = {
       } else {
         arr.push(Object.assign({ created_at: Date.now() }, entry));
       }
-      localStorage.setItem('sp_lb', JSON.stringify(arr));
+      safeStorage.setItem('sp_lb', JSON.stringify(arr));
     } catch (e) {}
 
     // 2. Background Cloud Sync to Supabase so all phones, tablets & PCs see it instantly!
@@ -3932,12 +3950,12 @@ const LB = {
     if (!newName) return;
     if (newName.toLowerCase() === 'louis the goat') newName = 'DodoDad';
     try {
-      localStorage.setItem('sp_name', newName);
+      safeStorage.setItem('sp_name', newName);
       playerName = newName;
       let arr = await this._local();
       const myUid = SAVE.data.uid;
       let changed = false;
-      let myMaxScore = +localStorage.getItem('sp_best') || 0;
+      let myMaxScore = +safeStorage.getItem('sp_best') || 0;
       let myLevel = 1;
       let myCoins = 0;
 
@@ -3961,7 +3979,7 @@ const LB = {
         }
       }
       if (changed) {
-        localStorage.setItem('sp_lb', JSON.stringify(arr));
+        safeStorage.setItem('sp_lb', JSON.stringify(arr));
       }
 
       // Push updated captain dossier to Supabase cloud
@@ -3996,7 +4014,7 @@ const LB = {
   async _local() {
     let rows = [];
     try {
-      const stored = localStorage.getItem('sp_lb');
+      const stored = safeStorage.getItem('sp_lb');
       if (stored) {
         rows = JSON.parse(stored);
       }
@@ -4042,7 +4060,7 @@ const LB = {
             const myUid = SAVE.data.uid;
             const myLocal = local.filter(r => r.uid === myUid);
             const merged = this._dedupe([...cloudScores, ...myLocal]);
-            try { localStorage.setItem('sp_lb', JSON.stringify(merged)); } catch(e) {}
+            try { safeStorage.setItem('sp_lb', JSON.stringify(merged)); } catch(e) {}
             return merged;
           }
         }
@@ -5859,7 +5877,7 @@ async function renderLeaderboard(cid, myScore, myName) {
   const el = document.getElementById(cid);
   if (!el) return;
   const title = (cid === 'lbMenu') ? '🏆 GALAXY PIRATE HALL OF FAME' : '🏆 TACTICAL RADAR ROSTER';
-  const curName = (myName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || localStorage.getItem('sp_name') || 'Captain Noel').slice(0, 14);
+  const curName = (myName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'Captain Noel').slice(0, 14);
 
   const drawList = (items, rankVal) => {
     let html = '<h2>' + title + '</h2>';
@@ -6230,7 +6248,7 @@ const OnlineFleetNet = {
   updatePilotInfo() {
     const nmInp = document.getElementById('onlineCallsign');
     const shSel = document.getElementById('onlineShipSelect');
-    const name = (nmInp && nmInp.value.trim()) || localStorage.getItem('sp_name') || 'Captain Noel';
+    const name = (nmInp && nmInp.value.trim()) || safeStorage.getItem('sp_name') || 'Captain Noel';
     const shipType = (shSel && shSel.value) || SAVE.data.sel || 'cutter';
 
     if (this.mode === 'online_host' || this.mode === 'solo') {
@@ -6257,7 +6275,7 @@ const OnlineFleetNet = {
     }
     this.roomCode = code;
 
-    const callsign = (document.getElementById('onlineCallsign').value || localStorage.getItem('sp_name') || 'Captain Noel').slice(0, 14);
+    const callsign = (document.getElementById('onlineCallsign').value || safeStorage.getItem('sp_name') || 'Captain Noel').slice(0, 14);
     const shipType = (document.getElementById('onlineShipSelect').value || SAVE.data.sel || 'cutter');
     
     this.mode = 'online_host';
@@ -6441,7 +6459,7 @@ const OnlineFleetNet = {
     }
     this.roomCode = code;
 
-    const callsign = (document.getElementById('onlineCallsign').value || localStorage.getItem('sp_name') || 'First Mate').slice(0, 14);
+    const callsign = (document.getElementById('onlineCallsign').value || safeStorage.getItem('sp_name') || 'First Mate').slice(0, 14);
     const shipType = (document.getElementById('onlineShipSelect').value || 'runner');
 
     this.mode = 'online_client';
@@ -6717,7 +6735,7 @@ function openOnlineModal(e) {
   if (m) m.classList.remove('hidden');
 
   const cInp = document.getElementById('onlineCallsign');
-  if (cInp) cInp.value = playerName || localStorage.getItem('sp_name') || 'Captain Noel';
+  if (cInp) cInp.value = playerName || safeStorage.getItem('sp_name') || 'Captain Noel';
 
   const sSel = document.getElementById('onlineShipSelect');
   if (sSel) sSel.value = SAVE.data.sel || 'cutter';
@@ -7100,9 +7118,9 @@ function startSolarSail(e) {
   // 4. PLAYER NAME & LOADOUT
   try {
     const inp = document.getElementById('pname');
-    let nm = (inp && inp.value && inp.value.trim()) || localStorage.getItem('sp_name') || 'Captain';
+    let nm = (inp && inp.value && inp.value.trim()) || safeStorage.getItem('sp_name') || 'Captain';
     playerName = nm.slice(0, 14);
-    try { localStorage.setItem('sp_name', playerName); } catch(err) {}
+    try { safeStorage.setItem('sp_name', playerName); } catch(err) {}
   } catch(err) {}
 
   try { applyLoadout(); } catch(err) { console.error('applyLoadout err:', err); }
@@ -7234,7 +7252,7 @@ window.returnToMenu = returnToMenu;
 window.restartGame = returnToMenu;
 
 async function endGame(cid) {
-  const nm = (document.getElementById('pname') && document.getElementById('pname').value.trim()) || playerName || localStorage.getItem('sp_name') || 'Captain';
+  const nm = (document.getElementById('pname') && document.getElementById('pname').value.trim()) || playerName || safeStorage.getItem('sp_name') || 'Captain';
   playerName = nm.slice(0, 14);
   if (!scoreSubmitted) {
     scoreSubmitted = true;
@@ -7259,7 +7277,7 @@ async function endGame(cid) {
 function saveBest() {
   if (score > best) {
     best = score;
-    try { localStorage.setItem('sp_best', best); } catch (e) {}
+    try { safeStorage.setItem('sp_best', best); } catch (e) {}
     return true;
   }
   return false;
@@ -8195,7 +8213,7 @@ const COSMIC_TRAIL = [
 
 function getPlayerTrophies() {
   if (isCreator()) return Math.max(100000, SAVE.data.trophies || 100000);
-  const careerScoreTrophies = Math.floor((+localStorage.getItem('sp_best') || 0) / 8);
+  const careerScoreTrophies = Math.floor((+safeStorage.getItem('sp_best') || 0) / 8);
   const killsTrophies = Math.floor((SAVE.data.kills || 0) * 5);
   return Math.max(SAVE.data.trophies || 0, careerScoreTrophies + killsTrophies);
 }
@@ -8418,15 +8436,15 @@ if (document.readyState === 'loading') {
 (function () {
   try {
     const i = document.getElementById('pname');
-    const n = localStorage.getItem('sp_name');
-    const vip = localStorage.getItem('sp_creator_pass') === 'true';
+    const n = safeStorage.getItem('sp_name');
+    const vip = safeStorage.getItem('sp_creator_pass') === 'true';
 
     // Query param unlock e.g. ?vip=1 or ?creator=noel
     try {
       const params = new URLSearchParams(window.location.search);
       if (params.get('vip') === '1' || params.get('creator') === 'noel') {
-        localStorage.setItem('sp_creator_pass', 'true');
-        localStorage.setItem('sp_name', 'Captain Noël');
+        safeStorage.setItem('sp_creator_pass', 'true');
+        safeStorage.setItem('sp_name', 'Captain Noël');
       }
     } catch(e) {}
 
@@ -8441,7 +8459,7 @@ if (document.readyState === 'loading') {
     SAVE.load();
     applyLoadout();
 
-    best = +localStorage.getItem('sp_best') || 0;
+    best = +safeStorage.getItem('sp_best') || 0;
     const bl = document.getElementById('bestline');
     if (bl && best > 0) bl.textContent = '🏅 Sector Record: ' + best;
 
@@ -8450,7 +8468,7 @@ if (document.readyState === 'loading') {
       const updateName = (immediate = false) => {
         const val = i.value.trim().slice(0, 14);
         if (val) {
-          try { localStorage.setItem('sp_name', val); } catch(e) {}
+          try { safeStorage.setItem('sp_name', val); } catch(e) {}
           playerName = val;
           SAVE.load();
           applyLoadout();
