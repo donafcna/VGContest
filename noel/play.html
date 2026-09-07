@@ -1773,7 +1773,7 @@
   <input id="pname" placeholder="Enter Captain Name (e.g. NoelTheGoat)" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="btnrow">
     <button id="onlinebtn" type="button" class="action-btn" onclick="openOnlineModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">🌐 ONLINE MULTIPLAYER (3P)</button>
-    <button id="startbtn" type="button" class="action-btn" onclick="startSolarSail(event)" onpointerdown="startSolarSail(event)" style="background:linear-gradient(135deg,#ffb834,#ea6c10);color:#1a0c00;border:none;border-radius:14px;cursor:pointer;font-weight:900;box-shadow:0 8px 28px rgba(255,160,40,0.55);letter-spacing:1.5px;text-transform:uppercase;font-size:1.25rem;padding:15px 46px;margin-top:0.4rem;position:relative;z-index:999;pointer-events:auto!important;-webkit-user-select:none;user-select:none">⚓ SET SOLAR SAIL!</button>
+    <button id="startbtn" type="button" class="action-btn" onclick="if(window.startSolarSail){window.startSolarSail(event);}else{document.getElementById('menu').style.display='none';state='play';}" onpointerdown="if(window.startSolarSail){window.startSolarSail(event);}else{document.getElementById('menu').style.display='none';state='play';}" style="background:linear-gradient(135deg,#ffb834,#ea6c10);color:#1a0c00;border:none;border-radius:14px;cursor:pointer;font-weight:900;box-shadow:0 8px 28px rgba(255,160,40,0.55);letter-spacing:1.5px;text-transform:uppercase;font-size:1.25rem;padding:15px 46px;margin-top:0.4rem;position:relative;z-index:9999;pointer-events:auto!important;-webkit-user-select:none;user-select:none">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" type="button" class="action-btn" onclick="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ SHIPYARD &amp; ARSENAL</button>
     <button id="dailybtn" type="button" class="action-btn" onclick="openDailyModal(event)" style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(255,94,98,0.55);position:relative;cursor:pointer">🎁 DAILY REWARDS <span id="dailyBadge" class="daily-badge hidden">!</span></button>
     <button id="bossbtn" type="button" class="action-btn" onclick="openBossIntelModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">👾 BOSS & FLEET INTEL</button>
@@ -7069,75 +7069,89 @@ function updateMultiplayerFleet(dt) {
 
 function startSolarSail(e) {
   if (e) {
-    try { e.stopPropagation(); } catch(err) {}
+    try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
   }
-  if (typeof OnlineFleetNet !== 'undefined' && OnlineFleetNet && OnlineFleetNet.mode === 'online_host' && OnlineFleetNet.clientConns && OnlineFleetNet.clientConns.length > 0) {
-    try {
+  
+  // 1. IMMEDIATELY HIDE ALL OVERLAYS AND MENU (Guaranteed First Action!)
+  try {
+    const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal'];
+    overlays.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('hidden');
+        el.style.cssText = 'display:none!important;pointer-events:none!important;visibility:hidden!important;opacity:0!important;';
+      }
+    });
+  } catch(err) { console.error('Menu hide error:', err); }
+
+  // 2. SET ACTIVE COMBAT STATE IMMEDIATELY
+  state = 'play';
+
+  // 3. BROADCAST TO MULTIPLAYER HOST IF ACTIVE
+  try {
+    if (typeof OnlineFleetNet !== 'undefined' && OnlineFleetNet && OnlineFleetNet.mode === 'online_host' && OnlineFleetNet.clientConns && OnlineFleetNet.clientConns.length > 0) {
       OnlineFleetNet.broadcast({
         type: 'start_game',
         pilots: OnlineFleetNet.connectedPilots
       });
-    } catch(err) {}
-  }
-  const inp = document.getElementById('pname');
-  let nm = (inp && inp.value.trim()) || localStorage.getItem('sp_name') || 'Captain';
-  playerName = nm.slice(0, 14);
-  try { localStorage.setItem('sp_name', playerName); } catch (e) {}
-  scoreSubmitted = false;
-  applyLoadout();
-  initMultiplayerFleet();
-  if (ship) {
-    ship.hp = maxHp;
-    ship.inv = 2.0;
-    ship.x = W * 0.22;
-    ship.y = H * 0.5;
-    ship.vx = 0;
-    ship.vy = 0;
-    ship.pitch = 0;
-  }
-
-  // Initialize Brawl Stars Gadget & Super Loadout
-  gadgetCharges = 3;
-  gadgetCooldown = 0;
-  superCharge = 0;
-  hyperchargeActiveT = 0;
-  superBeamActiveT = 0;
-  corsairTurretT = 0;
-  corsairAngle = 0;
-  novaSuperT = 0;
-  protonTorpedoes = [];
-  stealthCloakT = 0;
-  stealthDecoys = [];
-  singularities = [];
-  rammingProwT = 0;
-  meteorStrikes = [];
-  nebulaScythesT = 0;
-  flakPods = [];
-
-  tokensRun = 0; killsRun = 0; spinsRun = 0;
-  balls = []; eballs = []; forts = []; gliders = []; mines = []; coins = []; powerups = []; parts = [];
-  boss = null; bossT = 10; score = 0; coinsN = 0; level = 1; t = 0;
-  
-  // Hide all overlays and menu
-  const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal'];
-  overlays.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.classList.add('hidden');
-      el.style.setProperty('display', 'none', 'important');
-      el.style.setProperty('pointer-events', 'none', 'important');
     }
-  });
+  } catch(err) {}
+
+  // 4. PLAYER NAME & LOADOUT
+  try {
+    const inp = document.getElementById('pname');
+    let nm = (inp && inp.value && inp.value.trim()) || localStorage.getItem('sp_name') || 'Captain';
+    playerName = nm.slice(0, 14);
+    try { localStorage.setItem('sp_name', playerName); } catch(err) {}
+  } catch(err) {}
+
+  try { applyLoadout(); } catch(err) { console.error('applyLoadout err:', err); }
+  try { initMultiplayerFleet(); } catch(err) { console.error('initMultiplayerFleet err:', err); }
+  
+  try {
+    if (!ship || typeof ship !== 'object') {
+      ship = { x: W * 0.22, y: H * 0.5, vx: 0, vy: 0, pitch: 0, hp: 5, inv: 2.0, recoil: 0, flagWave: 0, sailGlow: 0, r: 46, aimAngle: 0 };
+    } else {
+      ship.hp = (typeof maxHp !== 'undefined' && maxHp) ? maxHp : 5;
+      ship.inv = 2.0;
+      ship.x = W * 0.22;
+      ship.y = H * 0.5;
+      ship.vx = 0;
+      ship.vy = 0;
+      ship.pitch = 0;
+    }
+  } catch(err) {}
+
+  try {
+    gadgetCharges = 3;
+    gadgetCooldown = 0;
+    superCharge = 0;
+    hyperchargeActiveT = 0;
+    superBeamActiveT = 0;
+    corsairTurretT = 0;
+    corsairAngle = 0;
+    novaSuperT = 0;
+    protonTorpedoes = [];
+    stealthCloakT = 0;
+    stealthDecoys = [];
+    singularities = [];
+    rammingProwT = 0;
+    meteorStrikes = [];
+    nebulaScythesT = 0;
+    flakPods = [];
+    tokensRun = 0; killsRun = 0; spinsRun = 0;
+    balls = []; eballs = []; forts = []; gliders = []; mines = []; coins = []; powerups = []; parts = [];
+    boss = null; bossT = 10; score = 0; coinsN = 0; level = 1; t = 0; scoreSubmitted = false;
+  } catch(err) {}
 
   try { initAudio(); } catch(err) {}
-  state = 'play';
   try { sfx('incoming'); } catch(err) {}
-  addShake(18);
-  addAlert('🚨 RED ALERT: COSMIC ARMADA INBOUND!', 'incoming');
-  updateDpadVisibility();
-  updatePauseBtnVisibility();
-  updateBrawlControlsVisibility();
-  
+  try { addShake(18); } catch(err) {}
+  try { addAlert('🚨 RED ALERT: COSMIC ARMADA INBOUND!', 'incoming'); } catch(err) {}
+  try { updateDpadVisibility(); } catch(err) {}
+  try { updatePauseBtnVisibility(); } catch(err) {}
+  try { updateBrawlControlsVisibility(); } catch(err) {}
+
   try {
     spawnGlider(W + 50, H * 0.28, 'tie');
     spawnGlider(W + 80, H * 0.72, 'stalker');
