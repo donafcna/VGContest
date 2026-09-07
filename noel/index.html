@@ -11398,9 +11398,9 @@ function update(dt) {
   }
 
   // Performance Guard: Cap maximum active entities to maintain 60 FPS
-  if (parts.length > 60) parts.splice(0, parts.length - 60);
-  if (eballs.length > 50) eballs.splice(0, eballs.length - 50);
-  if (coins.length > 40) coins.splice(0, coins.length - 40);
+  if (parts.length > 35) parts.splice(0, parts.length - 35);
+  if (eballs.length > 35) eballs.splice(0, eballs.length - 35);
+  if (coins.length > 30) coins.splice(0, coins.length - 30);
 }
 
 function damageShip(targetPlayer) {
@@ -11647,16 +11647,13 @@ function draw() {
   cx.scale(zoom, zoom);
   cx.translate(-camX, -camY);
 
-  // Multi-layered Spectral Starfield
+  // Multi-layered High-Performance Batched Starfield (Zero GC Overhead)
+  cx.fillStyle = '#ffffff';
+  cx.beginPath();
   for (const s of stars) {
-    const alpha = s.brightness * (0.65 + Math.sin(s.twinkle + t * 3) * 0.35);
-    const starCol = (s.size > 2.2) ? '#9ec7ff' : (s.size > 1.6) ? '#ffffff' : (s.size > 1.2) ? '#fff2a8' : '#ff9977';
-
-    cx.fillStyle = starCol;
-    cx.globalAlpha = Math.min(1, alpha);
-    cx.beginPath(); cx.arc(s.x, s.y, s.size, 0, Math.PI * 2); cx.fill();
+    cx.rect(s.x, s.y, s.size, s.size);
   }
-  cx.globalAlpha = 1;
+  cx.fill();
 
   // Realistic 3D Craggy Asteroids (Optimized High-Performance Shading)
   for (const a of asteroids) {
@@ -14563,71 +14560,31 @@ function draw() {
     const sm = b.shipModel || 'cutter';
     const sk = b.skinId || 'default';
 
-    // 1. SKIN SIGNATURE PROJECTILES
+    // 1. SKIN SIGNATURE PROJECTILES (Fast Zero-Allocation Radiant Rendering)
     if (sk === 'sunset') {
-      // Solar Flare 🌅: Sunburst Plasma Flare (Fiery Solar Corona with blazing flares)
-      const sg = cx.createRadialGradient(0, 0, 1, 0, 0, b.r + 7);
-      sg.addColorStop(0, '#ffffff');
-      sg.addColorStop(0.3, '#ffcc00');
-      sg.addColorStop(0.65, '#ff4400');
-      sg.addColorStop(1, 'rgba(255,50,0,0)');
-      cx.fillStyle = sg;
-      cx.beginPath(); cx.arc(0, 0, b.r + 6, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = 'rgba(255, 80, 0, 0.4)'; cx.beginPath(); cx.arc(0, 0, b.r + 6, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffb834'; cx.beginPath(); cx.arc(0, 0, b.r + 2, 0, Math.PI * 2); cx.fill();
       cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, b.r * 0.6, 0, Math.PI * 2); cx.fill();
     } else if (sk === 'toxic') {
-      // Alien Plasma 🧪: Bubbling Toxic Acid Sphere (Glowing Biohazard Green with orbiting acid bubbles)
-      const tg = cx.createRadialGradient(-2, -2, 1, 0, 0, b.r + 6);
-      tg.addColorStop(0, '#ffffff');
-      tg.addColorStop(0.35, '#88ff00');
-      tg.addColorStop(0.7, '#228800');
-      tg.addColorStop(1, 'rgba(0,180,0,0)');
-      cx.fillStyle = tg;
-      cx.beginPath(); cx.arc(0, 0, b.r + 5, 0, Math.PI * 2); cx.fill();
-      cx.fillStyle = '#00ff66';
-      cx.beginPath(); cx.arc(Math.cos(t * 16) * (b.r + 4), Math.sin(t * 16) * (b.r + 4), 3, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = 'rgba(0, 255, 100, 0.35)'; cx.beginPath(); cx.arc(0, 0, b.r + 5, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#22c55e'; cx.beginPath(); cx.arc(0, 0, b.r + 2, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, b.r * 0.5, 0, Math.PI * 2); cx.fill();
     } else if (sk === 'ocean') {
-      // Deep Nebula 🌌: Cosmic Nebula Comet (Deep Blue starlight sphere with shimmering planetary rings)
-      const ng = cx.createRadialGradient(0, 0, 2, 0, 0, b.r + 8);
-      ng.addColorStop(0, '#ffffff');
-      ng.addColorStop(0.35, '#2f9be6');
-      ng.addColorStop(0.75, '#001a4d');
-      ng.addColorStop(1, 'rgba(0,100,255,0)');
-      cx.fillStyle = ng;
-      cx.beginPath(); cx.arc(0, 0, b.r + 7, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#a9e0ff'; cx.lineWidth = 1.8;
-      cx.beginPath(); cx.ellipse(0, 0, b.r * 1.5, b.r * 0.5, t * 4, 0, Math.PI * 2); cx.stroke();
+      cx.fillStyle = 'rgba(0, 229, 255, 0.35)'; cx.beginPath(); cx.arc(0, 0, b.r + 6, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#0284c7'; cx.beginPath(); cx.arc(0, 0, b.r + 2, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, b.r * 0.5, 0, Math.PI * 2); cx.fill();
     } else if (sk === 'shadow') {
-      // Black Pearl 🌑: Ghostly Spectral Skull Cannonball (Dark Phantom Void with blood-red core)
-      const bg = cx.createRadialGradient(0, 0, 1, 0, 0, b.r + 7);
-      bg.addColorStop(0, '#ff0044');
-      bg.addColorStop(0.4, '#1c1e24');
-      bg.addColorStop(0.85, '#000000');
-      bg.addColorStop(1, 'rgba(0,0,0,0)');
-      cx.fillStyle = bg;
-      cx.beginPath(); cx.arc(0, 0, b.r + 6, 0, Math.PI * 2); cx.fill();
-      cx.fillStyle = '#ff2255';
-      cx.beginPath(); cx.arc(-3, -2, 2, 0, Math.PI * 2); cx.fill();
-      cx.beginPath(); cx.arc(3, -2, 2, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = 'rgba(255, 0, 68, 0.4)'; cx.beginPath(); cx.arc(0, 0, b.r + 6, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#1e1b4b'; cx.beginPath(); cx.arc(0, 0, b.r + 2, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ff2255'; cx.beginPath(); cx.arc(0, 0, b.r * 0.5, 0, Math.PI * 2); cx.fill();
     } else if (sk === 'royal') {
-      // Royal Navy 👑: Gilded Imperial Diamond Shot (Purple & Gold Royal Crest with radiant diamond flash)
-      const rg = cx.createRadialGradient(-2, -2, 1, 0, 0, b.r + 5);
-      rg.addColorStop(0, '#ffffff');
-      rg.addColorStop(0.35, '#ffd700');
-      rg.addColorStop(0.75, '#7e22ce');
-      rg.addColorStop(1, '#2e0854');
-      cx.fillStyle = rg;
-      cx.beginPath(); cx.arc(0, 0, b.r + 4, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#ffd700'; cx.lineWidth = 1.5;
-      cx.strokeRect(-b.r * 0.5, -b.r * 0.5, b.r, b.r);
+      cx.fillStyle = 'rgba(168, 85, 247, 0.4)'; cx.beginPath(); cx.arc(0, 0, b.r + 5, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffd23c'; cx.beginPath(); cx.arc(0, 0, b.r + 2, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, b.r * 0.5, 0, Math.PI * 2); cx.fill();
     } else if (sk === 'legend') {
-      // Golden Legend ✨: Divine Supernova Orb (Blinding Pure White-Gold Star with prismatic cross-flares)
-      const lg = cx.createRadialGradient(0, 0, 1, 0, 0, b.r + 10);
-      lg.addColorStop(0, '#ffffff');
-      lg.addColorStop(0.3, '#fff280');
-      lg.addColorStop(0.65, '#ffd700');
-      lg.addColorStop(1, 'rgba(255,215,0,0)');
-      cx.fillStyle = lg;
-      cx.beginPath(); cx.arc(0, 0, b.r + 9, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = 'rgba(255, 215, 0, 0.45)'; cx.beginPath(); cx.arc(0, 0, b.r + 8, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffd23c'; cx.beginPath(); cx.arc(0, 0, b.r + 3, 0, Math.PI * 2); cx.fill();
+      cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(0, 0, b.r * 0.6, 0, Math.PI * 2); cx.fill();
       cx.fillStyle = '#ffffff';
       cx.fillRect(-b.r * 1.8, -1.5, b.r * 3.6, 3);
       cx.fillRect(-1.5, -b.r * 1.8, 3, b.r * 3.6);
@@ -16595,7 +16552,7 @@ function draw() {
 let last = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
 function loop(now) {
   requestAnimationFrame(loop);
-  const dt = Math.min((now - last) / 1000, 0.05);
+  const dt = Math.min((now - last) / 1000, 0.033);
   last = now;
   update(dt);
   draw();
