@@ -1676,10 +1676,148 @@
     }
   }
 
+
+  /* Brawl Stars Style Top-Right Header Bar */
+  .top-brawl-bar {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .brawl-top-btn {
+    background: linear-gradient(180deg, #2a3b5c, #162238);
+    border: 2px solid rgba(255, 210, 60, 0.6);
+    border-radius: 14px;
+    color: #ffd23c;
+    padding: 6px 14px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 42px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.15);
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s, border-color 0.15s, background 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    position: relative;
+    pointer-events: auto !important;
+  }
+
+  .brawl-top-btn:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 24px rgba(255, 210, 60, 0.5), inset 0 2px 6px rgba(255, 255, 255, 0.25);
+    border-color: #ffd23c;
+    background: linear-gradient(180deg, #364d78, #1e2e4a);
+  }
+
+  .brawl-top-btn:active {
+    transform: scale(0.95);
+  }
+
+  .brawl-top-online {
+    background: linear-gradient(180deg, #0e5a60, #063038);
+    border-color: #00e5ff;
+    color: #00ffee;
+  }
+  .brawl-top-online:hover {
+    border-color: #ffffff;
+    box-shadow: 0 6px 24px rgba(0, 229, 255, 0.5);
+    background: linear-gradient(180deg, #12747c, #0a434c);
+  }
+
+  .brawl-top-settings {
+    background: linear-gradient(180deg, #3f2b63, #221438);
+    border-color: #c084fc;
+    color: #e9d5ff;
+  }
+  .brawl-top-settings:hover {
+    border-color: #ffffff;
+    box-shadow: 0 6px 24px rgba(192, 132, 252, 0.5);
+    background: linear-gradient(180deg, #533982, #2f1c4d);
+  }
+
+  .brawl-top-icon {
+    font-size: 1.1rem;
+  }
+
+  .brawl-top-badge {
+    background: #22c55e;
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 900;
+    border-radius: 999px;
+    padding: 1px 6px;
+    min-width: 16px;
+    text-align: center;
+  }
+
+  .brawl-pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #00ffee;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00ffee;
+    animation: brawlPulse 1.5s infinite;
+  }
+
+  @keyframes brawlPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.5; }
+  }
+
+  @media (max-width: 768px) {
+    .top-brawl-bar {
+      top: 8px;
+      right: 8px;
+      gap: 5px;
+    }
+    .brawl-top-btn {
+      padding: 5px 8px;
+      font-size: 0.72rem;
+      min-height: 36px;
+    }
+    .brawl-top-label {
+      display: none;
+    }
+  }
+
 </style>
 </head>
 <body>
 <canvas id="cv"></canvas>
+
+<!-- Brawl Stars Style Top-Right Header Bar (Friends, Online Multiplayer, Settings) -->
+<div class="top-brawl-bar" id="topBrawlBar">
+  <!-- 1. Friends / Add Friend Button -->
+  <button id="friendsBtn" class="brawl-top-btn" onclick="openFriendsModal(event)" title="Friends & Crew (Add Friends)">
+    <span class="brawl-top-icon">👥</span>
+    <span class="brawl-top-label">FRIENDS</span>
+    <span id="friendsCountBadge" class="brawl-top-badge">3</span>
+  </button>
+
+  <!-- 2. Online Multiplayer Fleet Button -->
+  <button id="onlineLobbyBtn" class="brawl-top-btn brawl-top-online" onclick="openOnlineModal(event)" title="Online Multiplayer Fleet (3 Players)">
+    <span class="brawl-top-icon">🌐</span>
+    <span class="brawl-top-label">ONLINE</span>
+    <span class="brawl-pulse-dot"></span>
+  </button>
+
+  <!-- 3. Settings Button -->
+  <button id="settingsBtn" class="brawl-top-btn brawl-top-settings" onclick="openSettingsModal(event)" title="Settings (Audio, Controls, Graphics)">
+    <span class="brawl-top-icon">⚙️</span>
+    <span class="brawl-top-label">SETTINGS</span>
+  </button>
+</div>
+
 <button id="musicbtn" onclick="toggleMusic(event)" aria-label="Toggle Audio">🔊</button>
 <button id="pausebtn" onclick="togglePause(event)" aria-label="Pause Game (Press P or Esc)">⏸ PAUSE</button>
 <div id="touchHint" style="display:none;">🕹️ D-PAD: MOVE • TAP SCREEN: SHOOT 💥</div>
@@ -1931,6 +2069,92 @@
   </div>
 </div>
 <!-- Cross-Device Online Fleet Multiplayer Modal -->
+
+<!-- Brawl Stars Style Friends & Add Friends Modal -->
+<div id="friendsModal" class="overlay hidden" style="z-index: 130;">
+  <div class="online-card" style="max-width: 580px;">
+    <div class="online-header">
+      <div style="text-align:left">
+        <span style="font-size:0.75rem;font-weight:bold;color:#ffd23c;letter-spacing:1.5px;text-transform:uppercase">👥 PIRATE CREW &amp; FLEET NETWORK</span>
+        <h1 style="font-family:'Orbitron',sans-serif;font-size:1.4rem;color:#ffffff;margin:2px 0">👥 FRIENDS LIST</h1>
+      </div>
+      <button onclick="closeFriendsModal(event)" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:8px 16px;cursor:pointer;font-family:'Orbitron',sans-serif">✖ CLOSE</button>
+    </div>
+
+    <!-- Your Callsign / Friend Code -->
+    <div style="background:rgba(255,210,60,0.1);border:1.5px solid #ffd23c;border-radius:12px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div style="text-align:left">
+        <div style="font-size:0.75rem;color:#ffd23c;font-weight:bold;text-transform:uppercase">Your Pilot ID:</div>
+        <div id="myFriendCode" style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.1rem;color:#ffffff">CAPTAIN_NOEL#7788</div>
+      </div>
+      <button onclick="copyFriendCode(event)" style="background:linear-gradient(135deg,#ffd23c,#f59e0b);color:#1a0c00;border:none;border-radius:8px;padding:8px 14px;font-weight:900;font-size:0.8rem;cursor:pointer;font-family:'Orbitron',sans-serif">📋 COPY ID</button>
+    </div>
+
+    <!-- Add Friend Input -->
+    <div style="background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;gap:10px;align-items:center">
+      <input id="addFriendInput" placeholder="Enter Friend ID or Name..." style="flex:1;background:rgba(255,255,255,0.08);border:1.5px solid #00e5ff;border-radius:8px;color:#fff;font-family:'Orbitron',sans-serif;font-size:0.9rem;padding:8px 12px;font-weight:bold">
+      <button onclick="handleAddFriend(event)" style="background:linear-gradient(135deg,#00e5ff,#0284c7);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:'Orbitron',sans-serif">➕ ADD</button>
+    </div>
+
+    <!-- Friends List -->
+    <div style="text-align:left;font-size:0.8rem;font-weight:bold;color:#94a3b8;margin-bottom:8px;text-transform:uppercase">Your Fleet Crewmates:</div>
+    <div id="friendsListContainer" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;padding-right:4px;">
+      <!-- Dynamic Friends List injected here -->
+    </div>
+
+    <div style="margin-top:14px;display:flex;gap:10px;justify-content:center">
+      <button onclick="openOnlineModal(event); closeFriendsModal();" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:10px;padding:10px 22px;font-weight:900;cursor:pointer;font-family:'Orbitron',sans-serif">🚀 CREATE TEAM LOBBY</button>
+    </div>
+  </div>
+</div>
+
+<!-- Brawl Stars Style Settings Modal -->
+<div id="settingsModal" class="overlay hidden" style="z-index: 130;">
+  <div class="online-card" style="max-width: 520px;">
+    <div class="online-header">
+      <div style="text-align:left">
+        <span style="font-size:0.75rem;font-weight:bold;color:#c084fc;letter-spacing:1.5px;text-transform:uppercase">⚙️ FLIGHT &amp; SYSTEM PREFERENCES</span>
+        <h1 style="font-family:'Orbitron',sans-serif;font-size:1.4rem;color:#ffffff;margin:2px 0">⚙️ SETTINGS</h1>
+      </div>
+      <button onclick="closeSettingsModal(event)" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:8px 16px;cursor:pointer;font-family:'Orbitron',sans-serif">✖ CLOSE</button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;text-align:left;margin-top:10px;">
+      <!-- Sound & Music -->
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-family:'Orbitron',sans-serif;font-size:0.95rem;color:#ffffff;font-weight:bold">🎵 Galactic Music &amp; Audio</div>
+          <div style="font-size:0.8rem;color:#94a3b8">Procedural orchestral synth soundtrack</div>
+        </div>
+        <button id="settingsMusicBtn" onclick="toggleMusic(event); updateSettingsUI();" style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-weight:bold;font-family:'Orbitron',sans-serif;cursor:pointer">ON</button>
+      </div>
+
+      <!-- Controls Hint -->
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-family:'Orbitron',sans-serif;font-size:0.95rem;color:#ffffff;font-weight:bold">🕹️ On-Screen Flight Controls</div>
+          <div style="font-size:0.8rem;color:#94a3b8">Virtual flight joystick and action buttons</div>
+        </div>
+        <button id="settingsDpadBtn" onclick="toggleDpadSetting(event)" style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-weight:bold;font-family:'Orbitron',sans-serif;cursor:pointer">AUTO</button>
+      </div>
+
+      <!-- High Performance 60 FPS -->
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-family:'Orbitron',sans-serif;font-size:0.95rem;color:#ffffff;font-weight:bold">⚡ High-Performance Mode</div>
+          <div style="font-size:0.8rem;color:#94a3b8">Batched starfields &amp; zero-lag rendering</div>
+        </div>
+        <span style="color:#00ffee;font-weight:900;font-size:0.85rem;font-family:'Orbitron',sans-serif">60 FPS ACTIVE</span>
+      </div>
+
+      <!-- Version & Lore -->
+      <div style="text-align:center;color:#64748b;font-size:0.75rem;margin-top:8px">
+        Space Pirates: Cosmic Armada • Built with ⚡ for VGContest by Noel
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="onlineModal" class="overlay hidden" style="z-index: 129;">
   <div class="online-card">
     <div class="online-header">
@@ -6782,6 +7006,155 @@ function updateOnlinePilotInfo() {
 }
 
 window.openOnlineModal = openOnlineModal;
+
+// ==========================================================================
+// 👥 FRIENDS & ⚙️ SETTINGS SYSTEM (BRAWL STARS STYLE)
+// ==========================================================================
+let customFriends = [];
+try {
+  const savedF = safeStorage.getItem('sp_custom_friends');
+  if (savedF) customFriends = JSON.parse(savedF);
+} catch(e) {}
+
+function getInitialCrewFriends() {
+  return [
+    { name: 'Captain Noel', id: 'NOEL#0001', rank: '🥇 Sovereign Pirate King', status: 'Online', role: 'Creator VIP', col: '#ffd23c' },
+    { name: 'Captain Leon', id: 'LEON#1042', rank: '⚔️ Master Labyrinth Explorer', status: 'Online', role: 'Impossible Maze', col: '#38bdf8' },
+    { name: 'Captain Louis', id: 'LOUIS#2088', rank: '🚀 Galactic Stunt Ace', status: 'Online', role: 'Space Platformer', col: '#c084fc' }
+  ];
+}
+
+function renderFriendsList() {
+  const container = document.getElementById('friendsListContainer');
+  if (!container) return;
+
+  const codeEl = document.getElementById('myFriendCode');
+  const myName = (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'Captain';
+  if (codeEl) codeEl.textContent = `${myName.toUpperCase()}#${Math.abs(SAVE.data.uid || 7788) % 9000 + 1000}`;
+
+  const allFriends = [...getInitialCrewFriends(), ...customFriends];
+  const countBadge = document.getElementById('friendsCountBadge');
+  if (countBadge) countBadge.textContent = allFriends.length;
+
+  const onlineBadge = document.getElementById('friendsOnlineCount');
+  if (onlineBadge) onlineBadge.textContent = `${allFriends.length} Online`;
+
+  container.innerHTML = allFriends.map((f, idx) => `
+    <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,0.4);border:1.5px solid ${f.col || '#ffd23c'};display:flex;align-items:center;justify-content:center;font-size:1.1rem">🏴‍☠️</div>
+        <div>
+          <div style="font-family:'Orbitron',sans-serif;font-weight:bold;color:#ffffff;font-size:0.9rem;display:flex;align-items:center;gap:6px">
+            ${f.name} <span style="font-size:0.7rem;color:#94a3b8;font-weight:normal">(${f.id})</span>
+          </div>
+          <div style="font-size:0.75rem;color:${f.col || '#ffd23c'};font-weight:bold">${f.rank}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:0.75rem;color:#22c55e;font-weight:bold">
+          <span style="width:7px;height:7px;background:#22c55e;border-radius:50%"></span> Online
+        </span>
+        <button onclick="inviteFriendToFleet('${f.name}')" style="background:rgba(0,229,255,0.2);border:1px solid #00e5ff;color:#00ffee;border-radius:6px;padding:4px 8px;font-size:0.72rem;font-weight:bold;cursor:pointer;font-family:'Orbitron',sans-serif">INVITE</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function handleAddFriend(e) {
+  if (e) { try { e.preventDefault(); } catch(err) {} }
+  const inp = document.getElementById('addFriendInput');
+  if (!inp || !inp.value.trim()) return;
+  const name = inp.value.trim();
+  const idNum = Math.floor(1000 + Math.random() * 9000);
+  const newF = {
+    name: name,
+    id: `${name.toUpperCase().replace(/\s+/g, '_')}#${idNum}`,
+    rank: '🚀 Space Pirate Vanguard',
+    status: 'Online',
+    role: 'Fleet Ally',
+    col: '#00ffee'
+  };
+  customFriends.push(newF);
+  try { safeStorage.setItem('sp_custom_friends', JSON.stringify(customFriends)); } catch(err) {}
+  inp.value = '';
+  renderFriendsList();
+  popup(W * 0.5, H * 0.5, `👥 ${name} ADDED TO CREW!`, '#22c55e');
+}
+window.handleAddFriend = handleAddFriend;
+
+function copyFriendCode(e) {
+  if (e) { try { e.preventDefault(); } catch(err) {} }
+  const myName = (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'Captain';
+  const myCode = `${myName.toUpperCase()}#${Math.abs(SAVE.data.uid || 7788) % 9000 + 1000}`;
+  try {
+    if (navigator.clipboard) navigator.clipboard.writeText(myCode);
+  } catch(err) {}
+  popup(W * 0.5, H * 0.5, `📋 COPIED: ${myCode}`, '#ffd23c');
+}
+window.copyFriendCode = copyFriendCode;
+
+function inviteFriendToFleet(name) {
+  popup(W * 0.5, H * 0.5, `📡 INVITE SENT TO ${name.toUpperCase()}!`, '#00ffee');
+  setTimeout(() => {
+    closeFriendsModal();
+    openOnlineModal();
+  }, 400);
+}
+window.inviteFriendToFleet = inviteFriendToFleet;
+
+function openFriendsModal(e) {
+  if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
+  try { initAudio(); } catch(err) {}
+  const m = document.getElementById('friendsModal');
+  if (m) m.classList.remove('hidden');
+  renderFriendsList();
+}
+window.openFriendsModal = openFriendsModal;
+
+function closeFriendsModal(e) {
+  if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
+  const m = document.getElementById('friendsModal');
+  if (m) m.classList.add('hidden');
+}
+window.closeFriendsModal = closeFriendsModal;
+
+function openSettingsModal(e) {
+  if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
+  try { initAudio(); } catch(err) {}
+  const m = document.getElementById('settingsModal');
+  if (m) m.classList.remove('hidden');
+  updateSettingsUI();
+}
+window.openSettingsModal = openSettingsModal;
+
+function closeSettingsModal(e) {
+  if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
+  const m = document.getElementById('settingsModal');
+  if (m) m.classList.add('hidden');
+}
+window.closeSettingsModal = closeSettingsModal;
+
+function updateSettingsUI() {
+  const mBtn = document.getElementById('settingsMusicBtn');
+  if (mBtn) {
+    mBtn.textContent = musicOn ? 'ON' : 'OFF';
+    mBtn.style.background = musicOn ? '#22c55e' : '#ef4444';
+  }
+}
+window.updateSettingsUI = updateSettingsUI;
+
+let forcedDpad = false;
+function toggleDpadSetting(e) {
+  forcedDpad = !forcedDpad;
+  const dBtn = document.getElementById('settingsDpadBtn');
+  if (dBtn) {
+    dBtn.textContent = forcedDpad ? 'ALWAYS ON' : 'AUTO';
+    dBtn.style.background = forcedDpad ? '#00e5ff' : '#22c55e';
+  }
+  updateDpadVisibility();
+}
+window.toggleDpadSetting = toggleDpadSetting;
+
 window.closeOnlineModal = closeOnlineModal;
 window.createOnlineRoom = createOnlineRoom;
 window.joinOnlineRoom = joinOnlineRoom;
@@ -7078,7 +7451,7 @@ function startSolarSail(e) {
   
   // 1. IMMEDIATELY HIDE ALL OVERLAYS AND MENU
   try {
-    const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal'];
+    const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal'];
     overlays.forEach(id => hideOverlay(id));
   } catch(err) { console.error('Menu hide error:', err); }
 
@@ -7161,7 +7534,7 @@ function startSolarSail(e) {
   try { initAudio(); } catch(err) {}
   try { sfx('warp'); } catch(err) {}
   try { updateDpadVisibility(); } catch(err) {}
-  try { updatePauseBtnVisibility(); } catch(err) {}
+  try { updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); } catch(e) {} } catch(err) {}
   try { updateBrawlControlsVisibility(); } catch(err) {}
 }
 window.startSolarSail = startSolarSail;
@@ -7200,6 +7573,18 @@ function updatePauseBtnVisibility() {
 }
 window.updatePauseBtnVisibility = updatePauseBtnVisibility;
 
+function updateTopBrawlBarVisibility() {
+  const bar = document.getElementById('topBrawlBar');
+  if (!bar) return;
+  if (state === 'menu') {
+    bar.style.display = 'flex';
+  } else {
+    bar.style.display = 'none';
+  }
+}
+window.updateTopBrawlBarVisibility = updateTopBrawlBarVisibility;
+
+
 let prePauseState = 'play';
 let lastPauseToggleTime = 0;
 function togglePause(e) {
@@ -7216,7 +7601,7 @@ function togglePause(e) {
     if (typeof window !== 'undefined') window.state = state;
     hideOverlay('pauseoverlay');
     updateDpadVisibility();
-    updatePauseBtnVisibility();
+    updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); } catch(e) {}
     updateBrawlControlsVisibility();
   } else if (state === 'play' || state === 'intro') {
     prePauseState = state;
@@ -7224,7 +7609,7 @@ function togglePause(e) {
     if (typeof window !== 'undefined') window.state = state;
     showOverlay('pauseoverlay');
     updateDpadVisibility();
-    updatePauseBtnVisibility();
+    updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); } catch(e) {}
   }
 }
 window.togglePause = togglePause;
@@ -7242,7 +7627,7 @@ function returnToMenu(e) {
   if (typeof window !== 'undefined') window.state = 'menu';
 
   // Hide all gameplay overlays & modals
-  const overlays = ['pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal'];
+  const overlays = ['pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal'];
   overlays.forEach(id => hideOverlay(id));
 
   // Show main menu quarterdeck
@@ -7253,7 +7638,7 @@ function returnToMenu(e) {
   boss = null; bossT = 12; score = 0; coinsN = 0; level = 1; t = 0;
   storyStage = 0; storySectorAnnounced = 1;
 
-  updatePauseBtnVisibility();
+  updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); } catch(e) {}
   updateDpadVisibility();
   updateBrawlControlsVisibility();
   try { renderWallet(); } catch(err) {}
@@ -7301,7 +7686,7 @@ function lose() {
   }
   sfx('boom');
   updateDpadVisibility();
-  updatePauseBtnVisibility();
+  updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); } catch(e) {}
   const pb = saveBest();
   const bank = bankRun();
   document.getElementById('losetext').textContent =
