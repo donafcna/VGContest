@@ -1771,7 +1771,7 @@
     🎮 <b>PC Abilities</b>: <b>[Q]</b> = 🟢 <b>Gadget</b> (3 Charges) • <b>[E]</b> = 🌟 <b>Super &amp; Hypercharge</b> (100% Charge)<br>
     🚀 <b>Flight Movement</b>: <b>W A S D</b> or <b>Arrow Keys</b> • 📱 <b>Mobile</b>: D-Pad &amp; On-Screen Buttons
   </div>
-  <input id="pname" placeholder="Enter Captain Name (e.g. NoelTheGoat)" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
+  <input id="pname" placeholder="Captain Name" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="btnrow">
     <button id="onlinebtn" type="button" class="action-btn" onclick="openOnlineModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">🌐 ONLINE MULTIPLAYER (3P)</button>
     <button id="startbtn" type="button" class="action-btn" onclick="if(window.startSolarSail){window.startSolarSail(event);}else{document.getElementById('menu').style.display='none';state='play';}" onpointerdown="if(window.startSolarSail){window.startSolarSail(event);}else{document.getElementById('menu').style.display='none';state='play';}" style="background:linear-gradient(135deg,#ffb834,#ea6c10);color:#1a0c00;border:none;border-radius:14px;cursor:pointer;font-weight:900;box-shadow:0 8px 28px rgba(255,160,40,0.55);letter-spacing:1.5px;text-transform:uppercase;font-size:1.25rem;padding:15px 46px;margin-top:0.4rem;position:relative;z-index:9999;pointer-events:auto!important;-webkit-user-select:none;user-select:none">⚓ SET SOLAR SAIL!</button>
@@ -1952,7 +1952,7 @@
     <div class="online-pilot-bar">
       <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:200px">
         <label style="font-size:0.75rem;font-weight:bold;color:#ffd23c;text-transform:uppercase;letter-spacing:1px;text-align:left">Your Captain Name:</label>
-        <input id="onlineCallsign" placeholder="Enter Captain Name (e.g. NoelTheGoat)" maxlength="14" style="font-family:'Orbitron',sans-serif;font-size:0.95rem;padding:8px 12px;background:rgba(0,0,0,0.4);border:1.5px solid #00e5ff;border-radius:8px;color:#fff;font-weight:bold" oninput="updateOnlinePilotInfo()">
+        <input id="onlineCallsign" placeholder="Captain Name" maxlength="14" style="font-family:'Orbitron',sans-serif;font-size:0.95rem;padding:8px 12px;background:rgba(0,0,0,0.4);border:1.5px solid #00e5ff;border-radius:8px;color:#fff;font-weight:bold" oninput="updateOnlinePilotInfo()">
       </div>
       <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:200px">
         <label style="font-size:0.75rem;font-weight:bold;color:#00ffaa;text-transform:uppercase;letter-spacing:1px;text-align:left">Selected Ship:</label>
@@ -1974,7 +1974,7 @@
         <div id="hostSetupView">
           <p style="font-size:0.8rem;color:#cfe4ff;margin-bottom:10px">Create a squadron room and invite up to 2 wingmen on their own devices.</p>
           <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px;flex-wrap:wrap">
-            <input id="customRoomCode" placeholder="Code (e.g. PIRATE-7)" maxlength="10" style="width:140px;font-family:'Orbitron',sans-serif;text-transform:uppercase;text-align:center;background:rgba(0,0,0,0.4);border:1px solid #ffd23c;border-radius:8px;color:#ffd23c;font-weight:bold;padding:6px">
+            <input id="customRoomCode" placeholder="Room Code" maxlength="10" style="width:140px;font-family:'Orbitron',sans-serif;text-transform:uppercase;text-align:center;background:rgba(0,0,0,0.4);border:1px solid #ffd23c;border-radius:8px;color:#ffd23c;font-weight:bold;padding:6px">
             <button class="online-btn-gold" onclick="createOnlineRoom()">📡 CREATE ROOM</button>
           </div>
         </div>
@@ -1997,7 +1997,7 @@
         <div id="joinSetupView">
           <p style="font-size:0.8rem;color:#cfe4ff;margin-bottom:10px">Enter the 5-digit room code from your squad leader or friend.</p>
           <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px;flex-wrap:wrap">
-            <input id="joinRoomCode" placeholder="ENTER CODE (e.g. PIRATE-7)" maxlength="12" style="width:180px;font-family:'Orbitron',sans-serif;text-transform:uppercase;text-align:center;background:rgba(0,0,0,0.4);border:1.5px solid #00e5ff;border-radius:8px;color:#00ffee;font-weight:bold;padding:8px">
+            <input id="joinRoomCode" placeholder="ENTER CODE" maxlength="12" style="width:180px;font-family:'Orbitron',sans-serif;text-transform:uppercase;text-align:center;background:rgba(0,0,0,0.4);border:1.5px solid #00e5ff;border-radius:8px;color:#00ffee;font-weight:bold;padding:8px">
             <button class="online-btn-cyan" onclick="joinOnlineRoom()">🔗 JOIN ROOM</button>
           </div>
         </div>
