@@ -6174,7 +6174,7 @@ function startCombat() {
   state = 'play'; if (typeof window !== 'undefined') window.state = 'play';
   sfx('incoming');
   addShake(18);
-  addAlert('🚨 RED ALERT: IMPERIAL STARFLEET & SEPARATIST FIGHTERS ATTACKING!', 'incoming');
+  addAlert('🚨 RED ALERT: COSMIC ARMADA & ENEMY FLEET INBOUND!', 'incoming');
   updateDpadVisibility();
   updateBrawlControlsVisibility();
   spawnGlider(W + 50, H * 0.22, 'tie');
@@ -7082,8 +7082,8 @@ function startSolarSail(e) {
     overlays.forEach(id => hideOverlay(id));
   } catch(err) { console.error('Menu hide error:', err); }
 
-  // 2. SET ACTIVE COMBAT STATE IMMEDIATELY
-  state = 'play'; if (typeof window !== 'undefined') window.state = 'play';
+  // 2. SET CINEMATIC STORYLINE PROLOGUE STATE
+  state = 'intro'; if (typeof window !== 'undefined') window.state = 'intro';
 
   // 3. BROADCAST TO MULTIPLAYER HOST IF ACTIVE
   try {
@@ -7105,7 +7105,7 @@ function startSolarSail(e) {
 
   try { applyLoadout(); } catch(err) { console.error('applyLoadout err:', err); }
   try { initMultiplayerFleet(); } catch(err) { console.error('initMultiplayerFleet err:', err); }
-  
+
   try {
     if (!ship || typeof ship !== 'object') {
       ship = { x: W * 0.22, y: H * 0.5, vx: 0, vy: 0, pitch: 0, hp: 5, inv: 2.0, recoil: 0, flagWave: 0, sailGlow: 0, r: 46, aimAngle: 0 };
@@ -7119,6 +7119,22 @@ function startSolarSail(e) {
       ship.pitch = 0;
     }
   } catch(err) {}
+
+  // Initialize Storyline Cinematic States
+  introT = 0;
+  storyStage = 0;
+  storyCooldown = 0.35;
+  introShot1 = false;
+  introShot2 = false;
+  introLasers = [];
+  wreckage = [];
+  shieldShards = [];
+  introShieldFlare = 0;
+  introArmada = [];
+  introUfos = [
+    { x: W + 120, y: H * 0.35, targetX: W * 0.72, targetY: H * 0.32, vx: -520, vy: 0, r: 30, dead: false, col: '#00ffee', type: 'scout', saucerSpin: 0 },
+    { x: W + 180, y: H * 0.65, targetX: W * 0.76, targetY: H * 0.68, vx: -500, vy: 0, r: 32, dead: false, col: '#c084fc', type: 'bomber', saucerSpin: 0 }
+  ];
 
   try {
     gadgetCharges = 3;
@@ -7143,17 +7159,10 @@ function startSolarSail(e) {
   } catch(err) {}
 
   try { initAudio(); } catch(err) {}
-  try { sfx('incoming'); } catch(err) {}
-  try { addShake(18); } catch(err) {}
-  try { addAlert('🚨 RED ALERT: COSMIC ARMADA INBOUND!', 'incoming'); } catch(err) {}
+  try { sfx('warp'); } catch(err) {}
   try { updateDpadVisibility(); } catch(err) {}
   try { updatePauseBtnVisibility(); } catch(err) {}
   try { updateBrawlControlsVisibility(); } catch(err) {}
-
-  try {
-    spawnGlider(W + 50, H * 0.28, 'tie');
-    spawnGlider(W + 80, H * 0.72, 'stalker');
-  } catch(err) {}
 }
 window.startSolarSail = startSolarSail;
 
