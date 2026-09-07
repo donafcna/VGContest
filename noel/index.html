@@ -4077,9 +4077,9 @@ function bankRun() {
 // ---------- LEADERBOARD (Reliable Persistent & Cloud Sync) ----------
 // Clean Leaderboard Reset
 try {
-  if (safeStorage.getItem('sp_lb_v7') !== '1') {
+  if (safeStorage.getItem('sp_lb_v8') !== '1') {
     safeStorage.removeItem('sp_lb');
-    safeStorage.setItem('sp_lb_v7', '1');
+    safeStorage.setItem('sp_lb_v8', '1');
   }
 } catch (e) {}
 
@@ -4288,8 +4288,9 @@ const LB = {
     for (const r of rows) {
       if (!r || typeof r.score !== 'number' || r.score <= 0) continue;
       r.name = (r.name || 'Captain').trim().slice(0, 14);
-      if (r.name.toLowerCase() === 'louis the goat') r.name = 'DodoDad';
-      if (!r.name) continue;
+      const nameLower = r.name.toLowerCase();
+      if (nameLower === 'louis the goat') r.name = 'DodoDad';
+      if (!r.name || r.name.length < 2 || nameLower === 'n' || nameLower === 'no' || nameLower === 'nol' || r.uid === 'pilot_cdk0q55_mtr8k7wq') continue;
       
       const uid = (r.uid || '').trim();
       if (uid) {
