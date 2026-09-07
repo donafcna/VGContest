@@ -5045,7 +5045,7 @@ const BOSS_INTEL = [
   {
     id: 'dread',
     name: 'Grand Admiral Vex: The Imperial Eclipse',
-    sector: 'Sector 1 Flagship (Weakest · 60 HP) · Imperial II-Class Star Destroyer',
+    sector: 'Sector 1 Flagship (Weakest · 60 HP) · Void Eclipse Super-Dreadnought',
     col: '#00ffaa',
     hp: 60,
     powers: [
@@ -5106,7 +5106,7 @@ const BOSS_INTEL = [
     hp: 80,
     powers: [
       '⚡ Quad Outrigger Emerald Turbolaser Barrage (Dual converging piercing green laser lances from 4 outriggers)',
-      '🛸 Ventral TIE Interceptor Carrier Sortie (Launches twin Imperial TIE escorts into the sector)',
+      '🛸 Ventral Cosmic Interceptor Carrier Sortie (Launches twin Imperial TIE escorts into the sector)',
       '🧲 High-Energy Kinetic Arrestor Siege Cannon (Heavy kinetic concussion mortar with gravity shockwave)'
     ],
     loot: '👑 +3 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +170 🪙',
@@ -5277,7 +5277,7 @@ function getEnemySvg(id) {
     </svg>`;
 
   } else if (id === 'tie_bomber') {
-    // 3. IMPERIAL TIE BOMBER
+    // 3. COSMIC HEAVY PLASMA BOMBER
     return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${glowFilter}
       <!-- Port Pilot Cockpit Pod -->
@@ -5422,7 +5422,7 @@ function getEnemySvg(id) {
     // 8. PIRATE "UGLY" HEAVY HYBRID GUNSHIP (TYE-WING / DEATHSEED ASSAULT SHIP - From User Reference Photo)
     return `<svg viewBox="0 0 160 80" width="140" height="70" fill="none" xmlns="http://www.w3.org/2000/svg">
       ${glowFilter}
-      <!-- Port Side: Angled TIE Interceptor Dagger Solar Wing -->
+      <!-- Port Side: Angled Cosmic Interceptor Dagger Solar Wing -->
       <polygon points="12,12 85,8 145,22 110,28 65,22" fill="#090d16" stroke="#94a3b8" stroke-width="1.8"/>
       <line x1="25" y1="12" x2="135" y2="21" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3 2"/>
       <polygon points="30,14 75,12 90,24 45,22" fill="#1e293b" opacity="0.8"/>
@@ -5593,7 +5593,7 @@ const ENEMY_INTEL = [
   },
   {
     id: 'tie_bomber',
-    name: 'Imperial TIE Bomber',
+    name: 'Imperial Plasma Bomber',
     type: 'Heavy Bomber',
     col: '#ff3344',
     hp: '1 - 2 HP',
@@ -5613,7 +5613,7 @@ const ENEMY_INTEL = [
   },
   {
     id: 'tie',
-    name: 'Imperial TIE/ln Starfighter',
+    name: 'Void Interceptor Starfighter',
     type: 'Starfighter · Swarm',
     col: '#ff2255',
     hp: '1 - 3 HP',
@@ -5968,7 +5968,7 @@ function spawnGlider(xPos, yPos, forceType) {
   if (roll === 'stalker') {
     col = '#a855f7'; name = 'SEPARATIST VULTURE DROID'; spd = 260 + level * 35; w = 56; h = 36; hp = 1 + (level >= 3 ? 1 : 0); shield = 0;
   } else if (roll === 'rammer') {
-    col = '#ff4433'; name = 'IMPERIAL TIE BOMBER'; spd = 350 + level * 50; w = 60; h = 32; hp = 1 + (level >= 3 ? 1 : 0); shield = 0;
+    col = '#ff4433'; name = 'COSMIC HEAVY PLASMA BOMBER'; spd = 350 + level * 50; w = 60; h = 32; hp = 1 + (level >= 3 ? 1 : 0); shield = 0;
   } else if (roll === 'drone') {
     col = '#00ffee'; name = 'IMPERIAL TIE DEFENDER'; spd = 340 + level * 45; w = 54; h = 34; hp = 1 + (level >= 3 ? 1 : 0); shield = 1;
   } else if (roll === 'phantom') {
@@ -6015,7 +6015,7 @@ function spawnMine() {
 }
 
 const BTYPES = [
-  { id: 'dread',    name: 'Grand Admiral Vex: Imperial Star Destroyer (The Eclipse)', col: '#00ffaa', w: 305, h: 165, hp: 60, spd: 44, atk: 'tachyon' },
+  { id: 'dread',    name: 'Grand Admiral Vex: Cosmic Dreadnought (The Eclipse)', col: '#00ffaa', w: 305, h: 165, hp: 60, spd: 44, atk: 'tachyon' },
   { id: 'hive',     name: 'Overlord Chronos: DS-1 Orbital Citadel Battlestation', col: '#00e5ff', w: 290, h: 165, hp: 65, spd: 40, atk: 'emp_cascade' },
   { id: 'ram',      name: 'Admiral Vortex: Heavy Citadel MC85 Star Cruiser', col: '#38bdf8', w: 305, h: 185, hp: 70, spd: 46, atk: 'mon_cal_broadside' },
   { id: 'void',     name: 'Captain Noel: The Rogue Solar Skiff (YT-1300)', col: '#00ffee', w: 300, h: 170, hp: 75, spd: 52, atk: 'quad_laser_barrage' },
@@ -11057,7 +11057,7 @@ function update(dt) {
         sfx('laser');
       }
     } else if (g.variant === 'rammer') {
-      // 3. IMPERIAL TIE BOMBER: Seismic Proton Torpedo Bombing Run + Trailing Mine Dropper
+      // 3. COSMIC HEAVY PLASMA BOMBER: Seismic Proton Torpedo Bombing Run + Trailing Mine Dropper
       g.y += (ship.y - g.y) * 2.2 * dt;
       g.shootT = (g.shootT || 1.2) - dt;
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 120) {
@@ -11812,7 +11812,7 @@ function draw() {
       sg.addColorStop(0, 'rgba(255, 85, 0, 0.40)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = sg; cx.beginPath(); cx.ellipse(0, 0, f.w * 0.52, f.h * 0.48, 0, 0, Math.PI * 2); cx.fill();
 
-      // PORT WING: Angled TIE Interceptor Solar Dagger Wing
+      // PORT WING: Angled Cosmic Interceptor Solar Dagger Wing
       cx.fillStyle = '#090d16';
       cx.beginPath();
       cx.moveTo(-f.w * 0.42, -f.h * 0.20);
@@ -12221,7 +12221,7 @@ function draw() {
       cx.closePath(); cx.fill();
 
     } else if (g.variant === 'rammer') {
-      // 3. IMPERIAL TIE BOMBER (Dual Cylindrical Pods + Angled Solar Panels + Proton Torpedo Bay)
+      // 3. COSMIC HEAVY PLASMA BOMBER (Dual Cylindrical Pods + Angled Solar Panels + Proton Torpedo Bay)
       const bank = Math.sin(t * 7 + g.x * 0.04) * 0.15;
       cx.rotate(bank);
 
@@ -12673,7 +12673,7 @@ function draw() {
           cx.beginPath(); cx.arc(18, 0, 4.5 + Math.sin(t * 20) * 1.5, 0, Math.PI * 2); cx.fill();
 
         } else {
-          // AUTHENTIC IN-GAME HEAVY WARSHIP FORTRESS / STAR DESTROYER
+          // AUTHENTIC IN-GAME HEAVY WARSHIP FORTRESS / DREADNOUGHT
           const fw = 118, fh = 68;
           const isDefender = f.variant === 'venator' || f.variant === 'imperial';
           const isTesla = f.variant === 'tesla';
@@ -13128,7 +13128,7 @@ function draw() {
         }
       }
     } else if (boss.type === 'dread') {
-      // BOSS 1: GRAND ADMIRAL VEX: IMPERIAL ECLIPSE SUPER-DREADNOUGHT (Cosmic Alien Imperial Star Destroyer)
+      // BOSS 1: GRAND ADMIRAL VEX: IMPERIAL ECLIPSE SUPER-DREADNOUGHT (Cosmic Alien Cosmic Dreadnought)
       const bg = cx.createRadialGradient(0, 0, 30, 0, 0, boss.w * 0.55);
       bg.addColorStop(0, 'rgba(0, 255, 170, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.54, boss.h * 0.50, 0, 0, Math.PI * 2); cx.fill();
@@ -13176,7 +13176,7 @@ function draw() {
         cx.restore();
       }
 
-      // Main Triangular Imperial Star Destroyer Dagger Wedge
+      // Main Triangular Heavy Dreadnought Wedge
       const dg = cx.createLinearGradient(boss.w * 0.5, 0, -boss.w * 0.5, 0);
       dg.addColorStop(0, '#050811'); dg.addColorStop(0.35, '#0f172a'); dg.addColorStop(0.7, '#1e293b'); dg.addColorStop(1, '#475569');
       cx.fillStyle = dg;
@@ -13620,7 +13620,7 @@ function draw() {
       cx.fillRect(boss.w * 0.10, -boss.h * 0.08, boss.w * 0.12, 4);
       cx.fillRect(boss.w * 0.10, boss.h * 0.05, boss.w * 0.12, 4);
 
-      // Accompanying TIE Interceptor Escort Formation
+      // Accompanying Cosmic Interceptor Escort Formation
       for (const ty of [-boss.h * 0.42, boss.h * 0.42]) {
         cx.save(); cx.translate(-boss.w * 0.25, ty);
         cx.strokeStyle = '#64748b'; cx.lineWidth = 2;
