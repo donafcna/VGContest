@@ -1958,7 +1958,7 @@
   <p style="font-size:1.05rem;color:#ffd23c;margin-bottom:1.2rem">Solar sails reefed, Captain Noel… Fleet on standby.</p>
   <div class="btnrow" style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:0.6rem;">
     <button id="resumebtn" onclick="togglePause(event)" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:1.15rem;padding:14px 34px;box-shadow:0 6px 24px rgba(34,197,94,0.5)">▶ RESUME BATTLE</button>
-    <button id="restartbtn" onclick="startSolarSail(event)" style="background:linear-gradient(135deg,#ffb834,#ea6c10);color:#1a0c00;font-size:1.15rem;padding:14px 30px;box-shadow:0 6px 24px rgba(255,160,40,0.5)">↻ RESTART RUN</button>
+    <button id="pauseVolumeBtn" onclick="togglePauseVolume(event)" style="background:linear-gradient(135deg,#ffb834,#ea6c10);color:#1a0c00;font-size:1.15rem;padding:14px 30px;box-shadow:0 6px 24px rgba(255,160,40,0.5);font-weight:900;letter-spacing:1px;">🔊 AUDIO: ON</button>
     <button id="menubtn" onclick="returnToMenu(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;font-size:1.15rem;padding:14px 32px;box-shadow:0 6px 24px rgba(138,123,255,0.5)">🏴‍☠️ RETURN TO MENU</button>
   </div>
   <p style="margin-top:1.4rem"><a class="exitlink" href="../" style="color:#8fa6cb;font-size:0.92rem;text-decoration:none">🚪 EXIT TO CONTEST HUB</a></p>
@@ -3267,6 +3267,33 @@ function toggleMusic(e) {
   }
 }
 window.toggleMusic = toggleMusic;
+
+function updatePauseVolumeUI() {
+  const btn = document.getElementById('pauseVolumeBtn');
+  if (!btn) return;
+  if (musicOn) {
+    btn.innerHTML = '🔊 AUDIO: ON';
+    btn.style.background = 'linear-gradient(135deg, #ffb834, #ea6c10)';
+    btn.style.color = '#1a0c00';
+    btn.style.boxShadow = '0 6px 24px rgba(255, 160, 40, 0.5)';
+  } else {
+    btn.innerHTML = '🔇 AUDIO: MUTED';
+    btn.style.background = 'linear-gradient(135deg, #64748b, #334155)';
+    btn.style.color = '#f1f5f9';
+    btn.style.boxShadow = '0 6px 24px rgba(0, 0, 0, 0.5)';
+  }
+}
+window.updatePauseVolumeUI = updatePauseVolumeUI;
+
+function togglePauseVolume(e) {
+  if (e) {
+    try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
+  }
+  toggleMusic(e);
+  updatePauseVolumeUI();
+  try { updateSettingsUI(); } catch (err) {}
+}
+window.togglePauseVolume = togglePauseVolume;
 
 const alerts = [];
 function addAlert(text, snd) {
@@ -8722,6 +8749,33 @@ window.repairDailyStreak = repairDailyStreak;
 window.resetDailyStreak = resetDailyStreak;
 window.togglePause = togglePause;
 window.toggleMusic = toggleMusic;
+
+function updatePauseVolumeUI() {
+  const btn = document.getElementById('pauseVolumeBtn');
+  if (!btn) return;
+  if (musicOn) {
+    btn.innerHTML = '🔊 AUDIO: ON';
+    btn.style.background = 'linear-gradient(135deg, #ffb834, #ea6c10)';
+    btn.style.color = '#1a0c00';
+    btn.style.boxShadow = '0 6px 24px rgba(255, 160, 40, 0.5)';
+  } else {
+    btn.innerHTML = '🔇 AUDIO: MUTED';
+    btn.style.background = 'linear-gradient(135deg, #64748b, #334155)';
+    btn.style.color = '#f1f5f9';
+    btn.style.boxShadow = '0 6px 24px rgba(0, 0, 0, 0.5)';
+  }
+}
+window.updatePauseVolumeUI = updatePauseVolumeUI;
+
+function togglePauseVolume(e) {
+  if (e) {
+    try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
+  }
+  toggleMusic(e);
+  updatePauseVolumeUI();
+  try { updateSettingsUI(); } catch (err) {}
+}
+window.togglePauseVolume = togglePauseVolume;
 window.restartGame = returnToMenu;
 window.returnToMenu = returnToMenu;
 window.advanceStory = advanceStory;
@@ -8957,7 +9011,7 @@ function bindActionButtons() {
   attach('pausebtn', togglePause);
   attach('musicbtn', toggleMusic);
   attach('resumebtn', togglePause);
-  attach('restartbtn', returnToMenu);
+  attach('pauseVolumeBtn', togglePauseVolume);
   attach('gadgetBtn', activateGadget);
   attach('superBtn', activateSuper);
   attach('spinPullBtn', () => { initAudio(); triggerSlotSpin(); });
