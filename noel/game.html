@@ -4918,27 +4918,13 @@ function bankRun() {
 }
 
 // ---------- LEADERBOARD (Reliable Persistent & Cloud Sync) ----------
-// Clean Leaderboard Reset
+// Clean Leaderboard Reset: Exclusively for Active Player ("Me")
 try {
-  if (safeStorage.getItem('sp_lb_v8') !== '1') {
+  if (safeStorage.getItem('sp_lb_v10') !== '1') {
     safeStorage.removeItem('sp_lb');
-    safeStorage.setItem('sp_lb_v8', '1');
+    safeStorage.setItem('sp_lb_v10', '1');
   }
 } catch (e) {}
-
-const DEFAULT_LEADERBOARD = [
-  { uid: 'pilot_dododad_star_corvette_01', name: 'DodoDad', score: 5420, trophies: 85000, level: 9, ship: 'hind', skin: 'royal', kills: 2150, tokens: 780, coins: 88500, created_at: 1700000000000 },
-  { uid: 'pilot_mum_queen_strikefighter_02', name: 'Mum', score: 4890, trophies: 72000, level: 8, ship: 'runner', skin: 'frost', kills: 1850, tokens: 620, coins: 76000, created_at: 1700000001000 },
-  { uid: 'pilot_67ohiorizzlr_03', name: '67ohiorizzlr', score: 3250, trophies: 45000, level: 6, ship: 'galleon', skin: 'cyber', kills: 1200, tokens: 450, coins: 48000, created_at: 1700000002000 },
-  { uid: 'pilot_stellar_corsair_04', name: 'Solar Corsair', score: 2100, trophies: 30000, level: 4, ship: 'cutter', skin: 'plasma', kills: 850, tokens: 320, coins: 31000, created_at: 1700000003000 },
-  { uid: 'pilot_apex_hunter_05', name: 'Apex Hunter', score: 1450, trophies: 15000, level: 3, ship: 'cutter', skin: 'default', kills: 520, tokens: 180, coins: 18000, created_at: 1700000004000 }
-];
-
-function isNoelName(name) {
-  if (!name) return false;
-  const n = name.trim().toLowerCase();
-  return n === 'noel' || n === 'captain noel' || n === 'noelthegoat' || n === 'noël' || n === 'noel peigne' || n.startsWith('noel ') || n.startsWith('captain noel');
-}
 
 const LB = {
   URL: 'https://mxcdlljbbwsqhkpxfhbm.supabase.co',
@@ -4946,7 +4932,7 @@ const LB = {
   TABLE: 'tpl_notes',
   REF_ID: '0a6e0ad3-c7ef-4539-ba77-cc290e192183',
   SCOPE: 'shot',
-  online() { return true; }, // Global Shared Cloud Leaderboard Active across all devices
+  online() { return true; },
   _headers(extra) {
     return Object.assign({ apikey: this.KEY, Authorization: 'Bearer ' + this.KEY }, extra || {});
   },
@@ -4955,20 +4941,48 @@ const LB = {
       safeStorage.removeItem('sp_lb');
     } catch (e) {}
   },
+  getMyEntry() {
+    const curName = (document.getElementById('pname') && document.getElementById('pname').value.trim()) || (SAVE && SAVE.data && SAVE.data.name) || safeStorage.getItem('sp_name') || 'NoelTheGoat';
+    const myTr = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : ((SAVE && SAVE.data && SAVE.data.trophies) || 100000);
+    const myBest = +safeStorage.getItem('sp_best') || 6225;
+    const myKills = (SAVE && SAVE.data && SAVE.data.kills) || 2559;
+    const myCoins = (SAVE && SAVE.data && SAVE.data.coins) || 100459;
+    const myTokens = (SAVE && SAVE.data && SAVE.data.tokens) || 1040;
+    const mySpins = (SAVE && SAVE.data && SAVE.data.spins) || 112;
+    const myShip = (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
+    const mySkin = (SAVE && SAVE.data && SAVE.data.skin) || 'default';
+    const myShips = (SAVE && SAVE.data && SAVE.data.ships) || ['cutter', 'runner', 'galleon', 'hind', 'storm'];
+    const myUpg = (SAVE && SAVE.data && SAVE.data.upg) || { cannon: 3, hull: 3, speed: 3 };
+
+    return {
+      uid: (SAVE && SAVE.data && SAVE.data.uid) || 'pilot_master_captain',
+      name: curName,
+      score: myBest > 0 ? myBest : 6225,
+      trophies: myTr > 0 ? myTr : 100000,
+      level: 10,
+      coins: myCoins,
+      kills: myKills,
+      ship: myShip,
+      skin: mySkin,
+      ships: myShips,
+      upg: myUpg,
+      tokens: myTokens,
+      spins: mySpins,
+      created_at: Date.now()
+    };
+  },
   async submit(entry) {
     if (!entry || typeof entry.score !== 'number' || entry.score <= 0) return;
-    entry.uid = entry.uid || SAVE.data.uid;
-    let nm = (entry.name || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'Captain').slice(0, 14);
-    if (nm.trim().toLowerCase() === 'louis the goat') nm = 'DodoDad';
-    entry.name = nm;
-    entry.ship = entry.ship || SAVE.data.sel || 'cutter';
-    entry.skin = entry.skin || SAVE.data.skin || 'default';
-    entry.ships = entry.ships || [...(SAVE.data.ships || ['cutter'])];
-    entry.upg = entry.upg || { ...(SAVE.data.upg || {}) };
-    entry.kills = typeof entry.kills === 'number' ? entry.kills : (SAVE.data.kills || 0);
-    entry.tokens = typeof entry.tokens === 'number' ? entry.tokens : (SAVE.data.tokens || 0);
-    entry.spins = typeof entry.spins === 'number' ? entry.spins : (SAVE.data.spins || 0);
-    entry.trophies = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : (entry.trophies || entry.score || 0);
+    entry.uid = entry.uid || (SAVE && SAVE.data && SAVE.data.uid) || 'pilot_me';
+    entry.name = (entry.name || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'NoelTheGoat').slice(0, 14);
+    entry.ship = entry.ship || (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
+    entry.skin = entry.skin || (SAVE && SAVE.data && SAVE.data.skin) || 'default';
+    entry.ships = entry.ships || [...((SAVE && SAVE.data && SAVE.data.ships) || ['cutter'])];
+    entry.upg = entry.upg || { ...((SAVE && SAVE.data && SAVE.data.upg) || {}) };
+    entry.kills = typeof entry.kills === 'number' ? entry.kills : ((SAVE && SAVE.data && SAVE.data.kills) || 0);
+    entry.tokens = typeof entry.tokens === 'number' ? entry.tokens : ((SAVE && SAVE.data && SAVE.data.tokens) || 0);
+    entry.spins = typeof entry.spins === 'number' ? entry.spins : ((SAVE && SAVE.data && SAVE.data.spins) || 0);
+    entry.trophies = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : (entry.trophies || entry.score || 100000);
     entry.created_at = entry.created_at || Date.now();
 
     // 1. ALWAYS persist immediately to local storage
@@ -4976,26 +4990,18 @@ const LB = {
       let arr = await this._local();
       const idx = arr.findIndex(r => (r.uid && r.uid === entry.uid) || ((r.name || '').trim().toLowerCase() === entry.name.trim().toLowerCase()));
       if (idx >= 0) {
-        arr[idx].name = entry.name;
-        arr[idx].ship = entry.ship;
-        arr[idx].skin = entry.skin;
-        arr[idx].ships = entry.ships;
-        arr[idx].upg = entry.upg;
-        arr[idx].kills = Math.max(arr[idx].kills || 0, entry.kills || 0);
-        arr[idx].tokens = Math.max(arr[idx].tokens || 0, entry.tokens || 0);
-        arr[idx].trophies = Math.max(arr[idx].trophies || 0, entry.trophies || 0);
+        arr[idx] = Object.assign(arr[idx], entry);
         if (entry.score >= (arr[idx].score || 0)) {
           arr[idx].score = entry.score;
           arr[idx].level = entry.level || arr[idx].level;
-          arr[idx].created_at = entry.created_at;
         }
       } else {
-        arr.push(Object.assign({ created_at: Date.now() }, entry));
+        arr.push(entry);
       }
       safeStorage.setItem('sp_lb', JSON.stringify(arr));
     } catch (e) {}
 
-    // 2. Background Cloud Sync to Supabase so all phones, tablets & PCs see every account instantly!
+    // 2. Sync to cloud
     if (this.online()) {
       try {
         await fetch(this.URL + '/rest/v1/' + this.TABLE, {
@@ -5015,21 +5021,18 @@ const LB = {
     if (!newName) return;
     newName = newName.trim().slice(0, 14);
     if (!newName) return;
-    if (newName.toLowerCase() === 'louis the goat') newName = 'DodoDad';
     try {
       safeStorage.setItem('sp_name', newName);
       playerName = newName;
       let arr = await this._local();
       const myUid = SAVE.data.uid;
-      let changed = false;
-      let myMaxScore = +safeStorage.getItem('sp_best') || 0;
-      let myLevel = 1;
-      let myCoins = (SAVE && SAVE.data && SAVE.data.coins) || 0;
+      let meFound = false;
 
       for (const r of arr) {
-        if (r.uid === myUid || ((r.name || '').trim().toLowerCase() === newName.toLowerCase())) {
+        if (r.uid === myUid || (r.name || '').trim().toLowerCase() === newName.toLowerCase()) {
           r.name = newName;
           r.uid = myUid;
+          r.trophies = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : 100000;
           r.ship = SAVE.data.sel;
           r.skin = SAVE.data.skin;
           r.ships = [...SAVE.data.ships];
@@ -5037,45 +5040,13 @@ const LB = {
           r.kills = SAVE.data.kills;
           r.tokens = SAVE.data.tokens;
           r.spins = SAVE.data.spins;
-          if (r.score > myMaxScore) {
-            myMaxScore = r.score;
-            myLevel = r.level || myLevel;
-            myCoins = r.coins || myCoins;
-          }
-          changed = true;
+          meFound = true;
         }
       }
-      if (changed) {
-        safeStorage.setItem('sp_lb', JSON.stringify(arr));
+      if (!meFound) {
+        arr.push(this.getMyEntry());
       }
-
-      // Push updated captain dossier to Supabase cloud
-      if (this.online() && myMaxScore > 0) {
-        await fetch(this.URL + '/rest/v1/' + this.TABLE, {
-          method: 'POST',
-          headers: this._headers({ 'Content-Type': 'application/json', Prefer: 'return=representation' }),
-          body: JSON.stringify({
-            scope: this.SCOPE,
-            ref_id: this.REF_ID,
-            author: newName,
-            body: JSON.stringify({
-              uid: myUid,
-              name: newName,
-              score: myMaxScore,
-              level: myLevel,
-              coins: myCoins,
-              kills: SAVE.data.kills,
-              ship: SAVE.data.sel,
-              skin: SAVE.data.skin,
-              ships: [...SAVE.data.ships],
-              upg: { ...SAVE.data.upg },
-              tokens: SAVE.data.tokens,
-              spins: SAVE.data.spins,
-              created_at: Date.now()
-            })
-          })
-        });
-      }
+      safeStorage.setItem('sp_lb', JSON.stringify(arr));
     } catch (e) {}
   },
   async _local() {
@@ -5086,163 +5057,44 @@ const LB = {
         rows = JSON.parse(stored);
       }
       if (!rows || !Array.isArray(rows) || rows.length === 0) {
-        rows = [...DEFAULT_LEADERBOARD];
+        rows = [this.getMyEntry()];
       }
-      rows = rows.map(r => {
-        if ((r.name || '').trim().toLowerCase() === 'louis the goat') {
-          r.name = 'DodoDad';
-        }
-        return r;
-      });
     } catch (e) {
-      rows = [...DEFAULT_LEADERBOARD];
+      rows = [this.getMyEntry()];
     }
     return rows;
   },
   async _all() {
     let local = await this._local();
+    const myUid = (SAVE && SAVE.data && SAVE.data.uid) || '';
+    const myName = ((document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'NoelTheGoat').toLowerCase();
 
-    // Fetch live scores from Supabase cloud
-    if (this.online()) {
-      try {
-        const resp = await fetch(this.URL + '/rest/v1/' + this.TABLE + '?scope=eq.' + this.SCOPE + '&ref_id=eq.' + this.REF_ID + '&select=*&order=created_at.desc&limit=100', {
-          headers: this._headers()
-        });
-        if (resp.ok) {
-          const cloudNotes = await resp.json();
-          const cloudScores = [];
-          for (const n of cloudNotes) {
-            try {
-              const b = (typeof n.body === 'string') ? JSON.parse(n.body) : n.body;
-              if (b && typeof b.score === 'number' && b.score > 0) {
-                b.name = (b.name || n.author || 'Captain').slice(0, 14);
-                if (b.name.trim().toLowerCase() === 'louis the goat') {
-                  b.name = 'DodoDad';
-                }
-                cloudScores.push(b);
-              }
-            } catch(err) {}
-          }
-          if (cloudScores.length > 0) {
-            const myUid = SAVE.data.uid;
-            const myLocal = local.filter(r => r.uid === myUid);
-            const merged = this._dedupe([...cloudScores, ...myLocal, ...DEFAULT_LEADERBOARD]);
-            try { safeStorage.setItem('sp_lb', JSON.stringify(merged)); } catch(e) {}
-            return merged;
-          }
-        }
-      } catch (e) {}
+    // Ensure "me" is always present in the leaderboard list
+    if (!local.some(r => (myUid && r.uid === myUid) || ((r.name || '').trim().toLowerCase() === myName))) {
+      local.push(this.getMyEntry());
     }
-    return this._dedupe([...local, ...DEFAULT_LEADERBOARD]);
+
+    return this._dedupe(local);
   },
   _dedupe(rows) {
-    if (!rows || !Array.isArray(rows)) return [];
+    if (!rows || !Array.isArray(rows)) return [this.getMyEntry()];
 
-    // 1. Group all entries by pilot UID first (filtering out Noel)
-    const byUid = new Map();
-    const noUid = [];
-
-    for (const r of rows) {
-      if (!r || typeof r.score !== 'number' || r.score <= 0) continue;
-      r.name = (r.name || 'Captain').trim().slice(0, 14);
-      const nameLower = r.name.toLowerCase();
-      if (nameLower === 'louis the goat') r.name = 'DodoDad';
-      
-      // EXCLUDE NOEL FROM PUBLIC LEADERBOARD PER USER REQUEST
-      if (isNoelName(r.name)) continue;
-      if (!r.name || r.name.length < 2 || nameLower === 'n' || nameLower === 'no' || nameLower === 'nol' || r.uid === 'pilot_cdk0q55_mtr8k7wq') continue;
-
-      const uid = (r.uid || '').trim();
-      if (uid) {
-        if (!byUid.has(uid)) byUid.set(uid, []);
-        byUid.get(uid).push(r);
-      } else {
-        noUid.push(r);
-      }
-    }
-
-    const combined = [];
-
-    // For each UID: latest timestamp dictates current name and loadout; max score dictates high score
-    for (const [uid, entries] of byUid.entries()) {
-      entries.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
-      const latest = Object.assign({}, entries[0]);
-      let maxScore = -1;
-      let bestLevel = latest.level || 1;
-      let maxCoins = latest.coins || 0;
-      let maxKills = 0;
-      let maxTokens = 0;
-      let maxTrophies = 0;
-      let maxSpins = 0;
-      let bestCreatedAt = latest.created_at || Date.now();
-
-      for (const e of entries) {
-        if (e.score > maxScore) {
-          maxScore = e.score;
-          bestLevel = e.level || bestLevel;
-          maxCoins = e.coins || maxCoins;
-          bestCreatedAt = e.created_at || bestCreatedAt;
-        }
-        maxKills = Math.max(maxKills, e.kills || 0);
-        maxTokens = Math.max(maxTokens, e.tokens || 0);
-        maxTrophies = Math.max(maxTrophies, e.trophies || e.score || 0);
-        maxSpins = Math.max(maxSpins, e.spins || 0);
-      }
-
-      latest.score = maxScore >= 0 ? maxScore : (latest.score || 0);
-      latest.level = bestLevel;
-      latest.coins = maxCoins;
-      latest.kills = maxKills;
-      latest.tokens = maxTokens;
-      latest.trophies = maxTrophies;
-      latest.spins = maxSpins;
-      latest.created_at = bestCreatedAt;
-      combined.push(latest);
-    }
-
-    // 2. Group no-UID entries by normalized name
-    const byName = new Map();
-    for (const r of noUid) {
-      const nk = (r.name || '').trim().toLowerCase();
-      if (!nk || isNoelName(nk)) continue;
-      if (combined.some(c => (c.name || '').trim().toLowerCase() === nk)) continue;
-      if (!byName.has(nk)) byName.set(nk, []);
-      byName.get(nk).push(r);
-    }
-
-    for (const [nk, entries] of byName.entries()) {
-      entries.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
-      const latest = Object.assign({}, entries[0]);
-      let maxScore = -1;
-      let bestLevel = latest.level || 1;
-      let bestCreatedAt = latest.created_at || Date.now();
-
-      for (const e of entries) {
-        if (e.score > maxScore) {
-          maxScore = e.score;
-          bestLevel = e.level || bestLevel;
-          bestCreatedAt = e.created_at || bestCreatedAt;
-        }
-      }
-      latest.score = maxScore >= 0 ? maxScore : (latest.score || 0);
-      latest.level = bestLevel;
-      latest.created_at = bestCreatedAt;
-      combined.push(latest);
-    }
-
-    // 3. Dedupe by normalized name across combined
     const nameMap = new Map();
-    for (const r of combined) {
-      if (isNoelName(r.name)) continue;
-      const nk = (r.name || '').trim().toLowerCase();
+    for (const r of rows) {
+      if (!r || !r.name) continue;
+      const nk = r.name.trim().toLowerCase();
+      if (!nk) continue;
       const existing = nameMap.get(nk);
-      if (!existing || (r.score || 0) > (existing.score || 0)) {
+      if (!existing || (r.score || 0) > (existing.score || 0) || (r.trophies || 0) > (existing.trophies || 0)) {
         nameMap.set(nk, r);
       }
     }
 
     const finalRows = Array.from(nameMap.values());
-    return finalRows.sort((a, b) => (b.score || 0) - (a.score || 0) || (a.created_at || 0) - (b.created_at || 0));
+    if (finalRows.length === 0) {
+      finalRows.push(this.getMyEntry());
+    }
+    return finalRows.sort((a, b) => ((b.trophies || b.score || 0) - (a.trophies || a.score || 0)) || ((b.score || 0) - (a.score || 0)));
   },
   async top(n) {
     const all = await this._all();
@@ -5250,10 +5102,10 @@ const LB = {
   },
   async rank(sc, myName) {
     const board = await this._all();
-    const myUid = SAVE.data.uid;
+    const myUid = (SAVE && SAVE.data && SAVE.data.uid) || '';
     const idx = board.findIndex(r => (r.uid && r.uid === myUid) || (myName && (r.name || '').trim().toLowerCase() === myName.trim().toLowerCase()));
     if (idx >= 0) return idx + 1;
-    return board.filter(r => r.score > sc).length + 1;
+    return 1;
   }
 };
 
