@@ -2055,15 +2055,15 @@
     color: #ffffff;
   }
 
-  /* Profile Dossier Modal */
+  /* Profile Dossier Modal & Ultra-Cool Avatar System */
   .profile-modal-card {
     background: linear-gradient(180deg, #131c2e 0%, #0a101d 100%);
     border: 2px solid #ffd23c;
     border-radius: 24px;
-    padding: 24px;
-    max-width: 640px;
-    width: 92%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 210, 60, 0.25);
+    padding: 22px;
+    max-width: 660px;
+    width: 94%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(255, 210, 60, 0.3);
     color: #f0f3ff;
     position: relative;
     max-height: 90vh;
@@ -2071,42 +2071,128 @@
   }
 
   .profile-avatar-large {
-    width: 76px;
-    height: 76px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     background: radial-gradient(circle, #3b82f6 0%, #1e3a8a 100%);
     border: 3px solid #ffd23c;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.5rem;
-    box-shadow: 0 0 20px rgba(255, 210, 60, 0.6);
+    font-size: 2.8rem;
+    box-shadow: 0 0 25px rgba(255, 210, 60, 0.7);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    flex-shrink: 0;
   }
 
-  .avatar-pick-btn {
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    font-size: 1.8rem;
+  .avatar-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .avatar-card-item {
+    position: relative;
+    border-radius: 16px;
+    padding: 10px 4px 6px 4px;
     cursor: pointer;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 92px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  .avatar-card-item:hover {
+    transform: translateY(-4px) scale(1.05);
+    border-color: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+    z-index: 2;
+  }
+
+  .avatar-card-item.selected {
+    border-color: #ffd23c !important;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 0 20px rgba(255, 210, 60, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.45) !important;
+    animation: avatarPulseGlow 1.8s infinite alternate;
+  }
+
+  @keyframes avatarPulseGlow {
+    0% { box-shadow: 0 0 14px rgba(255, 210, 60, 0.6); }
+    100% { box-shadow: 0 0 26px rgba(255, 210, 60, 0.95), 0 0 8px #fff; }
+  }
+
+  .avatar-card-tier {
+    position: absolute;
+    top: 4px;
+    right: 5px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 900;
+    padding: 1px 4px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .avatar-card-icon {
+    font-size: 2.1rem;
+    line-height: 1;
+    margin: 4px 0 2px 0;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.7));
+    transition: transform 0.2s;
+  }
+
+  .avatar-card-item:hover .avatar-card-icon {
+    transform: scale(1.15);
+  }
+
+  .avatar-card-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    text-align: center;
+    line-height: 1.1;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    padding: 0 2px;
+  }
+
+  .avatar-card-check {
+    display: none;
+    position: absolute;
+    top: 4px;
+    left: 5px;
+    background: #22c55e;
+    color: #ffffff;
+    font-size: 0.6rem;
+    font-weight: 900;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
     align-items: center;
     justify-content: center;
-    transition: all 0.15s ease;
+    border: 1px solid #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.6);
   }
 
-  .avatar-pick-btn:hover {
-    transform: scale(1.1);
-    border-color: #ffd23c;
-    background: rgba(255, 210, 60, 0.2);
-  }
-
-  .avatar-pick-btn.selected {
-    border-color: #ffd23c;
-    background: rgba(255, 210, 60, 0.3);
-    box-shadow: 0 0 14px rgba(255, 210, 60, 0.7);
+  .avatar-card-item.selected .avatar-card-check {
+    display: flex;
   }
 
   .stat-box-card {
@@ -2118,6 +2204,7 @@
     flex-direction: column;
     gap: 4px;
     text-align: left;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   }
 
   @media (max-width: 768px) {
@@ -2509,14 +2596,12 @@
 
     <!-- Choose Profile Avatar -->
     <div style="text-align:left;margin-bottom:18px;">
-      <span style="font-size:0.8rem;font-weight:bold;color:#ffd23c;letter-spacing:1px;text-transform:uppercase">🎨 CHOOSE AVATAR ICON</span>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;" id="avatarPickerContainer">
-        <button class="avatar-pick-btn selected" onclick="selectAvatarIcon('🏴‍☠️', event)">🏴‍☠️</button>
-        <button class="avatar-pick-btn" onclick="selectAvatarIcon('🛸', event)">🛸</button>
-        <button class="avatar-pick-btn" onclick="selectAvatarIcon('👑', event)">👑</button>
-        <button class="avatar-pick-btn" onclick="selectAvatarIcon('⚡', event)">⚡</button>
-        <button class="avatar-pick-btn" onclick="selectAvatarIcon('🐉', event)">🐉</button>
-        <button class="avatar-pick-btn" onclick="selectAvatarIcon('🌟', event)">🌟</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:0.8rem;font-weight:bold;color:#ffd23c;letter-spacing:1px;text-transform:uppercase">🎨 COSMIC AVATARS &amp; PILOT ICONS</span>
+        <span style="font-size:0.7rem;color:#94a3b8;font-family:'Orbitron',sans-serif;">12 LEGENDARY ICONS</span>
+      </div>
+      <div class="avatar-picker-grid" id="avatarPickerContainer">
+        <!-- Rendered dynamically by renderAvatarCatalog() -->
       </div>
     </div>
 
@@ -8141,10 +8226,64 @@ if (typeof window !== 'undefined') {
 
 
 // ---------- BRAWL STARS PLAYER PROFILE & DOSSIER LOGIC ----------
-let currentAvatarIcon = '🏴‍☠️';
+const AVATAR_CATALOG = [
+  { id: 'skull', icon: '💀', name: 'CYBER PIRATE', tier: 'LEGENDARY', tierColor: '#ffd23c', gradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #082f49 100%)', glow: 'rgba(14, 165, 233, 0.85)', border: '#38bdf8' },
+  { id: 'saucer', icon: '🛸', name: 'VOID STRIKER', tier: 'MYTHIC', tierColor: '#c084fc', gradient: 'linear-gradient(135deg, #6366f1 0%, #4338ca 50%, #1e1b4b 100%)', glow: 'rgba(99, 102, 241, 0.85)', border: '#818cf8' },
+  { id: 'crown', icon: '👑', name: 'SOLAR EMPEROR', tier: 'HYPERCHARGE', tierColor: '#fb923c', gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #78350f 100%)', glow: 'rgba(245, 158, 11, 0.85)', border: '#fbbf24' },
+  { id: 'bolt', icon: '⚡', name: 'PLASMA ARCHON', tier: 'MYTHIC', tierColor: '#c084fc', gradient: 'linear-gradient(135deg, #9333ea 0%, #7e22ce 50%, #3b0764 100%)', glow: 'rgba(168, 85, 247, 0.85)', border: '#c084fc' },
+  { id: 'dragon', icon: '🐉', name: 'MECHA WYRM', tier: 'LEGENDARY', tierColor: '#ffd23c', gradient: 'linear-gradient(135deg, #10b981 0%, #047857 50%, #064e3b 100%)', glow: 'rgba(16, 185, 129, 0.85)', border: '#34d399' },
+  { id: 'star', icon: '🌟', name: 'SUPERNOVA', tier: 'CHROMA', tierColor: '#f472b6', gradient: 'linear-gradient(135deg, #ec4899 0%, #be185d 50%, #500724 100%)', glow: 'rgba(236, 72, 153, 0.85)', border: '#f472b6' },
+  { id: 'phoenix', icon: '🔥', name: 'SOLAR PHOENIX', tier: 'HYPERCHARGE', tierColor: '#fb923c', gradient: 'linear-gradient(135deg, #ef4444 0%, #ea580c 50%, #7c2d12 100%)', glow: 'rgba(239, 68, 68, 0.85)', border: '#f87171' },
+  { id: 'mecha', icon: '🤖', name: 'TITAN CORE', tier: 'LEGENDARY', tierColor: '#ffd23c', gradient: 'linear-gradient(135deg, #06b6d4 0%, #0e7490 50%, #164e63 100%)', glow: 'rgba(6, 182, 212, 0.85)', border: '#22d3ee' },
+  { id: 'oni', icon: '👹', name: 'NEON ONI', tier: 'MYTHIC', tierColor: '#c084fc', gradient: 'linear-gradient(135deg, #e11d48 0%, #9f1239 50%, #4c0519 100%)', glow: 'rgba(225, 29, 72, 0.85)', border: '#fb7185' },
+  { id: 'ninja', icon: '🥷', name: 'SHADOW RONIN', tier: 'MYTHIC', tierColor: '#c084fc', gradient: 'linear-gradient(135deg, #475569 0%, #334155 50%, #0f172a 100%)', glow: 'rgba(148, 163, 184, 0.85)', border: '#94a3b8' },
+  { id: 'alien', icon: '👽', name: 'OVERSEER', tier: 'LEGENDARY', tierColor: '#ffd23c', gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 50%, #2e1065 100%)', glow: 'rgba(139, 92, 246, 0.85)', border: '#a78bfa' },
+  { id: 'diamond', icon: '💎', name: 'QUANTUM GEM', tier: 'CHROMA', tierColor: '#f472b6', gradient: 'linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%)', glow: 'rgba(56, 189, 248, 0.95)', border: '#7dd3fc' }
+];
+
+let currentAvatarId = 'skull';
+let currentAvatarIcon = '💀';
+
 try {
-  currentAvatarIcon = safeStorage.getItem('sp_avatar') || '🏴‍☠️';
+  const savedId = safeStorage.getItem('sp_avatar_id');
+  const savedIcon = safeStorage.getItem('sp_avatar');
+  if (savedId && AVATAR_CATALOG.find(a => a.id === savedId)) {
+    currentAvatarId = savedId;
+    currentAvatarIcon = AVATAR_CATALOG.find(a => a.id === savedId).icon;
+  } else if (savedIcon) {
+    const match = AVATAR_CATALOG.find(a => a.icon === savedIcon);
+    if (match) {
+      currentAvatarId = match.id;
+      currentAvatarIcon = match.icon;
+    }
+  }
 } catch(e) {}
+
+function getSelectedAvatarData() {
+  return AVATAR_CATALOG.find(a => a.id === currentAvatarId) || AVATAR_CATALOG[0];
+}
+
+function renderAvatarCatalog() {
+  const container = document.getElementById('avatarPickerContainer');
+  if (!container) return;
+
+  container.innerHTML = AVATAR_CATALOG.map(av => {
+    const isSelected = (av.id === currentAvatarId);
+    return `
+      <div class="avatar-card-item ${isSelected ? 'selected' : ''}" 
+           style="background:${av.gradient};border-color:${isSelected ? '#ffd23c' : av.border};"
+           onclick="selectAvatarById('${av.id}', event)"
+           role="button"
+           tabindex="0"
+           title="${av.name} (${av.tier})">
+        <span class="avatar-card-check">✓</span>
+        <span class="avatar-card-tier" style="color:${av.tierColor};border-color:${av.tierColor}">${av.tier.slice(0,5)}</span>
+        <div class="avatar-card-icon">${av.icon}</div>
+        <div class="avatar-card-name">${av.name}</div>
+      </div>
+    `;
+  }).join('');
+}
 
 function getPlayerPilotId() {
   let uid = '';
@@ -8166,6 +8305,7 @@ function updateProfileUI() {
     const tokens = (SAVE && SAVE.data && SAVE.data.tokens) || 999;
     const kills = (SAVE && SAVE.data && SAVE.data.kills) || 2500;
     const pilotId = getPlayerPilotId();
+    const curAvatar = getSelectedAvatarData();
 
     // Top-Left Bar
     const topName = document.getElementById('topProfileName');
@@ -8174,15 +8314,29 @@ function updateProfileUI() {
     const topTrophies = document.getElementById('topProfileTrophyCount');
     if (topTrophies) topTrophies.textContent = trophies.toLocaleString();
 
-    const topAvatar = document.getElementById('topProfileAvatarIcon');
-    if (topAvatar) topAvatar.textContent = currentAvatarIcon;
+    const topAvatarWrap = document.getElementById('topProfileAvatar');
+    if (topAvatarWrap) {
+      topAvatarWrap.style.background = curAvatar.gradient;
+      topAvatarWrap.style.borderColor = curAvatar.border;
+      topAvatarWrap.style.boxShadow = `0 0 12px ${curAvatar.glow}`;
+    }
 
-    // Profile Modal
+    const topAvatar = document.getElementById('topProfileAvatarIcon');
+    if (topAvatar) topAvatar.textContent = curAvatar.icon;
+
+    // Profile Modal Hero
     const mName = document.getElementById('modalProfileName');
     if (mName) mName.textContent = name;
 
+    const mAvatarWrap = document.getElementById('modalProfileAvatarLarge');
+    if (mAvatarWrap) {
+      mAvatarWrap.style.background = curAvatar.gradient;
+      mAvatarWrap.style.borderColor = '#ffd23c';
+      mAvatarWrap.style.boxShadow = `0 0 28px ${curAvatar.glow}, inset 0 2px 6px rgba(255,255,255,0.4)`;
+    }
+
     const mAvatar = document.getElementById('modalProfileAvatarIcon');
-    if (mAvatar) mAvatar.textContent = currentAvatarIcon;
+    if (mAvatar) mAvatar.textContent = curAvatar.icon;
 
     const mId = document.getElementById('modalPilotId');
     if (mId) mId.textContent = pilotId;
@@ -8204,6 +8358,8 @@ function updateProfileUI() {
       const unlockedCount = (SAVE && SAVE.data && SAVE.data.ships && SAVE.data.ships.length) || 5;
       sShips.textContent = unlockedCount + ' / 5 Unlocked';
     }
+
+    renderAvatarCatalog();
   } catch(err) {
     console.error('updateProfileUI error:', err);
   }
@@ -8228,25 +8384,31 @@ function closeProfileModal(e) {
 }
 window.closeProfileModal = closeProfileModal;
 
-function selectAvatarIcon(icon, e) {
+function selectAvatarById(avatarId, e) {
   if (e) {
     try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
   }
-  try { initAudio(); sfx('pew'); } catch (err) {}
-  currentAvatarIcon = icon;
-  try { safeStorage.setItem('sp_avatar', icon); } catch(err) {}
+  const av = AVATAR_CATALOG.find(a => a.id === avatarId);
+  if (!av) return;
 
-  // Update selection UI buttons
-  const container = document.getElementById('avatarPickerContainer');
-  if (container) {
-    const btns = container.querySelectorAll('.avatar-pick-btn');
-    btns.forEach(b => {
-      if (b.textContent.trim() === icon) b.classList.add('selected');
-      else b.classList.remove('selected');
-    });
-  }
+  try { initAudio(); sfx('pew'); } catch (err) {}
+  currentAvatarId = av.id;
+  currentAvatarIcon = av.icon;
+
+  try { 
+    safeStorage.setItem('sp_avatar_id', av.id);
+    safeStorage.setItem('sp_avatar', av.icon);
+  } catch(err) {}
 
   updateProfileUI();
+}
+window.selectAvatarById = selectAvatarById;
+
+function selectAvatarIcon(icon, e) {
+  const match = AVATAR_CATALOG.find(a => a.icon === icon);
+  if (match) {
+    selectAvatarById(match.id, e);
+  }
 }
 window.selectAvatarIcon = selectAvatarIcon;
 
