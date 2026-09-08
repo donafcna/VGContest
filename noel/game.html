@@ -95,8 +95,8 @@
   }
   #musicbtn:hover, #pausebtn:hover { background: rgba(255, 210, 60, 0.35); border-color: #ffd23c; transform: scale(1.08); }
   #musicbtn:active, #pausebtn:active { transform: scale(0.92); background: rgba(255, 210, 60, 0.5); }
-  #musicbtn { right: 16px; }
-  #pausebtn { right: 78px; display: none; }
+  #musicbtn { display: none !important; }
+  #pausebtn { right: 16px; display: none; }
   
   .overlay .btnrow { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
   .overlay a.exitlink {
@@ -1046,8 +1046,7 @@
       padding: 4px 10px;
       font-size: 1.15rem;
     }
-    #musicbtn { right: 10px; }
-    #pausebtn { right: 58px; }
+    #pausebtn { right: 10px; }
 
     #dpad {
       bottom: 12px;
@@ -1919,7 +1918,7 @@
   </div>
 </div>
 
-<button id="musicbtn" onclick="toggleMusic(event)" aria-label="Toggle Audio">🔊</button>
+
 <button id="pausebtn" onclick="togglePause(event)" aria-label="Pause Game (Press P or Esc)">⏸ PAUSE</button>
 <div id="touchHint" style="display:none;">🕹️ D-PAD: MOVE • TAP SCREEN: SHOOT 💥</div>
 
