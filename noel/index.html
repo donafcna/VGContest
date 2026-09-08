@@ -2602,6 +2602,290 @@
     }
   }
 
+
+  /* ==========================================================================
+     🛍️ BRAWL STARS COSMIC SHOP MODAL STYLES
+     ========================================================================== */
+  .brawl-shop-modal-card {
+    background: linear-gradient(180deg, #101a2f 0%, #080d19 100%);
+    border: 2.5px solid #38bdf8;
+    border-radius: 26px;
+    padding: 20px 22px;
+    max-width: 780px;
+    width: 95%;
+    max-height: 90vh;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), 0 0 45px rgba(56, 189, 248, 0.35);
+    color: #f0f3ff;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .brawl-shop-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid rgba(56, 189, 248, 0.25);
+    margin-bottom: 12px;
+  }
+
+  .brawl-shop-modal-badge-icon {
+    width: 48px;
+    height: 48px;
+    background: radial-gradient(circle, #38bdf8 0%, #1e40af 100%);
+    border: 2px solid #ffd23c;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.6);
+  }
+
+  .brawl-shop-modal-subtitle {
+    font-size: 0.70rem;
+    font-weight: 800;
+    color: #38bdf8;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  .brawl-shop-modal-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.15rem, 3.5vw, 1.65rem);
+    font-weight: 900;
+    color: #ffd23c;
+    margin: 2px 0 0 0;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 12px rgba(255, 210, 60, 0.6);
+  }
+
+  .brawl-shop-wallet-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1.5px solid rgba(255, 210, 60, 0.4);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 800;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+  }
+
+  .brawl-shop-modal-close {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    font-size: 0.82rem;
+    transition: all 0.2s;
+  }
+
+  .brawl-shop-modal-close:hover {
+    background: rgba(239, 68, 68, 0.8);
+    border-color: #ef4444;
+    transform: scale(1.05);
+  }
+
+  /* Brawl Stars Category Tabs */
+  .brawl-shop-nav-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 2px 10px 2px;
+    margin-bottom: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(56, 189, 248, 0.5) transparent;
+  }
+
+  .brawl-shop-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(30, 41, 59, 0.85);
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 8px 14px;
+    color: #94a3b8;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .brawl-shop-tab:hover {
+    color: #ffffff;
+    border-color: #38bdf8;
+    background: rgba(56, 189, 248, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .brawl-shop-tab.active {
+    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+    border-color: #ffffff;
+    color: #020617;
+    box-shadow: 0 4px 18px rgba(56, 189, 248, 0.6);
+  }
+
+  .brawl-tab-badge {
+    background: #22c55e;
+    color: #ffffff;
+    font-size: 0.55rem;
+    font-weight: 900;
+    padding: 1px 5px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  /* Content Scroll Area */
+  .brawl-shop-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+    max-height: 58vh;
+  }
+
+  .brawl-shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  /* Brawl Stars Card Item */
+  .brawl-shop-card {
+    background: linear-gradient(180deg, #18253c 0%, #0f172a 100%);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 18px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+  }
+
+  .brawl-shop-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.8), 0 0 20px rgba(56, 189, 248, 0.4);
+    border-color: #38bdf8;
+  }
+
+  .brawl-shop-card.featured {
+    border-color: #ffd23c;
+    background: linear-gradient(180deg, #242c3f 0%, #131b2e 100%);
+    box-shadow: 0 0 24px rgba(255, 210, 60, 0.35);
+  }
+
+  .brawl-shop-card-rarity {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 4px;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.56rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .brawl-shop-card-icon-wrap {
+    width: 100%;
+    height: 90px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 18px 0 10px 0;
+    position: relative;
+  }
+
+  .brawl-shop-card-icon-wrap svg {
+    max-width: 85%;
+    max-height: 85%;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.7));
+  }
+
+  .brawl-shop-card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 900;
+    color: #ffffff;
+    margin-bottom: 4px;
+  }
+
+  .brawl-shop-card-desc {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    flex: 1;
+  }
+
+  .brawl-shop-buy-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 0.82rem;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+
+  .brawl-shop-buy-btn.free {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.5);
+  }
+
+  .brawl-shop-buy-btn.coins {
+    background: linear-gradient(135deg, #ffd23c 0%, #f59e0b 100%);
+    color: #020617;
+    box-shadow: 0 4px 14px rgba(255, 210, 60, 0.5);
+  }
+
+  .brawl-shop-buy-btn.cores {
+    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.5);
+  }
+
+  .brawl-shop-buy-btn.equipped {
+    background: rgba(255, 255, 255, 0.1);
+    color: #64748b;
+    cursor: default;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .brawl-shop-buy-btn:not(.equipped):hover {
+    transform: scale(1.04);
+    filter: brightness(1.15);
+  }
+
 </style>
 </head>
 <body>
@@ -2700,7 +2984,7 @@
 
 
   <!-- Brawl Stars Style Middle-Left Shop Floating Widget -->
-  <div id="middleLeftShopWrap" class="middle-left-shop-wrap" onclick="openHangar(event)" role="button" tabindex="0" title="Tap to open Shipyard, Arsenal &amp; Skin Shop!">
+  <div id="middleLeftShopWrap" class="middle-left-shop-wrap" onclick="openBrawlShop(event)" role="button" tabindex="0" title="Tap to open Shipyard, Arsenal &amp; Skin Shop!">
     <div class="brawl-shop-tile">
       <div class="brawl-shop-header">SHOP</div>
       <div class="brawl-shop-icon-wrap">
@@ -2798,7 +3082,7 @@
   <input id="pname" placeholder="Captain Name" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="menu-btn-stack">
     <button id="startbtn" type="button" class="action-btn menu-stack-btn" onclick="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
-    <button id="hangarbtn" type="button" class="action-btn menu-stack-btn" onclick="openHangar(event)">🛠️ SHIPYARD &amp; ARSENAL</button>
+    <button id="hangarbtn" type="button" class="action-btn menu-stack-btn" onclick="openBrawlShop(event)">🛠️ SHIPYARD &amp; ARSENAL</button>
     <button id="bossbtn" type="button" class="action-btn menu-stack-btn" onclick="openBossIntelModal(event)">👾 BOSS &amp; FLEET INTEL</button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.1rem; color:#ffd23c; font-weight:bold"></p>
@@ -2838,6 +3122,57 @@
 </div>
 
 <!-- Captain's Tactical Fleet Dossier Modal -->
+
+<!-- Brawl Stars Style Cosmic Shop Full Modal -->
+<div id="brawlShopModal" class="overlay hidden" style="z-index: 124;">
+  <div class="brawl-shop-modal-card">
+    <!-- Header with Shop Marquee & Live Floating Wallet -->
+    <div class="brawl-shop-modal-header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="brawl-shop-modal-badge-icon">🏪</div>
+        <div>
+          <span class="brawl-shop-modal-subtitle">⚡ GALAXY ARSENAL &amp; DEALS</span>
+          <h1 class="brawl-shop-modal-title">BRAWL STARS COSMIC SHOP</h1>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="brawl-shop-wallet-pill" id="brawlShopWalletPill">
+          <span id="brawlShopCoins">🪙 0</span>
+          <span id="brawlShopTokens">🎟️ 0</span>
+          <span id="brawlShopSpins">🎡 0</span>
+        </div>
+        <button class="brawl-shop-modal-close" onclick="closeBrawlShop(event)">✖ CLOSE</button>
+      </div>
+    </div>
+
+    <!-- Brawl Stars Category Navigation Tabs -->
+    <div class="brawl-shop-nav-tabs" id="brawlShopNavTabs">
+      <button class="brawl-shop-tab active" data-brawl-tab="daily" onclick="switchBrawlShopTab('daily', event)">
+        <span>🎁 DAILY DEALS</span>
+        <span class="brawl-tab-badge">FREE</span>
+      </button>
+      <button class="brawl-shop-tab" data-brawl-tab="ships" onclick="switchBrawlShopTab('ships', event)">
+        <span>🛸 SHIPS</span>
+        <span class="brawl-tab-badge" style="background:#38bdf8;color:#020617">5 SHIPS</span>
+      </button>
+      <button class="brawl-shop-tab" data-brawl-tab="skins" onclick="switchBrawlShopTab('skins', event)">
+        <span>🎨 SKINS</span>
+        <span class="brawl-tab-badge" style="background:#c084fc;color:#020617">8 SKINS</span>
+      </button>
+      <button class="brawl-shop-tab" data-brawl-tab="upgrades" onclick="switchBrawlShopTab('upgrades', event)">
+        <span>⚡ ARSENAL</span>
+        <span class="brawl-tab-badge" style="background:#ffd23c;color:#020617">MAX 10</span>
+      </button>
+      <button class="brawl-shop-tab" data-brawl-tab="resources" onclick="switchBrawlShopTab('resources', event)">
+        <span>🪙 RESOURCES</span>
+      </button>
+    </div>
+
+    <!-- Shop Content Container (Filled dynamically by renderBrawlShopUI()) -->
+    <div id="brawlShopContent" class="brawl-shop-content"></div>
+  </div>
+</div>
+
 <div id="dossierModal" class="overlay hidden" style="z-index: 100;">
   <div class="dossier-card">
     <div class="dossier-header">
@@ -18220,6 +18555,487 @@ if (typeof window !== 'undefined') {
   window.loop = loop;
   window.getState = function() { return state; };
   window.setState = function(s) { state = s; window.state = s; };
+
+// ==========================================================================
+// 🛍️ BRAWL STARS COSMIC SHOP ENGINE & TAB CONTROLLER
+// ==========================================================================
+let currentBrawlShopTab = 'daily';
+
+function openBrawlShop(e, defaultTab = 'daily') {
+  if (e) {
+    try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
+  }
+  try { initAudio(); sfx('map'); } catch(err) {}
+  currentBrawlShopTab = defaultTab;
+  
+  const m = document.getElementById('menu');
+  if (m) m.classList.add('hidden');
+  
+  const modal = document.getElementById('brawlShopModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+    modal.style.pointerEvents = 'auto';
+  }
+  
+  renderBrawlShopUI();
+}
+window.openBrawlShop = openBrawlShop;
+
+function closeBrawlShop(e) {
+  if (e) {
+    try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
+  }
+  const modal = document.getElementById('brawlShopModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+  }
+  const m = document.getElementById('menu');
+  if (m && state === 'menu') m.classList.remove('hidden');
+  renderWallet(); try { updateProfileUI(); } catch(e) {}
+}
+window.closeBrawlShop = closeBrawlShop;
+
+function switchBrawlShopTab(tabKey, e) {
+  if (e) {
+    try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
+  }
+  try { initAudio(); sfx('pew'); } catch(err) {}
+  currentBrawlShopTab = tabKey;
+  
+  // Update Tab visuals
+  const tabs = document.querySelectorAll('.brawl-shop-tab');
+  tabs.forEach(t => {
+    if (t.dataset.brawlTab === tabKey) t.classList.add('active');
+    else t.classList.remove('active');
+  });
+  
+  renderBrawlShopUI();
+}
+window.switchBrawlShopTab = switchBrawlShopTab;
+
+function renderBrawlShopUI() {
+  // 1. Update Floating Live Wallet Pill
+  const coinEl = document.getElementById('brawlShopCoins');
+  const tokEl = document.getElementById('brawlShopTokens');
+  const spinEl = document.getElementById('brawlShopSpins');
+  if (coinEl) coinEl.textContent = `🪙 ${SAVE.data.coins || 0}`;
+  if (tokEl) tokEl.textContent = `🎟️ ${SAVE.data.tokens || 0}`;
+  if (spinEl) spinEl.textContent = `🎡 ${SAVE.data.spins || 0}`;
+  
+  const contentEl = document.getElementById('brawlShopContent');
+  if (!contentEl) return;
+  
+  let h = '';
+  
+  // -------------------------------------------------------------
+  // TAB 1: 🎁 DAILY DEALS & FREEBIES
+  // -------------------------------------------------------------
+  if (currentBrawlShopTab === 'daily') {
+    const todayStr = new Date().toDateString();
+    const freeClaimed = SAVE.data.shopDailyDate === todayStr;
+    const dropClaimed = SAVE.data.shopStarDropDate === todayStr;
+    
+    h += `<div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:#ffd23c;margin-bottom:12px;letter-spacing:1px">🌟 DAILY REFRESHING FREEBIES &amp; SPECIAL BUNDLES</div>`;
+    h += `<div class="brawl-shop-grid">`;
+    
+    // Card 1: Daily Free 200 Gold Dubloons
+    h += `<div class="brawl-shop-card featured">
+      <div class="brawl-shop-card-rarity" style="background:#22c55e;color:#020617">FREE DAILY DEAL</div>
+      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #f59e0b 0%, #1e293b 100%)">
+        <span style="font-size:3.2rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6))">🪙</span>
+      </div>
+      <div class="brawl-shop-card-title">200 Gold Dubloons</div>
+      <div class="brawl-shop-card-desc">Daily free bounty for all active Captains! Refresh every 24 hours.</div>` +
+      (freeClaimed
+        ? `<button class="brawl-shop-buy-btn equipped">✔ CLAIMED TODAY</button>`
+        : `<button class="brawl-shop-buy-btn free" onclick="claimBrawlShopFreeCoins(event)">🎁 CLAIM FREE</button>`
+      ) +
+    `</div>`;
+    
+    // Card 2: Cosmic Star Drop Mystery Chest
+    h += `<div class="brawl-shop-card featured">
+      <div class="brawl-shop-card-rarity" style="background:#a855f7;color:#fff">MYSTERY STARDROP</div>
+      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #c084fc 0%, #312e81 100%)">
+        <span style="font-size:3.2rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6))">📦</span>
+      </div>
+      <div class="brawl-shop-card-title">Cosmic Star Drop</div>
+      <div class="brawl-shop-card-desc">Crack open a rare cosmic drop containing 100-500 coins, alien plasma cores &amp; prize spins!</div>` +
+      (dropClaimed
+        ? `<button class="brawl-shop-buy-btn cores" onclick="buyBrawlShopExtraDrop(event)">🎟️ 2 CORES (OPEN)</button>`
+        : `<button class="brawl-shop-buy-btn free" onclick="openBrawlShopMysteryDrop(event)">✨ OPEN FREE STARDROP</button>`
+      ) +
+    `</div>`;
+    
+    // Card 3: Lucky Wheel Spin Voucher
+    h += `<div class="brawl-shop-card">
+      <div class="brawl-shop-card-rarity" style="background:#38bdf8;color:#020617">PRIZE WHEEL TICKET</div>
+      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #38bdf8 0%, #1e3a8a 100%)">
+        <span style="font-size:3.2rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6))">🎡</span>
+      </div>
+      <div class="brawl-shop-card-title">Lucky Wheel Spin</div>
+      <div class="brawl-shop-card-desc">Spin the grand prize wheel to win jackpot payouts up to 1,000 Coins &amp; 10 Cores!</div>
+      <button class="brawl-shop-buy-btn coins" onclick="buyBrawlShopSpinTicket(event)">🪙 150 BUY SPIN</button>
+    </div>`;
+    
+    // Card 4: 7-Day Pirate Voyage Shortcut
+    const dailyStatus = getDailyRewardStatus();
+    h += `<div class="brawl-shop-card">
+      <div class="brawl-shop-card-rarity" style="background:#ff5e62;color:#fff">VOYAGE STREAK</div>
+      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #ff5e62 0%, #7f1d1d 100%)">
+        <span style="font-size:3.2rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6))">🏴‍☠️</span>
+      </div>
+      <div class="brawl-shop-card-title">7-Day Pirate Calendar</div>
+      <div class="brawl-shop-card-desc">Daily rewards calendar. Current Streak: ${SAVE.data.daily ? SAVE.data.daily.streak : 0} Days 🔥</div>
+      <button class="brawl-shop-buy-btn free" onclick="closeBrawlShop(); openDailyModal(event);">🎁 OPEN CALENDAR</button>
+    </div>`;
+    
+    h += `</div>`;
+  }
+  
+  // -------------------------------------------------------------
+  // TAB 2: 🛸 SHIPS & BRAWLERS
+  // -------------------------------------------------------------
+  else if (currentBrawlShopTab === 'ships') {
+    h += `<div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:#38bdf8;margin-bottom:12px;letter-spacing:1px">🛸 STARSHIP HANGAR — UNLOCK &amp; PILOT COMBAT VESSELS</div>`;
+    h += `<div class="brawl-shop-grid">`;
+    
+    const rarityMap = {
+      cutter: { name: 'COMMON STARTER', col: '#94a3b8' },
+      runner: { name: 'RARE INTERCEPTOR', col: '#38bdf8' },
+      galleon: { name: 'EPIC DREADNOUGHT', col: '#c084fc' },
+      hind: { name: 'MYTHIC GUNSHIP', col: '#f59e0b' },
+      storm: { name: 'LEGENDARY APEX', col: '#ef4444' }
+    };
+    
+    for (const s of SHIPS) {
+      const isOwned = isCreator() || SAVE.data.ships.includes(s.id);
+      const isEquipped = SAVE.data.sel === s.id;
+      const rInfo = rarityMap[s.id] || { name: 'SPECIAL', col: '#38bdf8' };
+      const svg = getShipSvg(s.id, s.cols);
+      
+      h += `<div class="brawl-shop-card${isEquipped ? ' featured' : ''}">
+        <div class="brawl-shop-card-rarity" style="background:${rInfo.col};color:${rInfo.col === '#ffd23c' ? '#020617' : '#ffffff'}">${rInfo.name}</div>
+        <div class="brawl-shop-card-icon-wrap">${svg}</div>
+        <div class="brawl-shop-card-title" style="color:${s.cols[0] || '#fff'}">${s.name.split(' (')[0]}</div>
+        <div class="brawl-shop-card-desc">
+          <div><b>HP:</b> ${s.hp} | <b>SPD:</b> ${s.spd}x | <b>FIRE:</b> ${(1/s.cool).toFixed(1)}/s</div>
+          <div style="color:#cfe4ff;margin-top:4px;font-size:0.72rem">${s.gadgetName || ''} • ${s.superName || ''}</div>
+        </div>` +
+        (isEquipped
+          ? `<button class="brawl-shop-buy-btn equipped">✔ ACTIVE SHIP</button>`
+          : (isOwned
+              ? `<button class="brawl-shop-buy-btn cores" onclick="selectBrawlShopShip('${s.id}')">⚡ EQUIP FOR FLIGHT</button>`
+              : `<button class="brawl-shop-buy-btn coins" onclick="buyBrawlShopShip('${s.id}', ${s.cost})">🎟️ ${s.cost} UNLOCK</button>`
+            )
+        ) +
+      `</div>`;
+    }
+    h += `</div>`;
+  }
+  
+  // -------------------------------------------------------------
+  // TAB 3: 🎨 COSMIC SKINS
+  // -------------------------------------------------------------
+  else if (currentBrawlShopTab === 'skins') {
+    h += `<div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:#c084fc;margin-bottom:12px;letter-spacing:1px">🎨 COSMIC SKINS &amp; THEMED AURA EFFECTS</div>`;
+    h += `<div class="brawl-shop-grid">`;
+    
+    const skinTiers = [
+      { id: 'default', tier: 'COMMON', tCol: '#94a3b8' },
+      { id: 'sunset', tier: 'RARE 🔥', tCol: '#ff4500' },
+      { id: 'toxic', tier: 'SUPER RARE 🧪', tCol: '#10b981' },
+      { id: 'ocean', tier: 'EPIC 🌊', tCol: '#00ffee' },
+      { id: 'shadow', tier: 'MYTHIC 🌑', tCol: '#ff003b' },
+      { id: 'cyber', tier: 'MYTHIC ⚡', tCol: '#ec4899' },
+      { id: 'royal', tier: 'LEGENDARY 👑', tCol: '#c084fc' },
+      { id: 'frost', tier: 'LEGENDARY ❄️', tCol: '#38bdf8' },
+      { id: 'legend', tier: 'CHRONO MASTER ✨', tCol: '#ffd700' }
+    ];
+    
+    for (const sk of SKINS) {
+      const isOwned = isCreator() || SAVE.data.kills >= (sk.kills || 0);
+      const isEquipped = (SAVE.data.skin || 'default') === sk.id;
+      const tInfo = skinTiers.find(t => t.id === sk.id) || { tier: 'SPECIAL', tCol: '#38bdf8' };
+      const curShip = shipById(SAVE.data.sel || 'cutter');
+      const skinSvg = getShipSvg(curShip.id, sk.cols || curShip.cols);
+      
+      h += `<div class="brawl-shop-card${isEquipped ? ' featured' : ''}">
+        <div class="brawl-shop-card-rarity" style="background:${tInfo.tCol};color:#ffffff">${tInfo.tier}</div>
+        <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, ${sk.themeCol || '#38bdf8'}33 0%, #0f172a 100%)">${skinSvg}</div>
+        <div class="brawl-shop-card-title" style="color:${sk.themeCol || '#ffd23c'}">${sk.name}</div>
+        <div class="brawl-shop-card-desc">
+          <div style="color:#cfe4ff">${sk.perk || ''}</div>
+          <div style="color:#94a3b8;margin-top:4px;font-size:0.70rem">Req: ${sk.kills} Career Kills (You: ${SAVE.data.kills || 0})</div>
+        </div>` +
+        (isEquipped
+          ? `<button class="brawl-shop-buy-btn equipped">✔ EQUIPPED SKIN</button>`
+          : (isOwned
+              ? `<button class="brawl-shop-buy-btn cores" onclick="selectBrawlShopSkin('${sk.id}')">🎨 EQUIP SKIN</button>`
+              : `<button class="brawl-shop-buy-btn coins" onclick="buyBrawlShopSkinDirect('${sk.id}', ${sk.kills})">🔒 UNLOCK (${sk.kills} KILLS)</button>`
+            )
+        ) +
+      `</div>`;
+    }
+    h += `</div>`;
+  }
+  
+  // -------------------------------------------------------------
+  // TAB 4: ⚡ ARSENAL STAT UPGRADES
+  // -------------------------------------------------------------
+  else if (currentBrawlShopTab === 'upgrades') {
+    const curShip = shipById(activeUpgradeShip || SAVE.data.sel || 'cutter');
+    const uShip = getShipUpg(curShip.id);
+    
+    h += `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+      <div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:#ffd23c">⚡ ARSENAL UPGRADES FOR: <b style="color:#38bdf8">${curShip.name.split(' (')[0]}</b></div>
+      <div style="display:flex;gap:6px">`;
+      for (const s of SHIPS) {
+        const isA = (activeUpgradeShip || SAVE.data.sel || 'cutter') === s.id;
+        h += `<button onclick="activeUpgradeShip='${s.id}'; renderBrawlShopUI();" style="padding:4px 8px;border-radius:8px;border:1.5px solid ${isA ? '#ffd23c' : 'rgba(255,255,255,0.15)'};background:${isA ? '#38bdf8' : 'rgba(255,255,255,0.05)'};color:${isA ? '#020617' : '#fff'};font-weight:bold;font-size:0.72rem;cursor:pointer">${s.name.split(' (')[0]}</button>`;
+      }
+    h += `</div></div>`;
+    
+    h += `<div class="brawl-shop-grid">`;
+    for (const [k, u] of Object.entries(UPG)) {
+      const curLv = uShip[k] || 0;
+      const isMax = curLv >= u.max;
+      const cost = isMax ? 0 : u.cost(curLv);
+      const canBuy = SAVE.data.coins >= cost && !isMax;
+      
+      h += `<div class="brawl-shop-card">
+        <div class="brawl-shop-card-rarity" style="background:#ffd23c;color:#020617">LEVEL ${curLv}/${u.max}</div>
+        <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #f59e0b 0%, #1e293b 100%)">
+          <span style="font-size:2.8rem">${u.icon}</span>
+        </div>
+        <div class="brawl-shop-card-title">${u.name}</div>
+        <div class="brawl-shop-card-desc">${u.desc}</div>` +
+        (isMax
+          ? `<button class="brawl-shop-buy-btn equipped">👑 MAX LEVEL 10</button>`
+          : `<button class="brawl-shop-buy-btn coins" onclick="buyBrawlShopUpgrade('${curShip.id}', '${k}', ${cost})">🪙 ${cost} UPGRADE +1</button>`
+        ) +
+      `</div>`;
+    }
+    h += `</div>`;
+  }
+  
+  // -------------------------------------------------------------
+  // TAB 5: 🪙 RESOURCES & PACKS
+  // -------------------------------------------------------------
+  else if (currentBrawlShopTab === 'resources') {
+    h += `<div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:#ffd23c;margin-bottom:12px;letter-spacing:1px">🪙 PLASMA CORE &amp; GOLD DUBLOON CURRENCY PACKS</div>`;
+    h += `<div class="brawl-shop-grid">`;
+    
+    // Resource Pack 1: 500 Coins for 5 Cores
+    h += `<div class="brawl-shop-card">
+      <div class="brawl-shop-card-rarity" style="background:#ffd23c;color:#020617">PIRATE GOLD SACK</div>
+      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #f59e0b 0%, #1e293b 100%)">
+        <span style="font-size:3.2rem">💰</span>
+      </div>
+      <div class="brawl-shop-card-title">500 Gold Dubloons</div>
+      <div class="brawl-shop-card-desc">Exchange 5 Alien Plasma Cores for 500 Gold Dubloons!</div>
+      <button class="brawl-shop-buy-btn cores" onclick="exchangeBrawlShopCurrency('buy_coins_500')">🎟️ 5 CORES (BUY)</button>
+    </div>`;
+    
+    // Resource Pack 2: 1,500 Coins for 12 Cores
+    h += `<div class="brawl-shop-card featured">
+      <div class="brawl-shop-card-rarity" style="background:#22c55e;color:#020617">MEGA TREASURE CHEST</div>
+      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #22c55e 0%, #064e3b 100%)">
+        <span style="font-size:3.2rem">🏆</span>
+      </div>
+      <div class="brawl-shop-card-title">1,500 Gold Dubloons</div>
+      <div class="brawl-shop-card-desc">Best value exchange: 12 Alien Plasma Cores for 1,500 Gold!</div>
+      <button class="brawl-shop-buy-btn cores" onclick="exchangeBrawlShopCurrency('buy_coins_1500')">🎟️ 12 CORES (BUY)</button>
+    </div>`;
+    
+    // Resource Pack 3: 5 Plasma Cores for 600 Coins
+    h += `<div class="brawl-shop-card">
+      <div class="brawl-shop-card-rarity" style="background:#38bdf8;color:#020617">PLASMA CORE DROP</div>
+      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #38bdf8 0%, #1e3a8a 100%)">
+        <span style="font-size:3.2rem">🎟️</span>
+      </div>
+      <div class="brawl-shop-card-title">5 Plasma Cores</div>
+      <div class="brawl-shop-card-desc">Buy 5 rare Alien Plasma Cores using 600 Gold Coins!</div>
+      <button class="brawl-shop-buy-btn coins" onclick="exchangeBrawlShopCurrency('buy_cores_5')">🪙 600 BUY CORES</button>
+    </div>`;
+    
+    // Resource Pack 4: Creator VIP Pass
+    h += `<div class="brawl-shop-card featured">
+      <div class="brawl-shop-card-rarity" style="background:#ffd700;color:#020617">👑 CREATOR VIP PASS</div>
+      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #ffd700 0%, #78350f 100%)">
+        <span style="font-size:3.2rem">👑</span>
+      </div>
+      <div class="brawl-shop-card-title">Creator VIP Pass</div>
+      <div class="brawl-shop-card-desc">Exclusive to Noël. Unlock all ships, max Lv 10 stats &amp; all skins!</div>
+      <button class="brawl-shop-buy-btn free" onclick="promptVipPass(); renderBrawlShopUI();">🔑 UNLOCK VIP</button>
+    </div>`;
+    
+    h += `</div>`;
+  }
+  
+  contentEl.innerHTML = h;
+}
+window.renderBrawlShopUI = renderBrawlShopUI;
+
+// --- ACTIONS IN BRAWL STARS SHOP ---
+function claimBrawlShopFreeCoins(e) {
+  if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
+  const todayStr = new Date().toDateString();
+  if (SAVE.data.shopDailyDate === todayStr) return;
+  
+  SAVE.data.coins = (SAVE.data.coins || 0) + 200;
+  SAVE.data.shopDailyDate = todayStr;
+  SAVE.save();
+  try { initAudio(); sfx('coin'); } catch(err) {}
+  addAlert('🎁 CLAIMED 200 DAILY GOLD DUBLOONS!', 'coin');
+  popup(W / 2, H * 0.45, '+200 🪙 GOLD DUBLOONS!', '#ffd23c');
+  renderBrawlShopUI();
+  renderWallet();
+}
+window.claimBrawlShopFreeCoins = claimBrawlShopFreeCoins;
+
+function openBrawlShopMysteryDrop(e) {
+  if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
+  const todayStr = new Date().toDateString();
+  if (SAVE.data.shopStarDropDate === todayStr) return;
+  
+  const coinRoll = 150 + Math.floor(Math.random() * 350);
+  const coreRoll = 1 + Math.floor(Math.random() * 3);
+  SAVE.data.coins += coinRoll;
+  SAVE.data.tokens += coreRoll;
+  SAVE.data.spins = (SAVE.data.spins || 0) + 1;
+  SAVE.data.shopStarDropDate = todayStr;
+  SAVE.save();
+  
+  try { initAudio(); sfx('super'); } catch(err) {}
+  addAlert(`🌟 STARDROP: +${coinRoll} 🪙 COINS, +${coreRoll} 🎟️ CORES & +1 🎡 SPIN!`, 'super');
+  popup(W / 2, H * 0.45, `🌟 MYSTERY STARDROP OPENED!`, '#c084fc');
+  renderBrawlShopUI();
+  renderWallet();
+}
+window.openBrawlShopMysteryDrop = openBrawlShopMysteryDrop;
+
+function buyBrawlShopExtraDrop(e) {
+  if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
+  if (SAVE.data.tokens < 2) {
+    alert('⚠️ Need 2 Alien Plasma Cores to open extra Stardrop!');
+    return;
+  }
+  SAVE.data.tokens -= 2;
+  const coinRoll = 200 + Math.floor(Math.random() * 400);
+  const coreRoll = 2;
+  SAVE.data.coins += coinRoll;
+  SAVE.data.tokens += coreRoll;
+  SAVE.save();
+  
+  try { initAudio(); sfx('super'); } catch(err) {}
+  addAlert(`🌟 STARDROP: +${coinRoll} 🪙 COINS & +${coreRoll} 🎟️ CORES!`, 'super');
+  renderBrawlShopUI();
+  renderWallet();
+}
+window.buyBrawlShopExtraDrop = buyBrawlShopExtraDrop;
+
+function buyBrawlShopSpinTicket(e) {
+  if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
+  if (SAVE.data.coins < 150) {
+    alert('⚠️ Need 150 Gold Coins for a Lucky Wheel Spin Ticket!');
+    return;
+  }
+  SAVE.data.coins -= 150;
+  SAVE.data.spins = (SAVE.data.spins || 0) + 1;
+  SAVE.save();
+  try { initAudio(); sfx('coin'); } catch(err) {}
+  addAlert('🎡 BOUGHT 1 LUCKY WHEEL TICKET!', 'coin');
+  renderBrawlShopUI();
+  renderWallet();
+}
+window.buyBrawlShopSpinTicket = buyBrawlShopSpinTicket;
+
+function selectBrawlShopShip(shipId) {
+  SAVE.data.sel = shipId;
+  activeUpgradeShip = shipId;
+  applyLoadout();
+  SAVE.save();
+  try { initAudio(); sfx('map'); } catch(err) {}
+  addAlert(`🛸 EQUIPPED ${shipById(shipId).name.toUpperCase()} FOR FLIGHT!`, 'map');
+  renderBrawlShopUI();
+  renderWallet();
+}
+window.selectBrawlShopShip = selectBrawlShopShip;
+
+function buyBrawlShopShip(shipId, cost) {
+  if (SAVE.data.tokens < cost && !isCreator()) {
+    alert(`⚠️ Need ${cost} Alien Plasma Cores to unlock this starship!`);
+    return;
+  }
+  if (!isCreator()) SAVE.data.tokens -= cost;
+  if (!SAVE.data.ships.includes(shipId)) SAVE.data.ships.push(shipId);
+  SAVE.data.sel = shipId;
+  activeUpgradeShip = shipId;
+  applyLoadout();
+  SAVE.save();
+  try { initAudio(); sfx('super'); } catch(err) {}
+  addAlert(`🎉 UNLOCKED & EQUIPPED ${shipById(shipId).name.toUpperCase()}!`, 'super');
+  renderBrawlShopUI();
+  renderWallet();
+}
+window.buyBrawlShopShip = buyBrawlShopShip;
+
+function selectBrawlShopSkin(skinId) {
+  SAVE.data.skin = skinId;
+  SAVE.save();
+  try { initAudio(); sfx('map'); } catch(err) {}
+  addAlert(`🎨 EQUIPPED SKIN: ${skinById(skinId).name.toUpperCase()}!`, 'map');
+  renderBrawlShopUI();
+}
+window.selectBrawlShopSkin = selectBrawlShopSkin;
+
+function buyBrawlShopSkinDirect(skinId, killsReq) {
+  alert(`⚔️ This Legendary Skin requires ${killsReq} Career Kills. Your kills: ${SAVE.data.kills || 0}`);
+}
+window.buyBrawlShopSkinDirect = buyBrawlShopSkinDirect;
+
+function buyBrawlShopUpgrade(shipId, upgKey, cost) {
+  if (SAVE.data.coins < cost && !isCreator()) {
+    alert(`⚠️ Need ${cost} Gold Coins for this upgrade!`);
+    return;
+  }
+  if (!isCreator()) SAVE.data.coins -= cost;
+  SAVE.data.fleetUpg = SAVE.data.fleetUpg || {};
+  SAVE.data.fleetUpg[shipId] = SAVE.data.fleetUpg[shipId] || { hull: 0, cannon: 0, engine: 0, magnet: 0 };
+  SAVE.data.fleetUpg[shipId][upgKey] = (SAVE.data.fleetUpg[shipId][upgKey] || 0) + 1;
+  applyLoadout();
+  SAVE.save();
+  try { initAudio(); sfx('coin'); } catch(err) {}
+  addAlert(`⚡ UPGRADED ${UPG[upgKey].name.toUpperCase()} TO LV ${SAVE.data.fleetUpg[shipId][upgKey]}!`, 'coin');
+  renderBrawlShopUI();
+  renderWallet();
+}
+window.buyBrawlShopUpgrade = buyBrawlShopUpgrade;
+
+function exchangeBrawlShopCurrency(type) {
+  if (type === 'buy_coins_500') {
+    if (SAVE.data.tokens < 5 && !isCreator()) { alert('⚠️ Need 5 Plasma Cores!'); return; }
+    if (!isCreator()) SAVE.data.tokens -= 5;
+    SAVE.data.coins += 500;
+  } else if (type === 'buy_coins_1500') {
+    if (SAVE.data.tokens < 12 && !isCreator()) { alert('⚠️ Need 12 Plasma Cores!'); return; }
+    if (!isCreator()) SAVE.data.tokens -= 12;
+    SAVE.data.coins += 1500;
+  } else if (type === 'buy_cores_5') {
+    if (SAVE.data.coins < 600 && !isCreator()) { alert('⚠️ Need 600 Gold Coins!'); return; }
+    if (!isCreator()) SAVE.data.coins -= 600;
+    SAVE.data.tokens += 5;
+  }
+  SAVE.save();
+  try { initAudio(); sfx('coin'); } catch(err) {}
+  addAlert('🪙 CURRENCY EXCHANGED SUCCESSFULLY!', 'coin');
+  renderBrawlShopUI();
+  renderWallet();
+}
+window.exchangeBrawlShopCurrency = exchangeBrawlShopCurrency;
+
 }
 </script>
 </body>
