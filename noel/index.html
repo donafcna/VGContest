@@ -2643,7 +2643,7 @@
   </div>
   <input id="pname" placeholder="Captain Name" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="menu-btn-stack">
-    <button id="startbtn" type="button" class="action-btn menu-stack-btn" onclick="startSolarSail(event)" onpointerdown="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
+    <button id="startbtn" type="button" class="action-btn menu-stack-btn" onclick="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
     <button id="hangarbtn" type="button" class="action-btn menu-stack-btn" onclick="openHangar(event)">🛠️ SHIPYARD &amp; ARSENAL</button>
     <button id="bossbtn" type="button" class="action-btn menu-stack-btn" onclick="openBossIntelModal(event)">👾 BOSS &amp; FLEET INTEL</button>
   </div>
@@ -3432,8 +3432,8 @@ bindDpadButton('btnRight', 'right');
 
 function advanceStory() {
   if (state !== 'intro' || storyCooldown > 0) return;
-  storyCooldown = 0.25;
-  sfx('pew');
+  storyCooldown = 0.45;
+  try { sfx('pew'); } catch(e) {}
   storyStage++;
   if (storyStage >= 3) {
     startCombat();
@@ -3477,7 +3477,10 @@ addEventListener('mousedown', e => {
   }
   initAudio();
   if (e.button === 0) {
-    if (state === 'intro') { advanceStory(); return; }
+    if (state === 'intro') {
+      if (storyCooldown <= 0) advanceStory();
+      return;
+    }
     mouse.clicked = true;
     mouse.down = true;
   }
@@ -3490,7 +3493,7 @@ addEventListener('mouseup', e => {
 function onGameTouchStart(e) {
   initAudio();
   if (state === 'intro') {
-    advanceStory();
+    if (storyCooldown <= 0) advanceStory();
     e.preventDefault();
     return;
   }
@@ -7237,14 +7240,34 @@ window.ship = ship;
 
 function startCombat() {
   state = 'play'; if (typeof window !== 'undefined') window.state = 'play';
-  sfx('incoming');
-  addShake(18);
+  
+  // 1. Resync master clock to eliminate transition delta-time spike/lag
+  last = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+  
+  // 2. Cleanly clear intro entity arrays
+  introLasers = [];
+  balls = [];
+  introUfos = [];
+  introArmada = [];
+  wreckage = [];
+  shieldShards = [];
+  
+  // 3. Clear existing combat debris for clean 60 FPS combat start
+  eballs = [];
+  forts = [];
+  gliders = [];
+  mines = [];
+  
+  try { sfx('incoming'); } catch(e) {}
+  addShake(16);
   addAlert('🚨 RED ALERT: COSMIC ARMADA & ENEMY FLEET INBOUND!', 'incoming');
   updateDpadVisibility();
   updateBrawlControlsVisibility();
-  spawnGlider(W + 50, H * 0.22, 'tie');
-  spawnGlider(W + 110, H * 0.75, 'stalker');
-  spawnGlider(W + 170, H * 0.48, 'rammer');
+  
+  // Spawn initial enemy squadron
+  spawnGlider(W + 60, H * 0.25, 'tie');
+  spawnGlider(W + 120, H * 0.75, 'stalker');
+  spawnGlider(W + 180, H * 0.50, 'rammer');
   spawnFort();
   fortT = 3.5;
 }
@@ -8285,11 +8308,15 @@ function updateMultiplayerFleet(dt) {
   }
 }
 
+let isStartingSail = false;
 function startSolarSail(e) {
   if (e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
   }
-  
+  if (isStartingSail || state === 'intro' || state === 'play') return;
+  isStartingSail = true;
+  setTimeout(() => { isStartingSail = false; }, 400);
+
   // 1. IMMEDIATELY FORCEFULLY HIDE ALL OVERLAYS AND MENU
   try {
     const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal', 'profileModal'];
@@ -8298,8 +8325,9 @@ function startSolarSail(e) {
     if (m) { m.style.display = 'none'; m.classList.add('hidden'); m.style.pointerEvents = 'none'; }
   } catch(err) { console.error('Menu hide error:', err); }
 
-  // 2. SET CINEMATIC STORYLINE PROLOGUE STATE
+  // 2. SET CINEMATIC STORYLINE PROLOGUE STATE & RESYNC CLOCK
   state = 'intro'; if (typeof window !== 'undefined') window.state = 'intro';
+  last = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
   updatePauseBtnVisibility();
   try { updateTopBrawlBarVisibility(); try { updateTopProfileVisibility(); } catch(e) {} } catch(e) {}
   if (cv && cv.focus) { try { cv.focus(); } catch(err) {} }
@@ -8339,13 +8367,16 @@ function startSolarSail(e) {
     }
   } catch(err) {}
 
-  // Initialize Storyline Cinematic States
+  // Clean and initialize Storyline Cinematic States
   introT = 0;
   storyStage = 0;
-  storyCooldown = 0.35;
+  storyCooldown = 0.60;
   introShot1 = false;
   introShot2 = false;
   introLasers = [];
+  balls = [];
+  eballs = []; forts = []; gliders = [];
+  parts = [];
   wreckage = [];
   shieldShards = [];
   introShieldFlare = 0;
@@ -8354,8 +8385,7 @@ function startSolarSail(e) {
     { x: W + 120, y: H * 0.35, targetX: W * 0.72, targetY: H * 0.32, vx: -520, vy: 0, r: 30, dead: false, col: '#00ffee', type: 'scout', saucerSpin: 0 },
     { x: W + 180, y: H * 0.65, targetX: W * 0.76, targetY: H * 0.68, vx: -500, vy: 0, r: 32, dead: false, col: '#c084fc', type: 'bomber', saucerSpin: 0 }
   ];
-
-  try {
+try {
     gadgetCharges = 3;
     gadgetCooldown = 0;
     superCharge = 0;
