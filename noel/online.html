@@ -2316,7 +2316,148 @@
   }
 
 
-  /* Brawl Stars Style Middle-Right Daily Rewards Floating Tile */
+    /* Brawl Stars Style Middle-Left Shop Floating Tile */
+  .middle-left-shop-wrap {
+    position: fixed;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    pointer-events: auto !important;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .brawl-shop-tile {
+    background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
+    border: 2.5px solid #38bdf8;
+    border-radius: 20px;
+    padding: 10px 8px 8px 8px;
+    width: 82px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.75), 0 0 16px rgba(56, 189, 248, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s, border-color 0.2s;
+    position: relative;
+  }
+
+  .brawl-shop-tile:hover {
+    transform: scale(1.08) translateX(4px);
+    border-color: #ffd23c;
+    box-shadow: 0 12px 34px rgba(56, 189, 248, 0.7), 0 0 24px rgba(255, 210, 60, 0.8), inset 0 2px 6px rgba(255, 255, 255, 0.5);
+    background: linear-gradient(180deg, #2563eb 0%, #1e293b 100%);
+  }
+
+  .brawl-shop-tile:active {
+    transform: scale(0.95);
+  }
+
+  .brawl-shop-header {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.56rem;
+    font-weight: 900;
+    color: #38bdf8;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: 2px;
+  }
+
+  .brawl-shop-icon-wrap {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    background: radial-gradient(circle, #3b82f6 0%, #1d4ed8 100%);
+    border: 2px solid #38bdf8;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2px 0 4px 0;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  }
+
+  .brawl-shop-cart-icon {
+    font-size: 1.65rem;
+    line-height: 1;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+    animation: brawlShopCartBounce 3.0s infinite ease-in-out;
+  }
+
+  @keyframes brawlShopCartBounce {
+    0%, 75%, 100% { transform: scale(1) translateY(0); }
+    80% { transform: scale(1.15) translateY(-4px) rotate(-5deg); }
+    85% { transform: scale(1.15) translateY(-2px) rotate(5deg); }
+    90% { transform: scale(1.1) translateY(-4px) rotate(-3deg); }
+    95% { transform: scale(1) translateY(0); }
+  }
+
+  .brawl-shop-alert-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.50rem;
+    font-weight: 900;
+    padding: 2px 4px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    animation: brawlBadgePulse 1.4s infinite alternate;
+  }
+
+  .brawl-shop-status {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.56rem;
+    font-weight: 900;
+    color: #ffd23c;
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+    text-shadow: 0 0 6px rgba(255, 210, 60, 0.6);
+  }
+
+  .brawl-shop-streak {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.52rem;
+    font-weight: 800;
+    color: #93c5fd;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    border-radius: 6px;
+    padding: 1px 5px;
+    margin-top: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .middle-left-shop-wrap {
+      left: 8px;
+    }
+    .brawl-shop-tile {
+      width: 72px;
+      padding: 8px 4px 6px 4px;
+      border-radius: 16px;
+    }
+    .brawl-shop-icon-wrap {
+      width: 38px;
+      height: 38px;
+    }
+    .brawl-shop-cart-icon {
+      font-size: 1.4rem;
+    }
+  }
+
+/* Brawl Stars Style Middle-Right Daily Rewards Floating Tile */
   .middle-right-daily-wrap {
     position: fixed;
     right: 14px;
@@ -2557,6 +2698,19 @@
   <p style="margin-top:1.4rem"><a class="exitlink" href="../" style="color:#8fa6cb;font-size:0.92rem;text-decoration:none">🚪 EXIT TO CONTEST HUB</a></p>
 </div>
 
+
+  <!-- Brawl Stars Style Middle-Left Shop Floating Widget -->
+  <div id="middleLeftShopWrap" class="middle-left-shop-wrap" onclick="openHangar(event)" role="button" tabindex="0" title="Tap to open Shipyard, Arsenal &amp; Skin Shop!">
+    <div class="brawl-shop-tile">
+      <div class="brawl-shop-header">SHOP</div>
+      <div class="brawl-shop-icon-wrap">
+        <span class="brawl-shop-cart-icon">🛒</span>
+        <span id="leftShopBadge" class="brawl-shop-alert-badge">DEALS</span>
+      </div>
+      <div id="leftShopStatusText" class="brawl-shop-status">ARSENAL</div>
+      <div id="leftShopSubPill" class="brawl-shop-streak">SKINS &amp; UPGS</div>
+    </div>
+  </div>
 
   <!-- Brawl Stars Style Middle-Right Daily Rewards Floating Widget -->
   <div id="middleRightDailyWrap" class="middle-right-daily-wrap" onclick="openDailyModal(event)" role="button" tabindex="0" title="Tap to claim Daily Voyage Rewards!">
@@ -8600,6 +8754,9 @@ function updateTopProfileVisibility() {
 
   const dailyRight = document.getElementById('middleRightDailyWrap');
   if (dailyRight) dailyRight.style.display = (state === 'menu') ? 'flex' : 'none';
+
+  const shopLeft = document.getElementById('middleLeftShopWrap');
+  if (shopLeft) shopLeft.style.display = (state === 'menu') ? 'flex' : 'none';
 }
 window.updateTopProfileVisibility = updateTopProfileVisibility;
 
