@@ -97,6 +97,49 @@
   #musicbtn:active, #pausebtn:active { transform: scale(0.92); background: rgba(255, 210, 60, 0.5); }
   #musicbtn { display: none !important; }
   #pausebtn { right: 16px; display: none; }
+
+  /* Pause Screen Top-Right Audio Button */
+  .pause-top-audio-btn {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 210;
+    background: linear-gradient(180deg, #2b3a58 0%, #151f33 100%);
+    border: 2px solid #ffd23c;
+    border-radius: 14px;
+    color: #ffd23c;
+    padding: 8px 16px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 900;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    pointer-events: auto !important;
+  }
+  .pause-top-audio-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    border-color: #ffffff;
+    box-shadow: 0 6px 24px rgba(255, 210, 60, 0.6);
+  }
+  .pause-top-audio-btn:active {
+    transform: scale(0.95);
+  }
+
+  @media (max-width: 768px) {
+    .pause-top-audio-btn {
+      top: 8px;
+      right: 8px;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+    }
+  }
   
   .overlay .btnrow { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
   .overlay a.exitlink {
@@ -1953,13 +1996,18 @@
   <button class="dpad-btn dpad-down" id="btnDown" aria-label="Fly Down">▼</button>
 </div>
 
+<!-- Pause Screen Top-Right Audio Button -->
+<button id="pauseTopAudioBtn" class="pause-top-audio-btn" onclick="togglePauseVolume(event)" title="Toggle Audio (Music & SFX)">
+  <span id="pauseTopAudioIcon" style="font-size:1.2rem;">🔊</span>
+  <span id="pauseTopAudioLabel">AUDIO: ON</span>
+</button>
+
 <div id="pauseoverlay" class="overlay hidden" style="z-index: 150;">
   <h1>⏸ WARP STASIS (PAUSED)</h1>
-  <p style="font-size:1.05rem;color:#ffd23c;margin-bottom:1.2rem">Solar sails reefed, Captain Noel… Fleet on standby.</p>
+  <p style="font-size:1.05rem;color:#ffd23c;margin-bottom:1.2rem">Solar sails reefed, Captain Noel... Fleet on standby.</p>
   <div class="btnrow" style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:0.6rem;">
     <button id="resumebtn" onclick="togglePause(event)" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:1.15rem;padding:14px 34px;box-shadow:0 6px 24px rgba(34,197,94,0.5)">▶ RESUME BATTLE</button>
-    <button id="pauseVolumeBtn" onclick="togglePauseVolume(event)" style="background:linear-gradient(135deg,#ffb834,#ea6c10);color:#1a0c00;font-size:1.15rem;padding:14px 30px;box-shadow:0 6px 24px rgba(255,160,40,0.5);font-weight:900;letter-spacing:1px;">🔊 AUDIO: ON</button>
-    <button id="menubtn" onclick="returnToMenu(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;font-size:1.15rem;padding:14px 32px;box-shadow:0 6px 24px rgba(138,123,255,0.5)">🏴‍☠️ RETURN TO MENU</button>
+    <button id="menubtn" onclick="returnToMenu(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;font-size:1.15rem;padding:14px 32px;box-shadow:0 6px 24px rgba(138,123,255,0.5)">✖ RETURN TO MENU</button>
   </div>
   <p style="margin-top:1.4rem"><a class="exitlink" href="../" style="color:#8fa6cb;font-size:0.92rem;text-decoration:none">🚪 EXIT TO CONTEST HUB</a></p>
 </div>
@@ -3269,18 +3317,22 @@ function toggleMusic(e) {
 window.toggleMusic = toggleMusic;
 
 function updatePauseVolumeUI() {
-  const btn = document.getElementById('pauseVolumeBtn');
+  const btn = document.getElementById('pauseTopAudioBtn');
+  const icon = document.getElementById('pauseTopAudioIcon');
+  const label = document.getElementById('pauseTopAudioLabel');
   if (!btn) return;
   if (musicOn) {
-    btn.innerHTML = '🔊 AUDIO: ON';
-    btn.style.background = 'linear-gradient(135deg, #ffb834, #ea6c10)';
-    btn.style.color = '#1a0c00';
-    btn.style.boxShadow = '0 6px 24px rgba(255, 160, 40, 0.5)';
+    if (icon) icon.textContent = '🔊';
+    if (label) label.textContent = 'AUDIO: ON';
+    btn.style.background = 'linear-gradient(180deg, #2b3a58 0%, #151f33 100%)';
+    btn.style.borderColor = '#ffd23c';
+    btn.style.color = '#ffd23c';
   } else {
-    btn.innerHTML = '🔇 AUDIO: MUTED';
-    btn.style.background = 'linear-gradient(135deg, #64748b, #334155)';
-    btn.style.color = '#f1f5f9';
-    btn.style.boxShadow = '0 6px 24px rgba(0, 0, 0, 0.5)';
+    if (icon) icon.textContent = '🔇';
+    if (label) label.textContent = 'AUDIO: OFF';
+    btn.style.background = 'linear-gradient(180deg, #334155 0%, #1e293b 100%)';
+    btn.style.borderColor = '#94a3b8';
+    btn.style.color = '#94a3b8';
   }
 }
 window.updatePauseVolumeUI = updatePauseVolumeUI;
@@ -7774,7 +7826,7 @@ function togglePause(e) {
   if (state === 'pause') {
     state = prePauseState || 'play';
     if (typeof window !== 'undefined') window.state = state;
-    hideOverlay('pauseoverlay');
+    hideOverlay('pauseoverlay'); const ptBtn = document.getElementById('pauseTopAudioBtn'); if (ptBtn) ptBtn.style.display = 'none';
     updateDpadVisibility();
     updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); } catch(e) {}
     updateBrawlControlsVisibility();
@@ -7782,7 +7834,7 @@ function togglePause(e) {
     prePauseState = state;
     state = 'pause';
     if (typeof window !== 'undefined') window.state = state;
-    showOverlay('pauseoverlay');
+    showOverlay('pauseoverlay'); const ptBtn = document.getElementById('pauseTopAudioBtn'); if (ptBtn) { ptBtn.style.display = 'flex'; updatePauseVolumeUI(); }
     updateDpadVisibility();
     updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); } catch(e) {}
   }
@@ -7792,6 +7844,7 @@ window.resumeGame = togglePause;
 window.resume = togglePause;
 
 function returnToMenu(e) {
+  const ptBtn = document.getElementById('pauseTopAudioBtn'); if (ptBtn) ptBtn.style.display = 'none';
   if (e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
   }
@@ -8751,18 +8804,22 @@ window.togglePause = togglePause;
 window.toggleMusic = toggleMusic;
 
 function updatePauseVolumeUI() {
-  const btn = document.getElementById('pauseVolumeBtn');
+  const btn = document.getElementById('pauseTopAudioBtn');
+  const icon = document.getElementById('pauseTopAudioIcon');
+  const label = document.getElementById('pauseTopAudioLabel');
   if (!btn) return;
   if (musicOn) {
-    btn.innerHTML = '🔊 AUDIO: ON';
-    btn.style.background = 'linear-gradient(135deg, #ffb834, #ea6c10)';
-    btn.style.color = '#1a0c00';
-    btn.style.boxShadow = '0 6px 24px rgba(255, 160, 40, 0.5)';
+    if (icon) icon.textContent = '🔊';
+    if (label) label.textContent = 'AUDIO: ON';
+    btn.style.background = 'linear-gradient(180deg, #2b3a58 0%, #151f33 100%)';
+    btn.style.borderColor = '#ffd23c';
+    btn.style.color = '#ffd23c';
   } else {
-    btn.innerHTML = '🔇 AUDIO: MUTED';
-    btn.style.background = 'linear-gradient(135deg, #64748b, #334155)';
-    btn.style.color = '#f1f5f9';
-    btn.style.boxShadow = '0 6px 24px rgba(0, 0, 0, 0.5)';
+    if (icon) icon.textContent = '🔇';
+    if (label) label.textContent = 'AUDIO: OFF';
+    btn.style.background = 'linear-gradient(180deg, #334155 0%, #1e293b 100%)';
+    btn.style.borderColor = '#94a3b8';
+    btn.style.color = '#94a3b8';
   }
 }
 window.updatePauseVolumeUI = updatePauseVolumeUI;
