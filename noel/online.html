@@ -2608,13 +2608,13 @@
      ========================================================================== */
   .brawl-shop-modal-card {
     background: linear-gradient(180deg, #101a2f 0%, #080d19 100%);
-    border: 2.5px solid #38bdf8;
-    border-radius: 26px;
-    padding: 20px 22px;
+    border: 2px solid #38bdf8;
+    border-radius: 18px;
+    padding: 12px 16px;
     max-width: 780px;
     width: 95%;
-    max-height: 90vh;
-    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), 0 0 45px rgba(56, 189, 248, 0.35);
+    max-height: 88vh;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(56, 189, 248, 0.3);
     color: #f0f3ff;
     position: relative;
     display: flex;
@@ -2627,68 +2627,72 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 12px;
-    padding-bottom: 14px;
-    border-bottom: 2px solid rgba(56, 189, 248, 0.25);
-    margin-bottom: 12px;
+    gap: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid rgba(56, 189, 248, 0.25);
+    margin-bottom: 8px;
   }
 
   .brawl-shop-modal-badge-icon {
-    width: 48px;
-    height: 48px;
+    width: 34px;
+    height: 34px;
     background: radial-gradient(circle, #38bdf8 0%, #1e40af 100%);
-    border: 2px solid #ffd23c;
-    border-radius: 14px;
+    border: 1.5px solid #ffd23c;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
-    box-shadow: 0 0 16px rgba(56, 189, 248, 0.6);
+    font-size: 1.15rem;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    flex-shrink: 0;
   }
 
   .brawl-shop-modal-subtitle {
-    font-size: 0.70rem;
+    font-size: 0.58rem;
     font-weight: 800;
     color: #38bdf8;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     text-transform: uppercase;
     font-family: 'Orbitron', sans-serif;
+    line-height: 1;
+    display: block;
   }
 
   .brawl-shop-modal-title {
     font-family: 'Orbitron', sans-serif;
-    font-size: clamp(1.15rem, 3.5vw, 1.65rem);
+    font-size: clamp(0.95rem, 2.2vw, 1.25rem);
     font-weight: 900;
     color: #ffd23c;
     margin: 2px 0 0 0;
     letter-spacing: 0.5px;
-    text-shadow: 0 0 12px rgba(255, 210, 60, 0.6);
+    text-shadow: 0 0 10px rgba(255, 210, 60, 0.5);
+    line-height: 1.1;
   }
 
   .brawl-shop-wallet-pill {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     background: rgba(15, 23, 42, 0.85);
     border: 1.5px solid rgba(255, 210, 60, 0.4);
-    border-radius: 20px;
-    padding: 6px 14px;
+    border-radius: 14px;
+    padding: 4px 10px;
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.82rem;
+    font-size: 0.74rem;
     font-weight: 800;
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
   }
 
   .brawl-shop-modal-close {
     background: rgba(255, 255, 255, 0.1);
     border: 1.5px solid rgba(255, 255, 255, 0.3);
     color: #ffffff;
-    border-radius: 12px;
-    padding: 8px 16px;
+    border-radius: 10px;
+    padding: 5px 12px;
     cursor: pointer;
     font-family: 'Orbitron', sans-serif;
     font-weight: 800;
-    font-size: 0.82rem;
+    font-size: 0.74rem;
     transition: all 0.2s;
   }
 
@@ -2698,13 +2702,13 @@
     transform: scale(1.05);
   }
 
-  /* Brawl Stars Category Tabs */
+  /* Category Tabs */
   .brawl-shop-nav-tabs {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     overflow-x: auto;
-    padding: 4px 2px 10px 2px;
-    margin-bottom: 12px;
+    padding: 2px 2px 6px 2px;
+    margin-bottom: 8px;
     scrollbar-width: thin;
     scrollbar-color: rgba(56, 189, 248, 0.5) transparent;
   }
@@ -2712,14 +2716,14 @@
   .brawl-shop-tab {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     background: rgba(30, 41, 59, 0.85);
-    border: 2px solid rgba(255, 255, 255, 0.12);
-    border-radius: 14px;
-    padding: 8px 14px;
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 5px 10px;
     color: #94a3b8;
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.76rem;
+    font-size: 0.72rem;
     font-weight: 800;
     cursor: pointer;
     white-space: nowrap;
@@ -3132,7 +3136,7 @@
         <div class="brawl-shop-modal-badge-icon">🏪</div>
         <div>
           <span class="brawl-shop-modal-subtitle">⚡ GALAXY ARSENAL &amp; DEALS</span>
-          <h1 class="brawl-shop-modal-title">BRAWL STARS COSMIC SHOP</h1>
+          <h1 class="brawl-shop-modal-title">STARFORGE COSMIC SHOP</h1>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
