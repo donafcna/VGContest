@@ -2237,6 +2237,84 @@
     }
   }
 
+
+  /* Home Screen Stacked Rows Menu Layout */
+  .menu-btn-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 440px;
+    margin: 0.6rem auto 0 auto;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+
+  .menu-stack-btn {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-weight: 900 !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
+    border-radius: 16px !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s, filter 0.15s !important;
+    margin: 0 !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    touch-action: manipulation !important;
+    pointer-events: auto !important;
+    position: relative !important;
+  }
+
+  .menu-stack-btn:hover {
+    transform: translateY(-3px) scale(1.02) !important;
+    filter: brightness(1.12) !important;
+  }
+
+  .menu-stack-btn:active {
+    transform: scale(0.97) !important;
+  }
+
+  #startbtn.menu-stack-btn {
+    background: linear-gradient(135deg, #ffb834 0%, #ea6c10 100%) !important;
+    color: #1a0c00 !important;
+    font-size: 1.3rem !important;
+    padding: 16px 20px !important;
+    box-shadow: 0 8px 30px rgba(255, 160, 40, 0.65), inset 0 2px 4px rgba(255, 255, 255, 0.4) !important;
+    z-index: 9999 !important;
+  }
+
+  #hangarbtn.menu-stack-btn {
+    background: linear-gradient(135deg, #8a7bff 0%, #5b48e0 100%) !important;
+    color: #ffffff !important;
+    font-size: 1.15rem !important;
+    padding: 14px 20px !important;
+    box-shadow: 0 6px 22px rgba(120, 100, 255, 0.5), inset 0 1px 3px rgba(255, 255, 255, 0.3) !important;
+  }
+
+  #dailybtn.menu-stack-btn {
+    background: linear-gradient(135deg, #ff5e62 0%, #ff9966 100%) !important;
+    color: #ffffff !important;
+    font-size: 1.15rem !important;
+    padding: 14px 20px !important;
+    box-shadow: 0 6px 22px rgba(255, 94, 98, 0.5), inset 0 1px 3px rgba(255, 255, 255, 0.3) !important;
+  }
+
+  #bossbtn.menu-stack-btn {
+    background: linear-gradient(135deg, #00e5ff 0%, #7e22ce 100%) !important;
+    color: #ffffff !important;
+    font-size: 1.15rem !important;
+    padding: 14px 20px !important;
+    box-shadow: 0 6px 22px rgba(0, 229, 255, 0.5), inset 0 1px 3px rgba(255, 255, 255, 0.3) !important;
+  }
+
 </style>
 </head>
 <body>
@@ -2404,11 +2482,11 @@
     🚀 <b>Flight Movement</b>: <b>W A S D</b> or <b>Arrow Keys</b> • 📱 <b>Mobile</b>: D-Pad &amp; On-Screen Buttons
   </div>
   <input id="pname" placeholder="Captain Name" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
-  <div class="btnrow">
-    <button id="startbtn" type="button" class="action-btn" onclick="startSolarSail(event)" onpointerdown="startSolarSail(event)" style="background:linear-gradient(135deg,#ffb834,#ea6c10);color:#1a0c00;border:none;border-radius:14px;cursor:pointer;font-weight:900;box-shadow:0 8px 28px rgba(255,160,40,0.55);letter-spacing:1.5px;text-transform:uppercase;font-size:1.25rem;padding:15px 46px;margin-top:0.4rem;position:relative;z-index:9999;pointer-events:auto!important;-webkit-user-select:none;user-select:none">⚓ SET SOLAR SAIL!</button>
-    <button id="hangarbtn" type="button" class="action-btn" onclick="openHangar(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;box-shadow:0 4px 18px rgba(120,100,255,0.45)">🛠️ SHIPYARD &amp; ARSENAL</button>
-    <button id="dailybtn" type="button" class="action-btn" onclick="openDailyModal(event)" style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(255,94,98,0.55);position:relative;cursor:pointer">🎁 DAILY REWARDS <span id="dailyBadge" class="daily-badge hidden">!</span></button>
-    <button id="bossbtn" type="button" class="action-btn" onclick="openBossIntelModal(event)" style="background:linear-gradient(135deg,#00e5ff,#7e22ce);color:#fff;font-size:1.15rem;padding:14px 28px;border-radius:14px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 22px rgba(0,229,255,0.55);position:relative;cursor:pointer">👾 BOSS & FLEET INTEL</button>
+  <div class="menu-btn-stack">
+    <button id="startbtn" type="button" class="action-btn menu-stack-btn" onclick="startSolarSail(event)" onpointerdown="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
+    <button id="hangarbtn" type="button" class="action-btn menu-stack-btn" onclick="openHangar(event)">🛠️ SHIPYARD &amp; ARSENAL</button>
+    <button id="dailybtn" type="button" class="action-btn menu-stack-btn" onclick="openDailyModal(event)">🎁 DAILY REWARDS <span id="dailyBadge" class="daily-badge hidden">!</span></button>
+    <button id="bossbtn" type="button" class="action-btn menu-stack-btn" onclick="openBossIntelModal(event)">👾 BOSS &amp; FLEET INTEL</button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.1rem; color:#ffd23c; font-weight:bold"></p>
   <p id="bestline" style="margin-top:0.2rem; font-size:1rem; color:#ffd23c; font-weight:bold; min-height:1.2em"></p>
