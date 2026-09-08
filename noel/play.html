@@ -2315,6 +2315,152 @@
     box-shadow: 0 6px 22px rgba(0, 229, 255, 0.5), inset 0 1px 3px rgba(255, 255, 255, 0.3) !important;
   }
 
+
+  /* Brawl Stars Style Middle-Right Daily Rewards Floating Tile */
+  .middle-right-daily-wrap {
+    position: fixed;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    pointer-events: auto !important;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .brawl-daily-tile {
+    background: linear-gradient(180deg, #2a3b5a 0%, #121a2c 100%);
+    border: 2.5px solid #ffd23c;
+    border-radius: 20px;
+    padding: 10px 8px 8px 8px;
+    width: 82px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.75), 0 0 16px rgba(255, 210, 60, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s, border-color 0.2s;
+    position: relative;
+  }
+
+  .brawl-daily-tile:hover {
+    transform: scale(1.08) translateX(-4px);
+    border-color: #ffffff;
+    box-shadow: 0 12px 34px rgba(255, 94, 98, 0.7), 0 0 24px rgba(255, 210, 60, 0.8), inset 0 2px 6px rgba(255, 255, 255, 0.5);
+    background: linear-gradient(180deg, #354a73 0%, #1a253e 100%);
+  }
+
+  .brawl-daily-tile:active {
+    transform: scale(0.95);
+  }
+
+  .brawl-daily-header {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.54rem;
+    font-weight: 900;
+    color: #ffd23c;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: 2px;
+  }
+
+  .brawl-daily-icon-wrap {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    background: radial-gradient(circle, #ff5e62 0%, #ea580c 100%);
+    border: 2px solid #ffd23c;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2px 0 4px 0;
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  }
+
+  .brawl-daily-gift-icon {
+    font-size: 1.7rem;
+    line-height: 1;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+    animation: brawlDailyGiftShake 2.5s infinite ease-in-out;
+  }
+
+  @keyframes brawlDailyGiftShake {
+    0%, 80%, 100% { transform: scale(1) rotate(0deg); }
+    85% { transform: scale(1.15) rotate(-8deg); }
+    90% { transform: scale(1.15) rotate(8deg); }
+    95% { transform: scale(1.15) rotate(-5deg); }
+  }
+
+  .brawl-daily-alert-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ef4444;
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 900;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    animation: brawlBadgePulse 1.2s infinite alternate;
+  }
+
+  @keyframes brawlBadgePulse {
+    0% { transform: scale(1); box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); }
+    100% { transform: scale(1.15); box-shadow: 0 0 12px rgba(239, 68, 68, 1); }
+  }
+
+  .brawl-daily-status {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 900;
+    color: #22c55e;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+  }
+
+  .brawl-daily-streak {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.52rem;
+    font-weight: 800;
+    color: #94a3b8;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+    padding: 1px 5px;
+    margin-top: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .middle-right-daily-wrap {
+      right: 8px;
+    }
+    .brawl-daily-tile {
+      width: 72px;
+      padding: 8px 4px 6px 4px;
+      border-radius: 16px;
+    }
+    .brawl-daily-icon-wrap {
+      width: 38px;
+      height: 38px;
+    }
+    .brawl-daily-gift-icon {
+      font-size: 1.4rem;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -2411,7 +2557,21 @@
   <p style="margin-top:1.4rem"><a class="exitlink" href="../" style="color:#8fa6cb;font-size:0.92rem;text-decoration:none">🚪 EXIT TO CONTEST HUB</a></p>
 </div>
 
-<div id="menu" class="overlay">
+
+  <!-- Brawl Stars Style Middle-Right Daily Rewards Floating Widget -->
+  <div id="middleRightDailyWrap" class="middle-right-daily-wrap" onclick="openDailyModal(event)" role="button" tabindex="0" title="Tap to claim Daily Voyage Rewards!">
+    <div class="brawl-daily-tile">
+      <div class="brawl-daily-header">DAILY GIFT</div>
+      <div class="brawl-daily-icon-wrap">
+        <span class="brawl-daily-gift-icon">🎁</span>
+        <span id="rightDailyClaimBadge" class="brawl-daily-alert-badge">!</span>
+      </div>
+      <div id="rightDailyStatusText" class="brawl-daily-status">CLAIM!</div>
+      <div id="rightDailyStreakPill" class="brawl-daily-streak">DAY 7</div>
+    </div>
+  </div>
+
+  <div id="menu" class="overlay">
     <!-- Brawl Stars Style Top-Left Player Profile Banner & Hub Button -->
   <div class="top-left-profile-wrap" id="topLeftProfileWrap">
     <!-- Player Profile Card (Avatar + Name + Trophies + Rank) -->
@@ -8503,12 +8663,10 @@ window.copyProfilePilotId = copyProfilePilotId;
 
 function updateTopProfileVisibility() {
   const wrap = document.getElementById('topLeftProfileWrap');
-  if (!wrap) return;
-  if (state === 'menu') {
-    wrap.style.display = 'flex';
-  } else {
-    wrap.style.display = 'none';
-  }
+  if (wrap) wrap.style.display = (state === 'menu') ? 'flex' : 'none';
+
+  const dailyRight = document.getElementById('middleRightDailyWrap');
+  if (dailyRight) dailyRight.style.display = (state === 'menu') ? 'flex' : 'none';
 }
 window.updateTopProfileVisibility = updateTopProfileVisibility;
 
@@ -8760,13 +8918,46 @@ function getDailyRewardStatus() {
 
 function updateDailyBadge() {
   const badge = document.getElementById('dailyBadge');
-  if (!badge) return;
+  const rightBadge = document.getElementById('rightDailyClaimBadge');
+  const rightStatus = document.getElementById('rightDailyStatusText');
+  const rightStreak = document.getElementById('rightDailyStreakPill');
   const status = getDailyRewardStatus();
-  if (status.state === 'READY' || status.state === 'MISSED') {
-    badge.classList.remove('hidden');
-    badge.textContent = status.state === 'MISSED' ? '!' : '🎁';
-  } else {
-    badge.classList.add('hidden');
+  const daily = (SAVE && SAVE.data && SAVE.data.daily) || { streak: 0 };
+
+  if (badge) {
+    if (status.state === 'READY' || status.state === 'MISSED') {
+      badge.classList.remove('hidden');
+      badge.textContent = status.state === 'MISSED' ? '!' : '🎁';
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+
+  if (rightBadge) {
+    if (status.state === 'READY' || status.state === 'MISSED') {
+      rightBadge.style.display = 'flex';
+      rightBadge.textContent = '!';
+    } else {
+      rightBadge.style.display = 'none';
+    }
+  }
+
+  if (rightStatus) {
+    if (status.state === 'READY') {
+      rightStatus.textContent = 'CLAIM!';
+      rightStatus.style.color = '#22c55e';
+    } else if (status.state === 'MISSED') {
+      rightStatus.textContent = 'RECOVER!';
+      rightStatus.style.color = '#ff3344';
+    } else {
+      rightStatus.textContent = 'READY!';
+      rightStatus.style.color = '#ffd23c';
+    }
+  }
+
+  if (rightStreak) {
+    const curStreak = (daily.streak > 0) ? daily.streak : 1;
+    rightStreak.textContent = 'DAY ' + (((curStreak - 1) % 7) + 1);
   }
 }
 
