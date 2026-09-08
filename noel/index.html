@@ -1916,6 +1916,240 @@
     }
   }
 
+
+  /* Brawl Stars Style Top-Left Player Profile Card */
+  .top-left-profile-wrap {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    pointer-events: auto !important;
+  }
+
+  .top-profile-card {
+    background: linear-gradient(180deg, #202d45 0%, #0f1829 100%);
+    border: 2px solid #ffd23c;
+    border-radius: 16px;
+    padding: 5px 12px 5px 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.65), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s, border-color 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .top-profile-card:hover {
+    transform: translateY(-2px) scale(1.03);
+    border-color: #ffffff;
+    box-shadow: 0 6px 26px rgba(255, 210, 60, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.35);
+    background: linear-gradient(180deg, #2b3d60 0%, #16243d 100%);
+  }
+
+  .top-profile-card:active {
+    transform: scale(0.96);
+  }
+
+  .top-profile-avatar-wrap {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    background: radial-gradient(circle, #3b82f6 0%, #1e3a8a 100%);
+    border: 2px solid #ffd23c;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 0 10px rgba(255, 210, 60, 0.5);
+    flex-shrink: 0;
+  }
+
+  .top-profile-lvl-badge {
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+    background: #e11d48;
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 900;
+    padding: 1px 4px;
+    border-radius: 6px;
+    border: 1px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    line-height: 1;
+  }
+
+  .top-profile-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 1px;
+  }
+
+  .top-profile-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+  }
+
+  .top-profile-trophies {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #ffd23c;
+  }
+
+  .top-profile-rank-bar {
+    width: 100%;
+    min-width: 90px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 2px;
+  }
+
+  .top-profile-rank-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #ffd23c, #ff9900);
+    border-radius: 2px;
+  }
+
+  .top-hub-mini-btn {
+    background: rgba(255, 210, 60, 0.15);
+    border: 1px solid rgba(255, 210, 60, 0.4);
+    border-radius: 12px;
+    color: #ffd23c;
+    padding: 8px 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    transition: all 0.2s;
+  }
+
+  .top-hub-mini-btn:hover {
+    background: rgba(255, 210, 60, 0.35);
+    border-color: #ffd23c;
+    transform: translateY(-2px);
+    color: #ffffff;
+  }
+
+  /* Profile Dossier Modal */
+  .profile-modal-card {
+    background: linear-gradient(180deg, #131c2e 0%, #0a101d 100%);
+    border: 2px solid #ffd23c;
+    border-radius: 24px;
+    padding: 24px;
+    max-width: 640px;
+    width: 92%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 210, 60, 0.25);
+    color: #f0f3ff;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .profile-avatar-large {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #3b82f6 0%, #1e3a8a 100%);
+    border: 3px solid #ffd23c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    box-shadow: 0 0 20px rgba(255, 210, 60, 0.6);
+  }
+
+  .avatar-pick-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    font-size: 1.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+  }
+
+  .avatar-pick-btn:hover {
+    transform: scale(1.1);
+    border-color: #ffd23c;
+    background: rgba(255, 210, 60, 0.2);
+  }
+
+  .avatar-pick-btn.selected {
+    border-color: #ffd23c;
+    background: rgba(255, 210, 60, 0.3);
+    box-shadow: 0 0 14px rgba(255, 210, 60, 0.7);
+  }
+
+  .stat-box-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+  }
+
+  @media (max-width: 768px) {
+    .top-left-profile-wrap {
+      top: 8px;
+      left: 8px;
+      gap: 6px;
+    }
+    .top-profile-card {
+      padding: 4px 8px 4px 4px;
+      gap: 6px;
+    }
+    .top-profile-avatar-wrap {
+      width: 36px;
+      height: 36px;
+      font-size: 1.2rem;
+    }
+    .top-profile-name {
+      font-size: 0.75rem;
+    }
+    .top-profile-trophies {
+      font-size: 0.65rem;
+    }
+    .top-profile-rank-bar {
+      min-width: 70px;
+    }
+    .top-hub-mini-btn {
+      padding: 6px 8px;
+      font-size: 0.7rem;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -2218,6 +2452,87 @@
 <!-- Cross-Device Online Fleet Multiplayer Modal -->
 
 <!-- Brawl Stars Style Friends & Add Friends Modal -->
+<!-- Brawl Stars Style Player Profile & Career Stats Dossier Modal -->
+<div id="profileModal" class="overlay hidden" style="z-index: 135;">
+  <div class="profile-modal-card">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:12px;margin-bottom:16px;">
+      <div style="text-align:left">
+        <span style="font-size:0.75rem;font-weight:bold;color:#ffd23c;letter-spacing:1.5px;text-transform:uppercase">🌟 GALACTIC FLEET DOSSIER</span>
+        <h1 style="font-family:'Orbitron',sans-serif;font-size:1.35rem;color:#ffffff;margin:2px 0">👤 CAPTAIN PROFILE</h1>
+      </div>
+      <button onclick="closeProfileModal(event)" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;width:36px;height:36px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900;">✕</button>
+    </div>
+
+    <!-- Hero Profile Header -->
+    <div style="background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(255,210,60,0.1));border:1px solid rgba(255,210,60,0.3);border-radius:18px;padding:16px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:18px;">
+      <div class="profile-avatar-large" id="modalProfileAvatarLarge">
+        <span id="modalProfileAvatarIcon">🏴‍☠️</span>
+      </div>
+      <div style="flex:1;min-width:200px;text-align:left">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <h2 id="modalProfileName" style="font-family:'Orbitron',sans-serif;font-size:1.3rem;color:#ffffff;font-weight:900;margin:0">NoelTheGoat</h2>
+          <span style="background:#e11d48;color:#fff;font-size:0.7rem;font-weight:900;padding:2px 8px;border-radius:8px;font-family:'Orbitron',sans-serif">★ RANK 50</span>
+        </div>
+        <p style="font-size:0.85rem;color:#ffd23c;font-weight:700;margin:4px 0 6px 0;font-family:'Orbitron',sans-serif">👑 MASTER SUPREME OVERLORD</p>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.78rem;color:#94a3b8">
+          <span>Pilot ID: <b id="modalPilotId" style="color:#00ffee;font-family:monospace">#PILOT-SOLAR-8472</b></span>
+          <button onclick="copyProfilePilotId()" style="background:rgba(0,229,255,0.15);border:1px solid #00e5ff;color:#00ffee;padding:2px 8px;border-radius:6px;font-size:0.7rem;cursor:pointer;font-weight:bold;">📋 Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Choose Profile Avatar -->
+    <div style="text-align:left;margin-bottom:18px;">
+      <span style="font-size:0.8rem;font-weight:bold;color:#ffd23c;letter-spacing:1px;text-transform:uppercase">🎨 CHOOSE AVATAR ICON</span>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;" id="avatarPickerContainer">
+        <button class="avatar-pick-btn selected" onclick="selectAvatarIcon('🏴‍☠️', event)">🏴‍☠️</button>
+        <button class="avatar-pick-btn" onclick="selectAvatarIcon('🛸', event)">🛸</button>
+        <button class="avatar-pick-btn" onclick="selectAvatarIcon('👑', event)">👑</button>
+        <button class="avatar-pick-btn" onclick="selectAvatarIcon('⚡', event)">⚡</button>
+        <button class="avatar-pick-btn" onclick="selectAvatarIcon('🐉', event)">🐉</button>
+        <button class="avatar-pick-btn" onclick="selectAvatarIcon('🌟', event)">🌟</button>
+      </div>
+    </div>
+
+    <!-- Career Statistics Grid -->
+    <div style="text-align:left;margin-bottom:16px;">
+      <span style="font-size:0.8rem;font-weight:bold;color:#ffd23c;letter-spacing:1px;text-transform:uppercase">📊 CAREER COMBAT RECORDS</span>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:10px;margin-top:8px;">
+        <div class="stat-box-card">
+          <span style="font-size:0.7rem;color:#94a3b8">🏆 Highest Trophies</span>
+          <b id="statTrophies" style="font-family:'Orbitron',sans-serif;color:#ffd23c;font-size:1.05rem">100,000</b>
+        </div>
+        <div class="stat-box-card">
+          <span style="font-size:0.7rem;color:#94a3b8">⚔️ Ships Destroyed</span>
+          <b id="statKills" style="font-family:'Orbitron',sans-serif;color:#ff3366;font-size:1.05rem">2,500</b>
+        </div>
+        <div class="stat-box-card">
+          <span style="font-size:0.7rem;color:#94a3b8">💰 Cosmic Gold</span>
+          <b id="statGold" style="font-family:'Orbitron',sans-serif;color:#eab308;font-size:1.05rem">99,999</b>
+        </div>
+        <div class="stat-box-card">
+          <span style="font-size:0.7rem;color:#94a3b8">⚡ Quantum Cores</span>
+          <b id="statTokens" style="font-family:'Orbitron',sans-serif;color:#00ffee;font-size:1.05rem">999</b>
+        </div>
+        <div class="stat-box-card">
+          <span style="font-size:0.7rem;color:#94a3b8">🚀 Fleet Flagships</span>
+          <b id="statShips" style="font-family:'Orbitron',sans-serif;color:#a855f7;font-size:1.05rem">5 / 5 Unlocked</b>
+        </div>
+        <div class="stat-box-card">
+          <span style="font-size:0.7rem;color:#94a3b8">👑 Highest Flagship</span>
+          <b style="font-family:'Orbitron',sans-serif;color:#22c55e;font-size:0.85rem">Sector 10 Boss</b>
+        </div>
+      </div>
+    </div>
+
+    <!-- Close Button -->
+    <button onclick="closeProfileModal(event)" style="width:100%;padding:12px;background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;border:none;border-radius:12px;font-family:'Orbitron',sans-serif;font-size:0.95rem;font-weight:900;letter-spacing:1px;cursor:pointer;box-shadow:0 6px 20px rgba(138,123,255,0.4);margin-top:10px;">
+      ✕ CLOSE PROFILE
+    </button>
+  </div>
+</div>
+
 <div id="friendsModal" class="overlay hidden" style="z-index: 130;">
   <div class="online-card" style="max-width: 580px;">
     <div class="online-header">
@@ -3891,7 +4206,7 @@ function activateVipPass(code) {
     if (inp) inp.value = 'Captain Noël';
     SAVE.load();
     applyLoadout();
-    renderWallet();
+    renderWallet(); try { updateProfileUI(); } catch(e) {}
     updateTrailBadge();
     buildShop();
     renderLeaderboard('lbMenu', -1, playerName);
@@ -7300,7 +7615,7 @@ window.closeFriendsModal = closeFriendsModal;
 function openSettingsModal(e) {
   if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
   try { initAudio(); } catch(err) {}
-  const m = document.getElementById('settingsModal');
+  const m = document.getElementById('settingsModal', 'profileModal');
   if (m) m.classList.remove('hidden');
   updateSettingsUI();
 }
@@ -7308,7 +7623,7 @@ window.openSettingsModal = openSettingsModal;
 
 function closeSettingsModal(e) {
   if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
-  const m = document.getElementById('settingsModal');
+  const m = document.getElementById('settingsModal', 'profileModal');
   if (m) m.classList.add('hidden');
 }
 window.closeSettingsModal = closeSettingsModal;
@@ -7630,7 +7945,7 @@ function startSolarSail(e) {
   
   // 1. IMMEDIATELY FORCEFULLY HIDE ALL OVERLAYS AND MENU
   try {
-    const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal'];
+    const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal', 'profileModal'];
     overlays.forEach(id => hideOverlay(id));
     const m = document.getElementById('menu');
     if (m) { m.style.display = 'none'; m.classList.add('hidden'); m.style.pointerEvents = 'none'; }
@@ -7639,7 +7954,7 @@ function startSolarSail(e) {
   // 2. SET CINEMATIC STORYLINE PROLOGUE STATE
   state = 'intro'; if (typeof window !== 'undefined') window.state = 'intro';
   updatePauseBtnVisibility();
-  try { updateTopBrawlBarVisibility(); } catch(e) {}
+  try { updateTopBrawlBarVisibility(); try { updateTopProfileVisibility(); } catch(e) {} } catch(e) {}
   if (cv && cv.focus) { try { cv.focus(); } catch(err) {} }
 
   // 3. BROADCAST TO MULTIPLAYER HOST IF ACTIVE
@@ -7718,7 +8033,7 @@ function startSolarSail(e) {
   try { initAudio(); } catch(err) {}
   try { sfx('warp'); } catch(err) {}
   try { updateDpadVisibility(); } catch(err) {}
-  try { updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); } catch(e) {} } catch(err) {}
+  try { updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); try { updateTopProfileVisibility(); } catch(e) {} } catch(e) {} } catch(err) {}
   try { updateBrawlControlsVisibility(); } catch(err) {}
 }
 window.startSolarSail = startSolarSail;
@@ -7799,6 +8114,140 @@ if (typeof window !== 'undefined') {
   });
 }
 
+
+// ---------- BRAWL STARS PLAYER PROFILE & DOSSIER LOGIC ----------
+let currentAvatarIcon = '🏴‍☠️';
+try {
+  currentAvatarIcon = safeStorage.getItem('sp_avatar') || '🏴‍☠️';
+} catch(e) {}
+
+function getPlayerPilotId() {
+  let uid = '';
+  try {
+    uid = (SAVE && SAVE.data && SAVE.data.uid) || safeStorage.getItem('sp_uid') || '';
+  } catch(e) {}
+  if (!uid) {
+    uid = 'PILOT-SOLAR-' + Math.floor(1000 + Math.random() * 9000);
+    try { safeStorage.setItem('sp_uid', uid); } catch(e) {}
+  }
+  return uid.startsWith('#') ? uid : '#' + uid;
+}
+
+function updateProfileUI() {
+  try {
+    const name = (document.getElementById('pname') && document.getElementById('pname').value.trim()) || (SAVE && SAVE.data && SAVE.data.name) || safeStorage.getItem('sp_name') || 'NoelTheGoat';
+    const trophies = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : ((SAVE && SAVE.data && SAVE.data.trophies) || 100000);
+    const gold = (SAVE && SAVE.data && SAVE.data.coins) || 99999;
+    const tokens = (SAVE && SAVE.data && SAVE.data.tokens) || 999;
+    const kills = (SAVE && SAVE.data && SAVE.data.kills) || 2500;
+    const pilotId = getPlayerPilotId();
+
+    // Top-Left Bar
+    const topName = document.getElementById('topProfileName');
+    if (topName) topName.textContent = name;
+
+    const topTrophies = document.getElementById('topProfileTrophyCount');
+    if (topTrophies) topTrophies.textContent = trophies.toLocaleString();
+
+    const topAvatar = document.getElementById('topProfileAvatarIcon');
+    if (topAvatar) topAvatar.textContent = currentAvatarIcon;
+
+    // Profile Modal
+    const mName = document.getElementById('modalProfileName');
+    if (mName) mName.textContent = name;
+
+    const mAvatar = document.getElementById('modalProfileAvatarIcon');
+    if (mAvatar) mAvatar.textContent = currentAvatarIcon;
+
+    const mId = document.getElementById('modalPilotId');
+    if (mId) mId.textContent = pilotId;
+
+    const sTrophies = document.getElementById('statTrophies');
+    if (sTrophies) sTrophies.textContent = trophies.toLocaleString();
+
+    const sGold = document.getElementById('statGold');
+    if (sGold) sGold.textContent = gold.toLocaleString();
+
+    const sTokens = document.getElementById('statTokens');
+    if (sTokens) sTokens.textContent = tokens.toLocaleString();
+
+    const sKills = document.getElementById('statKills');
+    if (sKills) sKills.textContent = kills.toLocaleString();
+
+    const sShips = document.getElementById('statShips');
+    if (sShips) {
+      const unlockedCount = (SAVE && SAVE.data && SAVE.data.ships && SAVE.data.ships.length) || 5;
+      sShips.textContent = unlockedCount + ' / 5 Unlocked';
+    }
+  } catch(err) {
+    console.error('updateProfileUI error:', err);
+  }
+}
+window.updateProfileUI = updateProfileUI;
+
+function openProfileModal(e) {
+  if (e) {
+    try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
+  }
+  try { initAudio(); sfx('pew'); } catch (err) {}
+  updateProfileUI();
+  showOverlay('profileModal');
+}
+window.openProfileModal = openProfileModal;
+
+function closeProfileModal(e) {
+  if (e) {
+    try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
+  }
+  hideOverlay('profileModal');
+}
+window.closeProfileModal = closeProfileModal;
+
+function selectAvatarIcon(icon, e) {
+  if (e) {
+    try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
+  }
+  try { initAudio(); sfx('pew'); } catch (err) {}
+  currentAvatarIcon = icon;
+  try { safeStorage.setItem('sp_avatar', icon); } catch(err) {}
+
+  // Update selection UI buttons
+  const container = document.getElementById('avatarPickerContainer');
+  if (container) {
+    const btns = container.querySelectorAll('.avatar-pick-btn');
+    btns.forEach(b => {
+      if (b.textContent.trim() === icon) b.classList.add('selected');
+      else b.classList.remove('selected');
+    });
+  }
+
+  updateProfileUI();
+}
+window.selectAvatarIcon = selectAvatarIcon;
+
+function copyProfilePilotId() {
+  const pid = getPlayerPilotId();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(pid);
+    alert('📋 Pilot ID Copied: ' + pid);
+  } else {
+    prompt('Your Pilot ID:', pid);
+  }
+}
+window.copyProfilePilotId = copyProfilePilotId;
+
+function updateTopProfileVisibility() {
+  const wrap = document.getElementById('topLeftProfileWrap');
+  if (!wrap) return;
+  if (state === 'menu') {
+    wrap.style.display = 'flex';
+  } else {
+    wrap.style.display = 'none';
+  }
+}
+window.updateTopProfileVisibility = updateTopProfileVisibility;
+
+
 function updateTopBrawlBarVisibility() {
   const bar = document.getElementById('topBrawlBar');
   if (!bar) return;
@@ -7828,7 +8277,7 @@ function togglePause(e) {
     if (typeof window !== 'undefined') window.state = state;
     hideOverlay('pauseoverlay'); const ptBtn = document.getElementById('pauseTopAudioBtn'); if (ptBtn) ptBtn.style.display = 'none';
     updateDpadVisibility();
-    updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); } catch(e) {}
+    updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); try { updateTopProfileVisibility(); } catch(e) {} } catch(e) {}
     updateBrawlControlsVisibility();
   } else if (state === 'play' || state === 'intro') {
     prePauseState = state;
@@ -7836,7 +8285,7 @@ function togglePause(e) {
     if (typeof window !== 'undefined') window.state = state;
     showOverlay('pauseoverlay'); const ptBtn = document.getElementById('pauseTopAudioBtn'); if (ptBtn) { ptBtn.style.display = 'flex'; updatePauseVolumeUI(); }
     updateDpadVisibility();
-    updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); } catch(e) {}
+    updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); try { updateTopProfileVisibility(); } catch(e) {} } catch(e) {}
   }
 }
 window.togglePause = togglePause;
@@ -7855,7 +8304,7 @@ function returnToMenu(e) {
   if (typeof window !== 'undefined') window.state = 'menu';
 
   // Hide all gameplay overlays & modals
-  const overlays = ['pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal'];
+  const overlays = ['pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal', 'profileModal'];
   overlays.forEach(id => hideOverlay(id));
 
   // Show main menu quarterdeck
@@ -7866,10 +8315,10 @@ function returnToMenu(e) {
   boss = null; bossT = 12; score = 0; coinsN = 0; level = 1; t = 0;
   storyStage = 0; storySectorAnnounced = 1;
 
-  updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); } catch(e) {}
+  updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); try { updateTopProfileVisibility(); } catch(e) {} } catch(e) {}
   updateDpadVisibility();
   updateBrawlControlsVisibility();
-  try { renderWallet(); } catch(err) {}
+  try { renderWallet(); try { updateProfileUI(); } catch(e) {} } catch(err) {}
   try { renderLeaderboard('lbMenu', -1, null); } catch(err) {}
 }
 window.returnToMenu = returnToMenu;
@@ -7914,7 +8363,7 @@ function lose() {
   }
   sfx('boom');
   updateDpadVisibility();
-  updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); } catch(e) {}
+  updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); try { updateTopProfileVisibility(); } catch(e) {} } catch(e) {}
   const pb = saveBest();
   const bank = bankRun();
   document.getElementById('losetext').textContent =
@@ -8175,7 +8624,7 @@ function claimDailyReward() {
   if (reward.tokens > 0) popup(W * 0.5, H * 0.46, `+${reward.tokens} 🎟️ Plasma Cores!`, '#c084fc');
   if (reward.spins > 0) popup(W * 0.5, H * 0.52, `+${reward.spins} 🎡 Lucky Spins!`, '#00ffee');
 
-  renderWallet();
+  renderWallet(); try { updateProfileUI(); } catch(e) {}
   updateDailyBadge();
   if (typeof updateTopTrailBar === "function") updateTopTrailBar();
   if (typeof updateTrailBadge === "function") updateTrailBadge();
@@ -8200,7 +8649,7 @@ function repairDailyStreak() {
   sfx('map');
   popup(W * 0.5, H * 0.4, '🛡️ VOYAGE STREAK REPAIRED! (-5 🎟️)', '#a855f7');
 
-  renderWallet();
+  renderWallet(); try { updateProfileUI(); } catch(e) {}
   updateDailyBadge();
   if (typeof updateTopTrailBar === "function") updateTopTrailBar();
   if (typeof updateTrailBadge === "function") updateTrailBadge();
@@ -8217,7 +8666,7 @@ function resetDailyStreak() {
   sfx('coin');
   popup(W * 0.5, H * 0.4, '🔄 VOYAGE STREAK RESET TO DAY 1!', '#ffd23c');
 
-  renderWallet();
+  renderWallet(); try { updateProfileUI(); } catch(e) {}
   updateDailyBadge();
   if (typeof updateTopTrailBar === "function") updateTopTrailBar();
   if (typeof updateTrailBadge === "function") updateTrailBadge();
@@ -8240,7 +8689,7 @@ window.openDailyModal = openDailyModal;
 function closeDailyModal() {
   const modal = document.getElementById('dailyModal');
   if (modal) modal.classList.add('hidden');
-  renderWallet();
+  renderWallet(); try { updateProfileUI(); } catch(e) {}
   updateDailyBadge();
   if (typeof updateTopTrailBar === "function") updateTopTrailBar();
   if (typeof updateTrailBadge === "function") updateTrailBadge();
@@ -8391,7 +8840,7 @@ function closeSpinModal() {
   const modal = document.getElementById('spinModal');
   if (modal) modal.classList.add('hidden');
   buildShop();
-  renderWallet();
+  renderWallet(); try { updateProfileUI(); } catch(e) {}
 }
 
 function updateSpinModalUI() {
@@ -8487,7 +8936,7 @@ function triggerSlotSpin() {
       }
 
       updateSpinModalUI();
-      renderWallet();
+      renderWallet(); try { updateProfileUI(); } catch(e) {}
       buildShop();
     }
   }
@@ -8501,7 +8950,7 @@ function doSpin() {
 }
 
 function buildShop() {
-  renderWallet();
+  renderWallet(); try { updateProfileUI(); } catch(e) {}
   let h = '';
   
   // VIP Creator Banner — EXCLUSIVE TO NOËL
@@ -8782,7 +9231,7 @@ function closeShop(e) {
   if (s) s.classList.add('hidden');
   const m = document.getElementById('menu');
   if (m) m.classList.remove('hidden');
-  renderWallet();
+  renderWallet(); try { updateProfileUI(); } catch(e) {}
 }
 
 // Global Window Function Attachments for 100% Click Reliability
@@ -8921,7 +9370,7 @@ function closeTrailModal(e) {
   const m = document.getElementById('trailModal');
   if (m) m.classList.add('hidden');
   updateTrailBadge();
-  renderWallet();
+  renderWallet(); try { updateProfileUI(); } catch(e) {}
 }
 window.closeTrailModal = closeTrailModal;
 
@@ -8973,7 +9422,7 @@ function claimTrailReward(nodeId) {
   renderTrailModalUI();
   updateTrailBadge();
   if (typeof updateTopTrailBar === "function") updateTopTrailBar();
-  renderWallet();
+  renderWallet(); try { updateProfileUI(); } catch(e) {}
 }
 window.claimTrailReward = claimTrailReward;
 
@@ -9127,7 +9576,7 @@ if (document.readyState === 'loading') {
           playerName = val;
           SAVE.load();
           applyLoadout();
-          renderWallet();
+          renderWallet(); try { updateProfileUI(); } catch(e) {}
           if (immediate) {
             LB.updateName(val);
             renderLeaderboard('lbMenu', -1, playerName);
@@ -9162,7 +9611,7 @@ if (document.readyState === 'loading') {
     }
   } catch (e) {}
   renderLeaderboard('lbMenu', -1, null);
-  renderWallet();
+  renderWallet(); try { updateProfileUI(); } catch(e) {}
   applyLoadout();
 })();
 
