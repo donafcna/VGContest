@@ -3751,7 +3751,15 @@ function initAudio() {
         else if (boss) targetFreq = 8000;
         else if (combo >= 3) targetFreq = 6500;
         else if (combo >= 1) targetFreq = 4800;
-        musicFilter.frequency.setTargetAtTime(targetFreq, now, 0.15);
+        try {
+          if (typeof musicFilter.frequency.setTargetAtTime === 'function') {
+            musicFilter.frequency.setTargetAtTime(targetFreq, now, 0.15);
+          } else {
+            musicFilter.frequency.value = targetFreq;
+          }
+        } catch(e) {
+          try { musicFilter.frequency.value = targetFreq; } catch(e2) {}
+        }
       }
 
       while (nextTime < now + 0.4) {
@@ -7127,19 +7135,45 @@ function startCombat() {
   forts = [];
   gliders = [];
   mines = [];
+  coins = [];
+  powerups = [];
+  
+  // 4. Reset ship flight velocities and ensure valid coordinates
+  try {
+    if (ship && typeof ship === 'object') {
+      ship.vx = 0;
+      ship.vy = 0;
+      ship.pitch = 0;
+      ship.inv = 2.0;
+      ship.x = Math.max(80, Math.min(W - 140, (typeof ship.x === 'number' && !isNaN(ship.x)) ? ship.x : W * 0.22));
+      ship.y = Math.max(70, Math.min(H - 80, (typeof ship.y === 'number' && !isNaN(ship.y)) ? ship.y : H * 0.5));
+    }
+  } catch(e) {}
+  
+  // 5. Reset inputs to avoid accidental immediate firing on transition
+  mouse.clicked = false;
+  mouse.down = false;
+  keys.spaceClicked = false;
   
   try { sfx('incoming'); } catch(e) {}
-  addShake(16);
-  addAlert('🚨 RED ALERT: COSMIC ARMADA & ENEMY FLEET INBOUND!', 'incoming');
-  updateDpadVisibility();
-  updateBrawlControlsVisibility();
+  try { addShake(16); } catch(e) {}
+  try { addAlert('🚨 RED ALERT: COSMIC ARMADA & ENEMY FLEET INBOUND!', 'incoming'); } catch(e) {}
+  try { updateDpadVisibility(); } catch(e) {}
+  try { updateBrawlControlsVisibility(); } catch(e) {}
+  try { updatePauseBtnVisibility(); } catch(e) {}
+  try { updateTopBrawlBarVisibility(); } catch(e) {}
+  try { updateTopProfileVisibility(); } catch(e) {}
   
   // Spawn initial enemy squadron
-  spawnGlider(W + 60, H * 0.25, 'tie');
-  spawnGlider(W + 120, H * 0.75, 'stalker');
-  spawnGlider(W + 180, H * 0.50, 'rammer');
-  spawnFort();
+  try {
+    spawnGlider(W + 60, H * 0.25, 'tie');
+    spawnGlider(W + 120, H * 0.75, 'stalker');
+    spawnGlider(W + 180, H * 0.50, 'rammer');
+    spawnFort();
+  } catch(e) { console.error('Spawn initial enemies error:', e); }
   fortT = 3.5;
+  gliderT = 4.0;
+  mineT = 7.0;
 }
 
 
@@ -8363,7 +8397,7 @@ if (typeof window !== 'undefined') {
 
 
 // ---------- BRAWL STARS PLAYER PROFILE & DOSSIER LOGIC ----------
-const AVATAR_CATALOG = [
+const AVATAR_CATALOG = window.AVATAR_CATALOG = [
   { id: 'skull', icon: '💀', name: 'CYBER PIRATE', tier: 'LEGENDARY', tierColor: '#ffd23c', gradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #082f49 100%)', glow: 'rgba(14, 165, 233, 0.85)', border: '#38bdf8' },
   { id: 'saucer', icon: '🛸', name: 'VOID STRIKER', tier: 'MYTHIC', tierColor: '#c084fc', gradient: 'linear-gradient(135deg, #6366f1 0%, #4338ca 50%, #1e1b4b 100%)', glow: 'rgba(99, 102, 241, 0.85)', border: '#818cf8' },
   { id: 'crown', icon: '👑', name: 'SOLAR EMPEROR', tier: 'HYPERCHARGE', tierColor: '#fb923c', gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #78350f 100%)', glow: 'rgba(245, 158, 11, 0.85)', border: '#fbbf24' },
@@ -12248,7 +12282,7 @@ function update(dt) {
               boss.x = W + 220;
               boss.targetX = W - 260;
               boss.y = H * 0.5;
-              boss.hp = hp + 35;
+              boss.hp = (boss.maxhp || 60) + 35;
               boss.maxhp = boss.hp;
               boss.enraged = true;
               boss.atkCycle = 0;
@@ -17996,14 +18030,29 @@ function draw() {
   }
 }
 
-// ---------- SIMULATION LOOP ----------
+// ---------- SIMULATION LOOP (60 FPS BULLETPROOF TIME-SYNC) ----------
 let last = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
 function loop(now) {
   requestAnimationFrame(loop);
-  const dt = Math.min((now - last) / 1000, 0.033);
-  last = now;
-  update(dt);
-  draw();
+  const currentTime = (typeof now === 'number' && !isNaN(now)) ? now : ((typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now());
+  let dt = 0.0166;
+  if (typeof last === 'number' && !isNaN(last) && last > 0) {
+    const elapsed = (currentTime - last) / 1000;
+    if (!isNaN(elapsed) && elapsed > 0) {
+      dt = Math.min(Math.max(0.001, elapsed), 0.033);
+    }
+  }
+  last = currentTime;
+  try {
+    update(dt);
+  } catch(err) {
+    console.error('Update loop error:', err);
+  }
+  try {
+    draw();
+  } catch(err) {
+    console.error('Draw loop error:', err);
+  }
 }
 requestAnimationFrame(loop);
 
