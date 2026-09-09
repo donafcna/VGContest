@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v77';
+  var LATEST_VERSION = 'v=60fps_v78';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -8010,7 +8010,7 @@ function spawnBoss() {
     spinRing: 0,
     atkCycle: 0,
     enraged: false,
-    beamActive: b.id === 'dread' ? 3.5 : 0,
+    beamActive: 0, beamCharge: 0,
     beamAng: Math.PI,
     tractorT: 0,
     isRamming: false, ramChargeT: 0, ramStartX: 0,
@@ -12365,21 +12365,31 @@ function update(dt) {
     }
 
     // Active Boss Timers & Mechanics updates
-    if (boss.beamActive > 0) {
-      boss.beamActive -= dt;
-      // Planet-Killer Death Ray smoothly tracks and sweeps across the player (Normalized shortest-angle interpolation)
+    if (boss.beamCharge > 0) {
+      boss.beamCharge -= dt;
+      // During telegraph charge-up (1.0s), aim quickly towards player so telegraph shows incoming direction
       const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
       const targetAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
       if (boss.beamAng === undefined) boss.beamAng = targetAng;
       let diff = targetAng - boss.beamAng;
       while (diff < -Math.PI) diff += Math.PI * 2;
       while (diff > Math.PI) diff -= Math.PI * 2;
-      boss.beamAng += diff * Math.min(1.0, dt * 3.8);
+      boss.beamAng += diff * Math.min(1.0, dt * 4.5);
+    } else if (boss.beamActive > 0) {
+      boss.beamActive -= dt;
+      // During active firing (2.4s), rotate SLOWLY (dt * 0.85) so player can easily fly or dash up/down to dodge!
+      const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
+      const targetAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
+      if (boss.beamAng === undefined) boss.beamAng = targetAng;
+      let diff = targetAng - boss.beamAng;
+      while (diff < -Math.PI) diff += Math.PI * 2;
+      while (diff > Math.PI) diff -= Math.PI * 2;
+      boss.beamAng += diff * Math.min(1.0, dt * 0.85);
 
       const mdx = ship.x - muzzleX, mdy = ship.y - muzzleY;
       const proj = mdx * Math.cos(boss.beamAng) + mdy * Math.sin(boss.beamAng);
       const perp = Math.abs(-mdx * Math.sin(boss.beamAng) + mdy * Math.cos(boss.beamAng));
-      if (proj > 0 && perp < 34 && ship.inv <= 0) {
+      if (proj > 0 && perp < 20 && ship.inv <= 0) {
         damageShip();
         popup(ship.x, ship.y - 25, '⚡ TACHYON BEAM HIT!', '#00ffaa');
         explode(ship.x, ship.y, '#00ffaa', 18);
@@ -12729,8 +12739,9 @@ function update(dt) {
       if (boss.type === 'dread') {
         // Boss 1: GRAND ADMIRAL VEX: OMEGA DREADNOUGHT
         if (boss.atkCycle === 0 || boss.atkCycle === 2) {
-          // ULTIMATE: Axial Planet-Killer Continuous Emerald Death Ray + Ventral TIE Carrier Launch!
-          boss.beamActive = 3.5;
+          // ULTIMATE: Axial Planet-Killer Continuous Emerald Death Ray (1.0s Telegraph Warning + 2.4s Slow Sweeping Fire)
+          boss.beamCharge = 1.0;
+          boss.beamActive = 2.4;
           const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
           boss.beamAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
           if (gliders.length < 3) {
@@ -12740,9 +12751,9 @@ function update(dt) {
               vx: -240, vy: (Math.random() - 0.5) * 80, shootT: 1.5, w: 56, h: 42
             });
           }
-          addShake(28);
-          popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: AXIAL PLANET-KILLER BEAM!', '#00ffaa');
-          sfx('laser');
+          addAlert('⚠️ WARNING: VEX AXIAL BEAM CHARGING!', 'incoming');
+          popup(boss.x - 40, boss.y - 45, '⚠️ BEAM CHARGING • DODGE!', '#ff0055');
+          sfx('incoming');
           // Twin sponson emerald railgun fire
           for (const cy of [-36, 36]) {
             eballs.push({ type: 'laser', col: '#00ffaa', x: boss.x - boss.w * 0.40, y: boss.y + cy, vx: (dx / dist) * 660 * spdBonus, vy: (dy / dist) * 660 * spdBonus, r: 19 });
@@ -15579,8 +15590,29 @@ function draw() {
       bg.addColorStop(0, 'rgba(0, 255, 170, 0.45)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
       cx.fillStyle = bg; cx.beginPath(); cx.ellipse(0, 0, boss.w * 0.54, boss.h * 0.50, 0, 0, Math.PI * 2); cx.fill();
 
-      // Active Axial Planet-Killer Continuous Death Ray (Aimed and sweeping across player!)
-      if (boss.beamActive > 0) {
+      // Active Axial Planet-Killer Continuous Death Ray (Telegraph Warning + Fair Slow Sweep)
+      if (boss.beamCharge > 0) {
+        // 1. Telegraph Warning Laser (Flashing red targeting sight line)
+        const bAng = boss.beamAng !== undefined ? boss.beamAng : Math.PI;
+        const muzzleX = -boss.w * 0.48, muzzleY = 0;
+        const beamLen = 2400;
+        const endX = muzzleX + Math.cos(bAng) * beamLen;
+        const endY = muzzleY + Math.sin(bAng) * beamLen;
+
+        cx.save();
+        cx.strokeStyle = Math.sin(t * 30) > 0 ? '#ff0055' : 'rgba(255, 0, 85, 0.4)';
+        cx.lineWidth = 2.5;
+        cx.setLineDash([12, 8]);
+        cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
+        cx.setLineDash([]);
+
+        // Emitter Charging Pulse
+        const cg = cx.createRadialGradient(muzzleX, muzzleY, 2, muzzleX, muzzleY, 28);
+        cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.5, '#ff0055'); cg.addColorStop(1, 'rgba(255,0,85,0)');
+        cx.fillStyle = cg; cx.beginPath(); cx.arc(muzzleX, muzzleY, 18 + Math.sin(t * 24) * 6, 0, Math.PI * 2); cx.fill();
+        cx.restore();
+      } else if (boss.beamActive > 0) {
+        // 2. Full Blaster Beam (Sweeping slowly so player can dodge!)
         const bAng = boss.beamAng !== undefined ? boss.beamAng : Math.PI;
         const muzzleX = -boss.w * 0.48, muzzleY = 0;
         const beamLen = 2600;
@@ -15589,36 +15621,36 @@ function draw() {
 
         cx.save();
         // Layer 1: Wide Emerald Ambient Aura
-        cx.shadowColor = '#00ffaa'; cx.shadowBlur = 36;
-        cx.strokeStyle = 'rgba(0, 255, 170, 0.45)'; cx.lineWidth = 46;
+        cx.shadowColor = '#00ffaa'; cx.shadowBlur = 30;
+        cx.strokeStyle = 'rgba(0, 255, 170, 0.35)'; cx.lineWidth = 36;
         cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
 
         // Layer 2: Searing Emerald Plasma Ray
-        cx.strokeStyle = 'rgba(0, 255, 170, 0.95)'; cx.lineWidth = 26;
+        cx.strokeStyle = 'rgba(0, 255, 170, 0.90)'; cx.lineWidth = 18;
         cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
 
         // Layer 3: Ultra-Bright White Energy Core
-        cx.strokeStyle = '#ffffff'; cx.lineWidth = 12;
+        cx.strokeStyle = '#ffffff'; cx.lineWidth = 8;
         cx.beginPath(); cx.moveTo(muzzleX, muzzleY); cx.lineTo(endX, endY); cx.stroke();
 
         // Layer 4: Electric Tachyon Arc Rings pulsing down the beam
-        cx.strokeStyle = '#00ffee'; cx.lineWidth = 3.0;
-        for (let d = 75; d < 2200; d += 75) {
+        cx.strokeStyle = '#00ffee'; cx.lineWidth = 2.5;
+        for (let d = 90; d < 2200; d += 90) {
           const rx = muzzleX + Math.cos(bAng) * d;
           const ry = muzzleY + Math.sin(bAng) * d;
           cx.beginPath();
-          cx.ellipse(rx, ry, 10, 26 + Math.sin(t * 22 + d) * 8, bAng + Math.PI * 0.5, 0, Math.PI * 2);
+          cx.ellipse(rx, ry, 8, 18 + Math.sin(t * 22 + d) * 6, bAng + Math.PI * 0.5, 0, Math.PI * 2);
           cx.stroke();
         }
 
         // Layer 5: Prow Emitter Core Flare
-        const fg = cx.createRadialGradient(muzzleX, muzzleY, 4, muzzleX, muzzleY, 44);
+        const fg = cx.createRadialGradient(muzzleX, muzzleY, 4, muzzleX, muzzleY, 36);
         fg.addColorStop(0, '#ffffff');
         fg.addColorStop(0.4, '#00ffaa');
         fg.addColorStop(0.8, 'rgba(0,255,170,0.6)');
         fg.addColorStop(1, 'rgba(0,255,170,0)');
         cx.fillStyle = fg;
-        cx.beginPath(); cx.arc(muzzleX, muzzleY, 40 + Math.sin(t * 28) * 8, 0, Math.PI * 2); cx.fill();
+        cx.beginPath(); cx.arc(muzzleX, muzzleY, 32 + Math.sin(t * 28) * 6, 0, Math.PI * 2); cx.fill();
         cx.restore();
       }
 
@@ -18636,7 +18668,7 @@ function draw() {
     cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, barX, statY3);
     const statY4 = statY3 + (isMobileScreen ? 14 : 18);
     cx.fillStyle = '#00ffee'; cx.font = isMobileScreen ? 'bold 8px "Orbitron", sans-serif' : 'bold 9px "Orbitron", sans-serif';
-    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v77)`, barX, statY4);
+    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v78)`, barX, statY4);
     cx.restore();
     
     
