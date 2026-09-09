@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v68';
+  var LATEST_VERSION = 'v=60fps_v69';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -7732,7 +7732,7 @@ function startCombat() {
     }
   } catch(e) {}
   
-  // 6. Aim forward towards enemy fleet and reset input triggers
+  // 6. Aim forward towards deep space and reset input triggers
   mouse.clicked = false;
   mouse.down = false;
   keys.spaceClicked = false;
@@ -7740,28 +7740,19 @@ function startCombat() {
   mouse.y = H * 0.5;
   
   try { sfx('incoming'); } catch(e) {}
-  try { addShake(16); } catch(e) {}
-  try { addAlert('🚨 RED ALERT: COSMIC ARMADA & ENEMY FLEET INBOUND!', 'incoming'); } catch(e) {}
+  try { addShake(12); } catch(e) {}
+  try { addAlert('🚀 SOLAR SAIL ENGAGED • ENEMY SQUADRONS INBOUND IN 3s!', 'incoming'); } catch(e) {}
+  try { popup(ship.x, ship.y - 45, '🚀 SOLAR SAIL ENGAGED • HOSTILES IN 3s!', '#ffd23c'); } catch(e) {}
   try { updateDpadVisibility(); } catch(e) {}
   try { updateBrawlControlsVisibility(); } catch(e) {}
   try { updatePauseBtnVisibility(); } catch(e) {}
   try { updateTopBrawlBarVisibility(); } catch(e) {}
   try { updateTopProfileVisibility(); } catch(e) {}
   
-  // 7. Spawn initial enemy squadron directly on screen for instant high-octane action
-  try {
-    spawnGlider(W * 0.82, H * 0.26, 'tie');
-    spawnGlider(W * 0.90, H * 0.74, 'stalker');
-    spawnGlider(W * 0.78, H * 0.50, 'rammer');
-    spawnFort();
-    if (forts.length > 0) {
-      forts[0].x = W * 0.94;
-      forts[0].y = H * 0.38;
-    }
-  } catch(e) { console.error('Spawn initial enemies error:', e); }
-  fortT = 2.8;
-  gliderT = 1.8;
-  mineT = 4.5;
+  // 7. Set 3-second grace period before initial enemy wave arrives
+  gliderT = 3.0;
+  fortT = 4.8;
+  mineT = 7.5;
 }
 
 
