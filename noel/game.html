@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v63';
+  var LATEST_VERSION = 'v=60fps_v65';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -3152,11 +3152,8 @@
   </div>
   <input id="pname" placeholder="Captain Name" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="menu-btn-stack">
-    <button id="startbtn" type="button" class="action-btn menu-stack-btn" onclick="startInstantCombat(event)" style="font-size:1.35rem;padding:16px 24px;background:linear-gradient(135deg,#ffb834,#ea6c10);box-shadow:0 8px 32px rgba(255,160,40,0.65);font-weight:900;">🚀 PLAY NOW (INSTANT BATTLE) ❯</button>
-    <div style="display:flex;gap:8px;width:100%;">
-      <button id="storybtn" type="button" class="action-btn menu-stack-btn" onclick="startSolarSail(event)" style="flex:1;font-size:0.95rem;padding:10px 12px;background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,210,60,0.4);color:#ffd23c;">🎬 STORY INTRO</button>
-      <button id="hangarbtn" type="button" class="action-btn menu-stack-btn" onclick="openBrawlShop('ships', event)" style="flex:1;font-size:0.95rem;padding:10px 12px;background:rgba(255,255,255,0.08);border:1.5px solid rgba(0,229,255,0.4);color:#00ffee;">🛠️ SHIPYARD</button>
-    </div>
+    <button id="startbtn" type="button" class="action-btn menu-stack-btn" onclick="startInstantCombat(event)" style="font-size:1.35rem;padding:16px 24px;background:linear-gradient(135deg,#ffb834,#ea6c10);box-shadow:0 8px 32px rgba(255,160,40,0.65);font-weight:900;">🚀 SET SOLAR SAIL &amp; PLAY! ❯</button>
+    <button id="hangarbtn" type="button" class="action-btn menu-stack-btn" onclick="openBrawlShop('ships', event)">🛠️ SHIPYARD &amp; ARSENAL</button>
     <button id="bossbtn" type="button" class="action-btn menu-stack-btn" onclick="openBossIntelModal(event)">👾 BOSS &amp; FLEET INTEL</button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.1rem; color:#ffd23c; font-weight:bold"></p>
@@ -8877,110 +8874,10 @@ function startInstantCombat(e) {
 window.startInstantCombat = startInstantCombat;
 
 function startSolarSail(e) {
-  if (e) {
-    try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
-  }
-  if (isStartingSail || state === 'intro' || state === 'play') return;
-  isStartingSail = true;
-  setTimeout(() => { isStartingSail = false; }, 400);
-
-  // 1. IMMEDIATELY FORCEFULLY HIDE ALL OVERLAYS AND MENU
-  try {
-    const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'brawlShopModal', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal', 'profileModal'];
-    overlays.forEach(id => hideOverlay(id));
-    const m = document.getElementById('menu');
-    if (m) { m.style.display = 'none'; m.classList.add('hidden'); m.style.pointerEvents = 'none'; }
-  } catch(err) { console.error('Menu hide error:', err); }
-
-  // 2. SET CINEMATIC STORYLINE PROLOGUE STATE & RESYNC CLOCK
-  state = 'intro'; if (typeof window !== 'undefined') window.state = 'intro';
-  last = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
-  updatePauseBtnVisibility();
-  try { updateTopBrawlBarVisibility(); try { updateTopProfileVisibility(); } catch(e) {} } catch(e) {}
-  if (cv && cv.focus) { try { cv.focus(); } catch(err) {} }
-
-  // 3. BROADCAST TO MULTIPLAYER HOST IF ACTIVE
-  try {
-    if (typeof OnlineFleetNet !== 'undefined' && OnlineFleetNet && OnlineFleetNet.mode === 'online_host' && OnlineFleetNet.clientConns && OnlineFleetNet.clientConns.length > 0) {
-      OnlineFleetNet.broadcast({
-        type: 'start_game',
-        pilots: OnlineFleetNet.connectedPilots
-      });
-    }
-  } catch(err) {}
-
-  // 4. PLAYER NAME & LOADOUT
-  try {
-    const inp = document.getElementById('pname');
-    let nm = (inp && inp.value && inp.value.trim()) || safeStorage.getItem('sp_name') || 'Captain';
-    playerName = nm.slice(0, 14);
-    try { safeStorage.setItem('sp_name', playerName); } catch(err) {}
-  } catch(err) {}
-
-  try { applyLoadout(); } catch(err) { console.error('applyLoadout err:', err); }
-  try { initMultiplayerFleet(); } catch(err) { console.error('initMultiplayerFleet err:', err); }
-
-  try {
-    if (!ship || typeof ship !== 'object') {
-      ship = { x: W * 0.22, y: H * 0.5, vx: 0, vy: 0, pitch: 0, hp: 5, inv: 2.0, recoil: 0, flagWave: 0, sailGlow: 0, r: 46, aimAngle: 0 };
-    } else {
-      ship.hp = (typeof maxHp !== 'undefined' && maxHp) ? maxHp : 5;
-      ship.inv = 2.0;
-      ship.x = W * 0.22;
-      ship.y = H * 0.5;
-      ship.vx = 0;
-      ship.vy = 0;
-      ship.pitch = 0;
-    }
-  } catch(err) {}
-
-  // Clean and initialize Storyline Cinematic States
-  introT = 0;
-  storyStage = 0;
-  storyCooldown = 0.60;
-  introShot1 = false;
-  introShot2 = false;
-  introLasers = [];
-  balls = [];
-  eballs = []; forts = []; gliders = [];
-  parts = [];
-  wreckage = [];
-  shieldShards = [];
-  introShieldFlare = 0;
-  introArmada = [];
-  introUfos = [
-    { x: W + 120, y: H * 0.35, targetX: W * 0.72, targetY: H * 0.32, vx: -520, vy: 0, r: 30, dead: false, col: '#00ffee', type: 'scout', saucerSpin: 0 },
-    { x: W + 180, y: H * 0.65, targetX: W * 0.76, targetY: H * 0.68, vx: -500, vy: 0, r: 32, dead: false, col: '#c084fc', type: 'bomber', saucerSpin: 0 }
-  ];
-try {
-    gadgetCharges = 3;
-    gadgetCooldown = 0;
-    superCharge = 0;
-    hyperchargeActiveT = 0;
-    superBeamActiveT = 0;
-    corsairTurretT = 0;
-    corsairAngle = 0;
-    novaSuperT = 0;
-    protonTorpedoes = [];
-    stealthCloakT = 0;
-    stealthDecoys = [];
-    singularities = [];
-    rammingProwT = 0;
-    meteorStrikes = [];
-    nebulaScythesT = 0;
-    flakPods = [];
-    tokensRun = 0; killsRun = 0; spinsRun = 0;
-    balls = []; eballs = []; forts = []; gliders = []; mines = []; coins = []; powerups = []; parts = [];
-    boss = null; bossT = 10; score = 0; coinsN = 0; level = 1; t = 0; scoreSubmitted = false;
-  } catch(err) {}
-
-  try { initAudio(); } catch(err) {}
-  try { sfx('warp'); } catch(err) {}
-  try { updateDpadVisibility(); } catch(err) {}
-  try { updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); try { updateTopProfileVisibility(); } catch(e) {} } catch(e) {} } catch(err) {}
-  try { updateBrawlControlsVisibility(); } catch(err) {}
+  return startInstantCombat(e);
 }
 window.startSolarSail = startSolarSail;
+
 
 const startBtnEl = document.getElementById('startbtn');
 if (startBtnEl) startBtnEl.addEventListener('click', startSolarSail);
@@ -10557,7 +10454,7 @@ function bindActionButtons() {
 
   attach('topTrailBar', openTrailModal);
   attach('startbtn', startInstantCombat);
-  attach('storybtn', startSolarSail);
+  
   attach('onlinebtn', openOnlineModal);
   attach('hangarbtn', openHangar);
   attach('dailybtn', openDailyModal);
