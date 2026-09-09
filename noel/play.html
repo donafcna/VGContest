@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v66';
+  var LATEST_VERSION = 'v=60fps_v67';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -3054,18 +3054,7 @@
 </div>
 
 
-  <!-- Starforge Style Middle-Left Shop Floating Widget -->
-  <div id="middleLeftShopWrap" class="middle-left-shop-wrap" onclick="openBrawlShop('daily', event)" role="button" tabindex="0" title="Tap to open Starforge Cosmic Shop!">
-    <div class="brawl-shop-tile">
-      <div class="brawl-shop-header">SHOP</div>
-      <div class="brawl-shop-icon-wrap">
-        <span class="brawl-shop-cart-icon">🛒</span>
-        <span id="leftShopBadge" class="brawl-shop-alert-badge">DEALS</span>
-      </div>
-      <div id="leftShopStatusText" class="brawl-shop-status">ARSENAL</div>
-      <div id="leftShopSubPill" class="brawl-shop-streak">SKINS &amp; UPGS</div>
-    </div>
-  </div>
+  
 
   <!-- Brawl Stars Style Middle-Right Daily Rewards Floating Widget -->
   <div id="middleRightDailyWrap" class="middle-right-daily-wrap" onclick="openDailyModal(event)" role="button" tabindex="0" title="Tap to claim Daily Voyage Rewards!">
@@ -9161,8 +9150,7 @@ function updateTopProfileVisibility() {
   const dailyRight = document.getElementById('middleRightDailyWrap');
   if (dailyRight) dailyRight.style.display = (state === 'menu') ? 'flex' : 'none';
 
-  const shopLeft = document.getElementById('middleLeftShopWrap');
-  if (shopLeft) shopLeft.style.display = (state === 'menu') ? 'flex' : 'none';
+  
 }
 window.updateTopProfileVisibility = updateTopProfileVisibility;
 
