@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v71';
+  var LATEST_VERSION = 'v=60fps_v72';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -4009,8 +4009,8 @@ addEventListener('keydown', e => {
   if (e.code === 'Space' || e.code === 'Enter') {
     e.preventDefault();
     if (state === 'intro') { advanceStory(); return; }
-    if (!e.repeat) {
-      keys.spaceClicked = true;
+    if (!e.repeat && state === 'play') {
+      keys.spaceClicked = true; // 1 key press = 1 shot!
     }
   }
   if (e.code === 'KeyQ' || e.code === 'KeyG' || e.key === 'q' || e.key === 'Q') {
@@ -4033,20 +4033,8 @@ addEventListener('mousedown', e => {
     return;
   }
   initAudio();
-  if (e.button === 0) {
-    if (state === 'intro') {
-      const barH = Math.max(134, Math.min(150, H * 0.22));
-      const skipW = 120, skipH = 28;
-      const skipX = W - skipW - 16, skipY = barH - 36;
-      if (mouse.x >= skipX && mouse.x <= skipX + skipW && mouse.y >= skipY && mouse.y <= skipY + skipH) {
-        startCombat();
-        return;
-      }
-      if (storyCooldown <= 0) advanceStory();
-      return;
-    }
-    mouse.clicked = true;
-    mouse.down = true;
+  if (e.button === 0 && state === 'play') {
+    mouse.clicked = true; // 1 click = 1 shot!
   }
 });
 addEventListener('mouseup', e => {
@@ -4097,8 +4085,7 @@ function onGameTouchStart(e) {
       aimTouchId = t.identifier;
       mouse.x = t.clientX;
       mouse.y = t.clientY;
-      mouse.down = true;
-      mouse.clicked = true;
+      mouse.clicked = true; // 1 tap = 1 shot!
       touchOn = true;
     }
   }
@@ -4132,8 +4119,7 @@ function onGameTouchMove(e) {
     } else if (t.identifier === aimTouchId) {
       mouse.x = t.clientX;
       mouse.y = t.clientY;
-      mouse.down = true;
-      touchOn = true;
+      touchOn = true; // update aim coordinates on drag without spamming shots
     }
   }
   e.preventDefault();
@@ -4154,7 +4140,6 @@ function onGameTouchEnd(e) {
       updateDpadVisuals();
     } else if (t.identifier === aimTouchId) {
       aimTouchId = null;
-      mouse.down = false;
       touchOn = false;
     }
   }
@@ -8795,7 +8780,7 @@ function updateMultiplayerFleet(dt) {
 
       // Shooting
       p.shootCool -= dt;
-      const isShooting = p.keys.shoot || ((idx === 0 || idx + 1 === myLocalSlot) && (mouseShootHeld || autoShootActive));
+      const isShooting = p.keys.shoot || ((idx === 0 || idx + 1 === myLocalSlot) && (keys.spaceClicked || mouse.clicked));
       if (isShooting && p.shootCool <= 0) {
         p.shootCool = 0.20;
         p.recoil = 1.0;
@@ -11721,9 +11706,13 @@ function update(dt) {
     });
   }
 
-  // Directed Pirate Naval Cannon Salvo (Supports both rapid tapping & continuous touch/mouse hold)
+  // Semi-Automatic Pirate Naval Cannon Salvo (1 Click / 1 Tap / 1 Space = 1 Shot, No Holding/Spam)
   shootCool -= dt;
-  const wantShoot = (state === 'play') || mouse.clicked || keys.spaceClicked || mouse.down;
+  const wantShoot = mouse.clicked || keys.spaceClicked;
+  if (wantShoot) {
+    mouse.clicked = false;
+    keys.spaceClicked = false;
+  }
   if (wantShoot && shootCool <= 0) {
     mouse.clicked = false;
     keys.spaceClicked = false;
