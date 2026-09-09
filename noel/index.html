@@ -4697,15 +4697,11 @@ let nebulaScythesT = 0;
 let flakPods = []; // [{x, y, vx, vy, fuse, maxFuse, exploded, radius, col}]
 
 function hasGadget(shipId) {
-  if (isCreator()) return true;
-  const u = getShipUpg(shipId);
-  return (u.hull >= 8 || u.cannon >= 8 || u.engine >= 8 || u.magnet >= 8);
+  return true;
 }
 
 function hasSuper(shipId) {
-  if (isCreator()) return true;
-  const u = getShipUpg(shipId);
-  return (u.hull >= 10 || u.cannon >= 10 || u.engine >= 10 || u.magnet >= 10);
+  return true;
 }
 
 function addSuperCharge(amt) {
@@ -7716,7 +7712,17 @@ function startCombat() {
   coins = [];
   powerups = [];
   
-  // 4. Reset ship flight velocities and ensure valid coordinates
+  // 4. Forcefully hide all modals and overlays
+  try {
+    const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'brawlShopModal', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal', 'profileModal'];
+    overlays.forEach(id => hideOverlay(id));
+    const m = document.getElementById('menu');
+    if (m) { m.style.display = 'none'; m.classList.add('hidden'); m.style.pointerEvents = 'none'; }
+    const bModal = document.getElementById('brawlShopModal');
+    if (bModal) { bModal.style.display = 'none'; bModal.classList.add('hidden'); bModal.style.pointerEvents = 'none'; }
+  } catch(err) {}
+
+  // 5. Reset ship flight velocities and ensure valid coordinates
   try {
     if (ship && typeof ship === 'object') {
       ship.vx = 0;
@@ -7728,10 +7734,12 @@ function startCombat() {
     }
   } catch(e) {}
   
-  // 5. Reset inputs to avoid accidental immediate firing on transition
+  // 6. Aim forward towards enemy fleet and reset input triggers
   mouse.clicked = false;
   mouse.down = false;
   keys.spaceClicked = false;
+  mouse.x = W * 0.88;
+  mouse.y = H * 0.5;
   
   try { sfx('incoming'); } catch(e) {}
   try { addShake(16); } catch(e) {}
@@ -7742,16 +7750,20 @@ function startCombat() {
   try { updateTopBrawlBarVisibility(); } catch(e) {}
   try { updateTopProfileVisibility(); } catch(e) {}
   
-  // Spawn initial enemy squadron
+  // 7. Spawn initial enemy squadron directly on screen for instant high-octane action
   try {
-    spawnGlider(W + 60, H * 0.25, 'tie');
-    spawnGlider(W + 120, H * 0.75, 'stalker');
-    spawnGlider(W + 180, H * 0.50, 'rammer');
+    spawnGlider(W * 0.82, H * 0.26, 'tie');
+    spawnGlider(W * 0.90, H * 0.74, 'stalker');
+    spawnGlider(W * 0.78, H * 0.50, 'rammer');
     spawnFort();
+    if (forts.length > 0) {
+      forts[0].x = W * 0.94;
+      forts[0].y = H * 0.38;
+    }
   } catch(e) { console.error('Spawn initial enemies error:', e); }
-  fortT = 3.5;
-  gliderT = 4.0;
-  mineT = 7.0;
+  fortT = 2.8;
+  gliderT = 1.8;
+  mineT = 4.5;
 }
 
 
@@ -8801,7 +8813,7 @@ function startSolarSail(e) {
 
   // 1. IMMEDIATELY FORCEFULLY HIDE ALL OVERLAYS AND MENU
   try {
-    const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal', 'profileModal'];
+    const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'brawlShopModal', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal', 'profileModal'];
     overlays.forEach(id => hideOverlay(id));
     const m = document.getElementById('menu');
     if (m) { m.style.display = 'none'; m.classList.add('hidden'); m.style.pointerEvents = 'none'; }
@@ -11714,7 +11726,7 @@ function update(dt) {
 
   // Directed Pirate Naval Cannon Salvo (Supports both rapid tapping & continuous touch/mouse hold)
   shootCool -= dt;
-  const wantShoot = mouse.clicked || keys.spaceClicked || mouse.down;
+  const wantShoot = (state === 'play') || mouse.clicked || keys.spaceClicked || mouse.down;
   if (wantShoot && shootCool <= 0) {
     mouse.clicked = false;
     keys.spaceClicked = false;
