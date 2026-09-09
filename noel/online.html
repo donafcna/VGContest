@@ -2604,14 +2604,20 @@
 
 
   /* ==========================================================================
-     🛍️ BRAWL STARS COSMIC SHOP MODAL STYLES
+     🛍️ STARFORGE COSMIC SHOP MODAL STYLES
      ========================================================================== */
-  .brawl-shop-modal-card {
+  #brawlShopModal.overlay {
+    padding: 12px 10px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #brawlShopModal .brawl-shop-modal-card {
     background: linear-gradient(180deg, #101a2f 0%, #080d19 100%);
     border: 2px solid #38bdf8;
     border-radius: 18px;
-    padding: 12px 16px;
-    max-width: 780px;
+    padding: 10px 14px;
+    max-width: 760px;
     width: 95%;
     max-height: 88vh;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(56, 189, 248, 0.3);
@@ -2622,88 +2628,121 @@
     overflow: hidden;
   }
 
-  .brawl-shop-modal-header {
+  #brawlShopModal .brawl-shop-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 8px;
-    padding-bottom: 8px;
+    padding-bottom: 6px;
     border-bottom: 1.5px solid rgba(56, 189, 248, 0.25);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
-  .brawl-shop-modal-badge-icon {
-    width: 34px;
-    height: 34px;
+  #brawlShopModal .brawl-shop-brand-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  #brawlShopModal .brawl-shop-modal-badge-icon {
+    width: 30px;
+    height: 30px;
     background: radial-gradient(circle, #38bdf8 0%, #1e40af 100%);
     border: 1.5px solid #ffd23c;
-    border-radius: 10px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.15rem;
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    font-size: 1.05rem;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
     flex-shrink: 0;
   }
 
-  .brawl-shop-modal-subtitle {
-    font-size: 0.58rem;
-    font-weight: 800;
-    color: #38bdf8;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-family: 'Orbitron', sans-serif;
-    line-height: 1;
-    display: block;
+  #brawlShopModal .brawl-shop-text-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
   }
 
-  .brawl-shop-modal-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(0.95rem, 2.2vw, 1.25rem);
-    font-weight: 900;
-    color: #ffd23c;
-    margin: 2px 0 0 0;
-    letter-spacing: 0.5px;
-    text-shadow: 0 0 10px rgba(255, 210, 60, 0.5);
-    line-height: 1.1;
+  #brawlShopModal .brawl-shop-modal-subtitle {
+    font-size: 0.52rem !important;
+    font-weight: 800 !important;
+    color: #38bdf8 !important;
+    letter-spacing: 0.8px !important;
+    text-transform: uppercase !important;
+    font-family: 'Orbitron', sans-serif !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
   }
 
-  .brawl-shop-wallet-pill {
+  #brawlShopModal .brawl-shop-modal-title,
+  #brawlShopModal h1.brawl-shop-modal-title {
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: clamp(0.78rem, 1.8vw, 0.98rem) !important;
+    font-weight: 900 !important;
+    color: #ffd23c !important;
+    margin: 2px 0 0 0 !important;
+    padding: 0 !important;
+    letter-spacing: 0.5px !important;
+    text-shadow: 0 0 8px rgba(255, 210, 60, 0.4) !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+  }
+
+  #brawlShopModal .brawl-shop-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  #brawlShopModal .brawl-shop-wallet-pill {
     display: flex;
     align-items: center;
     gap: 8px;
     background: rgba(15, 23, 42, 0.85);
     border: 1.5px solid rgba(255, 210, 60, 0.4);
-    border-radius: 14px;
-    padding: 4px 10px;
+    border-radius: 12px;
+    padding: 3px 8px;
     font-family: 'Orbitron', sans-serif;
-    font-size: 0.74rem;
+    font-size: 0.70rem;
     font-weight: 800;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
   }
 
-  .brawl-shop-modal-close {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1.5px solid rgba(255, 255, 255, 0.3);
-    color: #ffffff;
-    border-radius: 10px;
-    padding: 5px 12px;
-    cursor: pointer;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 800;
-    font-size: 0.74rem;
-    transition: all 0.2s;
+  #brawlShopModal .brawl-shop-modal-close,
+  #brawlShopModal button.brawl-shop-modal-close {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 3px 10px !important;
+    cursor: pointer !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 0.70rem !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.2s !important;
+    white-space: nowrap !important;
   }
 
-  .brawl-shop-modal-close:hover {
-    background: rgba(239, 68, 68, 0.8);
-    border-color: #ef4444;
-    transform: scale(1.05);
+  #brawlShopModal .brawl-shop-modal-close:hover,
+  #brawlShopModal button.brawl-shop-modal-close:hover {
+    background: rgba(239, 68, 68, 0.85) !important;
+    border-color: #ef4444 !important;
+    transform: scale(1.04) !important;
   }
 
-  /* Category Tabs */
-  .brawl-shop-nav-tabs {
+  /* Starforge Category Tabs */
+  #brawlShopModal .brawl-shop-nav-tabs {
     display: flex;
     gap: 6px;
     overflow-x: auto;
@@ -2713,35 +2752,40 @@
     scrollbar-color: rgba(56, 189, 248, 0.5) transparent;
   }
 
-  .brawl-shop-tab {
+  #brawlShopModal .brawl-shop-tab,
+  #brawlShopModal button.brawl-shop-tab {
     display: flex;
     align-items: center;
     gap: 5px;
-    background: rgba(30, 41, 59, 0.85);
-    border: 1.5px solid rgba(255, 255, 255, 0.12);
-    border-radius: 10px;
-    padding: 5px 10px;
-    color: #94a3b8;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 800;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    background: rgba(30, 41, 59, 0.85) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 10px !important;
+    padding: 4px 8px !important;
+    color: #94a3b8 !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: 0.68rem !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   }
 
-  .brawl-shop-tab:hover {
-    color: #ffffff;
-    border-color: #38bdf8;
-    background: rgba(56, 189, 248, 0.15);
-    transform: translateY(-2px);
+  #brawlShopModal .brawl-shop-tab:hover,
+  #brawlShopModal button.brawl-shop-tab:hover {
+    color: #ffffff !important;
+    border-color: #38bdf8 !important;
+    background: rgba(56, 189, 248, 0.15) !important;
+    transform: translateY(-2px) !important;
   }
 
-  .brawl-shop-tab.active {
-    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
-    border-color: #ffffff;
-    color: #020617;
-    box-shadow: 0 4px 18px rgba(56, 189, 248, 0.6);
+  #brawlShopModal .brawl-shop-tab.active,
+  #brawlShopModal button.brawl-shop-tab.active {
+    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%) !important;
+    border-color: #ffffff !important;
+    color: #020617 !important;
+    box-shadow: 0 3px 12px rgba(56, 189, 248, 0.5) !important;
   }
 
   .brawl-tab-badge {
@@ -2844,50 +2888,60 @@
     flex: 1;
   }
 
-  .brawl-shop-buy-btn {
-    width: 100%;
-    padding: 10px;
-    border-radius: 12px;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 900;
-    font-size: 0.82rem;
-    cursor: pointer;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.2s;
+  #brawlShopModal .brawl-shop-buy-btn,
+  #brawlShopModal button.brawl-shop-buy-btn {
+    width: 100% !important;
+    padding: 8px 12px !important;
+    border-radius: 10px !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-weight: 900 !important;
+    font-size: 0.78rem !important;
+    cursor: pointer !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    margin-top: 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.2s !important;
   }
 
-  .brawl-shop-buy-btn.free {
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    color: #ffffff;
-    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.5);
+  #brawlShopModal .brawl-shop-buy-btn.free,
+  #brawlShopModal button.brawl-shop-buy-btn.free {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.5) !important;
   }
 
-  .brawl-shop-buy-btn.coins {
-    background: linear-gradient(135deg, #ffd23c 0%, #f59e0b 100%);
-    color: #020617;
-    box-shadow: 0 4px 14px rgba(255, 210, 60, 0.5);
+  #brawlShopModal .brawl-shop-buy-btn.coins,
+  #brawlShopModal button.brawl-shop-buy-btn.coins {
+    background: linear-gradient(135deg, #ffd23c 0%, #f59e0b 100%) !important;
+    color: #020617 !important;
+    box-shadow: 0 4px 14px rgba(255, 210, 60, 0.5) !important;
   }
 
-  .brawl-shop-buy-btn.cores {
-    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
-    color: #ffffff;
-    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.5);
+  #brawlShopModal .brawl-shop-buy-btn.cores,
+  #brawlShopModal button.brawl-shop-buy-btn.cores {
+    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.5) !important;
   }
 
-  .brawl-shop-buy-btn.equipped {
-    background: rgba(255, 255, 255, 0.1);
-    color: #64748b;
-    cursor: default;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+  #brawlShopModal .brawl-shop-buy-btn.equipped,
+  #brawlShopModal button.brawl-shop-buy-btn.equipped {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #64748b !important;
+    cursor: default !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: none !important;
   }
 
-  .brawl-shop-buy-btn:not(.equipped):hover {
-    transform: scale(1.04);
-    filter: brightness(1.15);
+  #brawlShopModal .brawl-shop-buy-btn:not(.equipped):hover,
+  #brawlShopModal button.brawl-shop-buy-btn:not(.equipped):hover {
+    transform: scale(1.03) !important;
+    filter: brightness(1.15) !important;
   }
 
 </style>
@@ -3127,19 +3181,19 @@
 
 <!-- Captain's Tactical Fleet Dossier Modal -->
 
-<!-- Brawl Stars Style Cosmic Shop Full Modal -->
+<!-- Starforge Cosmic Shop Full Modal -->
 <div id="brawlShopModal" class="overlay hidden" style="z-index: 124;">
   <div class="brawl-shop-modal-card">
     <!-- Header with Shop Marquee & Live Floating Wallet -->
     <div class="brawl-shop-modal-header">
-      <div style="display:flex;align-items:center;gap:12px">
+      <div class="brawl-shop-brand-group">
         <div class="brawl-shop-modal-badge-icon">🏪</div>
-        <div>
+        <div class="brawl-shop-text-group">
           <span class="brawl-shop-modal-subtitle">⚡ GALAXY ARSENAL &amp; DEALS</span>
-          <h1 class="brawl-shop-modal-title">STARFORGE COSMIC SHOP</h1>
+          <div class="brawl-shop-modal-title">STARFORGE COSMIC SHOP</div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div class="brawl-shop-actions-group">
         <div class="brawl-shop-wallet-pill" id="brawlShopWalletPill">
           <span id="brawlShopCoins">🪙 0</span>
           <span id="brawlShopTokens">🎟️ 0</span>
