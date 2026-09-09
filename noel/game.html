@@ -3977,9 +3977,11 @@ bindDpadButton('btnDown', 'down');
 bindDpadButton('btnLeft', 'left');
 bindDpadButton('btnRight', 'right');
 
+let stageTimer = 0;
 function advanceStory() {
   if (state !== 'intro' || storyCooldown > 0) return;
-  storyCooldown = 0.45;
+  storyCooldown = 0.40;
+  stageTimer = 0;
   try { sfx('pew'); } catch(e) {}
   storyStage++;
   if (storyStage >= 3) {
@@ -3987,6 +3989,16 @@ function advanceStory() {
   }
 }
 window.advanceStory = advanceStory;
+
+function skipStory(e) {
+  if (e) {
+    try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
+  }
+  if (state === 'intro') {
+    startCombat();
+  }
+}
+window.skipStory = skipStory;
 
 addEventListener('keydown', e => {
   if (state === 'menu' && (e.code === 'Space' || e.code === 'Enter') && document.activeElement !== document.getElementById('pname') && document.activeElement !== document.getElementById('onlineCallsign')) {
@@ -4025,6 +4037,13 @@ addEventListener('mousedown', e => {
   initAudio();
   if (e.button === 0) {
     if (state === 'intro') {
+      const barH = Math.max(134, Math.min(150, H * 0.22));
+      const skipW = 120, skipH = 28;
+      const skipX = W - skipW - 16, skipY = barH - 36;
+      if (mouse.x >= skipX && mouse.x <= skipX + skipW && mouse.y >= skipY && mouse.y <= skipY + skipH) {
+        startCombat();
+        return;
+      }
       if (storyCooldown <= 0) advanceStory();
       return;
     }
@@ -4040,6 +4059,18 @@ addEventListener('mouseup', e => {
 function onGameTouchStart(e) {
   initAudio();
   if (state === 'intro') {
+    if (e.changedTouches && e.changedTouches[0]) {
+      const tx = e.changedTouches[0].clientX;
+      const ty = e.changedTouches[0].clientY;
+      const barH = Math.max(134, Math.min(150, H * 0.22));
+      const skipW = 120, skipH = 34;
+      const skipX = W - skipW - 16, skipY = barH - 38;
+      if (tx >= skipX - 10 && tx <= W && ty >= 0 && ty <= barH) {
+        startCombat();
+        e.preventDefault();
+        return;
+      }
+    }
     if (storyCooldown <= 0) advanceStory();
     e.preventDefault();
     return;
@@ -10911,8 +10942,16 @@ function update(dt) {
       if (p.life <= 0) parts.splice(i, 1);
     }
 
-    // Story only advances when player clicks Continue button or presses Space/Enter
+    // Auto-advancement timer so game never hangs if player doesn't click
+    stageTimer = (typeof stageTimer === 'number' ? stageTimer : 0) + dt;
     storyCooldown = Math.max(0, storyCooldown - dt);
+
+    // Auto-advance stages: Stage 0 -> 4.5s, Stage 1 -> 4.5s, Stage 2 -> 3.2s
+    const maxStageTime = (storyStage >= 2) ? 3.2 : 4.5;
+    if (stageTimer >= maxStageTime) {
+      stageTimer = 0;
+      advanceStory();
+    }
     return;
   }
 
@@ -18479,6 +18518,23 @@ function draw() {
     cx.font = 'bold 12px "Orbitron", sans-serif';
     cx.fillStyle = (storyStage === 0 && Math.sin(t * 8) > 0) ? '#ffd23c' : '#4bd5ee';
     cx.fillText('⚡ MISSION: ELIMINATE AS MANY ENEMY SHIPS AS YOU CAN!', W / 2, barH - 24);
+
+    // Interactive Skip Button in Top Letterbox Bar
+    const skipW = 120, skipH = 26;
+    const skipX = W - skipW - 16, skipY = barH - 36;
+    cx.save();
+    cx.fillStyle = 'rgba(56, 189, 248, 0.25)';
+    cx.strokeStyle = '#38bdf8';
+    cx.lineWidth = 1.4;
+    cx.beginPath();
+    cx.roundRect(skipX, skipY, skipW, skipH, 6);
+    cx.fill();
+    cx.stroke();
+    cx.font = 'bold 11px "Orbitron", sans-serif';
+    cx.fillStyle = '#ffffff';
+    cx.textAlign = 'center';
+    cx.fillText('⚡ SKIP ❯', skipX + skipW / 2, skipY + 17);
+    cx.restore();
 
     // Dynamic Bounty calculation based on active player stats & username
     const currentCoins = (SAVE.data && SAVE.data.coins) || 99999;
