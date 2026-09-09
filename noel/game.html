@@ -3,6 +3,19 @@
 <!-- Space Pirates: Galleon vs Cosmic Alien Armada — Realistic Space Combat with 7-Day Daily Rewards by Noel v35.0 -->
 <html lang="en">
 <head>
+<script>
+(function() {
+  var LATEST_VERSION = 'v=60fps_v63';
+  if (typeof window !== 'undefined' && window.location) {
+    var search = window.location.search;
+    if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
+      var newSearch = search.replace(/v=60fps_v\w+/, LATEST_VERSION);
+      window.location.replace(window.location.pathname + newSearch);
+    }
+  }
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
