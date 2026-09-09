@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v75';
+  var LATEST_VERSION = 'v=60fps_v76';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -8962,7 +8962,7 @@ window.addEventListener('keydown', (e) => {
     if (k === 's' || e.key === 'ArrowDown') myP.keys.down = true;
     if (k === 'a' || e.key === 'ArrowLeft') myP.keys.left = true;
     if (k === 'd' || e.key === 'ArrowRight') myP.keys.right = true;
-    if (k === ' ' || k === 'f') myP.keys.shoot = true;
+    // Single-click firing only; no continuous keydown shooting
     if (k === 'q') {
       myP.keys.gadget = true;
       if (mySlotIdx === 0) activateGadget();
@@ -9108,32 +9108,25 @@ function updateMultiplayerFleet(dt) {
       p.y = Math.max(60, Math.min(H - 60, p.y + p.vy * dt));
       p.pitch = Math.max(-0.25, Math.min(0.25, p.vy * 0.0006));
 
-      // Shooting
-      p.shootCool -= dt;
-      const isShooting = p.keys.shoot || ((idx === 0 || idx + 1 === myLocalSlot) && (keys.spaceClicked || mouse.clicked));
-      if (isShooting && p.shootCool <= 0) {
-        p.shootCool = 0.20;
-        p.recoil = 1.0;
-        sfx('shot');
-        const shootCol = p.col || '#ffd23c';
-        balls.push({
-          x: p.x + 40,
-          y: p.y - 8,
-          vx: 900,
-          vy: (Math.random() - 0.5) * 40,
-          r: 10,
-          col: shootCol,
-          dmg: 1
-        });
-        balls.push({
-          x: p.x + 40,
-          y: p.y + 8,
-          vx: 900,
-          vy: (Math.random() - 0.5) * 40,
-          r: 10,
-          col: shootCol,
-          dmg: 1
-        });
+      // In Solo mode, Player 1 ship shooting is handled exclusively by the primary single-click cannon engine.
+      // In online multiplayer, only remote peers or explicit discrete clicks shoot.
+      if (OnlineFleetNet && OnlineFleetNet.mode !== 'solo' && idx > 0) {
+        p.shootCool -= dt;
+        if (p.keys.shoot && p.shootCool <= 0) {
+          p.shootCool = 0.40;
+          p.recoil = 1.0;
+          sfx('shot');
+          const shootCol = p.col || '#ffd23c';
+          balls.push({
+            x: p.x + 40,
+            y: p.y,
+            vx: 1100,
+            vy: 0,
+            r: 11,
+            col: shootCol,
+            dmg: 2
+          });
+        }
       }
 
       // If client, send input to Host
@@ -18638,7 +18631,7 @@ function draw() {
     cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, barX, statY3);
     const statY4 = statY3 + (isMobileScreen ? 14 : 18);
     cx.fillStyle = '#00ffee'; cx.font = isMobileScreen ? 'bold 8px "Orbitron", sans-serif' : 'bold 9px "Orbitron", sans-serif';
-    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v74)`, barX, statY4);
+    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v76)`, barX, statY4);
     cx.restore();
     
     
