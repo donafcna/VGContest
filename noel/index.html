@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v80';
+  var LATEST_VERSION = 'v=60fps_v81';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -8005,6 +8005,11 @@ function spawnBoss() {
     spd: bossSpd,
     x: isPathogen ? W + 450 : (isTrio ? W + 260 : W + 180), 
     targetX: W - 260,
+    destX: W * 0.72,
+    destY: H * 0.5,
+    moveTimer: 1.5,
+    wanderPhaseX: Math.random() * Math.PI * 2,
+    wanderPhaseY: Math.random() * Math.PI * 2,
     y: H * 0.5,
     atk: b.atk, atkT: 2.0, phase: 0,
     spinRing: 0,
@@ -12124,14 +12129,42 @@ function update(dt) {
     const directAimAng = Math.atan2(ship.y - boss.y, ship.x - boss.x);
     const spdBonus = (1 + Math.min(1.0, (level - 1) * 0.08)) * (boss.enraged ? 1.2 : 1.0);
 
-    if (boss.x > boss.targetX && !boss.isRamming) boss.x -= 130 * dt;
+    // 1. Autonomous Random Flight Navigation: Boss cruises unpredictably in random directions across 2D space (Never mirrors/tracks player position!)
     boss.phase += dt;
     boss.spinRing += dt * (boss.enraged ? 7 : 4);
-    if (!boss.isRamming && (boss.type !== 'trio' || boss.isMerged)) {
-      // Dynamic vertical tracking: the boss actively maneuvers to align its altitude with the player
-      const targetY = Math.max(90, Math.min(H - 90, ship.y + Math.sin(boss.phase * (boss.enraged ? 2.0 : 1.2)) * (boss.enraged ? 50 : 80)));
-      const trackSpeed = boss.enraged ? 3.0 : 2.0;
-      boss.y += (targetY - boss.y) * Math.min(1.0, dt * trackSpeed);
+    boss.moveTimer = (boss.moveTimer || 0) - dt;
+
+    if (!boss.isRamming && (boss.type !== 'trio' || boss.isMerged) && (boss.type !== 'pathogen' || boss.isOriginalActive)) {
+      if (boss.destX === undefined) boss.destX = W * 0.72;
+      if (boss.destY === undefined) boss.destY = H * 0.5;
+
+      const distToDest = Math.hypot(boss.destX - boss.x, boss.destY - boss.y);
+
+      // Pick a new random target waypoint when timer expires or close to current destination
+      if (boss.moveTimer <= 0 || distToDest < 40) {
+        // Random 2D coordinates in right-hand arena sector (X: 50% to 88% screen width, Y: 90 to H - 90)
+        boss.destX = Math.max(W * 0.50, Math.min(W - 130, W * 0.52 + Math.random() * (W * 0.36)));
+        boss.destY = Math.max(90, Math.min(H - 90, 90 + Math.random() * (H - 180)));
+        boss.moveTimer = 1.8 + Math.random() * 2.4;
+        boss.driftFreqX = 0.6 + Math.random() * 0.8;
+        boss.driftFreqY = 0.8 + Math.random() * 0.9;
+      }
+
+      // Smooth multi-frequency harmonic floating curves (Organic swooping & cruising in random directions)
+      const driftSpeed = boss.enraged ? 2.5 : 1.7;
+      const waveX = Math.cos(boss.phase * (boss.driftFreqX || 0.8) + (boss.wanderPhaseX || 0)) * (boss.enraged ? 40 : 25);
+      const waveY = Math.sin(boss.phase * (boss.driftFreqY || 1.1) + (boss.wanderPhaseY || 0)) * (boss.enraged ? 65 : 42);
+
+      const targetPosX = Math.max(W * 0.48, Math.min(W - 90, boss.destX + waveX));
+      const targetPosY = Math.max(80, Math.min(H - 80, boss.destY + waveY));
+
+      // Battlefield entrance slide if spawning offscreen right, followed by autonomous organic roaming
+      if (boss.x > targetPosX + 25 && boss.x > W - 140) {
+        boss.x -= 160 * dt;
+      } else {
+        boss.x += (targetPosX - boss.x) * Math.min(1.0, dt * driftSpeed);
+      }
+      boss.y += (targetPosY - boss.y) * Math.min(1.0, dt * driftSpeed);
     }
 
     // TRIO BOSS: THE VOID ELEMENTAL TRIUMVIRATE (IGNIS, GLACIES, FULGUR)
@@ -12151,28 +12184,32 @@ function update(dt) {
           // Individual phase clock for unique organic flight dynamics
           sub.phase = (sub.phase || 0) + dt * (sIdx === 0 ? 1.25 : (sIdx === 1 ? 1.55 : 1.95));
 
+          // Sub-boss autonomous random roaming
+          sub.moveTimer = (sub.moveTimer || 0) - dt;
+          if (sub.moveTimer <= 0) {
+            sub.randOffX = (Math.random() - 0.5) * 80;
+            sub.randOffY = (Math.random() - 0.5) * 60;
+            sub.moveTimer = 2.0 + Math.random() * 2.5;
+          }
           let laneY, destX, destY;
           if (sIdx === 0) {
             // 1. Warlord Ignis (Top Flank Magma Siege Dreadnought)
             laneY = H * 0.22;
-            const waveY = Math.sin(sub.phase * 1.1) * 34;
-            const playerBiasY = (ship.y - H * 0.5) * 0.18;
-            destY = Math.max(68, Math.min(H * 0.36, laneY + waveY + playerBiasY));
-            destX = (W - 370) + Math.cos(sub.phase * 0.85) * 35;
+            const waveY = Math.sin(sub.phase * 1.1) * 34 + (sub.randOffY || 0);
+            destY = Math.max(68, Math.min(H * 0.38, laneY + waveY));
+            destX = (W - 370) + Math.cos(sub.phase * 0.85) * 35 + (sub.randOffX || 0);
           } else if (sIdx === 1) {
             // 2. Inquisitor Glacies (Center Core Cryo-Apex Cruiser)
             laneY = H * 0.50;
-            const waveY = Math.sin(sub.phase * 1.35 + 1.2) * 40;
-            const playerBiasY = (ship.y - H * 0.5) * 0.30;
-            destY = Math.max(H * 0.38, Math.min(H * 0.62, laneY + waveY + playerBiasY));
-            destX = (W - 240) + Math.sin(sub.phase * 0.95) * 42;
+            const waveY = Math.sin(sub.phase * 1.35 + 1.2) * 40 + (sub.randOffY || 0);
+            destY = Math.max(H * 0.36, Math.min(H * 0.64, laneY + waveY));
+            destX = (W - 240) + Math.sin(sub.phase * 0.95) * 42 + (sub.randOffX || 0);
           } else {
             // 3. Sovereign Fulgur (Bottom Flank Kyber Storm Frigate)
             laneY = H * 0.78;
-            const waveY = Math.sin(sub.phase * 1.75 + 2.4) * 36;
-            const playerBiasY = (ship.y - H * 0.5) * 0.18;
-            destY = Math.max(H * 0.64, Math.min(H - 68, laneY + waveY + playerBiasY));
-            destX = (W - 120) + Math.cos(sub.phase * 1.25) * 32;
+            const waveY = Math.sin(sub.phase * 1.75 + 2.4) * 36 + (sub.randOffY || 0);
+            destY = Math.max(H * 0.62, Math.min(H - 68, laneY + waveY));
+            destX = (W - 120) + Math.cos(sub.phase * 1.25) * 32 + (sub.randOffX || 0);
           }
 
           // Initial battlefield entrance, followed by smooth active formation flight
@@ -12503,11 +12540,12 @@ function update(dt) {
           addShake(28);
         }
       } else if (boss.ramChargeT > 0) {
-        // Return back to target position
-        boss.x += (boss.targetX - boss.x) * Math.min(1, dt * 3.5);
+        // Return back to autonomous waypoint position
+        const returnTargetX = boss.destX !== undefined ? boss.destX : boss.targetX;
+        boss.x += (returnTargetX - boss.x) * Math.min(1, dt * 3.5);
       } else {
         boss.isRamming = false;
-        boss.x = boss.targetX;
+        boss.x = boss.destX !== undefined ? boss.destX : boss.targetX;
       }
     }
 
@@ -12650,9 +12688,16 @@ function update(dt) {
         // Clones Active Phase: 5 identical full-sized bio-frigates attacking the player
         for (let cIdx = boss.clones.length - 1; cIdx >= 0; cIdx--) {
           const c = boss.clones[cIdx];
-          // Smooth formation flying and oscillation
-          const targetY = c.baseY + Math.sin(t * 2.2 + c.phaseT) * (24 + boss.mutationLevel * 4);
-          c.x += (c.targetX - c.x) * Math.min(1, dt * 3.5);
+          // Smooth formation flying and random oscillation
+          c.moveTimer = (c.moveTimer || 0) - dt;
+          if (c.moveTimer <= 0) {
+            c.randOffX = (Math.random() - 0.5) * 50;
+            c.randOffY = (Math.random() - 0.5) * 45;
+            c.moveTimer = 2.0 + Math.random() * 2.0;
+          }
+          const targetY = c.baseY + Math.sin(t * 2.2 + c.phaseT) * (24 + boss.mutationLevel * 4) + (c.randOffY || 0);
+          const targetX = c.targetX + (c.randOffX || 0);
+          c.x += (targetX - c.x) * Math.min(1, dt * 3.5);
           c.y += (targetY - c.y) * Math.min(1, dt * 3.5);
 
           // Clones aim their chin blaster turrets dynamically at player
@@ -12827,7 +12872,10 @@ function update(dt) {
           // ULTIMATE: Kessel Run Hyperdrive Overdrive! (Hyperspace warp & quad-laser ambush!)
           boss.isCloaked = true;
           boss.cloakT = 1.8;
-          boss.y = Math.max(90, Math.min(H - 110, (ship.y + (Math.random() < 0.5 ? -130 : 130))));
+          boss.destX = W * 0.52 + Math.random() * (W * 0.36);
+          boss.destY = 90 + Math.random() * (H - 180);
+          boss.x = boss.destX;
+          boss.y = boss.destY;
           explode(boss.x, boss.y, '#00ffee', 32);
           addShake(24);
           popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: KESSEL RUN HYPERDRIVE!', '#00ffee');
@@ -18705,7 +18753,7 @@ function draw() {
     cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, barX, statY3);
     const statY4 = statY3 + (isMobileScreen ? 14 : 18);
     cx.fillStyle = '#00ffee'; cx.font = isMobileScreen ? 'bold 8px "Orbitron", sans-serif' : 'bold 9px "Orbitron", sans-serif';
-    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v80)`, barX, statY4);
+    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v81)`, barX, statY4);
     cx.restore();
     
     
