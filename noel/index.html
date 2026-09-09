@@ -3041,8 +3041,8 @@
 </div>
 
 
-  <!-- Brawl Stars Style Middle-Left Shop Floating Widget -->
-  <div id="middleLeftShopWrap" class="middle-left-shop-wrap" onclick="openBrawlShop(event)" role="button" tabindex="0" title="Tap to open Shipyard, Arsenal &amp; Skin Shop!">
+  <!-- Starforge Style Middle-Left Shop Floating Widget -->
+  <div id="middleLeftShopWrap" class="middle-left-shop-wrap" onclick="openBrawlShop('daily', event)" role="button" tabindex="0" title="Tap to open Starforge Cosmic Shop!">
     <div class="brawl-shop-tile">
       <div class="brawl-shop-header">SHOP</div>
       <div class="brawl-shop-icon-wrap">
@@ -3140,7 +3140,7 @@
   <input id="pname" placeholder="Captain Name" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="menu-btn-stack">
     <button id="startbtn" type="button" class="action-btn menu-stack-btn" onclick="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
-    <button id="hangarbtn" type="button" class="action-btn menu-stack-btn" onclick="openBrawlShop(event)">🛠️ SHIPYARD &amp; ARSENAL</button>
+    <button id="hangarbtn" type="button" class="action-btn menu-stack-btn" onclick="openBrawlShop('ships', event)">🛠️ SHIPYARD &amp; ARSENAL</button>
     <button id="bossbtn" type="button" class="action-btn menu-stack-btn" onclick="openBossIntelModal(event)">👾 BOSS &amp; FLEET INTEL</button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.1rem; color:#ffd23c; font-weight:bold"></p>
@@ -10151,26 +10151,19 @@ document.getElementById('spinCloseBtn').addEventListener('click', () => {
 
 
 function openHangar(e) {
-  if (e) {
-    try { e.stopPropagation(); } catch(err) {}
-  }
-  try { initAudio(); } catch(err) {}
-  const m = document.getElementById('menu');
-  if (m) m.classList.add('hidden');
-  const s = document.getElementById('shop');
-  if (s) s.classList.remove('hidden');
-  buildShop();
+  openBrawlShop('ships', e);
 }
 
 function closeShop(e) {
-  if (e) {
-    try { e.stopPropagation(); } catch(err) {}
-  }
+  closeBrawlShop(e);
   const s = document.getElementById('shop');
-  if (s) s.classList.add('hidden');
+  if (s) {
+    s.classList.add('hidden');
+    s.style.display = 'none';
+  }
   const m = document.getElementById('menu');
-  if (m) m.classList.remove('hidden');
-  renderWallet(); try { updateProfileUI(); } catch(e) {}
+  if (m && state === 'menu') m.classList.remove('hidden');
+  renderWallet(); try { updateProfileUI(); } catch(err) {}
 }
 
 // Global Window Function Attachments for 100% Click Reliability
@@ -18619,7 +18612,16 @@ if (typeof window !== 'undefined') {
 // ==========================================================================
 let currentBrawlShopTab = 'daily';
 
-function openBrawlShop(e, defaultTab = 'daily') {
+function openBrawlShop(arg1, arg2) {
+  let defaultTab = 'daily';
+  let e = null;
+  if (typeof arg1 === 'string') {
+    defaultTab = arg1;
+    e = arg2;
+  } else if (arg1 && typeof arg1 === 'object') {
+    e = arg1;
+    if (typeof arg2 === 'string') defaultTab = arg2;
+  }
   if (e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
   }
@@ -18634,7 +18636,22 @@ function openBrawlShop(e, defaultTab = 'daily') {
     modal.classList.remove('hidden');
     modal.style.display = 'flex';
     modal.style.pointerEvents = 'auto';
+  } else {
+    const s = document.getElementById('shop');
+    if (s) {
+      s.classList.remove('hidden');
+      s.style.display = 'flex';
+      buildShop();
+      return;
+    }
   }
+
+  // Update Tab visuals
+  const tabs = document.querySelectorAll('.brawl-shop-tab');
+  tabs.forEach(t => {
+    if (t.dataset.brawlTab === currentBrawlShopTab) t.classList.add('active');
+    else t.classList.remove('active');
+  });
   
   renderBrawlShopUI();
 }
