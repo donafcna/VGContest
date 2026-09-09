@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v72';
+  var LATEST_VERSION = 'v=60fps_v73';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -3998,6 +3998,10 @@ function skipStory(e) {
 }
 window.skipStory = skipStory;
 
+let mouseCanShoot = true;
+let spaceCanShoot = true;
+let touchCanShoot = true;
+
 addEventListener('keydown', e => {
   if (state === 'menu' && (e.code === 'Space' || e.code === 'Enter') && document.activeElement !== document.getElementById('pname') && document.activeElement !== document.getElementById('onlineCallsign')) {
     e.preventDefault();
@@ -4010,7 +4014,10 @@ addEventListener('keydown', e => {
     e.preventDefault();
     if (state === 'intro') { advanceStory(); return; }
     if (!e.repeat && state === 'play') {
-      keys.spaceClicked = true; // 1 key press = 1 shot!
+      if (spaceCanShoot) {
+        keys.spaceClicked = true; // 1 discrete keypress = 1 shot!
+        spaceCanShoot = false; // Must release Space before another shot!
+      }
     }
   }
   if (e.code === 'KeyQ' || e.code === 'KeyG' || e.key === 'q' || e.key === 'Q') {
@@ -4021,7 +4028,13 @@ addEventListener('keydown', e => {
   }
   if (e.code === 'Escape' || e.code === 'KeyP') togglePause(e);
 });
-addEventListener('keyup', e => keys[e.code] = false);
+
+addEventListener('keyup', e => {
+  keys[e.code] = false;
+  if (e.code === 'Space' || e.code === 'Enter') {
+    spaceCanShoot = true; // Space key released! Ready for next shot
+  }
+});
 
 addEventListener('mousemove', e => {
   mouse.x = e.clientX;
@@ -4034,11 +4047,18 @@ addEventListener('mousedown', e => {
   }
   initAudio();
   if (e.button === 0 && state === 'play') {
-    mouse.clicked = true; // 1 click = 1 shot!
+    if (mouseCanShoot) {
+      mouse.clicked = true; // 1 discrete click = 1 shot!
+      mouseCanShoot = false; // Must release mouse button before next shot!
+    }
   }
 });
+
 addEventListener('mouseup', e => {
-  if (e.button === 0) mouse.down = false;
+  if (e.button === 0) {
+    mouse.down = false;
+    mouseCanShoot = true; // Mouse button released! Ready for next click
+  }
 });
 
 // Advanced Multi-Touch Engine for Phones & Tablets
@@ -4081,11 +4101,14 @@ function onGameTouchStart(e) {
         touchStick.ay = 0;
       }
     } else {
-      // Right Zone: Direct Aiming Reticle & Broadside Salvo
+      // Right Zone: Direct Aiming Reticle & Broadside Salvo (1 Discrete Tap = 1 Shot)
       aimTouchId = t.identifier;
       mouse.x = t.clientX;
       mouse.y = t.clientY;
-      mouse.clicked = true; // 1 tap = 1 shot!
+      if (touchCanShoot) {
+        mouse.clicked = true; // 1 tap = 1 shot!
+        touchCanShoot = false;
+      }
       touchOn = true;
     }
   }
@@ -4141,6 +4164,7 @@ function onGameTouchEnd(e) {
     } else if (t.identifier === aimTouchId) {
       aimTouchId = null;
       touchOn = false;
+      touchCanShoot = true; // Finger lifted, ready for next tap!
     }
   }
 }
@@ -7771,6 +7795,9 @@ function startCombat() {
   mouse.clicked = false;
   mouse.down = false;
   keys.spaceClicked = false;
+  mouseCanShoot = true;
+  spaceCanShoot = true;
+  touchCanShoot = true;
   mouse.x = W * 0.88;
   mouse.y = H * 0.5;
   
@@ -11706,17 +11733,16 @@ function update(dt) {
     });
   }
 
-  // Semi-Automatic Pirate Naval Cannon Salvo (1 Click / 1 Tap / 1 Space = 1 Shot, No Holding/Spam)
+  // Strictly Semi-Automatic Pirate Naval Cannon Salvo (1 Click / 1 Tap / 1 Space = 1 Shot, Zero Spamming/Holding)
   shootCool -= dt;
   const wantShoot = mouse.clicked || keys.spaceClicked;
-  if (wantShoot) {
-    mouse.clicked = false;
-    keys.spaceClicked = false;
-  }
+  // Always consume trigger immediately every frame so rapid clicks never queue or buffer
+  mouse.clicked = false;
+  keys.spaceClicked = false;
+
   if (wantShoot && shootCool <= 0) {
-    mouse.clicked = false;
-    keys.spaceClicked = false;
-    shootCool = Math.max(0.12, baseCool * (rapidT > 0 ? 0.70 : 1.0) * (hyperchargeActiveT > 0 ? 0.60 : 1.0));
+    // Deliberate pirate naval cannon cadence (min cooldown 0.26s prevents jitter-clicking spam, giving authentic broadside punch)
+    shootCool = Math.max(0.26, (baseCool || 0.30) * (rapidT > 0 ? 0.70 : 1.0) * (hyperchargeActiveT > 0 ? 0.60 : 1.0));
     ship.recoil = 1.0;
     muzzleFlash = 1.0;
     
