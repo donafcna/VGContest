@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v76';
+  var LATEST_VERSION = 'v=60fps_v77';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -12367,11 +12367,14 @@ function update(dt) {
     // Active Boss Timers & Mechanics updates
     if (boss.beamActive > 0) {
       boss.beamActive -= dt;
-      // Planet-Killer Death Ray smoothly tracks and sweeps across the player
+      // Planet-Killer Death Ray smoothly tracks and sweeps across the player (Normalized shortest-angle interpolation)
       const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
       const targetAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
-      boss.beamAng = boss.beamAng !== undefined ? boss.beamAng : targetAng;
-      boss.beamAng += (targetAng - boss.beamAng) * Math.min(1.0, dt * 3.2);
+      if (boss.beamAng === undefined) boss.beamAng = targetAng;
+      let diff = targetAng - boss.beamAng;
+      while (diff < -Math.PI) diff += Math.PI * 2;
+      while (diff > Math.PI) diff -= Math.PI * 2;
+      boss.beamAng += diff * Math.min(1.0, dt * 3.8);
 
       const mdx = ship.x - muzzleX, mdy = ship.y - muzzleY;
       const proj = mdx * Math.cos(boss.beamAng) + mdy * Math.sin(boss.beamAng);
@@ -12728,6 +12731,8 @@ function update(dt) {
         if (boss.atkCycle === 0 || boss.atkCycle === 2) {
           // ULTIMATE: Axial Planet-Killer Continuous Emerald Death Ray + Ventral TIE Carrier Launch!
           boss.beamActive = 3.5;
+          const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
+          boss.beamAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
           if (gliders.length < 3) {
             gliders.push({
               variant: 'tie', name: 'VEX ESCORT TIE', col: '#ff0033', maxHp: 2, hp: 2,
@@ -18631,7 +18636,7 @@ function draw() {
     cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, barX, statY3);
     const statY4 = statY3 + (isMobileScreen ? 14 : 18);
     cx.fillStyle = '#00ffee'; cx.font = isMobileScreen ? 'bold 8px "Orbitron", sans-serif' : 'bold 9px "Orbitron", sans-serif';
-    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v76)`, barX, statY4);
+    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v77)`, barX, statY4);
     cx.restore();
     
     
