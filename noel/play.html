@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v67';
+  var LATEST_VERSION = 'v=60fps_v68';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -3191,7 +3191,7 @@
       <div class="brawl-shop-brand-group">
         <div class="brawl-shop-modal-badge-icon">🏪</div>
         <div class="brawl-shop-text-group">
-          <span class="brawl-shop-modal-subtitle">⚡ GALAXY ARSENAL &amp; DEALS</span>
+          <span class="brawl-shop-modal-subtitle">⚡ GALAXY ARSENAL &amp; FLEET HANGAR</span>
           <div class="brawl-shop-modal-title">STARFORGE COSMIC SHOP</div>
         </div>
       </div>
@@ -3207,11 +3207,7 @@
 
     <!-- Brawl Stars Category Navigation Tabs -->
     <div class="brawl-shop-nav-tabs" id="brawlShopNavTabs">
-      <button class="brawl-shop-tab active" data-brawl-tab="daily" onclick="switchBrawlShopTab('daily', event)">
-        <span>🎁 DAILY DEALS</span>
-        <span class="brawl-tab-badge">FREE</span>
-      </button>
-      <button class="brawl-shop-tab" data-brawl-tab="ships" onclick="switchBrawlShopTab('ships', event)">
+      <button class="brawl-shop-tab active" data-brawl-tab="ships" onclick="switchBrawlShopTab('ships', event)">
         <span>🛸 SHIPS</span>
         <span class="brawl-tab-badge" style="background:#38bdf8;color:#020617">5 SHIPS</span>
       </button>
@@ -18637,10 +18633,10 @@ if (typeof window !== 'undefined') {
 // ==========================================================================
 // 🛍️ BRAWL STARS COSMIC SHOP ENGINE & TAB CONTROLLER
 // ==========================================================================
-let currentBrawlShopTab = 'daily';
+let currentBrawlShopTab = 'ships';
 
 function openBrawlShop(arg1, arg2) {
-  let defaultTab = 'daily';
+  let defaultTab = 'ships';
   let e = null;
   if (typeof arg1 === 'string') {
     defaultTab = arg1;
@@ -18732,74 +18728,9 @@ function renderBrawlShopUI() {
   let h = '';
   
   // -------------------------------------------------------------
-  // TAB 1: 🎁 DAILY DEALS & FREEBIES
+  // TAB 1: 🛸 SHIPS & BRAWLERS
   // -------------------------------------------------------------
-  if (currentBrawlShopTab === 'daily') {
-    const todayStr = new Date().toDateString();
-    const freeClaimed = SAVE.data.shopDailyDate === todayStr;
-    const dropClaimed = SAVE.data.shopStarDropDate === todayStr;
-    
-    h += `<div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:#ffd23c;margin-bottom:12px;letter-spacing:1px">🌟 DAILY REFRESHING FREEBIES &amp; SPECIAL BUNDLES</div>`;
-    h += `<div class="brawl-shop-grid">`;
-    
-    // Card 1: Daily Free 200 Gold Dubloons
-    h += `<div class="brawl-shop-card featured">
-      <div class="brawl-shop-card-rarity" style="background:#22c55e;color:#020617">FREE DAILY DEAL</div>
-      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #f59e0b 0%, #1e293b 100%)">
-        <span style="font-size:3.2rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6))">🪙</span>
-      </div>
-      <div class="brawl-shop-card-title">200 Gold Dubloons</div>
-      <div class="brawl-shop-card-desc">Daily free bounty for all active Captains! Refresh every 24 hours.</div>` +
-      (freeClaimed
-        ? `<button class="brawl-shop-buy-btn equipped">✔ CLAIMED TODAY</button>`
-        : `<button class="brawl-shop-buy-btn free" onclick="claimBrawlShopFreeCoins(event)">🎁 CLAIM FREE</button>`
-      ) +
-    `</div>`;
-    
-    // Card 2: Cosmic Star Drop Mystery Chest
-    h += `<div class="brawl-shop-card featured">
-      <div class="brawl-shop-card-rarity" style="background:#a855f7;color:#fff">MYSTERY STARDROP</div>
-      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #c084fc 0%, #312e81 100%)">
-        <span style="font-size:3.2rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6))">📦</span>
-      </div>
-      <div class="brawl-shop-card-title">Cosmic Star Drop</div>
-      <div class="brawl-shop-card-desc">Crack open a rare cosmic drop containing 100-500 coins, alien plasma cores &amp; prize spins!</div>` +
-      (dropClaimed
-        ? `<button class="brawl-shop-buy-btn cores" onclick="buyBrawlShopExtraDrop(event)">🎟️ 2 CORES (OPEN)</button>`
-        : `<button class="brawl-shop-buy-btn free" onclick="openBrawlShopMysteryDrop(event)">✨ OPEN FREE STARDROP</button>`
-      ) +
-    `</div>`;
-    
-    // Card 3: Lucky Wheel Spin Voucher
-    h += `<div class="brawl-shop-card">
-      <div class="brawl-shop-card-rarity" style="background:#38bdf8;color:#020617">PRIZE WHEEL TICKET</div>
-      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #38bdf8 0%, #1e3a8a 100%)">
-        <span style="font-size:3.2rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6))">🎡</span>
-      </div>
-      <div class="brawl-shop-card-title">Lucky Wheel Spin</div>
-      <div class="brawl-shop-card-desc">Spin the grand prize wheel to win jackpot payouts up to 1,000 Coins &amp; 10 Cores!</div>
-      <button class="brawl-shop-buy-btn coins" onclick="buyBrawlShopSpinTicket(event)">🪙 150 BUY SPIN</button>
-    </div>`;
-    
-    // Card 4: 7-Day Pirate Voyage Shortcut
-    const dailyStatus = getDailyRewardStatus();
-    h += `<div class="brawl-shop-card">
-      <div class="brawl-shop-card-rarity" style="background:#ff5e62;color:#fff">VOYAGE STREAK</div>
-      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #ff5e62 0%, #7f1d1d 100%)">
-        <span style="font-size:3.2rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6))">🏴‍☠️</span>
-      </div>
-      <div class="brawl-shop-card-title">7-Day Pirate Calendar</div>
-      <div class="brawl-shop-card-desc">Daily rewards calendar. Current Streak: ${SAVE.data.daily ? SAVE.data.daily.streak : 0} Days 🔥</div>
-      <button class="brawl-shop-buy-btn free" onclick="closeBrawlShop(); openDailyModal(event);">🎁 OPEN CALENDAR</button>
-    </div>`;
-    
-    h += `</div>`;
-  }
-  
-  // -------------------------------------------------------------
-  // TAB 2: 🛸 SHIPS & BRAWLERS
-  // -------------------------------------------------------------
-  else if (currentBrawlShopTab === 'ships') {
+  if (currentBrawlShopTab === 'ships') {
     h += `<div style="font-family:'Orbitron',sans-serif;font-size:0.85rem;color:#38bdf8;margin-bottom:12px;letter-spacing:1px">🛸 STARSHIP HANGAR — UNLOCK &amp; PILOT COMBAT VESSELS</div>`;
     h += `<div class="brawl-shop-grid">`;
     
