@@ -3152,8 +3152,11 @@
   </div>
   <input id="pname" placeholder="Captain Name" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
   <div class="menu-btn-stack">
-    <button id="startbtn" type="button" class="action-btn menu-stack-btn" onclick="startSolarSail(event)">⚓ SET SOLAR SAIL!</button>
-    <button id="hangarbtn" type="button" class="action-btn menu-stack-btn" onclick="openBrawlShop('ships', event)">🛠️ SHIPYARD &amp; ARSENAL</button>
+    <button id="startbtn" type="button" class="action-btn menu-stack-btn" onclick="startInstantCombat(event)" style="font-size:1.35rem;padding:16px 24px;background:linear-gradient(135deg,#ffb834,#ea6c10);box-shadow:0 8px 32px rgba(255,160,40,0.65);font-weight:900;">🚀 PLAY NOW (INSTANT BATTLE) ❯</button>
+    <div style="display:flex;gap:8px;width:100%;">
+      <button id="storybtn" type="button" class="action-btn menu-stack-btn" onclick="startSolarSail(event)" style="flex:1;font-size:0.95rem;padding:10px 12px;background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,210,60,0.4);color:#ffd23c;">🎬 STORY INTRO</button>
+      <button id="hangarbtn" type="button" class="action-btn menu-stack-btn" onclick="openBrawlShop('ships', event)" style="flex:1;font-size:0.95rem;padding:10px 12px;background:rgba(255,255,255,0.08);border:1.5px solid rgba(0,229,255,0.4);color:#00ffee;">🛠️ SHIPYARD</button>
+    </div>
     <button id="bossbtn" type="button" class="action-btn menu-stack-btn" onclick="openBossIntelModal(event)">👾 BOSS &amp; FLEET INTEL</button>
   </div>
   <p id="walletline" style="margin-top:0.9rem; font-size:1.1rem; color:#ffd23c; font-weight:bold"></p>
@@ -3167,7 +3170,7 @@
   <p id="losetext">Your space pirate galleon was blasted into cosmic stardust…</p>
   <div class="lb" id="lbLose"></div>
   <div class="btnrow" style="margin-top:0.8rem">
-    <button onclick="startSolarSail(event)">↻ SET SAIL AGAIN</button>
+    <button onclick="startInstantCombat(event)">↻ PLAY AGAIN</button>
     <button onclick="returnToMenu(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff">🏴‍☠️ MAIN MENU</button>
   </div>
   <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">← Back to Contest</a></p>
@@ -3178,7 +3181,7 @@
   <p id="wintext">All alien UFO fleets vanquished across the stars!</p>
   <div class="lb" id="lbWin"></div>
   <div class="btnrow" style="margin-top:0.8rem">
-    <button onclick="startSolarSail(event)">↻ PLAY AGAIN</button>
+    <button onclick="startInstantCombat(event)">↻ PLAY AGAIN</button>
     <button onclick="returnToMenu(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff">🏴‍☠️ MAIN MENU</button>
   </div>
   <p style="margin-top:1rem"><a href="../" style="color:#8fa6cb">← Back to Contest</a></p>
@@ -8816,6 +8819,63 @@ function updateMultiplayerFleet(dt) {
 }
 
 let isStartingSail = false;
+function startInstantCombat(e) {
+  if (e) {
+    try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
+  }
+  initAudio();
+  
+  // 1. Forcefully hide all menu overlays
+  try {
+    const overlays = ['menu', 'pauseoverlay', 'loseoverlay', 'winoverlay', 'shop', 'brawlShopModal', 'dailyModal', 'bossIntelModal', 'dossierModal', 'spinModal', 'trailModal', 'onlineModal', 'friendsModal', 'settingsModal', 'profileModal'];
+    overlays.forEach(id => hideOverlay(id));
+    const m = document.getElementById('menu');
+    if (m) { m.style.display = 'none'; m.classList.add('hidden'); m.style.pointerEvents = 'none'; }
+    const bModal = document.getElementById('brawlShopModal');
+    if (bModal) { bModal.style.display = 'none'; bModal.classList.add('hidden'); bModal.style.pointerEvents = 'none'; }
+  } catch(err) {}
+
+  // 2. Loadout & fleet initialization
+  try { applyLoadout(); } catch(err) {}
+  try { initMultiplayerFleet(); } catch(err) {}
+
+  // 3. Initialize ship object
+  try {
+    if (!ship || typeof ship !== 'object') {
+      ship = { x: W * 0.22, y: H * 0.5, vx: 0, vy: 0, pitch: 0, hp: 5, inv: 2.0, recoil: 0, flagWave: 0, sailGlow: 0, r: 46, aimAngle: 0 };
+    } else {
+      ship.hp = (typeof maxHp !== 'undefined' && maxHp) ? maxHp : 5;
+      ship.inv = 2.0;
+      ship.x = W * 0.22;
+      ship.y = H * 0.5;
+      ship.vx = 0;
+      ship.vy = 0;
+      ship.pitch = 0;
+    }
+  } catch(err) {}
+
+  // 4. Reset powers & abilities
+  try {
+    gadgetCharges = 3;
+    gadgetCooldown = 0;
+    superCharge = 0;
+    hyperchargeActiveT = 0;
+    superBeamActiveT = 0;
+    corsairTurretT = 0;
+    novaSuperT = 0;
+    protonTorpedoes = [];
+    stealthCloakT = 0;
+    stealthDecoys = [];
+    singularities = [];
+    rammingProwT = 0;
+    plasmaScythesT = 0;
+  } catch(e) {}
+
+  // 5. Direct Combat Start
+  startCombat();
+}
+window.startInstantCombat = startInstantCombat;
+
 function startSolarSail(e) {
   if (e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
@@ -10496,7 +10556,8 @@ function bindActionButtons() {
   };
 
   attach('topTrailBar', openTrailModal);
-  attach('startbtn', startSolarSail);
+  attach('startbtn', startInstantCombat);
+  attach('storybtn', startSolarSail);
   attach('onlinebtn', openOnlineModal);
   attach('hangarbtn', openHangar);
   attach('dailybtn', openDailyModal);
