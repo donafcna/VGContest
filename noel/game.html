@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v73';
+  var LATEST_VERSION = 'v=60fps_v74';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5295,7 +5295,7 @@ const SHIPS = [
     name: 'Solar Skiff (YT-1300 Star Corsair) ⚓',
     cost: 0,
     cols: ['#f59e0b', '#b45309', '#451a03'],
-    hp: 6, cool: 0.20, spd: 1.15, gold: 1.25, magnet: 45, spread: [0],
+    hp: 6, cool: 0.40, spd: 1.15, gold: 1.25, magnet: 45, spread: [0],
     power: '🔥 Quad-Laser Blaster Cannons & Hyperdrive Overdrive',
     gadgetName: 'Hyperdrive Kessel Drift ⚡',
     gadgetDesc: 'Tier 1 [Q]: 1.2s phase dash, 8 gyro blaster bolts (2.0 dmg) & +1 HP repair',
@@ -5307,7 +5307,7 @@ const SHIPS = [
     name: 'Nova Strikefighter ⚡',
     cost: 5,
     cols: ['#00ffee', '#0284c7', '#082f49'],
-    hp: 6, cool: 0.14, spd: 1.50, gold: 1.30, magnet: 90, spread: [0],
+    hp: 6, cool: 0.35, spd: 1.50, gold: 1.30, magnet: 90, spread: [0],
     power: '⚡ S-Foil Attack Wings, +50% Speed & Proton Laser Barrage',
     gadgetName: 'Proton Torpedo Lock-On 🎯',
     gadgetDesc: 'Tier 2 [Q]: 4 smart homing torpedoes with high-yield blast (4.5 dmg)',
@@ -5319,7 +5319,7 @@ const SHIPS = [
     name: 'The Rogue Shadow (Stealth Transport) 🛡️',
     cost: 6,
     cols: ['#38bdf8', '#334155', '#0f172a'],
-    hp: 9, cool: 0.28, spd: 0.95, gold: 1.15, magnet: 35, spread: [0],
+    hp: 9, cool: 0.48, spd: 0.95, gold: 1.15, magnet: 35, spread: [0],
     power: '🛡️ Stealth Armor (+3 Max Hull HP) & Quad Tachyon Concussion Blast',
     gadgetName: 'Stealth Cloak & Decoys 👤',
     gadgetDesc: 'Tier 3 [Q]: 3.5s stealth + +50% spd, 2 decoy phantoms (7.0 EMP dmg + freeze)',
@@ -5331,7 +5331,7 @@ const SHIPS = [
     name: 'Republic Hammerhead Corvette 🚀',
     cost: 8,
     cols: ['#ef4444', '#f8fafc', '#0f172a'],
-    hp: 7, cool: 0.20, spd: 1.25, gold: 2.00, magnet: 180, spread: [0],
+    hp: 7, cool: 0.40, spd: 1.25, gold: 2.00, magnet: 180, spread: [0],
     power: '🚀 Dual Swivel Turbolasers & Quad Sublight Engine Surge (+100% Dubloons)',
     gadgetName: 'Deflector Ramming Prow 🛡️',
     gadgetDesc: 'Tier 4 [Q]: 2.5s invulnerable kinetic ram surge (+950 spd, 14.0 contact dmg)',
@@ -5343,7 +5343,7 @@ const SHIPS = [
     name: 'Nebula Cruiser (Nebula\'s Starship) 🌌',
     cost: 10,
     cols: ['#38bdf8', '#64748b', '#0f172a'],
-    hp: 8, cool: 0.22, spd: 1.20, gold: 1.50, magnet: 75, spread: [-0.15, 0.15],
+    hp: 8, cool: 0.42, spd: 1.20, gold: 1.50, magnet: 75, spread: [-0.15, 0.15],
     power: '🌀 Twin Plasma Scythes, Quad Articulated Turbines & Void Torpedoes',
     gadgetName: 'Twin Supreme Plasma Scythes ⚔️',
     gadgetDesc: 'Tier 5 [Q]: 5.0s colossal dual plasma scythes vaporizing bullets (18.0 dmg/s)',
@@ -5472,7 +5472,7 @@ function computeLoadout(shipId) {
   const sk = skinById(SAVE.data.skin);
   if (sk && sk.cols && SAVE.data.kills >= sk.kills) cols = [...sk.cols];
   const cannonLv = Math.min(10, u.cannon || 0);
-  const cool = Math.max(0.12, (s.cool || 0.32) - cannonLv * 0.012);
+  const cool = Math.max(0.32, (s.cool || 0.40) - cannonLv * 0.01);
   return {
     maxHp: (s.hp || 5) + (u.hull || 0),
     baseCool: cool,
@@ -11742,7 +11742,7 @@ function update(dt) {
 
   if (wantShoot && shootCool <= 0) {
     // Deliberate pirate naval cannon cadence (min cooldown 0.26s prevents jitter-clicking spam, giving authentic broadside punch)
-    shootCool = Math.max(0.26, (baseCool || 0.30) * (rapidT > 0 ? 0.70 : 1.0) * (hyperchargeActiveT > 0 ? 0.60 : 1.0));
+    shootCool = Math.max(0.35, (baseCool || 0.40) * (rapidT > 0 ? 0.70 : 1.0) * (hyperchargeActiveT > 0 ? 0.60 : 1.0));
     ship.recoil = 1.0;
     muzzleFlash = 1.0;
     
@@ -11772,7 +11772,7 @@ function update(dt) {
         skinId: activeSkin,
         cannonLevel: cannonLevel,
         isHypercharge: hyperchargeActiveT > 0,
-        dmg: hyperchargeActiveT > 0 ? 2 : 1
+        dmg: hyperchargeActiveT > 0 ? 4 : 2
       });
       
       let mCol = shipModel === 'runner' ? '#00ffee' : shipModel === 'storm' ? '#c084fc' : shipModel === 'hind' ? '#ffd700' : '#ffd23c';
