@@ -18245,7 +18245,7 @@ function draw() {
     const hudX = isMobileScreen ? 10 : 14;
     const hudY = isMobileScreen ? 10 : 14;
     const hudW = isMobileScreen ? 230 : 280;
-    const hudH = isMobileScreen ? 108 : 138;
+    const hudH = isMobileScreen ? 124 : 156;
     const barX = hudX + 10;
     const barY = hudY + (isMobileScreen ? 22 : 28);
     const barW = hudW - 20;
@@ -18325,6 +18325,9 @@ function draw() {
     cx.fillStyle = '#8fa6cb'; cx.font = isMobileScreen ? '10px "Orbitron", sans-serif' : '11px "Orbitron", sans-serif';
     const speedKnots = Math.round(Math.hypot(ship.vx, ship.vy) * 0.4);
     cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, barX, statY3);
+    const statY4 = statY3 + (isMobileScreen ? 14 : 18);
+    cx.fillStyle = '#00ffee'; cx.font = isMobileScreen ? 'bold 8px "Orbitron", sans-serif' : 'bold 9px "Orbitron", sans-serif';
+    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v74)`, barX, statY4);
     cx.restore();
     
     
