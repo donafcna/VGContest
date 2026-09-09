@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v78';
+  var LATEST_VERSION = 'v=60fps_v79';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -12367,29 +12367,25 @@ function update(dt) {
     // Active Boss Timers & Mechanics updates
     if (boss.beamCharge > 0) {
       boss.beamCharge -= dt;
-      // During telegraph charge-up (1.0s), aim quickly towards player so telegraph shows incoming direction
-      const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
-      const targetAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
-      if (boss.beamAng === undefined) boss.beamAng = targetAng;
-      let diff = targetAng - boss.beamAng;
-      while (diff < -Math.PI) diff += Math.PI * 2;
-      while (diff > Math.PI) diff -= Math.PI * 2;
-      boss.beamAng += diff * Math.min(1.0, dt * 4.5);
+      // During early warning telegraph (first 0.95s), aim towards player so red sightline shows attack direction
+      // In the final 0.25s of warning, angle locks in place completely so player can safely dodge!
+      if (boss.beamCharge > 0.25) {
+        const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
+        const targetAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
+        if (boss.beamAng === undefined) boss.beamAng = targetAng;
+        let diff = targetAng - boss.beamAng;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        boss.beamAng += diff * Math.min(1.0, dt * 5.5);
+      }
     } else if (boss.beamActive > 0) {
       boss.beamActive -= dt;
-      // During active firing (2.4s), rotate SLOWLY (dt * 0.85) so player can easily fly or dash up/down to dodge!
+      // THE LASER DOES NOT MOVE! It stays 100% locked and stationary where it fired, allowing player to dodge easily.
       const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
-      const targetAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
-      if (boss.beamAng === undefined) boss.beamAng = targetAng;
-      let diff = targetAng - boss.beamAng;
-      while (diff < -Math.PI) diff += Math.PI * 2;
-      while (diff > Math.PI) diff -= Math.PI * 2;
-      boss.beamAng += diff * Math.min(1.0, dt * 0.85);
-
       const mdx = ship.x - muzzleX, mdy = ship.y - muzzleY;
       const proj = mdx * Math.cos(boss.beamAng) + mdy * Math.sin(boss.beamAng);
       const perp = Math.abs(-mdx * Math.sin(boss.beamAng) + mdy * Math.cos(boss.beamAng));
-      if (proj > 0 && perp < 20 && ship.inv <= 0) {
+      if (proj > 0 && perp < 22 && ship.inv <= 0) {
         damageShip();
         popup(ship.x, ship.y - 25, '⚡ TACHYON BEAM HIT!', '#00ffaa');
         explode(ship.x, ship.y, '#00ffaa', 18);
@@ -12739,9 +12735,9 @@ function update(dt) {
       if (boss.type === 'dread') {
         // Boss 1: GRAND ADMIRAL VEX: OMEGA DREADNOUGHT
         if (boss.atkCycle === 0 || boss.atkCycle === 2) {
-          // ULTIMATE: Axial Planet-Killer Continuous Emerald Death Ray (1.0s Telegraph Warning + 2.4s Slow Sweeping Fire)
-          boss.beamCharge = 1.0;
-          boss.beamActive = 2.4;
+          // ULTIMATE: Axial Planet-Killer Continuous Emerald Death Ray (1.2s Telegraph Warning + 1.8s LOCKED STATIONARY Laser)
+          boss.beamCharge = 1.2;
+          boss.beamActive = 1.8;
           const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
           boss.beamAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
           if (gliders.length < 3) {
@@ -15612,7 +15608,7 @@ function draw() {
         cx.fillStyle = cg; cx.beginPath(); cx.arc(muzzleX, muzzleY, 18 + Math.sin(t * 24) * 6, 0, Math.PI * 2); cx.fill();
         cx.restore();
       } else if (boss.beamActive > 0) {
-        // 2. Full Blaster Beam (Sweeping slowly so player can dodge!)
+        // 2. Full Blaster Beam (Stationary locked beam - 0 movement so player easily dodges)
         const bAng = boss.beamAng !== undefined ? boss.beamAng : Math.PI;
         const muzzleX = -boss.w * 0.48, muzzleY = 0;
         const beamLen = 2600;
@@ -18668,7 +18664,7 @@ function draw() {
     cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, barX, statY3);
     const statY4 = statY3 + (isMobileScreen ? 14 : 18);
     cx.fillStyle = '#00ffee'; cx.font = isMobileScreen ? 'bold 8px "Orbitron", sans-serif' : 'bold 9px "Orbitron", sans-serif';
-    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v78)`, barX, statY4);
+    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v79)`, barX, statY4);
     cx.restore();
     
     
