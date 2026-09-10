@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v82';
+  var LATEST_VERSION = 'v=60fps_v83';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -12113,10 +12113,9 @@ function update(dt) {
       ay += touchStick.ay;
     }
 
-    // Active resistance against Overlord Chronos tractor beam: boost reverse/lateral thrusters!
+    // Vertical maneuvering allows dodging Chronos turbolasers while caught in the tractor beam
     if (boss && boss.tractorT > 0) {
-      if (ax < 0) ax *= 1.65; // High reverse thrust power to pull away from the Orbital Citadel
-      if (Math.abs(ay) > 0) ay *= 1.45; // Enhanced vertical maneuvering to break beam lock
+      if (Math.abs(ay) > 0) ay *= 1.15;
     }
   }
 
@@ -12127,9 +12126,6 @@ function update(dt) {
   }
 
   let currentAcc = ACC;
-  if (boss && boss.tractorT > 0 && ax < 0) {
-    currentAcc *= 2.2; // 2.2x reverse thruster boost to effortlessly resist Orbital Citadel tractor pull!
-  }
   ship.vx += ax * currentAcc * dt;
   ship.vy += ay * currentAcc * dt;
   if (isFrozen) { ship.vx = 0; ship.vy = 0; }
@@ -12598,18 +12594,26 @@ function update(dt) {
 
     if (boss.tractorT > 0) {
       boss.tractorT -= dt;
-      // Gentle, counterable magnetic tractor pull (Player can actively steer and resist!)
+      // Strong gravitational tractor pull (Player can only resist a bit!)
       const dishWorldX = boss.x - boss.w * 0.12;
       const dishWorldY = boss.y - boss.h * 0.15;
-      const captureX = dishWorldX - 140;
+      const captureX = dishWorldX - 120;
       const captureY = dishWorldY;
       const tdx = captureX - ship.x;
       const tdy = captureY - ship.y;
       const tdist = Math.hypot(tdx, tdy) || 1;
 
-      const pullSpeed = Math.min(95, tdist * 0.30);
+      // Base relentless gravitational vortex pull
+      let pullSpeed = Math.min(300, 185 + tdist * 0.22);
+
+      // Player holding reverse [A] / Left can only resist a bit (reduces drag by ~45%, but steady inward suction remains)
+      const isReversing = (keys['KeyA'] || keys['ArrowLeft'] || dpadState.left || (touchStick.active && touchStick.ax < -0.2));
+      if (isReversing) {
+        pullSpeed *= 0.55; // Reverse thrusters fire to brake, slowing the pull down but not escaping!
+      }
+
       ship.x += (tdx / tdist) * pullSpeed * dt;
-      ship.y += (tdy / tdist) * pullSpeed * 0.50 * dt;
+      ship.y += (tdy / tdist) * pullSpeed * 0.45 * dt;
 
       // Ion thruster trail sparks when player ship resists the tractor pull
       if (Math.random() < 0.6) {
@@ -12993,8 +12997,8 @@ function update(dt) {
         } else if (boss.atkCycle === 1) {
           // Gravitational Magnetic Tractor Beam (Player can hold [A] / steer away to resist)
           boss.tractorT = 2.4;
-          popup(boss.x - 40, boss.y - 45, '🧲 TRACTOR BEAM ACTIVATED! STEER AWAY TO RESIST!', '#00e5ff');
-          addAlert('⚠️ [TRACTOR BEAM] OVERLORD CHRONOS HAS ENGAGED TRACTOR PULL — ENGAGE REVERSE THRUSTERS [A]!', 'incoming');
+          popup(boss.x - 40, boss.y - 45, '🧲 GRAVITY WELL ACTIVATED! FIGHT THE PULL!', '#00e5ff');
+          addAlert('⚠️ [TRACTOR BEAM] OVERLORD CHRONOS GRAVITATIONAL SUCTION ENGAGED — HOLD [A] TO RESIST!', 'incoming');
           addShake(12);
           sfx('incoming');
         } else {
@@ -18920,7 +18924,7 @@ function draw() {
     cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, barX, statY3);
     const statY4 = statY3 + (isMobileScreen ? 14 : 18);
     cx.fillStyle = '#00ffee'; cx.font = isMobileScreen ? 'bold 8px "Orbitron", sans-serif' : 'bold 9px "Orbitron", sans-serif';
-    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v82)`, barX, statY4);
+    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v83)`, barX, statY4);
     cx.restore();
     
     
