@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v87';
+  var LATEST_VERSION = 'v=60fps_v88';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -3136,21 +3136,13 @@
 <button id="pausebtn" onclick="togglePause(event)" aria-label="Pause Game (Press P or Esc)">⏸ PAUSE</button>
 <div id="touchHint" style="display:none;">🕹️ D-PAD: MOVE • TAP SCREEN: SHOOT 💥</div>
 
-<!-- Brawl Stars Style Gadget & Super Action Controls -->
+<!-- Cosmic Overdrive Action Control (100% Core Charge) -->
 <div id="brawlControls" style="display:none;">
-  <!-- Green Gadget Button (Level 8+) -->
-  <button id="gadgetBtn" onclick="activateGadget(event)" aria-label="Activate Gadget (Press Q)" class="brawl-btn brawl-gadget">
-    <div class="brawl-icon">🟢</div>
-    <div class="brawl-badge">GADGET</div>
-    <div class="brawl-charges" id="gadgetCharges">3/3</div>
-    <div class="brawl-key">[Q]</div>
-  </button>
-
-  <!-- Yellow Super Button (Level 10 Max) with Circular Charge Meter -->
-  <button id="superBtn" onclick="activateSuper(event)" aria-label="Activate Super (Press E)" class="brawl-btn brawl-super">
+  <!-- Cosmic Overdrive Button (Level 10 Max) with Circular Charge Meter -->
+  <button id="superBtn" onclick="activateSuper(event)" aria-label="Activate Cosmic Overdrive (Press E)" class="brawl-btn brawl-super">
     <div class="super-ring-fill" id="superFill"></div>
-    <div class="brawl-icon super-icon" id="superIcon">💀</div>
-    <div class="brawl-badge super-badge" id="superBadge">SUPER</div>
+    <div class="brawl-icon super-icon" id="superIcon">⚡</div>
+    <div class="brawl-badge super-badge" id="superBadge">OVERDRIVE</div>
     <div class="brawl-charges" id="superPercent">0%</div>
     <div class="brawl-key">[E]</div>
   </button>
@@ -3280,7 +3272,7 @@
 
   <div class="keys">
     🎯 <b>Aim &amp; Fire</b>: <b>Move Mouse to AIM</b> • <b>CLICK</b> to Shoot Broadside 💥<br>
-    🎮 <b>PC Abilities</b>: <b>[Q]</b> = 🟢 <b>Gadget</b> (3 Charges) • <b>[E]</b> = 🌟 <b>Super &amp; Hypercharge</b> (100% Charge)<br>
+    🎮 <b>PC Controls</b>: <b>[E]</b> = ⚡ <b>COSMIC OVERDRIVE</b> (100% Energy Core Charge) • <b>[SPACE]</b> = Fire Cannons<br>
     🚀 <b>Flight Movement</b>: <b>W A S D</b> or <b>Arrow Keys</b> • 📱 <b>Mobile</b>: D-Pad &amp; On-Screen Buttons
   </div>
   <input id="pname" placeholder="Captain Name" maxlength="14" value="" autocomplete="off" style="font-size:1.15rem; padding:10px 18px; margin-bottom:0.8rem; text-align:center; width:min(85vw, 300px); color:#ffd23c; font-weight:bold; background:rgba(255,255,255,0.08); border:2px solid rgba(255,210,60,0.5); border-radius:14px; font-family:'Orbitron',sans-serif;">
@@ -4189,9 +4181,7 @@ addEventListener('keydown', e => {
       }
     }
   }
-  if (e.code === 'KeyQ' || e.code === 'KeyG' || e.key === 'q' || e.key === 'Q') {
-    activateGadget(e);
-  }
+
   if (e.code === 'KeyE' || e.code === 'KeyF' || e.key === 'e' || e.key === 'E') {
     activateSuper(e);
   }
@@ -4853,20 +4843,14 @@ function explode(x, y, col, n) {
   }
 }
 
-// ---------- BRAWL STARS GADGET & SUPER ABILITY ENGINE ----------
-let gadgetCharges = 3;
-let maxGadgetCharges = 3;
-let gadgetCooldown = 0;
+// ---------- COSMIC OVERDRIVE ABILITY ENGINE ----------
 let superCharge = 0; // 0 to 100
 let hyperchargeActiveT = 0;
 let superBeamActiveT = 0;
-
-// Ship-Specific Custom Ability States
 let corsairTurretT = 0;
 let corsairAngle = 0;
-
 let novaSuperT = 0;
-let protonTorpedoes = []; // [{x, y, vx, vy, target, life, maxLife, dmg, col}]
+let protonTorpedoes = []; // [{x, y, vx, vy, life, dmg, col}]
 
 let stealthCloakT = 0;
 let stealthDecoys = []; // [{x, y, vx, vy, life, maxLife, hp, col}]
@@ -4878,8 +4862,8 @@ let meteorStrikes = []; // [{x, y, targetY, vy, delay, size, col}]
 let nebulaScythesT = 0;
 let flakPods = []; // [{x, y, vx, vy, fuse, maxFuse, exploded, radius, col}]
 
-function hasGadget(shipId) {
-  return true;
+function hasGadget() {
+  return false;
 }
 
 function hasSuper(shipId) {
@@ -4895,9 +4879,9 @@ function addSuperCharge(amt) {
     sfx('map');
     const curShipId = (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
     const curShip = shipById(curShipId);
-    const sName = (curShip && curShip.superName) || 'SUPER';
-    addAlert(`⚡ ${sName.toUpperCase()} READY! Press [E] 🟡`, 'map');
-    popup(ship.x, ship.y - 40, `⚡ SUPER READY! [E]`, '#ffd23c');
+    const sName = (curShip && curShip.superName) || 'COSMIC OVERDRIVE';
+    addAlert(`⚡ ${sName.toUpperCase()} READY! Press [E] ⚡`, 'map');
+    popup(ship.x, ship.y - 40, `⚡ OVERDRIVE READY! [E]`, '#ffd23c');
   }
   updateBrawlControlsVisibility();
 }
@@ -4907,28 +4891,14 @@ function updateBrawlControlsVisibility() {
   if (!brawlEl) return;
   if (state === 'play' || state === 'pause') {
     brawlEl.style.display = 'flex';
-    const gBtn = document.getElementById('gadgetBtn');
     const sBtn = document.getElementById('superBtn');
     const curShipId = (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
     const curShip = shipById(curShipId);
 
-    if (gBtn) {
-      gBtn.style.display = hasGadget() ? 'flex' : 'none';
-      if (curShip && curShip.gadgetName) {
-        gBtn.title = `[Q] GADGET: ${curShip.gadgetName} — ${curShip.gadgetDesc || ''} (Press Q to activate)`;
-      }
-      const gCh = document.getElementById('gadgetCharges');
-      if (gCh) gCh.textContent = `${gadgetCharges}/3`;
-      if (gadgetCharges <= 0 || gadgetCooldown > 0) {
-        gBtn.classList.add('disabled');
-      } else {
-        gBtn.classList.remove('disabled');
-      }
-    }
     if (sBtn) {
       sBtn.style.display = hasSuper() ? 'flex' : 'none';
       if (curShip && curShip.superName) {
-        sBtn.title = `[E] SUPER: ${curShip.superName} — ${curShip.superDesc || ''} (Press E to activate)`;
+        sBtn.title = `[E] COSMIC OVERDRIVE: ${curShip.superName} — ${curShip.superDesc || ''} (Press E to activate)`;
       }
       const sPct = document.getElementById('superPercent');
       const sFill = document.getElementById('superFill');
@@ -5075,120 +5045,7 @@ function killMine(idx, m) {
 }
 
 function activateGadget(e) {
-  if (e) {
-    try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
-  }
-  if (!hasGadget() || state !== 'play' || gadgetCharges <= 0 || gadgetCooldown > 0) return;
-  try { if (typeof QUESTS !== 'undefined') QUESTS.track('gadgets', 1); } catch(err) {}
-  initAudio();
-  gadgetCharges--;
-  gadgetCooldown = 1.0;
-  sfx('gadget');
-  addShake(20);
-
-  const curShipId = (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
-  const curShip = shipById(curShipId);
-  const gName = (curShip && curShip.gadgetName) || 'GADGET';
-  addAlert(`🟢 GADGET ACTIVATED: ${gName.toUpperCase()}!`, 'gadget');
-  popup(ship.x, ship.y - 45, `🟢 ${gName}!`, '#10b981');
-
-  if (curShipId === 'cutter') {
-    // 1. Solar Skiff (Tier 1 Starter, Cost 0 Cores): Hyperdrive Kessel Drift
-    ship.inv = 1.2;
-    ship.hp = Math.min(maxHp, ship.hp + 1);
-    shieldT = Math.max(shieldT, 1.5);
-    const dashAng = ship.pitch || 0;
-    ship.x = Math.min(W * 0.85, Math.max(60, ship.x + Math.cos(dashAng) * 220));
-    ship.y = Math.min(H * 0.90, Math.max(50, ship.y + Math.sin(dashAng) * 220));
-    explode(ship.x, ship.y, '#f59e0b', 55);
-    // 8 radial quad-laser blaster bolts (Tier 1 baseline dmg: 2.0)
-    for (let i = 0; i < 8; i++) {
-      const ang = (i / 8) * Math.PI * 2;
-      balls.push({
-        x: ship.x,
-        y: ship.y,
-        vx: Math.cos(ang) * 950,
-        vy: Math.sin(ang) * 950,
-        r: 10,
-        shipModel: 'cutter',
-        skinId: 'sunset',
-        cannonLevel: 10,
-        isGadget: true,
-        dmg: 2.0
-      });
-    }
-    // Modest Glider Knockback
-    for (let gi = gliders.length - 1; gi >= 0; gi--) {
-      const g = gliders[gi];
-      if (Math.hypot(g.x - ship.x, g.y - ship.y) < 300) {
-        const ang = Math.atan2(g.y - ship.y, g.x - ship.x);
-        g.x += Math.cos(ang) * 150;
-        g.y += Math.sin(ang) * 150;
-        g.hp -= 1.5;
-        explode(g.x, g.y, '#f59e0b', 16);
-        if (g.hp <= 0) killGlider(gi, g);
-      }
-    }
-  } else if (curShipId === 'runner') {
-    // 2. Nova Strikefighter (Tier 2, Cost 5 Cores): Proton Torpedo Lock-On (4 smart homing torpedoes)
-    ship.inv = 1.0;
-    explode(ship.x, ship.y, '#00ffee', 45);
-    for (let i = 0; i < 4; i++) {
-      const launchAngle = (ship.pitch || 0) + (i - 1.5) * 0.28;
-      protonTorpedoes.push({
-        x: ship.x + Math.cos(launchAngle) * 30,
-        y: ship.y + Math.sin(launchAngle) * 30,
-        vx: Math.cos(launchAngle) * 650,
-        vy: Math.sin(launchAngle) * 650,
-        target: null,
-        life: 4.5,
-        maxLife: 4.5,
-        dmg: 4.5,
-        col: '#00ffee'
-      });
-    }
-  } else if (curShipId === 'galleon') {
-    // 3. Rogue Shadow (Tier 3, Cost 6 Cores): Stealth Cloak & Decoys
-    stealthCloakT = 3.5;
-    ship.inv = 3.5;
-    ship.hp = Math.min(maxHp, ship.hp + 2);
-    explode(ship.x, ship.y, '#38bdf8', 60);
-    // Screen-wide coin vacuum
-    for (const c of coins) {
-      c.x = ship.x + (Math.random() - 0.5) * 50;
-      c.y = ship.y + (Math.random() - 0.5) * 50;
-    }
-    // Spawn 2 Decoy Phantoms with EMP Shockwave Detonation
-    for (let d = 0; d < 2; d++) {
-      stealthDecoys.push({
-        x: ship.x + (d === 0 ? -40 : 40),
-        y: ship.y + (d === 0 ? -60 : 60),
-        vx: 80 + Math.random() * 40,
-        vy: (d === 0 ? -50 : 50),
-        life: 3.5,
-        maxLife: 3.5,
-        hp: 30,
-        col: '#38bdf8'
-      });
-    }
-  } else if (curShipId === 'hind') {
-    // 4. Hammerhead Corvette (Tier 4, Cost 8 Cores): Deflector Ramming Prow
-    rammingProwT = 2.5;
-    ship.inv = 2.5;
-    const dashAng = ship.pitch || 0;
-    ship.vx = Math.cos(dashAng) * 950;
-    ship.vy = Math.sin(dashAng) * 950;
-    explode(ship.x, ship.y, '#ef4444', 75);
-    popup(ship.x, ship.y - 30, '🛡️ RAMMING PROW ENGAGED!', '#ef4444');
-  } else if (curShipId === 'storm') {
-    // 5. Nebula Cruiser (Tier 5 - The Best Ship, Cost 10 Cores): Colossal Twin Laser Scythes
-    nebulaScythesT = 5.0;
-    ship.inv = 1.5;
-    explode(ship.x, ship.y, '#00ffee', 80);
-    popup(ship.x, ship.y - 30, '⚔️ SUPREME PLASMA SCYTHES IGNITED!', '#00ffee');
-  }
-
-  updateBrawlControlsVisibility();
+  // Gadgets removed as requested; abilities unified under Cosmic Overdrive [Key E]
 }
 window.activateGadget = activateGadget;
 
@@ -5197,20 +5054,21 @@ function activateSuper(e) {
     try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
   }
   if (!hasSuper() || state !== 'play' || superCharge < 100) return;
-  try { if (typeof QUESTS !== 'undefined') QUESTS.track('supers', 1); } catch(err) {}
+  try { if (typeof QUESTS !== 'undefined') { QUESTS.track('supers', 1); QUESTS.track('overdrive', 1); } } catch(err) {}
   initAudio();
   superCharge = 0;
   hyperchargeActiveT = 6.0;
   shieldT = Math.max(shieldT, 6.0);
   ship.hp = Math.min(maxHp, ship.hp + 4);
   sfx('super');
-  addShake(32);
+  addShake(36);
+  hurtFlash = 0.55;
 
   const curShipId = (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
   const curShip = shipById(curShipId);
-  const sName = (curShip && curShip.superName) || 'SUPER';
-  addAlert(`🌟 SUPER ACTIVATED: ${sName.toUpperCase()}! ⚡`, 'super');
-  popup(ship.x, ship.y - 55, `🌟 ${sName}!`, '#ffd23c');
+  const sName = (curShip && curShip.superName) || 'COSMIC OVERDRIVE';
+  addAlert(`🌟 COSMIC OVERDRIVE UNLEASHED: ${sName.toUpperCase()}! ⚡`, 'super');
+  popup(ship.x, ship.y - 55, `⚡ ${sName}!`, '#ffd23c');
 
   if (curShipId === 'cutter') {
     // 1. Solar Skiff (Tier 1 Starter, Cost 0 Cores): Coaxium Quad-Turret Tempest
@@ -5482,10 +5340,8 @@ const SHIPS = [
     cols: ['#f59e0b', '#b45309', '#451a03'],
     hp: 6, cool: 0.40, spd: 1.15, gold: 1.25, magnet: 45, spread: [0],
     power: '🔥 Quad-Laser Blaster Cannons & Hyperdrive Overdrive',
-    gadgetName: 'Hyperdrive Kessel Drift ⚡',
-    gadgetDesc: 'Tier 1 [Q]: 1.2s phase dash, 8 gyro blaster bolts (2.0 dmg) & +1 HP repair',
-    superName: 'Coaxium Quad-Turret Tempest 🌟',
-    superDesc: 'Tier 1 [E]: 3.5s twin 360° sweeping laser turrets (3.0 dmg/s)'
+    superName: '⚡ Overdrive: Coaxium Quad-Turret Tempest',
+    superDesc: 'Cosmic Overdrive [E]: 3.5s twin 360° sweeping laser turrets (3.5 dmg/s, >60 total dmg)'
   },
   {
     id: 'runner',
@@ -5494,10 +5350,8 @@ const SHIPS = [
     cols: ['#00ffee', '#0284c7', '#082f49'],
     hp: 6, cool: 0.35, spd: 1.50, gold: 1.30, magnet: 90, spread: [0],
     power: '⚡ S-Foil Attack Wings, +50% Speed & Proton Laser Barrage',
-    gadgetName: 'Proton Torpedo Lock-On 🎯',
-    gadgetDesc: 'Tier 2 [Q]: 4 smart homing torpedoes with high-yield blast (4.5 dmg)',
-    superName: 'S-Foil Attack Stance: Proton Nova ⚡',
-    superDesc: 'Tier 2 [E]: 4.0s piercing Proton Mega-Beam with chain lightning (5.5 dmg/s)'
+    superName: '⚡ Overdrive: S-Foil Proton Nova Doom Beam',
+    superDesc: 'Cosmic Overdrive [E]: 4.0s piercing Proton Mega-Beam with chain lightning (6.5 dmg/s)'
   },
   {
     id: 'galleon',
@@ -5506,10 +5360,8 @@ const SHIPS = [
     cols: ['#38bdf8', '#334155', '#0f172a'],
     hp: 9, cool: 0.48, spd: 0.95, gold: 1.15, magnet: 35, spread: [0],
     power: '🛡️ Stealth Armor (+3 Max Hull HP) & Quad Tachyon Concussion Blast',
-    gadgetName: 'Stealth Cloak & Decoys 👤',
-    gadgetDesc: 'Tier 3 [Q]: 3.5s stealth + +50% spd, 2 decoy phantoms (7.0 EMP dmg + freeze)',
-    superName: 'Tachyon Gravitational Singularity 🌀',
-    superDesc: 'Tier 3 [E]: 5.0s dark matter gravity vortex (7.5 dmg/s) & supernova implosion (16.0 dmg)'
+    superName: '⚡ Overdrive: Dark Matter Singularity',
+    superDesc: 'Cosmic Overdrive [E]: 5.0s dark matter gravity vortex (8.5 dmg/s) & supernova implosion (20.0 dmg)'
   },
   {
     id: 'hind',
@@ -5518,10 +5370,8 @@ const SHIPS = [
     cols: ['#ef4444', '#f8fafc', '#0f172a'],
     hp: 7, cool: 0.40, spd: 1.25, gold: 2.00, magnet: 180, spread: [0],
     power: '🚀 Dual Swivel Turbolasers & Quad Sublight Engine Surge (+100% Dubloons)',
-    gadgetName: 'Deflector Ramming Prow 🛡️',
-    gadgetDesc: 'Tier 4 [Q]: 2.5s invulnerable kinetic ram surge (+950 spd, 14.0 contact dmg)',
-    superName: 'Orbital Turbolaser Bombardment ☄️',
-    superDesc: 'Tier 4 [E]: 12 heavy orbital turbolaser artillery strikes (10.0-15.0 dmg per strike)'
+    superName: '⚡ Overdrive: Orbital Turbolaser Bombardment',
+    superDesc: 'Cosmic Overdrive [E]: 12 heavy orbital turbolaser artillery strikes (12.0-16.0 dmg per strike)'
   },
   {
     id: 'storm',
@@ -5530,10 +5380,8 @@ const SHIPS = [
     cols: ['#38bdf8', '#64748b', '#0f172a'],
     hp: 8, cool: 0.42, spd: 1.20, gold: 1.50, magnet: 75, spread: [-0.15, 0.15],
     power: '🌀 Twin Plasma Scythes, Quad Articulated Turbines & Void Torpedoes',
-    gadgetName: 'Twin Supreme Plasma Scythes ⚔️',
-    gadgetDesc: 'Tier 5 [Q]: 5.0s colossal dual plasma scythes vaporizing bullets (18.0 dmg/s)',
-    superName: 'Armada Flak Countermeasure Storm 💥',
-    superDesc: 'Tier 5 [E]: 24 articulated heavy droid flak pods wiping the screen (12.0-14.0 dmg each, >200 dmg)'
+    superName: '⚡ Overdrive: Armada Flak Countermeasure Tempest',
+    superDesc: 'Cosmic Overdrive [E]: 24 articulated heavy droid flak pods wiping the screen (>250 total area damage)'
   },
 ];
 
@@ -5543,6 +5391,8 @@ const UPG = {
   engine: { name: 'Solar Sails & Ether', icon: '⚙️', max: 10, cost: l => 40 + l * 45, desc: 'Enhanced cosmic wind maneuvering' },
   magnet: { name: 'Pirate Salvage Hook', icon: '🧲', max: 10, cost: l => 30 + l * 40, desc: 'Expanded gold attraction radius' },
 };
+window.SHIPS = SHIPS;
+window.UPG = UPG;
 
 const SKINS = [
   {
@@ -7559,14 +7409,14 @@ const QUEST_DEFS = [
     rewardGems: 1
   },
   {
-    id: 'gadget_expert',
-    icon: '🟢',
-    title: 'Tactical Gadgeteer',
-    desc: 'Deploy 4 Tactical Gadget Abilities [Key Q].',
-    target: 4,
-    type: 'gadgets',
-    rewardCoins: 50,
-    rewardTrophies: 180,
+    id: 'overdrive_master',
+    icon: '⚡',
+    title: 'Overdrive Master',
+    desc: 'Deploy 3 Cosmic Overdrive Abilities [Key E].',
+    target: 3,
+    type: 'supers',
+    rewardCoins: 75,
+    rewardTrophies: 250,
     rewardGems: 1
   },
   {
@@ -9143,12 +8993,6 @@ window.addEventListener('keydown', (e) => {
     if (k === 'a' || e.key === 'ArrowLeft') myP.keys.left = true;
     if (k === 'd' || e.key === 'ArrowRight') myP.keys.right = true;
     // Single-click firing only; no continuous keydown shooting
-    if (k === 'q') {
-      myP.keys.gadget = true;
-      if (mySlotIdx === 0) activateGadget();
-      else if (mySlotIdx === 1) activateP2Gadget();
-      else if (mySlotIdx === 2) activateP3Gadget();
-    }
     if (k === 'e') {
       myP.keys.super = true;
       if (mySlotIdx === 0) activateSuper();
@@ -9172,15 +9016,7 @@ window.addEventListener('keyup', (e) => {
   }
 });
 
-function activateP2Gadget() {
-  const p = players[1];
-  if (!p || !p.alive) return;
-  p.inv = 2.0;
-  p.hp = Math.min(p.maxHp, p.hp + 1);
-  popup(p.x, p.y - 35, '⚡ P2 GADGET: PROTON SHIELD!', '#00ffaa');
-  explode(p.x, p.y, '#00ffaa', 35);
-  sfx('super');
-}
+function activateP2Gadget() {}
 
 function activateP2Super() {
   const p = players[1];
@@ -9203,15 +9039,7 @@ function activateP2Super() {
   sfx('laser');
 }
 
-function activateP3Gadget() {
-  const p = players[2];
-  if (!p || !p.alive) return;
-  p.inv = 2.0;
-  p.hp = Math.min(p.maxHp, p.hp + 1);
-  popup(p.x, p.y - 35, '💣 P3 GADGET: DREADNOUGHT REPAIR!', '#ff5500');
-  explode(p.x, p.y, '#ff5500', 35);
-  sfx('super');
-}
+function activateP3Gadget() {}
 
 function activateP3Super() {
   const p = players[2];
@@ -9368,8 +9196,6 @@ function startInstantCombat(e) {
 
   // 4. Reset powers & abilities
   try {
-    gadgetCharges = 3;
-    gadgetCooldown = 0;
     superCharge = 0;
     hyperchargeActiveT = 0;
     superBeamActiveT = 0;
@@ -10513,8 +10339,7 @@ function buildShop() {
       `<div class="fleet-stat-badge" style="border-color:rgba(192,132,252,0.3)"><span style="color:#c084fc">🧲 Salvage Magnet:</span> <b>+${curLoadout.magnetBonus}px</b> <span style="opacity:0.75;font-size:0.70rem">(${curUpgShip.magnet || 0}px Base + Lv ${curShipUpg.magnet})</span></div>` +
     `</div>` +
     `<div style="margin-top:10px;padding-top:8px;border-top:1px dashed rgba(255,255,255,0.12);display:flex;flex-wrap:wrap;gap:12px;font-size:0.76rem">` +
-      `<div><b>🟢 Gadget [Q]:</b> ${curUpgShip.gadgetName} — ${hasGadget(activeUpgradeShip) ? '<span style="color:#34d399;font-weight:bold">✔ READY (3 Charges)</span>' : '<span style="color:#94a3b8">🔒 Reach Lv 8 on any upgrade</span>'}</div>` +
-      `<div><b>🌟 Super [E]:</b> ${curUpgShip.superName} — ${hasSuper(activeUpgradeShip) ? '<span style="color:#fde047;font-weight:bold">✔ READY (100% Charge)</span>' : '<span style="color:#94a3b8">🔒 Reach Lv 10 on any upgrade</span>'}</div>` +
+      `<div><b>⚡ Cosmic Overdrive [E]:</b> ${curUpgShip.superName} — ${hasSuper(activeUpgradeShip) ? '<span style="color:#fde047;font-weight:bold">✔ READY (100% Core Charge)</span>' : '<span style="color:#94a3b8">🔒 Reach Engineering Lv 10</span>'}</div>` +
     `</div>` +
   `</div>`;
 
@@ -10525,11 +10350,9 @@ function buildShop() {
     const can = !maxed && SAVE.data.coins >= cost;
     let brawlBadge = '';
     if (lv >= 10) {
-      brawlBadge = `<div style="color:#fde047;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(253,224,71,0.5)">🌟 SUPER &amp; HYPERCHARGE UNLOCKED for ${curUpgShip.name.split(' (')[0]}! [E] ⚡</div>`;
-    } else if (lv >= 8) {
-      brawlBadge = `<div style="color:#34d399;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(52,211,153,0.5)">🟢 GADGET UNLOCKED for ${curUpgShip.name.split(' (')[0]}! [Q] (3/3 Charges)</div>`;
+      brawlBadge = `<div style="color:#fde047;font-weight:900;font-size:0.75rem;margin-top:3px;text-shadow:0 0 10px rgba(253,224,71,0.5)">⚡ COSMIC OVERDRIVE UNLOCKED for ${curUpgShip.name.split(' (')[0]}! [E] ⚡</div>`;
     } else {
-      brawlBadge = `<div style="color:#8fa6cb;font-size:0.70rem;margin-top:2px">Reach Lv 8 for 🟢 Gadget [Q] • Lv 10 for 🌟 Super [E]</div>`;
+      brawlBadge = `<div style="color:#8fa6cb;font-size:0.70rem;margin-top:2px">Reach Engineering Lv 10 to unlock ⚡ Cosmic Overdrive [E]</div>`;
     }
 
     const pct = Math.round((lv / u.max) * 100);
@@ -10567,7 +10390,7 @@ function buildShop() {
     
     h += `<div class="shopitem" style="border-left: 3px solid ${s.cols[0] || '#ffd23c'};"><div class="ic">${shipSvg}</div>` +
       `<div class="info"><div class="t">${s.name}</div><div class="d">${s.power}</div>` +
-      `<div style="margin-top:4px;padding:4px 8px;background:rgba(16,185,129,0.12);border-radius:6px;border:1px solid rgba(16,185,129,0.3);font-size:0.72rem;color:#34d399"><b>🟢 Unique Gadget (Press Q):</b> ${s.gadgetName} — <i>${s.gadgetDesc}</i></div>` +
+      
       `<div style="margin-top:3px;padding:4px 8px;background:rgba(234,179,8,0.12);border-radius:6px;border:1px solid rgba(234,179,8,0.3);font-size:0.72rem;color:#fde047"><b>🌟 Unique Super (Press E):</b> ${s.superName} — <i>${s.superDesc}</i></div>` +
       `<div class="lv" style="margin-top:4px">🛡️ ${shipLo.maxHp} HP (${s.hp} Base + ${uShip.hull} Upg) · ⚡ ${(1 / shipLo.baseCool).toFixed(1)} rps · 🚀 ${shipLo.spdMul.toFixed(2)}x Spd${s.gold > 1 ? ' · 🪙 x' + s.gold : ''} · 🧲 +${shipLo.magnetBonus}px</div>` +
       `<div style="margin-top:4px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">` +
@@ -10994,7 +10817,6 @@ function bindActionButtons() {
   attach('musicbtn', toggleMusic);
   attach('resumebtn', togglePause);
   attach('pauseVolumeBtn', togglePauseVolume);
-  attach('gadgetBtn', activateGadget);
   attach('superBtn', activateSuper);
   attach('spinPullBtn', () => { initAudio(); triggerSlotSpin(); });
   attach('spinCloseBtn', closeSpinModal);
@@ -11508,8 +11330,7 @@ function update(dt) {
 
   if (state !== 'play') return;
 
-  // Update Brawl Stars Gadget & Super Timers and Abilities
-  if (gadgetCooldown > 0) gadgetCooldown -= dt;
+  // Update Cosmic Overdrive Timers & Particle Auras
   if (hyperchargeActiveT > 0) {
     hyperchargeActiveT -= dt;
     ship.inv = Math.max(ship.inv, 0.5);
@@ -19509,7 +19330,7 @@ function renderBrawlShopUI() {
         <div class="brawl-shop-card-title" style="color:${s.cols[0] || '#fff'}">${s.name.split(' (')[0]}</div>
         <div class="brawl-shop-card-desc">
           <div><b>HP:</b> ${s.hp} | <b>SPD:</b> ${s.spd}x | <b>FIRE:</b> ${(1/s.cool).toFixed(1)}/s</div>
-          <div style="color:#cfe4ff;margin-top:4px;font-size:0.72rem">${s.gadgetName || ''} • ${s.superName || ''}</div>
+          <div style="color:#cfe4ff;margin-top:4px;font-size:0.72rem">${s.superName || ''}</div>
         </div>` +
         (isEquipped
           ? `<button class="brawl-shop-buy-btn equipped">✔ ACTIVE SHIP</button>`
