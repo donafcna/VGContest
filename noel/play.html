@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v84';
+  var LATEST_VERSION = 'v=60fps_v85';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -6835,11 +6835,11 @@ const BOSS_INTEL = [
     hp: 65,
     powers: [
       '💥 360° Equatorial Turbolaser Trench Burst (12 radiating EMP plasma shells)',
-      '🧲 Gravitational Magnetic Tractor Beam (Pulls player ship irresistibly toward the trench while firing)',
+      '🧲 Gravitational Magnetic Tractor Beam (Pulls player ship toward the trench; resistance scales with your Ship model and Engine upgrades)',
       '⚡ 8-Tributary Kyber Dish Superlaser Convergence'
     ],
     loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +100 🪙',
-    tactic: 'Hold [A] or steer left to engage reverse ion thrusters against the magnetic tractor beam, then fire broadsides into the Kyber dish!'
+    tactic: 'Hold [A] to fire reverse thrusters against the gravity well. Higher-tier ships (Nova, Hammerhead) and Engine upgrades significantly boost your pull resistance!'
   },
   {
     id: 'ram',
@@ -12594,7 +12594,7 @@ function update(dt) {
 
     if (boss.tractorT > 0) {
       boss.tractorT -= dt;
-      // Strong gravitational tractor pull (Player can only resist a bit!)
+      // Dynamic Gravitational Tractor Pull: Resistance scales dynamically with Ship Model & Engine Upgrades!
       const dishWorldX = boss.x - boss.w * 0.12;
       const dishWorldY = boss.y - boss.h * 0.15;
       const captureX = dishWorldX - 120;
@@ -12603,28 +12603,49 @@ function update(dt) {
       const tdy = captureY - ship.y;
       const tdist = Math.hypot(tdx, tdy) || 1;
 
-      // Base relentless gravitational vortex pull
-      let pullSpeed = Math.min(300, 185 + tdist * 0.22);
+      // 1. Calculate active ship profile and engine upgrade level
+      const curShipModel = (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
+      const upgData = getShipUpg(curShipModel);
+      const engineLv = Math.min(10, (upgData && upgData.engine) || 0);
 
-      // Player holding reverse [A] / Left can only resist a bit (reduces drag by ~45%, but steady inward suction remains)
+      // 2. Base ship engine torque & thruster resistance ratings
+      const shipResistMap = {
+        runner: 1.35,  // Nova Strikefighter: Agile Twin Ion Thrusters (+35% base thrust)
+        hind:   1.45,  // Hammerhead Corvette: Quad Sublight Surge Thrusters (+45% base thrust)
+        storm:  1.25,  // Nebula Cruiser: Articulated Turbines (+25% base thrust)
+        galleon:1.10,  // The Rogue Shadow: Heavy Inertia (+10% base thrust)
+        cutter: 1.00   // Solar Skiff: Standard Starter Sails (1.0x baseline)
+      };
+      const shipThrusterMul = shipResistMap[curShipModel] || 1.0;
+
+      // 3. Engine upgrade scaling (+4.5% thruster resistance per upgrade level)
+      const engineBonus = engineLv * 0.045;
+      const totalThrusterPower = shipThrusterMul * (1.0 + engineBonus);
+
+      // 4. Base relentless gravitational vortex pull
+      let pullSpeed = Math.min(320, 190 + tdist * 0.22);
+
+      // 5. Dynamic resistance when player holds reverse [A] / Left (scales from 38% up to 75% reduction based on Ship & Engine Lv)
       const isReversing = (keys['KeyA'] || keys['ArrowLeft'] || dpadState.left || (touchStick.active && touchStick.ax < -0.2));
       if (isReversing) {
-        pullSpeed *= 0.55; // Reverse thrusters fire to brake, slowing the pull down but not escaping!
+        const resistFraction = Math.min(0.75, 0.38 * totalThrusterPower);
+        pullSpeed *= (1.0 - resistFraction);
       }
 
       ship.x += (tdx / tdist) * pullSpeed * dt;
       ship.y += (tdy / tdist) * pullSpeed * 0.45 * dt;
 
-      // Ion thruster trail sparks when player ship resists the tractor pull
-      if (Math.random() < 0.6) {
+      // Ion thruster trail sparks (flare intensifies with higher engine level & ship power)
+      if (Math.random() < (isReversing ? 0.85 : 0.45)) {
+        const flareCol = isReversing ? (engineLv >= 6 ? '#ffd23c' : (curShipModel === 'runner' ? '#00ffee' : '#38bdf8')) : '#00ffee';
         parts.push({
-          x: ship.x - 20,
-          y: ship.y + (Math.random() - 0.5) * 16,
-          vx: -240 - Math.random() * 120,
-          vy: (Math.random() - 0.5) * 40,
-          life: 0.35,
-          col: '#00ffee',
-          size: 4 + Math.random() * 3
+          x: ship.x - 24,
+          y: ship.y + (Math.random() - 0.5) * 18,
+          vx: -(260 + engineLv * 18) - Math.random() * 120,
+          vy: (Math.random() - 0.5) * 45,
+          life: 0.38,
+          col: flareCol,
+          size: (3.5 + engineLv * 0.4) + Math.random() * 3
         });
       }
 
@@ -12995,11 +13016,18 @@ function update(dt) {
           popup(boss.x - 40, boss.y - 45, '⚡ ULTIMATE: 360° EQUATORIAL TRENCH BURST!', '#00e5ff');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          // Gravitational Magnetic Tractor Beam (Player can hold [A] / steer away to resist)
-          boss.tractorT = 2.4;
-          popup(boss.x - 40, boss.y - 45, '🧲 GRAVITY WELL ACTIVATED! FIGHT THE PULL!', '#00e5ff');
-          addAlert('⚠️ [TRACTOR BEAM] OVERLORD CHRONOS GRAVITATIONAL SUCTION ENGAGED — HOLD [A] TO RESIST!', 'incoming');
-          addShake(12);
+          // Gravitational Magnetic Tractor Beam (Resistance scales dynamically with Ship & Engine Upgrades!)
+          boss.tractorT = 2.8;
+          const curShipModel = (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
+          const upgData = getShipUpg(curShipModel);
+          const engLv = Math.min(10, (upgData && upgData.engine) || 0);
+          const sObj = shipById(curShipModel);
+          const sName = (sObj && sObj.name ? sObj.name : 'STARSHIP').split(' (')[0];
+
+          popup(boss.x - 40, boss.y - 45, '🧲 GRAVITY WELL ACTIVATED!', '#00e5ff');
+          popup(ship.x, ship.y - 35, `⚙️ ${sName.toUpperCase()} [ENG LV ${engLv}] • HOLD [A] TO RESIST!`, '#ffd23c');
+          addAlert(`⚠️ [TRACTOR BEAM] CHRONOS GRAVITATIONAL SUCTION ENGAGED — ${sName.toUpperCase()} THRUSTERS ACTIVE!`, 'incoming');
+          addShake(14);
           sfx('incoming');
         } else {
           // 8-Beam Kyber Dish Superlaser Convergence (Aimed directly at player!)
@@ -18924,7 +18952,7 @@ function draw() {
     cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, barX, statY3);
     const statY4 = statY3 + (isMobileScreen ? 14 : 18);
     cx.fillStyle = '#00ffee'; cx.font = isMobileScreen ? 'bold 8px "Orbitron", sans-serif' : 'bold 9px "Orbitron", sans-serif';
-    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v84)`, barX, statY4);
+    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v85)`, barX, statY4);
     cx.restore();
     
     
