@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v94';
+  var LATEST_VERSION = 'v=60fps_v95';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -4868,7 +4868,7 @@ let meteorStrikes = []; // [{x, y, targetY, vy, delay, size, col}]
 
 let nebulaScythesT = 0;
 let flakPods = []; // [{x, y, vx, vy, fuse, maxFuse, exploded, radius, col}]
-let nebulaClones = []; // [{id, x, y, targetOffsetX, targetOffsetY, r, hp, maxHp, life, maxLife, alive, shootT, shipModel}]
+let nebulaClones = []; // [{id, sector, x, y, patrolT, r, hp, maxHp, life, maxLife, alive, shootT, shipModel, pitch}]
 
 function getEnemyTarget(fromX, fromY) {
   const livingClones = (typeof nebulaClones !== 'undefined') ? nebulaClones.filter(c => c && c.alive && c.hp > 0) : [];
@@ -5222,7 +5222,7 @@ function activateSuper(e) {
     }
   } else if (curShipId === 'storm') {
     // 5. Nebula Cruiser (Tier 5): Twin Holographic Fleet Clones Overdrive!
-    // Deploys two identical phantom wingman clones that draw all enemy fire, provide twin plasma fire support, and absorb 2 direct hits each before detonating!
+    // Deploys two autonomous Nebula Cruiser phantom clones that break formation into different directions across the upper and lower sectors to draw all enemy fire, provide twin plasma fire support, and absorb 2 direct hits each before detonating!
     ship.inv = Math.max(ship.inv, 2.0);
     ship.hp = Math.min(maxHp, ship.hp + 4);
     shieldT = Math.max(shieldT, 6.0);
@@ -5232,15 +5232,15 @@ function activateSuper(e) {
     sfx('boom');
     explode(ship.x, ship.y - 145, '#00ffee', 45);
     explode(ship.x, ship.y + 145, '#00ffee', 45);
-    popup(ship.x, ship.y - 40, '👥 TWIN HOLOGRAPHIC CLONES DEPLOYED!', '#00ffee');
+    popup(ship.x, ship.y - 40, '👥 AUTONOMOUS COMBAT CLONES DEPLOYED!', '#00ffee');
 
     nebulaClones = [
       {
         id: 'clone_top',
+        sector: 'top',
         x: ship.x + 25,
-        y: Math.max(50, ship.y - 145),
-        targetOffsetX: 25,
-        targetOffsetY: -145,
+        y: Math.max(70, ship.y - 145),
+        patrolT: 0,
         r: 28,
         hp: 2,
         maxHp: 2,
@@ -5248,14 +5248,15 @@ function activateSuper(e) {
         maxLife: 18.0,
         alive: true,
         shootT: 0.20,
-        shipModel: 'storm'
+        shipModel: 'storm',
+        pitch: -0.15
       },
       {
         id: 'clone_bot',
+        sector: 'bottom',
         x: ship.x + 25,
-        y: Math.min(H - 50, ship.y + 145),
-        targetOffsetX: 25,
-        targetOffsetY: 145,
+        y: Math.min(H - 70, ship.y + 145),
+        patrolT: 1.6,
         r: 28,
         hp: 2,
         maxHp: 2,
@@ -5263,7 +5264,8 @@ function activateSuper(e) {
         maxLife: 18.0,
         alive: true,
         shootT: 0.35,
-        shipModel: 'storm'
+        shipModel: 'storm',
+        pitch: 0.15
       }
     ];
   }
@@ -5523,7 +5525,7 @@ const SHIPS = [
     hp: 8, cool: 0.42, spd: 1.20, gold: 1.50, magnet: 75, spread: [-0.15, 0.15],
     power: '🌀 Twin Plasma Scythes, Quad Articulated Turbines & Void Torpedoes',
     superName: '⚡ Overdrive: Twin Holographic Fleet Clones 👥',
-    superDesc: 'Cosmic Overdrive [E]: Deploys two identical Nebula Cruiser phantom wingman clones that draw all enemy fire, provide twin plasma fire support, and absorb 2 direct hits each before detonating in a shockwave blast!'
+    superDesc: 'Cosmic Overdrive [E]: Deploys two autonomous Nebula Cruiser phantom clones that break formation into different directions across the upper and lower sectors to draw all enemy fire, provide twin plasma fire support, and absorb 2 direct hits each before detonating!'
   },
 ];
 
@@ -12099,7 +12101,7 @@ function update(dt) {
   }
 
   // 24 Articulated Heavy Flak Pods (Tier 5 Super: 12.0-14.0 dmg per explosion)
-  // Update Nebula Cruiser Twin Holographic Wingman Clones
+  // Update Nebula Cruiser Autonomous Combat Clones (Dynamic Multi-Directional Flight AI)
   for (let ci = nebulaClones.length - 1; ci >= 0; ci--) {
     const c = nebulaClones[ci];
     if (!c || !c.alive || c.hp <= 0) {
@@ -12114,22 +12116,37 @@ function update(dt) {
       continue;
     }
 
-    // Smooth formation tracking alongside the player ship
-    const targetX = Math.min(W - 80, Math.max(50, ship.x + c.targetOffsetX));
-    const targetY = Math.min(H - 60, Math.max(60, ship.y + c.targetOffsetY));
-    c.x += (targetX - c.x) * Math.min(1.0, dt * 9.0);
-    c.y += (targetY - c.y) * Math.min(1.0, dt * 9.0);
+    // Independent autonomous flight paths in divergent directions across the battlefield
+    c.patrolT = (c.patrolT || 0) + dt;
 
-    // Twin Plasma Blaster Fire Support (2.5 dmg each, forward bolts)
+    let targetX, targetY;
+    if (c.sector === 'top' || c.id === 'clone_top') {
+      // Upper Sector Autonomous Patrol & Forward Interception Strafe
+      targetX = (W * 0.46) + Math.cos(c.patrolT * 1.3) * (W * 0.26);
+      targetY = (H * 0.22) + Math.sin(c.patrolT * 2.1) * (H * 0.14);
+    } else {
+      // Lower Sector Autonomous Patrol & Flanking Divergent Dive
+      targetX = (W * 0.44) + Math.sin(c.patrolT * 1.1 + 1.2) * (W * 0.28);
+      targetY = (H * 0.76) + Math.cos(c.patrolT * 1.9 + 0.6) * (H * 0.14);
+    }
+
+    const prevY = c.y;
+    c.x += (targetX - c.x) * Math.min(1.0, dt * 2.8);
+    c.y += (targetY - c.y) * Math.min(1.0, dt * 2.8);
+    c.x = Math.max(60, Math.min(W - 100, c.x));
+    c.y = Math.max(50, Math.min(H - 60, c.y));
+    c.pitch = Math.max(-0.25, Math.min(0.25, (c.y - prevY) / (Math.max(0.001, dt) * 600)));
+
+    // Twin Plasma Blaster Fire Support (2.5 dmg each, forward plasma bolts)
     c.shootT = (c.shootT || 0.35) - dt;
     if (c.shootT <= 0) {
-      c.shootT = 0.35;
+      c.shootT = 0.32;
       for (const offY of [-10, 10]) {
         balls.push({
           x: c.x + 35,
           y: c.y + offY,
           vx: 1100,
-          vy: 0,
+          vy: (c.pitch || 0) * 180,
           r: 6,
           dmg: 2.5,
           col: '#00ffee',
@@ -18098,6 +18115,7 @@ function draw() {
       if (!c || !c.alive || c.hp <= 0) continue;
       cx.save();
       cx.translate(c.x, c.y);
+      if (c.pitch) cx.rotate(c.pitch);
 
       // Holographic Wingman Shimmer & Energy Shield Field
       const cloneAlpha = 0.88 + Math.sin(t * 12 + (c.id === 'clone_top' ? 0 : 3)) * 0.10;
@@ -18207,6 +18225,7 @@ function draw() {
 
       // Clone UI Badge & Health Indicators
       cx.globalAlpha = 1.0;
+      if (c.pitch) cx.rotate(-c.pitch);
       cx.fillStyle = 'rgba(15, 23, 42, 0.88)';
       cx.strokeStyle = '#00ffee';
       cx.lineWidth = 1.5;
