@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v95';
+  var LATEST_VERSION = 'v=60fps_v96';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -4887,6 +4887,33 @@ function getEnemyTarget(fromX, fromY) {
 }
 window.getEnemyTarget = getEnemyTarget;
 
+function getCloneTarget(fromX, fromY) {
+  let best = null, bestD = 99999;
+  // 1. Check active Gliders
+  if (typeof gliders !== 'undefined') {
+    for (const g of gliders) {
+      if (!g || g.hp <= 0 || g.x < -40 || g.x > (typeof W !== 'undefined' ? W + 60 : 1300)) continue;
+      const d = Math.hypot(fromX - g.x, fromY - g.y);
+      if (d < bestD) { bestD = d; best = g; }
+    }
+  }
+  // 2. Check active Warships/Forts
+  if (typeof forts !== 'undefined') {
+    for (const f of forts) {
+      if (!f || f.hp <= 0 || f.x < -40 || f.x > (typeof W !== 'undefined' ? W + 80 : 1300)) continue;
+      const d = Math.hypot(fromX - f.x, fromY - f.y);
+      if (d < bestD) { bestD = d; best = f; }
+    }
+  }
+  // 3. Check Boss
+  if (typeof boss !== 'undefined' && boss && boss.alive !== false && boss.hp > 0) {
+    const d = Math.hypot(fromX - boss.x, fromY - boss.y);
+    if (d < bestD) { bestD = d; best = boss; }
+  }
+  return best;
+}
+window.getCloneTarget = getCloneTarget;
+
 function hasGadget() {
   return false;
 }
@@ -5222,7 +5249,7 @@ function activateSuper(e) {
     }
   } else if (curShipId === 'storm') {
     // 5. Nebula Cruiser (Tier 5): Twin Holographic Fleet Clones Overdrive!
-    // Deploys two autonomous Nebula Cruiser phantom clones that break formation into different directions across the upper and lower sectors to draw all enemy fire, provide twin plasma fire support, and absorb 2 direct hits each before detonating!
+    // Deploys two autonomous Nebula Cruiser phantom clones that break into different directions across the battlefield, actively aim and shoot smart-tracking twin plasma bolts at enemies, draw all enemy fire, and absorb 2 direct hits each before detonating!
     ship.inv = Math.max(ship.inv, 2.0);
     ship.hp = Math.min(maxHp, ship.hp + 4);
     shieldT = Math.max(shieldT, 6.0);
@@ -12137,20 +12164,33 @@ function update(dt) {
     c.y = Math.max(50, Math.min(H - 60, c.y));
     c.pitch = Math.max(-0.25, Math.min(0.25, (c.y - prevY) / (Math.max(0.001, dt) * 600)));
 
-    // Twin Plasma Blaster Fire Support (2.5 dmg each, forward plasma bolts)
-    c.shootT = (c.shootT || 0.35) - dt;
+    // Directed Twin Plasma Blaster Fire Support actively targeting enemies
+    c.shootT = (c.shootT || 0.32) - dt;
     if (c.shootT <= 0) {
-      c.shootT = 0.32;
-      for (const offY of [-10, 10]) {
+      c.shootT = 0.28;
+      const enemyTarget = getCloneTarget(c.x, c.y);
+      let fireAng = 0;
+      if (enemyTarget && enemyTarget.hp > 0) {
+        fireAng = Math.atan2(enemyTarget.y - c.y, enemyTarget.x - c.x);
+        c.pitch = Math.max(-0.35, Math.min(0.35, fireAng));
+      } else {
+        fireAng = (c.pitch || 0);
+      }
+
+      const cosA = Math.cos(fireAng), sinA = Math.sin(fireAng);
+      const boltSpeed = 1200;
+      for (const offP of [-10, 10]) {
+        const perpX = -sinA * offP, perpY = cosA * offP;
         balls.push({
-          x: c.x + 35,
-          y: c.y + offY,
-          vx: 1100,
-          vy: (c.pitch || 0) * 180,
-          r: 6,
-          dmg: 2.5,
+          x: c.x + cosA * 35 + perpX,
+          y: c.y + sinA * 35 + perpY,
+          vx: cosA * boltSpeed,
+          vy: sinA * boltSpeed,
+          r: 6.5,
+          dmg: 3.0,
           col: '#00ffee',
           isCloneBolt: true,
+          target: enemyTarget,
           shipModel: 'storm'
         });
       }
@@ -13550,6 +13590,27 @@ function update(dt) {
   // Update Player Cannonballs
   for (let i = balls.length - 1; i >= 0; i--) {
     const b = balls[i];
+
+    // Smart tracking for clone blaster bolts against hostile targets
+    if (b.isCloneBolt) {
+      if (!b.target || b.target.hp <= 0) {
+        b.target = getCloneTarget(b.x, b.y);
+      }
+      if (b.target && b.target.hp > 0) {
+        const tdx = b.target.x - b.x, tdy = b.target.y - b.y;
+        const targetAng = Math.atan2(tdy, tdx);
+        const curAng = Math.atan2(b.vy, b.vx);
+        let diff = targetAng - curAng;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        const turnRate = 5.5 * dt;
+        const newAng = curAng + Math.max(-turnRate, Math.min(turnRate, diff));
+        const spd = Math.hypot(b.vx, b.vy) || 1200;
+        b.vx = Math.cos(newAng) * spd;
+        b.vy = Math.sin(newAng) * spd;
+      }
+    }
+
     b.x += b.vx * dt; b.y += b.vy * dt;
     
     if (Math.random() < 0.75) {
