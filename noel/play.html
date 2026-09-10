@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v83';
+  var LATEST_VERSION = 'v=60fps_v84';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -3328,7 +3328,7 @@
 <!-- Captain's Tactical Fleet Dossier Modal -->
 
 <!-- Starforge Cosmic Shop Full Modal -->
-<div id="brawlShopModal" class="overlay hidden" style="z-index: 124;">
+<div id="brawlShopModal" class="overlay hidden" style="z-index: 250;" onclick="if(event.target===this) closeBrawlShop(event);">
   <div class="brawl-shop-modal-card">
     <!-- Header with Shop Marquee & Live Floating Wallet -->
     <div class="brawl-shop-modal-header">
@@ -18924,7 +18924,7 @@ function draw() {
     cx.fillText(`⚡ SPEED: ${speedKnots} KTS`, barX, statY3);
     const statY4 = statY3 + (isMobileScreen ? 14 : 18);
     cx.fillStyle = '#00ffee'; cx.font = isMobileScreen ? 'bold 8px "Orbitron", sans-serif' : 'bold 9px "Orbitron", sans-serif';
-    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v83)`, barX, statY4);
+    cx.fillText(`🎯 CANNON: 1-CLICK MODE (v84)`, barX, statY4);
     cx.restore();
     
     
@@ -19306,24 +19306,13 @@ function openBrawlShop(arg1, arg2) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
   }
   try { initAudio(); sfx('map'); } catch(err) {}
-  currentBrawlShopTab = defaultTab;
+  currentBrawlShopTab = defaultTab || 'ships';
   
+  // Make sure menu remains in good state underneath
   const m = document.getElementById('menu');
-  if (m) m.classList.add('hidden');
-  
-  const modal = document.getElementById('brawlShopModal');
-  if (modal) {
-    modal.classList.remove('hidden');
-    modal.style.display = 'flex';
-    modal.style.pointerEvents = 'auto';
-  } else {
-    const s = document.getElementById('shop');
-    if (s) {
-      s.classList.remove('hidden');
-      s.style.display = 'flex';
-      buildShop();
-      return;
-    }
+  if (m && state === 'menu') {
+    m.classList.remove('hidden');
+    m.style.display = 'flex';
   }
 
   // Update Tab visuals
@@ -19333,7 +19322,13 @@ function openBrawlShop(arg1, arg2) {
     else t.classList.remove('active');
   });
   
-  renderBrawlShopUI();
+  try {
+    renderBrawlShopUI();
+  } catch(err) {
+    console.error('Error rendering Brawl Shop UI:', err);
+  }
+
+  showOverlay('brawlShopModal');
 }
 window.openBrawlShop = openBrawlShop;
 
@@ -19341,14 +19336,19 @@ function closeBrawlShop(e) {
   if (e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
   }
-  const modal = document.getElementById('brawlShopModal');
-  if (modal) {
-    modal.classList.add('hidden');
-    modal.style.display = 'none';
-  }
+  hideOverlay('brawlShopModal');
+  const s = document.getElementById('shop');
+  if (s) hideOverlay('shop');
+
   const m = document.getElementById('menu');
-  if (m && state === 'menu') m.classList.remove('hidden');
-  renderWallet(); try { updateProfileUI(); } catch(e) {}
+  if (m && state === 'menu') {
+    m.classList.remove('hidden');
+    m.style.display = 'flex';
+    m.style.visibility = 'visible';
+    m.style.opacity = '1';
+    m.style.pointerEvents = 'auto';
+  }
+  renderWallet(); try { updateProfileUI(); } catch(err) {}
 }
 window.closeBrawlShop = closeBrawlShop;
 
@@ -19448,7 +19448,7 @@ function renderBrawlShopUI() {
       const isOwned = isCreator() || SAVE.data.kills >= (sk.kills || 0);
       const isEquipped = (SAVE.data.skin || 'default') === sk.id;
       const tInfo = skinTiers.find(t => t.id === sk.id) || { tier: 'SPECIAL', tCol: '#38bdf8' };
-      const curShip = shipById(SAVE.data.sel || 'cutter');
+      const curShip = shipById(SAVE.data.sel || 'cutter') || SHIPS[0];
       const skinSvg = getShipSvg(curShip.id, sk.cols || curShip.cols);
       
       h += `<div class="brawl-shop-card${isEquipped ? ' featured' : ''}">
@@ -19475,7 +19475,7 @@ function renderBrawlShopUI() {
   // TAB 4: ⚡ ARSENAL STAT UPGRADES
   // -------------------------------------------------------------
   else if (currentBrawlShopTab === 'upgrades') {
-    const curShip = shipById(activeUpgradeShip || SAVE.data.sel || 'cutter');
+    const curShip = shipById(activeUpgradeShip || SAVE.data.sel || 'cutter') || SHIPS[0];
     const uShip = getShipUpg(curShip.id);
     
     h += `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
