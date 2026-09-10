@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v93';
+  var LATEST_VERSION = 'v=60fps_v94';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5230,17 +5230,17 @@ function activateSuper(e) {
     muzzleFlash = 1.8;
     addShake(28);
     sfx('boom');
-    explode(ship.x, ship.y - 75, '#00ffee', 45);
-    explode(ship.x, ship.y + 75, '#00ffee', 45);
+    explode(ship.x, ship.y - 145, '#00ffee', 45);
+    explode(ship.x, ship.y + 145, '#00ffee', 45);
     popup(ship.x, ship.y - 40, '👥 TWIN HOLOGRAPHIC CLONES DEPLOYED!', '#00ffee');
 
     nebulaClones = [
       {
         id: 'clone_top',
-        x: ship.x - 30,
-        y: ship.y - 75,
-        targetOffsetX: -30,
-        targetOffsetY: -75,
+        x: ship.x + 25,
+        y: Math.max(50, ship.y - 145),
+        targetOffsetX: 25,
+        targetOffsetY: -145,
         r: 28,
         hp: 2,
         maxHp: 2,
@@ -5252,10 +5252,10 @@ function activateSuper(e) {
       },
       {
         id: 'clone_bot',
-        x: ship.x - 30,
-        y: ship.y + 75,
-        targetOffsetX: -30,
-        targetOffsetY: 75,
+        x: ship.x + 25,
+        y: Math.min(H - 50, ship.y + 145),
+        targetOffsetX: 25,
+        targetOffsetY: 145,
         r: 28,
         hp: 2,
         maxHp: 2,
@@ -12379,14 +12379,15 @@ function update(dt) {
   // Boss updates
   if (!boss) { bossT -= dt; if (bossT <= 0) spawnBoss(); }
   if (boss) {
-    // Predictive targeting: lead player position based on player velocity and distance
-    const leadT = Math.min(0.28, Math.hypot(ship.x - boss.x, ship.y - boss.y) / 900);
-    const targetAimX = ship.x + (ship.vx || 0) * leadT;
-    const targetAimY = ship.y + (ship.vy || 0) * leadT;
+    // Predictive targeting: lead target position (clone or player) based on velocity and distance
+    const bTarget = getEnemyTarget(boss.x, boss.y);
+    const leadT = Math.min(0.28, Math.hypot(bTarget.x - boss.x, bTarget.y - boss.y) / 900);
+    const targetAimX = bTarget.x + (bTarget.vx || (bTarget === ship ? (ship.vx || 0) : 0)) * leadT;
+    const targetAimY = bTarget.y + (bTarget.vy || (bTarget === ship ? (ship.vy || 0) : 0)) * leadT;
     const dx = targetAimX - boss.x, dy = targetAimY - boss.y;
     const dist = Math.hypot(dx, dy) || 1;
     const aimAng = Math.atan2(dy, dx);
-    const directAimAng = Math.atan2(ship.y - boss.y, ship.x - boss.x);
+    const directAimAng = Math.atan2(bTarget.y - boss.y, bTarget.x - boss.x);
     const spdBonus = (1 + Math.min(1.0, (level - 1) * 0.08)) * (boss.enraged ? 1.2 : 1.0);
 
     // 1. Autonomous Random Flight Navigation: Boss cruises unpredictably in random directions across 2D space (Never mirrors/tracks player position!)
@@ -12484,9 +12485,10 @@ function update(dt) {
           sub.y += (destY - sub.y) * Math.min(1.0, dt * (sIdx === 2 ? 3.0 : (sIdx === 1 ? 2.3 : 1.8)));
 
           // Individual Aiming with leading prediction directly at player
-          const subLeadT = Math.min(0.24, Math.hypot(ship.x - sub.x, ship.y - sub.y) / 800);
-          const subPredX = ship.x + (ship.vx || 0) * subLeadT;
-          const subPredY = ship.y + (ship.vy || 0) * subLeadT;
+          const subTarget = getEnemyTarget(sub.x, sub.y);
+          const subLeadT = Math.min(0.24, Math.hypot(subTarget.x - sub.x, subTarget.y - sub.y) / 800);
+          const subPredX = subTarget.x + (subTarget.vx || (subTarget === ship ? (ship.vx || 0) : 0)) * subLeadT;
+          const subPredY = subTarget.y + (subTarget.vy || (subTarget === ship ? (ship.vy || 0) : 0)) * subLeadT;
           const subDx = subPredX - sub.x, subDy = subPredY - sub.y;
           const subAimAng = Math.atan2(subDy, subDx);
 
@@ -12647,7 +12649,8 @@ function update(dt) {
         if (boss.compositeBeamActive > 0) {
           boss.compositeBeamActive -= dt;
           const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
-          const targetAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
+          const bTarget = getEnemyTarget(muzzleX, muzzleY);
+          const targetAng = Math.atan2(bTarget.y - muzzleY, bTarget.x - muzzleX);
           boss.compositeBeamAng = boss.compositeBeamAng !== undefined ? boss.compositeBeamAng : targetAng;
           boss.compositeBeamAng += (targetAng - boss.compositeBeamAng) * Math.min(1.0, dt * 3.5);
           
@@ -12671,7 +12674,8 @@ function update(dt) {
       // In the final 0.25s of warning, angle locks in place completely so player can safely dodge!
       if (boss.beamCharge > 0.25) {
         const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
-        const targetAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
+        const bTarget = getEnemyTarget(muzzleX, muzzleY);
+        const targetAng = Math.atan2(bTarget.y - muzzleY, bTarget.x - muzzleX);
         if (boss.beamAng === undefined) boss.beamAng = targetAng;
         let diff = targetAng - boss.beamAng;
         while (diff < -Math.PI) diff += Math.PI * 2;
@@ -12801,8 +12805,9 @@ function update(dt) {
       boss.tractorShootT = (boss.tractorShootT || 0) - dt;
       if (boss.tractorShootT <= 0) {
         boss.tractorShootT = 0.48; // Spaced out barrage
-        const aimAtShip = Math.atan2(ship.y - boss.y, ship.x - boss.x);
-        
+        const bTarget = getEnemyTarget(boss.x, boss.y);
+        const aimAtTarget = Math.atan2(bTarget.y - boss.y, bTarget.x - boss.x);
+
         // 1. Dual Turbolaser Blasts from Equatorial Trench
         for (const cy of [-26, 26]) {
           eballs.push({
@@ -12810,20 +12815,22 @@ function update(dt) {
             col: '#00e5ff',
             x: boss.x - boss.w * 0.35,
             y: boss.y + cy,
-            vx: Math.cos(aimAtShip) * 620 * spdBonus,
-            vy: Math.sin(aimAtShip) * 620 * spdBonus,
+            vx: Math.cos(aimAtTarget) * 620 * spdBonus,
+            vy: Math.sin(aimAtTarget) * 620 * spdBonus,
             r: 14
           });
         }
 
         // 2. Kyber Superlaser Core Plasma Pulse
+        const dishTarget = getEnemyTarget(dishWorldX, dishWorldY);
+        const dishDist = Math.hypot(dishTarget.x - dishWorldX, dishTarget.y - dishWorldY) || 1;
         eballs.push({
           type: 'emp',
           col: '#00ffee',
           x: dishWorldX,
           y: dishWorldY,
-          vx: (ship.x - dishWorldX) / (Math.hypot(ship.x - dishWorldX, ship.y - dishWorldY) || 1) * 580 * spdBonus,
-          vy: (ship.y - dishWorldY) / (Math.hypot(ship.x - dishWorldX, ship.y - dishWorldY) || 1) * 580 * spdBonus,
+          vx: ((dishTarget.x - dishWorldX) / dishDist) * 580 * spdBonus,
+          vy: ((dishTarget.y - dishWorldY) / dishDist) * 580 * spdBonus,
           r: 18
         });
 
@@ -12894,7 +12901,8 @@ function update(dt) {
         sfx('incoming');
         addShake(18);
         // Surprise 4-round amethyst burst on uncloak aimed at player!
-        const uncloakAim = Math.atan2(ship.y - boss.y, ship.x - boss.x);
+        const bTarget = getEnemyTarget(boss.x, boss.y);
+        const uncloakAim = Math.atan2(bTarget.y - boss.y, bTarget.x - boss.x);
         for (let k = 0; k < 4; k++) {
           const spr = ((k - 1.5) / 3) * 0.35;
           const shootAng = uncloakAim + spr;
@@ -12922,7 +12930,8 @@ function update(dt) {
       for (const ny of [-boss.h * 0.32, boss.h * 0.32]) {
         const barrelWorldX = boss.x - boss.w * 0.44;
         const barrelWorldY = boss.y + ny;
-        const bdx = ship.x - barrelWorldX, bdy = ship.y - barrelWorldY;
+        const barrelTarget = getEnemyTarget(barrelWorldX, barrelWorldY);
+        const bdx = barrelTarget.x - barrelWorldX, bdy = barrelTarget.y - barrelWorldY;
         const barrelAim = Math.atan2(bdy, bdx);
         const pProj = bdx * Math.cos(barrelAim) + bdy * Math.sin(barrelAim);
         const pPerp = Math.abs(-bdx * Math.sin(barrelAim) + bdy * Math.cos(barrelAim));
@@ -13038,7 +13047,8 @@ function update(dt) {
           c.y += (targetY - c.y) * Math.min(1, dt * 3.5);
 
           // Clones aim their chin blaster turrets dynamically at player
-          c.aimAng = Math.atan2(ship.y - c.y, ship.x - c.x);
+          const cTarget = getEnemyTarget(c.x, c.y);
+          c.aimAng = Math.atan2(cTarget.y - c.y, cTarget.x - c.x);
 
           // Clones attack rate increases with mutationLevel
           c.shootT -= dt * (1.0 + boss.mutationLevel * 0.35);
@@ -13121,7 +13131,8 @@ function update(dt) {
           boss.beamCharge = 1.2;
           boss.beamActive = 1.8;
           const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
-          boss.beamAng = Math.atan2(ship.y - muzzleY, ship.x - muzzleX);
+          const beamTarget = getEnemyTarget(muzzleX, muzzleY);
+          boss.beamAng = Math.atan2(beamTarget.y - muzzleY, beamTarget.x - muzzleX);
           if (gliders.length < 3) {
             gliders.push({
               variant: 'tie', name: 'VEX ESCORT TIE', col: '#ff0033', maxHp: 2, hp: 2,
@@ -13472,7 +13483,8 @@ function update(dt) {
           for (let k = 0; k < 6; k++) {
             setTimeout(() => {
               if (boss && boss.hp > 0) {
-                const currDx = ship.x - boss.x, currDy = ship.y - boss.y;
+                const bTarget = getEnemyTarget(boss.x, boss.y);
+                const currDx = bTarget.x - boss.x, currDy = bTarget.y - boss.y;
                 const currAng = Math.atan2(currDy, currDx) + (Math.random() - 0.5) * 0.15;
                 eballs.push({
                   type: 'electric', isElectric: true, col: '#c084fc',
