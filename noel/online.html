@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v88';
+  var LATEST_VERSION = 'v=60fps_v89';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5071,10 +5071,56 @@ function activateSuper(e) {
   popup(ship.x, ship.y - 55, `⚡ ${sName}!`, '#ffd23c');
 
   if (curShipId === 'cutter') {
-    // 1. Solar Skiff (Tier 1 Starter, Cost 0 Cores): Coaxium Quad-Turret Tempest
-    corsairTurretT = 3.5;
-    corsairAngle = 0;
-    superBeamActiveT = 0;
+    // 1. Solar Skiff: Mega Solar Siege Cannon Overdrive!
+    // Fires a Colossal Supercharged Solar Cannon Shell with massive 240px AoE shockwave!
+    const aimAng = ship.pitch || 0;
+    const muzzleX = ship.x + 45 * Math.cos(aimAng);
+    const muzzleY = ship.y + 45 * Math.sin(aimAng);
+
+    // Primary Colossal Mega-Cannon Shell (25.0 direct dmg + 240px AoE)
+    balls.push({
+      x: muzzleX,
+      y: muzzleY,
+      vx: Math.cos(aimAng) * 1100,
+      vy: Math.sin(aimAng) * 1100,
+      r: 32, // Colossal 32px radius!
+      dmg: 25.0, // 25.0 Impact Damage!
+      aoeRadius: 240,
+      aoeDmg: 15.0,
+      col: '#ffd23c',
+      isMegaCannon: true,
+      isHypercharge: true,
+      shipModel: 'cutter',
+      skinId: (SAVE && SAVE.data && SAVE.data.shipSkins && SAVE.data.shipSkins.cutter) || 'default'
+    });
+
+    // Plus 2 Heavy Flanking Solar Cluster Mortars (10.0 dmg each + 140px AoE)
+    for (const offAng of [-0.18, 0.18]) {
+      const sAng = aimAng + offAng;
+      balls.push({
+        x: muzzleX,
+        y: muzzleY,
+        vx: Math.cos(sAng) * 1020,
+        vy: Math.sin(sAng) * 1020,
+        r: 20,
+        dmg: 10.0,
+        aoeRadius: 140,
+        aoeDmg: 8.0,
+        col: '#ff5500',
+        isMegaCannon: true,
+        isHypercharge: true,
+        shipModel: 'cutter',
+        skinId: (SAVE && SAVE.data && SAVE.data.shipSkins && SAVE.data.shipSkins.cutter) || 'default'
+      });
+    }
+
+    // Massive recoil, muzzle flash flare & explosion sound
+    ship.recoil = 2.5;
+    muzzleFlash = 2.0;
+    addShake(32);
+    sfx('boom');
+    explode(muzzleX, muzzleY, '#ffd23c', 40);
+    corsairTurretT = 0;
   } else if (curShipId === 'runner') {
     // 2. Nova Strikefighter (Tier 2, Cost 5 Cores): S-Foil Attack Stance: Proton Nova (Piercing Mega-Beam)
     novaSuperT = 4.0;
@@ -5340,8 +5386,8 @@ const SHIPS = [
     cols: ['#f59e0b', '#b45309', '#451a03'],
     hp: 6, cool: 0.40, spd: 1.15, gold: 1.25, magnet: 45, spread: [0],
     power: '🔥 Quad-Laser Blaster Cannons & Hyperdrive Overdrive',
-    superName: '⚡ Overdrive: Coaxium Quad-Turret Tempest',
-    superDesc: 'Cosmic Overdrive [E]: 3.5s twin 360° sweeping laser turrets (3.5 dmg/s, >60 total dmg)'
+    superName: '⚡ Overdrive: Mega Solar Siege Cannon',
+    superDesc: 'Cosmic Overdrive [E]: Fires a colossal hyper-density Solar Siege Cannon shell (25.0 Direct Dmg) with a 240px radial shockwave explosion vaporizing all surrounding enemies & enemy bullets!'
   },
   {
     id: 'runner',
@@ -12164,8 +12210,10 @@ function update(dt) {
       const waveX = Math.cos(boss.phase * (boss.driftFreqX || 0.8) + (boss.wanderPhaseX || 0)) * (boss.enraged ? 40 : 25);
       const waveY = Math.sin(boss.phase * (boss.driftFreqY || 1.1) + (boss.wanderPhaseY || 0)) * (boss.enraged ? 65 : 42);
 
-      const targetPosX = Math.max(W * 0.48, Math.min(W - 90, boss.destX + waveX));
-      const targetPosY = Math.max(80, Math.min(H - 80, boss.destY + waveY));
+      const bDestX = boss.destX !== undefined ? boss.destX : (boss.targetX !== undefined ? boss.targetX : boss.x);
+      const bDestY = boss.destY !== undefined ? boss.destY : (boss.targetY !== undefined ? boss.targetY : boss.y);
+      const targetPosX = Math.max(W * 0.48, Math.min(W - 90, bDestX + waveX));
+      const targetPosY = Math.max(80, Math.min(H - 80, bDestY + waveY));
 
       // Battlefield entrance slide if spawning offscreen right, followed by autonomous organic roaming
       if (boss.x > targetPosX + 25 && boss.x > W - 140) {
@@ -13472,16 +13520,70 @@ function update(dt) {
     }
     
     if (hit) {
-      if (b.shipModel === 'runner') triggerChainLightning(b.x, b.y);
-      if (b.isHypercharge) {
-        // Hypercharge AOE Shockwave Explosion
-        explode(b.x, b.y, '#ffd23c', 35);
-        explode(b.x, b.y, '#c084fc', 25);
+      if (b.isMegaCannon) {
+        // Colossal Mega-Cannon Area of Effect (AoE) Explosion!
+        const aoeR = b.aoeRadius || 240;
+        const aoeDmg = b.aoeDmg || 15.0;
+        addShake(35);
+        sfx('boom');
+        hurtFlash = 0.2;
+
+        // 1. Massive Visual Shockwave Rings & Fireball Sparks
+        explode(b.x, b.y, '#ffd23c', 60);
+        explode(b.x, b.y, '#ff4500', 45);
+        explode(b.x, b.y, '#ffffff', 30);
+        parts.push({ type: 'ring', x: b.x, y: b.y, r: 12, maxR: aoeR, life: 0.55, maxLife: 0.55, col: '#ffd23c', lw: 8 });
+        parts.push({ type: 'ring', x: b.x, y: b.y, r: 8, maxR: aoeR * 0.8, life: 0.45, maxLife: 0.45, col: '#ff5500', lw: 5 });
+
+        // 2. Floating Damage Banner
+        popup(b.x, b.y - 45, '💥 MEGA CANNON: ' + b.dmg + ' DMG + ' + aoeR + 'px AOE!', '#ffd23c');
+
+        // 3. AoE Damage: damage to ALL surrounding Gliders within aoeR
         for (let gj = gliders.length - 1; gj >= 0; gj--) {
           const eg = gliders[gj];
-          if (Math.hypot(eg.x - b.x, eg.y - b.y) < 80) {
-            eg.hp -= 0.8;
+          if (Math.hypot(eg.x - b.x, eg.y - b.y) < aoeR) {
+            eg.hp -= aoeDmg;
+            explode(eg.x, eg.y, '#ffd23c', 16);
             if (eg.hp <= 0) killGlider(gj, eg);
+          }
+        }
+
+        // 4. AoE Damage: damage to ALL surrounding Forts within aoeR
+        for (let fj = forts.length - 1; fj >= 0; fj--) {
+          const ef = forts[fj];
+          if (Math.hypot(ef.x - b.x, ef.y - b.y) < aoeR) {
+            ef.hp -= aoeDmg;
+            explode(ef.x, ef.y, '#ff5500', 20);
+            if (ef.hp <= 0) killFort(fj, ef);
+          }
+        }
+
+        // 5. AoE Vaporization: Destroy ALL incoming enemy bullets/lasers/mines within aoeR radius!
+        for (let ej = eballs.length - 1; ej >= 0; ej--) {
+          const eb = eballs[ej];
+          if (Math.hypot(eb.x - b.x, eb.y - b.y) < aoeR) {
+            explode(eb.x, eb.y, '#00ffee', 10);
+            eballs.splice(ej, 1);
+          }
+        }
+        for (let mj = mines.length - 1; mj >= 0; mj--) {
+          const em = mines[mj];
+          if (Math.hypot(em.x - b.x, em.y - b.y) < aoeR) {
+            killMine(mj, em);
+          }
+        }
+      } else {
+        if (b.shipModel === 'runner') triggerChainLightning(b.x, b.y);
+        if (b.isHypercharge) {
+          // Hypercharge AOE Shockwave Explosion
+          explode(b.x, b.y, '#ffd23c', 35);
+          explode(b.x, b.y, '#c084fc', 25);
+          for (let gj = gliders.length - 1; gj >= 0; gj--) {
+            const eg = gliders[gj];
+            if (Math.hypot(eg.x - b.x, eg.y - b.y) < 80) {
+              eg.hp -= 0.8;
+              if (eg.hp <= 0) killGlider(gj, eg);
+            }
           }
         }
       }
@@ -17163,6 +17265,34 @@ function draw() {
     cx.translate(b.x, b.y);
     const sm = b.shipModel || 'cutter';
     const sk = b.skinId || 'default';
+
+    if (b.isMegaCannon) {
+      // Colossal Mega Solar Siege Cannon Shell (32px radius glowing solar flare)
+      const cg = cx.createRadialGradient(0, 0, 4, 0, 0, b.r + 16);
+      cg.addColorStop(0, '#ffffff');
+      cg.addColorStop(0.25, '#ffd23c');
+      cg.addColorStop(0.65, '#ff5500');
+      cg.addColorStop(1, 'rgba(255, 69, 0, 0)');
+      cx.fillStyle = cg;
+      cx.beginPath(); cx.arc(0, 0, b.r + 16, 0, Math.PI * 2); cx.fill();
+
+      // Solid incandescent plasma core
+      cx.fillStyle = '#ffffff';
+      cx.beginPath(); cx.arc(0, 0, b.r * 0.65, 0, Math.PI * 2); cx.fill();
+
+      // Outer swirling solar flare rings
+      cx.strokeStyle = '#ffd23c'; cx.lineWidth = 3.5;
+      cx.beginPath(); cx.arc(0, 0, b.r + 4, 0, Math.PI * 2); cx.stroke();
+      
+      // Crackling cross lightning spikes
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.5;
+      cx.beginPath();
+      cx.moveTo(-b.r * 1.5, 0); cx.lineTo(b.r * 1.5, 0);
+      cx.moveTo(0, -b.r * 1.5); cx.lineTo(0, b.r * 1.5);
+      cx.stroke();
+      cx.restore();
+      continue;
+    }
 
     // 1. SKIN SIGNATURE PROJECTILES (Fast Zero-Allocation Radiant Rendering)
     if (sk === 'sunset') {
