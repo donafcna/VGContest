@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v91';
+  var LATEST_VERSION = 'v=60fps_v92';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5163,18 +5163,30 @@ function activateSuper(e) {
     novaSuperT = 0;
     superBeamActiveT = 0;
   } else if (curShipId === 'galleon') {
-    // 3. Rogue Shadow (Tier 3, Cost 6 Cores): Tachyon Gravitational Singularity
+    // 3. The Rogue Shadow: Event Horizon Black Hole Overdrive!
+    // Deploys a medium-sized Gravitational Black Hole that sucks in all enemy ships and enemy shots (except bosses)!
     const sAng = ship.pitch || 0;
-    const singX = Math.min(W * 0.9, Math.max(150, ship.x + Math.cos(sAng) * 280));
-    const singY = Math.min(H * 0.85, Math.max(100, ship.y + Math.sin(sAng) * 280));
+    const singX = Math.min(W * 0.88, Math.max(160, ship.x + Math.cos(sAng) * 260));
+    const singY = Math.min(H * 0.85, Math.max(100, ship.y + Math.sin(sAng) * 260));
     singularities.push({
       x: singX,
       y: singY,
       life: 5.0,
       maxLife: 5.0,
-      radius: 360,
-      col: '#c084fc'
+      radius: 120, // Medium-sized Black Hole (120px accretion radius, 340px gravity field)
+      gravityRadius: 340,
+      coreRadius: 38,
+      col: '#c084fc',
+      isBlackHole: true
     });
+    ship.inv = Math.max(ship.inv, 1.8);
+    ship.hp = Math.min(maxHp, ship.hp + 4);
+    shieldT = Math.max(shieldT, 6.0);
+    ship.recoil = 2.2;
+    muzzleFlash = 1.8;
+    addShake(30);
+    sfx('boom');
+    explode(singX, singY, '#c084fc', 35);
   } else if (curShipId === 'hind') {
     // 4. Hammerhead Corvette (Tier 4, Cost 8 Cores): Orbital Turbolaser Bombardment (12 Heavy Strikes)
     for (let m = 0; m < 12; m++) {
@@ -5438,13 +5450,13 @@ const SHIPS = [
   },
   {
     id: 'galleon',
-    name: 'The Rogue Shadow (Stealth Transport) 🛡️',
+    name: 'The Rogue Shadow (Stealth Transport) 🚀',
     cost: 6,
     cols: ['#38bdf8', '#334155', '#0f172a'],
     hp: 9, cool: 0.48, spd: 0.95, gold: 1.15, magnet: 35, spread: [0],
-    power: '🛡️ Stealth Armor (+3 Max Hull HP) & Quad Tachyon Concussion Blast',
-    superName: '⚡ Overdrive: Dark Matter Singularity',
-    superDesc: 'Cosmic Overdrive [E]: 5.0s dark matter gravity vortex (8.5 dmg/s) & supernova implosion (20.0 dmg)'
+    power: '⚡ Stealth Armor (+3 Max Hull HP) & Quad Tachyon Concussion Blast',
+    superName: '⚡ Overdrive: Event Horizon Black Hole',
+    superDesc: 'Cosmic Overdrive [E]: Deploys a medium-sized Gravitational Black Hole that sucks in all enemy ships, crushes enemy projectiles on contact, and tears bosses with tidal forces before a Hawking Supernova collapse!'
   },
   {
     id: 'hind',
@@ -11756,93 +11768,151 @@ function update(dt) {
   for (let i = singularities.length - 1; i >= 0; i--) {
     const sing = singularities[i];
     sing.life -= dt;
-    if (Math.random() < 0.8) {
+    const gravR = sing.gravityRadius || 340;
+    const coreR = sing.coreRadius || 38;
+    const accR = sing.radius || 120;
+
+    // Orbiting dark matter ionization sparks
+    if (Math.random() < 0.7) {
       const a = Math.random() * Math.PI * 2;
-      const r = 40 + Math.random() * sing.radius;
+      const r = coreR + Math.random() * (accR - coreR);
       parts.push({
         x: sing.x + Math.cos(a) * r,
         y: sing.y + Math.sin(a) * r,
-        vx: -Math.cos(a + 0.5) * 180,
-        vy: -Math.sin(a + 0.5) * 180,
-        life: 0.45,
-        col: Math.random() < 0.5 ? '#c084fc' : '#38bdf8',
-        size: 7 + Math.random() * 6
+        vx: -Math.sin(a) * 220 - Math.cos(a) * 120,
+        vy: Math.cos(a) * 220 - Math.sin(a) * 120,
+        life: 0.35,
+        col: Math.random() < 0.6 ? '#c084fc' : '#38bdf8',
+        size: 5 + Math.random() * 4
       });
     }
-    // Pull and continuous crushing damage (Tier 3: 7.0-7.5 dmg/s)
+
+    // 1. SUCK & CRUSH ENEMY SHIPS (Gliders) - Strong gravitational spiral suction
     for (let gi = gliders.length - 1; gi >= 0; gi--) {
       const g = gliders[gi];
       const d = Math.hypot(sing.x - g.x, sing.y - g.y);
-      if (d < 1200) {
+      if (d < gravR) {
         const ang = Math.atan2(sing.y - g.y, sing.x - g.x);
-        g.x += Math.cos(ang) * 260 * dt;
-        g.y += Math.sin(ang) * 260 * dt;
+        const pull = 340 + (1 - d / gravR) * 480;
+        // Strong inward gravitational suction + tangential vortex swirl
+        g.x += (Math.cos(ang) * pull - Math.sin(ang) * 90) * dt;
+        g.y += (Math.sin(ang) * pull + Math.cos(ang) * 90) * dt;
+        g.hp -= 12.0 * dt; // Gravitational tidal tearing damage
       }
-      if (d < sing.radius + 160) {
-        g.hp -= 7.0 * dt;
-        if (g.hp <= 0) killGlider(gi, g);
+      // Touched Black Hole Event Horizon Core: Instant Crushing Singularity Collapse
+      if (d < coreR + (g.w * 0.5 || 24)) {
+        explode(g.x, g.y, '#c084fc', 12);
+        popup(g.x, g.y - 20, '💥 CRUSHED!', '#c084fc');
+        killGlider(gi, g);
+      } else if (g.hp <= 0) {
+        killGlider(gi, g);
       }
     }
+
+    // 2. SUCK & CRUSH ENEMY WARSHIPS (Forts) - Gravitational vortex pull
     for (let fi = forts.length - 1; fi >= 0; fi--) {
       const f = forts[fi];
       const d = Math.hypot(sing.x - f.x, sing.y - f.y);
-      if (d < sing.radius + 160) {
-        f.hp -= 7.5 * dt;
-        if (f.hp <= 0) killFort(fi, f);
+      if (d < gravR) {
+        const ang = Math.atan2(sing.y - f.y, sing.x - f.x);
+        const pull = 220 + (1 - d / gravR) * 350;
+        f.x += Math.cos(ang) * pull * dt;
+        f.y += Math.sin(ang) * pull * dt;
+        f.hp -= 14.0 * dt;
       }
+      if (d < coreR + (f.w * 0.5 || 34)) {
+        f.hp -= 35.0 * dt; // Heavy core event horizon compression
+      }
+      if (f.hp <= 0) killFort(fi, f);
     }
+
+    // 3. SUCK & DISINTEGRATE ENEMY SHOTS (eballs) - Any enemy bullet touching or near black hole gets consumed!
     for (let bi = eballs.length - 1; bi >= 0; bi--) {
       const eb = eballs[bi];
       const d = Math.hypot(sing.x - eb.x, sing.y - eb.y);
-      if (d < sing.radius + 200) {
+      if (d < gravR) {
         const ang = Math.atan2(sing.y - eb.y, sing.x - eb.x);
-        eb.vx += Math.cos(ang) * 750 * dt;
-        eb.vy += Math.sin(ang) * 750 * dt;
-        if (d < 60) eballs.splice(bi, 1);
+        eb.vx += Math.cos(ang) * 1400 * dt;
+        eb.vy += Math.sin(ang) * 1400 * dt;
+      }
+      // Consumed upon reaching event horizon
+      if (d < coreR + (eb.r || 10) + 14) {
+        explode(eb.x, eb.y, '#c084fc', 4);
+        eballs.splice(bi, 1);
       }
     }
+
+    // 4. SUCK & SWALLOW MINES
+    for (let mi = mines.length - 1; mi >= 0; mi--) {
+      const m = mines[mi];
+      const d = Math.hypot(sing.x - m.x, sing.y - m.y);
+      if (d < gravR) {
+        const ang = Math.atan2(sing.y - m.y, sing.x - m.x);
+        m.x += Math.cos(ang) * 380 * dt;
+        m.y += Math.sin(ang) * 380 * dt;
+        if (d < coreR + (m.r || 24)) killMine(mi, m);
+      }
+    }
+
+    // 5. SUCK & MAGNETIZE COINS
     for (const c of coins) {
       const d = Math.hypot(sing.x - c.x, sing.y - c.y);
-      if (d < 1400) {
+      if (d < gravR + 200) {
         const ang = Math.atan2(sing.y - c.y, sing.x - c.x);
-        c.vx += Math.cos(ang) * 650 * dt;
-        c.vy += Math.sin(ang) * 650 * dt;
+        c.vx = (c.vx || 0) + Math.cos(ang) * 900 * dt;
+        c.vy = (c.vy || 0) + Math.sin(ang) * 900 * dt;
       }
     }
-    if (boss && Math.hypot(sing.x - boss.x, sing.y - boss.y) < sing.radius + 180) {
-      boss.hp -= 8.0 * dt;
-      if (boss.hp <= 0) killBoss();
+
+    // 6. BOSSES: IMMUNE TO SUCTION (Boss position is NOT moved), but suffers heavy tidal rift damage
+    if (boss && boss.alive !== false && (boss.hp > 0)) {
+      const bossDist = Math.hypot(sing.x - boss.x, sing.y - boss.y);
+      if (bossDist < accR + (boss.w * 0.5 || 60)) {
+        boss.hp -= 12.0 * dt; // Continuous gravitational tidal damage
+        if (Math.random() < 0.35) {
+          explode(boss.x + (Math.random() - 0.5) * boss.w * 0.5, boss.y + (Math.random() - 0.5) * boss.h * 0.5, '#c084fc', 8);
+        }
+        if (boss.hp <= 0) killBoss();
+      }
     }
-    // Supernova Implosion Final Blast (Tier 3: 16.0-18.0 dmg)
+
+    // 7. HAWKING RADIATION SUPERNOVA COLLAPSE (Final Detonation on Lifespan End)
     if (sing.life <= 0) {
-      explode(sing.x, sing.y, '#c084fc', 150);
-      explode(sing.x, sing.y, '#38bdf8', 120);
+      explode(sing.x, sing.y, '#c084fc', 24);
+      explode(sing.x, sing.y, '#38bdf8', 18);
+      parts.push({ type: 'ring', x: sing.x, y: sing.y, r: 12, maxR: 220, life: 0.5, maxLife: 0.5, col: '#c084fc', lw: 6 });
+      parts.push({ type: 'ring', x: sing.x, y: sing.y, r: 8, maxR: 160, life: 0.4, maxLife: 0.4, col: '#38bdf8', lw: 4 });
+      
       sfx('boom');
-      addShake(32);
-      popup(sing.x, sing.y - 35, '💥 160 TACHYON SUPERNOVA IMPLOSION!', '#c084fc');
+      addShake(30);
+      popup(sing.x, sing.y - 35, '💥 BLACK HOLE SUPERNOVA!', '#c084fc');
+
       for (let gi = gliders.length - 1; gi >= 0; gi--) {
         const g = gliders[gi];
-        if (Math.hypot(sing.x - g.x, sing.y - g.y) < sing.radius + 100) {
-          g.hp -= 16.0;
+        if (Math.hypot(sing.x - g.x, sing.y - g.y) < 220) {
+          g.hp -= 20.0;
           if (g.hp <= 0) killGlider(gi, g);
         }
       }
       for (let fi = forts.length - 1; fi >= 0; fi--) {
         const f = forts[fi];
-        if (Math.hypot(sing.x - f.x, sing.y - f.y) < sing.radius + 100) {
-          f.hp -= 16.0;
+        if (Math.hypot(sing.x - f.x, sing.y - f.y) < 220) {
+          f.hp -= 20.0;
           if (f.hp <= 0) killFort(fi, f);
         }
       }
-      if (boss && Math.hypot(sing.x - boss.x, sing.y - boss.y) < sing.radius + 120) {
-        boss.hp -= 18.0;
+      for (let bi = eballs.length - 1; bi >= 0; bi--) {
+        if (Math.hypot(sing.x - eballs[bi].x, sing.y - eballs[bi].y) < 220) {
+          eballs.splice(bi, 1);
+        }
+      }
+      if (boss && Math.hypot(sing.x - boss.x, sing.y - boss.y) < 220) {
+        boss.hp -= 22.0;
         if (boss.hp <= 0) killBoss();
       }
       singularities.splice(i, 1);
     }
-  }
-
-  // 4. HAMMERHEAD CORVETTE (Tier 4, Cost 8 Cores): Deflector Ramming Prow & Orbital Turbolaser Bombardment
+  }  // 4. HAMMERHEAD CORVETTE (Tier 4, Cost 8 Cores): Deflector Ramming Prow & Orbital Turbolaser Bombardment
   if (rammingProwT > 0) {
     rammingProwT -= dt;
     ship.inv = Math.max(ship.inv, 0.5);
@@ -17778,37 +17848,47 @@ function draw() {
     cx.restore();
   }
 
-  // 9f. Render Rogue Shadow Tachyon Gravitational Singularity
+  // 9f. Render Rogue Shadow Event Horizon Medium Black Hole (Zero-Allocation High Contrast)
   for (const sing of singularities) {
     cx.save();
     cx.translate(sing.x, sing.y);
-    // Event horizon accretion glow
-    const sGrad = cx.createRadialGradient(0, 0, 12, 0, 0, sing.radius);
-    sGrad.addColorStop(0, '#000000');
-    sGrad.addColorStop(0.2, '#3b0764');
-    sGrad.addColorStop(0.5, 'rgba(192, 132, 252, 0.45)');
-    sGrad.addColorStop(0.8, 'rgba(56, 189, 248, 0.25)');
-    sGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    cx.fillStyle = sGrad;
-    cx.beginPath(); cx.arc(0, 0, sing.radius, 0, Math.PI * 2); cx.fill();
+    const accR = sing.radius || 120;
+    const coreR = sing.coreRadius || 38;
 
-    // Rotating accretion rings
+    // 1. Gravitational Lensing Violet Accretion Disk Halo
+    cx.fillStyle = 'rgba(192, 132, 252, 0.22)';
+    cx.beginPath(); cx.arc(0, 0, accR, 0, Math.PI * 2); cx.fill();
+
+    cx.fillStyle = 'rgba(56, 189, 248, 0.18)';
+    cx.beginPath(); cx.arc(0, 0, accR * 0.75, 0, Math.PI * 2); cx.fill();
+
+    // 2. Relativistic Counter-Rotating Plasma Accretion Rings
     cx.strokeStyle = '#c084fc';
-    cx.lineWidth = 3;
+    cx.lineWidth = 3.0;
     cx.beginPath();
-    cx.ellipse(0, 0, sing.radius * 0.75, sing.radius * 0.35, t * 4, 0, Math.PI * 2);
+    cx.ellipse(0, 0, accR * 0.85, accR * 0.38, t * 5, 0, Math.PI * 2);
     cx.stroke();
 
     cx.strokeStyle = '#00ffee';
-    cx.lineWidth = 2;
+    cx.lineWidth = 2.2;
     cx.beginPath();
-    cx.ellipse(0, 0, sing.radius * 0.5, sing.radius * 0.22, -t * 5, 0, Math.PI * 2);
+    cx.ellipse(0, 0, accR * 0.65, accR * 0.28, -t * 6, 0, Math.PI * 2);
     cx.stroke();
 
-    // Black Hole Core
+    // 3. Electric Photon Sphere Halo
+    cx.strokeStyle = '#c084fc';
+    cx.lineWidth = 3.5;
+    cx.beginPath(); cx.arc(0, 0, coreR + 4, 0, Math.PI * 2); cx.stroke();
+
+    // 4. Pure Pitch-Black Event Horizon Core
     cx.fillStyle = '#000000';
-    cx.beginPath(); cx.arc(0, 0, 24, 0, Math.PI * 2); cx.fill();
-    cx.strokeStyle = '#ffffff'; cx.lineWidth = 2.5; cx.stroke();
+    cx.beginPath(); cx.arc(0, 0, coreR, 0, Math.PI * 2); cx.fill();
+
+    // 5. Razor-Sharp White Hot Event Horizon Edge
+    cx.strokeStyle = '#ffffff';
+    cx.lineWidth = 2.0;
+    cx.beginPath(); cx.arc(0, 0, coreR, 0, Math.PI * 2); cx.stroke();
+
     cx.restore();
   }
 
