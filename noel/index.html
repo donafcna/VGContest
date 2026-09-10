@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v90';
+  var LATEST_VERSION = 'v=60fps_v91';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5129,9 +5129,39 @@ function activateSuper(e) {
     explode(muzzleX, muzzleY, '#ffd23c', 40);
     corsairTurretT = 0;
   } else if (curShipId === 'runner') {
-    // 2. Nova Strikefighter (Tier 2, Cost 5 Cores): S-Foil Attack Stance: Proton Nova (Piercing Mega-Beam)
-    novaSuperT = 4.0;
-    superBeamActiveT = 4.0;
+    // 2. Nova Strikefighter: Hyper-Seeker Proton Torpedo Salvo Overdrive!
+    // Fires 8 Supercharged Smart Homing Hyper-Proton Torpedoes with 180px AoE Shockwaves!
+    ship.inv = Math.max(ship.inv, 1.8);
+    ship.hp = Math.min(maxHp, ship.hp + 4);
+    shieldT = Math.max(shieldT, 6.0);
+    ship.recoil = 2.0;
+    muzzleFlash = 1.8;
+    addShake(32);
+    sfx('boom');
+    explode(ship.x, ship.y, '#00ffee', 45);
+
+    const baseAim = ship.pitch || 0;
+    for (let i = 0; i < 8; i++) {
+      const launchAngle = baseAim + (i - 3.5) * 0.16;
+      const muzzleX = ship.x + Math.cos(launchAngle) * 35;
+      const muzzleY = ship.y + Math.sin(launchAngle) * 35;
+      protonTorpedoes.push({
+        x: muzzleX,
+        y: muzzleY,
+        vx: Math.cos(launchAngle) * 750,
+        vy: Math.sin(launchAngle) * 750,
+        target: null,
+        life: 5.5,
+        maxLife: 5.5,
+        dmg: 8.5, // 8.5 Direct Damage each (68.0 Total direct damage across the salvo!)
+        aoeRadius: 180,
+        aoeDmg: 6.0,
+        col: '#00ffee',
+        isSuper: true
+      });
+    }
+    novaSuperT = 0;
+    superBeamActiveT = 0;
   } else if (curShipId === 'galleon') {
     // 3. Rogue Shadow (Tier 3, Cost 6 Cores): Tachyon Gravitational Singularity
     const sAng = ship.pitch || 0;
@@ -5398,13 +5428,13 @@ const SHIPS = [
   },
   {
     id: 'runner',
-    name: 'Nova Strikefighter ⚡',
+    name: 'Nova Strikefighter 🚀',
     cost: 5,
     cols: ['#00ffee', '#0284c7', '#082f49'],
     hp: 6, cool: 0.35, spd: 1.50, gold: 1.30, magnet: 90, spread: [0],
     power: '⚡ S-Foil Attack Wings, +50% Speed & Proton Laser Barrage',
-    superName: '⚡ Overdrive: S-Foil Proton Nova Doom Beam',
-    superDesc: 'Cosmic Overdrive [E]: 4.0s piercing Proton Mega-Beam with chain lightning (6.5 dmg/s)'
+    superName: '⚡ Overdrive: Hyper-Seeker Proton Torpedo Salvo',
+    superDesc: 'Cosmic Overdrive [E]: Launches a devastating salvo of 8 Smart Homing Hyper-Proton Torpedoes (8.5 Direct Dmg each, total 68.0+ dmg) with high-yield 180px shockwaves, cryo-stasis freeze (2.5s) & enemy bullet vaporize!'
   },
   {
     id: 'galleon',
@@ -11554,13 +11584,13 @@ function update(dt) {
     }
   }
 
-  // Nova Strikefighter Smart Homing Proton Torpedoes (Tier 2 Gadget: 4.5 dmg each)
+  // 2. NOVA STRIKEFIGHTER: Hyper-Seeker Proton Torpedo Salvo Overdrive (8.5 Direct Dmg + 180px AoE Shockwave)
   for (let i = protonTorpedoes.length - 1; i >= 0; i--) {
     const torp = protonTorpedoes[i];
     torp.life -= dt;
-    // Find closest target
+    // Smart target acquisition: Priority on Boss > Warships > Gliders
     let target = null, minDist = 9999;
-    if (boss) {
+    if (boss && boss.alive !== false && (boss.hp > 0)) {
       target = boss;
       minDist = Math.hypot(boss.x - torp.x, boss.y - torp.y);
     }
@@ -11568,76 +11598,123 @@ function update(dt) {
       const d = Math.hypot(f.x - torp.x, f.y - torp.y);
       if (d < minDist) { minDist = d; target = f; }
     }
-    for (const g of gliders) {
-      const d = Math.hypot(g.x - torp.x, g.y - torp.y);
-      if (d < minDist) { minDist = d; target = g; }
+    if (!target || minDist > 500) {
+      for (const g of gliders) {
+        const d = Math.hypot(g.x - torp.x, g.y - torp.y);
+        if (d < minDist) { minDist = d; target = g; }
+      }
     }
     if (target) {
       const ang = Math.atan2(target.y - torp.y, target.x - torp.x);
-      const curSpd = Math.hypot(torp.vx, torp.vy) || 650;
-      const newSpd = Math.min(1350, curSpd + 550 * dt);
+      const curSpd = Math.hypot(torp.vx, torp.vy) || 750;
+      const newSpd = Math.min(1450, curSpd + 750 * dt);
       torp.vx = Math.cos(ang) * newSpd;
       torp.vy = Math.sin(ang) * newSpd;
     }
     torp.x += torp.vx * dt;
     torp.y += torp.vy * dt;
-    if (Math.random() < 0.7) {
+
+    // High-performance ion particle trail
+    if (Math.random() < 0.65) {
       parts.push({
         x: torp.x, y: torp.y,
-        vx: -torp.vx * 0.15 + (Math.random()-0.5)*30,
-        vy: -torp.vy * 0.15 + (Math.random()-0.5)*30,
-        life: 0.35, col: '#00ffee', size: 6 + Math.random()*5
+        vx: -torp.vx * 0.15 + (Math.random()-0.5)*25,
+        vy: -torp.vy * 0.15 + (Math.random()-0.5)*25,
+        life: 0.30, col: '#00ffee', size: 5 + Math.random()*4
       });
     }
+
     let hit = false;
+    // Impact with Gliders
     for (let gi = gliders.length - 1; gi >= 0; gi--) {
       const g = gliders[gi];
-      if (Math.hypot(g.x - torp.x, g.y - torp.y) < (g.w * 0.5 || 28) + 16) {
+      if (Math.hypot(g.x - torp.x, g.y - torp.y) < (g.w * 0.5 || 28) + 18) {
         g.hp -= torp.dmg;
-        g.frozenT = 2.0;
+        g.frozenT = 2.5; // Cryo-freeze stasis
         if (g.hp <= 0) killGlider(gi, g);
         hit = true; break;
       }
     }
+    // Impact with Forts
     if (!hit) {
       for (let fi = forts.length - 1; fi >= 0; fi--) {
         const f = forts[fi];
-        if (Math.hypot(f.x - torp.x, f.y - torp.y) < (f.w * 0.5 || 34) + 16) {
+        if (Math.hypot(f.x - torp.x, f.y - torp.y) < (f.w * 0.5 || 34) + 18) {
           f.hp -= torp.dmg;
           if (f.hp <= 0) killFort(fi, f);
           hit = true; break;
         }
       }
     }
-    if (!hit && boss && Math.hypot(boss.x - torp.x, boss.y - torp.y) < (boss.w * 0.5) + 16) {
-      boss.hp -= torp.dmg + 1.5;
+    // Impact with Boss
+    if (!hit && boss && Math.hypot(boss.x - torp.x, boss.y - torp.y) < (boss.w * 0.5) + 20) {
+      boss.hp -= (torp.dmg + 3.5); // 12.0 Direct Damage against Bosses!
       if (boss.hp <= 0) killBoss();
       hit = true;
     }
+    // Impact with Mines
     if (!hit) {
       for (let mi = mines.length - 1; mi >= 0; mi--) {
         const m = mines[mi];
-        if (Math.hypot(m.x - torp.x, m.y - torp.y) < (m.r || 28) + 16) {
+        if (Math.hypot(m.x - torp.x, m.y - torp.y) < (m.r || 28) + 18) {
           killMine(mi, m);
           hit = true; break;
         }
       }
     }
+
+    // High-Yield Shockwave Detonation
     if (hit || torp.life <= 0) {
-      explode(torp.x, torp.y, '#00ffee', 55);
-      explode(torp.x, torp.y, '#38bdf8', 40);
+      const aoeR = torp.aoeRadius || 180;
+      const aoeDmg = torp.aoeDmg || 6.0;
+
+      // 1. Multi-layered shockwave blast rings & fireballs
+      explode(torp.x, torp.y, '#00ffee', 24);
+      explode(torp.x, torp.y, '#38bdf8', 18);
+      parts.push({ type: 'ring', x: torp.x, y: torp.y, r: 10, maxR: aoeR, life: 0.45, maxLife: 0.45, col: '#00ffee', lw: 5 });
+      parts.push({ type: 'ring', x: torp.x, y: torp.y, r: 6, maxR: aoeR * 0.65, life: 0.35, maxLife: 0.35, col: '#38bdf8', lw: 3 });
+      
       sfx('boom');
-      addShake(12);
-      popup(torp.x, torp.y - 20, '💥 45 PROTON TORP!', '#00ffee');
+      addShake(16);
+      popup(torp.x, torp.y - 25, '💥 ' + torp.dmg + ' PROTON TORP!', '#00ffee');
+
+      // 2. AoE Damage: Inflicts blast damage to all surrounding gliders within 180px
+      for (let gj = gliders.length - 1; gj >= 0; gj--) {
+        const eg = gliders[gj];
+        if (Math.hypot(eg.x - torp.x, eg.y - torp.y) < aoeR) {
+          eg.hp -= aoeDmg;
+          eg.frozenT = 1.5;
+          explode(eg.x, eg.y, '#00ffee', 8);
+          if (eg.hp <= 0) killGlider(gj, eg);
+        }
+      }
+
+      // 3. AoE Damage: Inflicts blast damage to all surrounding forts within 180px
+      for (let fj = forts.length - 1; fj >= 0; fj--) {
+        const ef = forts[fj];
+        if (Math.hypot(ef.x - torp.x, ef.y - torp.y) < aoeR) {
+          ef.hp -= aoeDmg;
+          explode(ef.x, ef.y, '#38bdf8', 12);
+          if (ef.hp <= 0) killFort(fj, ef);
+        }
+      }
+
+      // 4. AoE Bullet Disintegration: Vaporize all enemy bullets & mines within 180px radius
       for (let bi = eballs.length - 1; bi >= 0; bi--) {
-        if (Math.hypot(eballs[bi].x - torp.x, eballs[bi].y - torp.y) < 130) {
+        if (Math.hypot(eballs[bi].x - torp.x, eballs[bi].y - torp.y) < aoeR) {
+          explode(eballs[bi].x, eballs[bi].y, '#00ffee', 6);
           eballs.splice(bi, 1);
         }
       }
+      for (let mj = mines.length - 1; mj >= 0; mj--) {
+        if (Math.hypot(mines[mj].x - torp.x, mines[mj].y - torp.y) < aoeR) {
+          killMine(mj, mines[mj]);
+        }
+      }
+
       protonTorpedoes.splice(i, 1);
     }
   }
-
   // 3. THE ROGUE SHADOW (Tier 3, Cost 6 Cores): Stealth Cloak, Decoys & Gravitational Singularity
   if (stealthCloakT > 0) {
     stealthCloakT -= dt;
@@ -17635,27 +17712,52 @@ function draw() {
     cx.restore();
   }
 
-  // 9d. Render Nova Strikefighter Smart Proton Torpedoes
+  // 9d. Render Nova Strikefighter Hyper-Seeker Proton Torpedoes (Zero-Allocation High Contrast)
   for (const torp of protonTorpedoes) {
     cx.save();
     cx.translate(torp.x, torp.y);
     const torpAng = Math.atan2(torp.vy, torp.vx);
     cx.rotate(torpAng);
-    // Torpedo glow aura
-    const tAura = cx.createRadialGradient(0, 0, 2, 0, 0, 18);
-    tAura.addColorStop(0, '#ffffff');
-    tAura.addColorStop(0.4, '#00ffee');
-    tAura.addColorStop(1, 'rgba(0, 255, 238, 0)');
-    cx.fillStyle = tAura;
+
+    // 1. Cyan Plasma Aura
+    cx.fillStyle = 'rgba(0, 255, 238, 0.35)';
     cx.beginPath(); cx.arc(0, 0, 18, 0, Math.PI * 2); cx.fill();
-    // Torpedo missile body
-    cx.fillStyle = '#0f172a';
-    cx.fillRect(-12, -3.5, 24, 7);
+
+    // 2. High-Tech Torpedo Chassis with Dark Contrast Outline
+    cx.fillStyle = '#0a192f';
+    cx.fillRect(-14, -4, 26, 8);
+    cx.strokeStyle = '#00ffee';
+    cx.lineWidth = 1.5;
+    cx.strokeRect(-14, -4, 26, 8);
+
+    // 3. Searing Hyper-Proton Warhead Cone
     cx.fillStyle = '#00ffee';
-    cx.beginPath(); cx.moveTo(12, -3.5); cx.lineTo(18, 0); cx.lineTo(12, 3.5); cx.closePath(); cx.fill();
-    // Tail thruster
+    cx.beginPath(); cx.moveTo(12, -4); cx.lineTo(20, 0); cx.lineTo(12, 4); cx.closePath(); cx.fill();
     cx.fillStyle = '#ffffff';
-    cx.beginPath(); cx.moveTo(-12, -2.5); cx.lineTo(-20 - Math.random() * 8, 0); cx.lineTo(-12, 2.5); cx.closePath(); cx.fill();
+    cx.beginPath(); cx.moveTo(14, -2); cx.lineTo(19, 0); cx.lineTo(14, 2); cx.closePath(); cx.fill();
+
+    // 4. Dual Ion Micro-Fins
+    cx.fillStyle = '#38bdf8';
+    cx.fillRect(-12, -7, 6, 3);
+    cx.fillRect(-12, 4, 6, 3);
+
+    // 5. Pulsing Superheated Ion Exhaust Plume
+    cx.fillStyle = '#ffffff';
+    const flameLen = 14 + Math.random() * 12;
+    cx.beginPath();
+    cx.moveTo(-14, -3);
+    cx.lineTo(-14 - flameLen, 0);
+    cx.lineTo(-14, 3);
+    cx.closePath();
+    cx.fill();
+    cx.fillStyle = '#00ffee';
+    cx.beginPath();
+    cx.moveTo(-14, -1.8);
+    cx.lineTo(-14 - flameLen * 0.6, 0);
+    cx.lineTo(-14, 1.8);
+    cx.closePath();
+    cx.fill();
+
     cx.restore();
   }
 
