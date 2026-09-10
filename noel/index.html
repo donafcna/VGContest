@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v92';
+  var LATEST_VERSION = 'v=60fps_v93';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -4868,6 +4868,24 @@ let meteorStrikes = []; // [{x, y, targetY, vy, delay, size, col}]
 
 let nebulaScythesT = 0;
 let flakPods = []; // [{x, y, vx, vy, fuse, maxFuse, exploded, radius, col}]
+let nebulaClones = []; // [{id, x, y, targetOffsetX, targetOffsetY, r, hp, maxHp, life, maxLife, alive, shootT, shipModel}]
+
+function getEnemyTarget(fromX, fromY) {
+  const livingClones = (typeof nebulaClones !== 'undefined') ? nebulaClones.filter(c => c && c.alive && c.hp > 0) : [];
+  if (livingClones.length > 0) {
+    if (typeof fromX === 'number' && typeof fromY === 'number') {
+      let best = livingClones[0], bestD = Math.hypot(fromX - best.x, fromY - best.y);
+      for (let i = 1; i < livingClones.length; i++) {
+        const d = Math.hypot(fromX - livingClones[i].x, fromY - livingClones[i].y);
+        if (d < bestD) { bestD = d; best = livingClones[i]; }
+      }
+      return best;
+    }
+    return livingClones[0];
+  }
+  return ship;
+}
+window.getEnemyTarget = getEnemyTarget;
 
 function hasGadget() {
   return false;
@@ -5203,22 +5221,51 @@ function activateSuper(e) {
       });
     }
   } else if (curShipId === 'storm') {
-    // 5. Nebula Cruiser (Tier 5 - The Best Ship, Cost 10 Cores): Armada Flak Countermeasure Storm (24 Pods)
-    for (let f = 0; f < 24; f++) {
-      const ang = (f / 24) * Math.PI * 2 + (Math.random() - 0.5) * 0.25;
-      const spd = 350 + Math.random() * 450;
-      flakPods.push({
-        x: ship.x,
-        y: ship.y,
-        vx: Math.cos(ang) * spd,
-        vy: Math.sin(ang) * spd,
-        fuse: 0.30 + Math.random() * 0.70,
-        maxFuse: 1.0,
-        exploded: false,
-        radius: 220,
-        col: '#00ffee'
-      });
-    }
+    // 5. Nebula Cruiser (Tier 5): Twin Holographic Fleet Clones Overdrive!
+    // Deploys two identical phantom wingman clones that draw all enemy fire, provide twin plasma fire support, and absorb 2 direct hits each before detonating!
+    ship.inv = Math.max(ship.inv, 2.0);
+    ship.hp = Math.min(maxHp, ship.hp + 4);
+    shieldT = Math.max(shieldT, 6.0);
+    ship.recoil = 2.0;
+    muzzleFlash = 1.8;
+    addShake(28);
+    sfx('boom');
+    explode(ship.x, ship.y - 75, '#00ffee', 45);
+    explode(ship.x, ship.y + 75, '#00ffee', 45);
+    popup(ship.x, ship.y - 40, '👥 TWIN HOLOGRAPHIC CLONES DEPLOYED!', '#00ffee');
+
+    nebulaClones = [
+      {
+        id: 'clone_top',
+        x: ship.x - 30,
+        y: ship.y - 75,
+        targetOffsetX: -30,
+        targetOffsetY: -75,
+        r: 28,
+        hp: 2,
+        maxHp: 2,
+        life: 18.0,
+        maxLife: 18.0,
+        alive: true,
+        shootT: 0.20,
+        shipModel: 'storm'
+      },
+      {
+        id: 'clone_bot',
+        x: ship.x - 30,
+        y: ship.y + 75,
+        targetOffsetX: -30,
+        targetOffsetY: 75,
+        r: 28,
+        hp: 2,
+        maxHp: 2,
+        life: 18.0,
+        maxLife: 18.0,
+        alive: true,
+        shootT: 0.35,
+        shipModel: 'storm'
+      }
+    ];
   }
 
   updateBrawlControlsVisibility();
@@ -5475,8 +5522,8 @@ const SHIPS = [
     cols: ['#38bdf8', '#64748b', '#0f172a'],
     hp: 8, cool: 0.42, spd: 1.20, gold: 1.50, magnet: 75, spread: [-0.15, 0.15],
     power: '🌀 Twin Plasma Scythes, Quad Articulated Turbines & Void Torpedoes',
-    superName: '⚡ Overdrive: Armada Flak Countermeasure Tempest',
-    superDesc: 'Cosmic Overdrive [E]: 24 articulated heavy droid flak pods wiping the screen (>250 total area damage)'
+    superName: '⚡ Overdrive: Twin Holographic Fleet Clones 👥',
+    superDesc: 'Cosmic Overdrive [E]: Deploys two identical Nebula Cruiser phantom wingman clones that draw all enemy fire, provide twin plasma fire support, and absorb 2 direct hits each before detonating in a shockwave blast!'
   },
 ];
 
@@ -9300,6 +9347,7 @@ function startInstantCombat(e) {
     stealthCloakT = 0;
     stealthDecoys = [];
     singularities = [];
+    nebulaClones = [];
     rammingProwT = 0;
     plasmaScythesT = 0;
   } catch(e) {}
@@ -12051,42 +12099,46 @@ function update(dt) {
   }
 
   // 24 Articulated Heavy Flak Pods (Tier 5 Super: 12.0-14.0 dmg per explosion)
-  for (let i = flakPods.length - 1; i >= 0; i--) {
-    const pod = flakPods[i];
-    pod.fuse -= dt;
-    pod.x += pod.vx * dt;
-    pod.y += pod.vy * dt;
-    pod.vx *= 0.96; pod.vy *= 0.96;
-    if (pod.fuse <= 0) {
-      explode(pod.x, pod.y, '#00ffee', 95);
-      explode(pod.x, pod.y, '#ffd23c', 75);
-      sfx('boom');
-      addShake(14);
-      popup(pod.x, pod.y - 20, '💥 120 FLAK BURST!', '#00ffee');
-      for (let bi = eballs.length - 1; bi >= 0; bi--) {
-        if (Math.hypot(eballs[bi].x - pod.x, eballs[bi].y - pod.y) < pod.radius) {
-          eballs.splice(bi, 1);
-        }
+  // Update Nebula Cruiser Twin Holographic Wingman Clones
+  for (let ci = nebulaClones.length - 1; ci >= 0; ci--) {
+    const c = nebulaClones[ci];
+    if (!c || !c.alive || c.hp <= 0) {
+      nebulaClones.splice(ci, 1);
+      continue;
+    }
+    c.life -= dt;
+    if (c.life <= 0) {
+      c.alive = false;
+      explode(c.x, c.y, '#00ffee', 25);
+      nebulaClones.splice(ci, 1);
+      continue;
+    }
+
+    // Smooth formation tracking alongside the player ship
+    const targetX = Math.min(W - 80, Math.max(50, ship.x + c.targetOffsetX));
+    const targetY = Math.min(H - 60, Math.max(60, ship.y + c.targetOffsetY));
+    c.x += (targetX - c.x) * Math.min(1.0, dt * 9.0);
+    c.y += (targetY - c.y) * Math.min(1.0, dt * 9.0);
+
+    // Twin Plasma Blaster Fire Support (2.5 dmg each, forward bolts)
+    c.shootT = (c.shootT || 0.35) - dt;
+    if (c.shootT <= 0) {
+      c.shootT = 0.35;
+      for (const offY of [-10, 10]) {
+        balls.push({
+          x: c.x + 35,
+          y: c.y + offY,
+          vx: 1100,
+          vy: 0,
+          r: 6,
+          dmg: 2.5,
+          col: '#00ffee',
+          isCloneBolt: true,
+          shipModel: 'storm'
+        });
       }
-      for (let gi = gliders.length - 1; gi >= 0; gi--) {
-        const g = gliders[gi];
-        if (Math.hypot(g.x - pod.x, g.y - pod.y) < pod.radius) {
-          g.hp -= 12.0;
-          if (g.hp <= 0) killGlider(gi, g);
-        }
-      }
-      for (let fi = forts.length - 1; fi >= 0; fi--) {
-        const f = forts[fi];
-        if (Math.hypot(f.x - pod.x, f.y - pod.y) < pod.radius) {
-          f.hp -= 12.0;
-          if (f.hp <= 0) killFort(fi, f);
-        }
-      }
-      if (boss && Math.hypot(boss.x - pod.x, boss.y - pod.y) < pod.radius + 40) {
-        boss.hp -= 14.0;
-        if (boss.hp <= 0) killBoss();
-      }
-      flakPods.splice(i, 1);
+      muzzleFlash = Math.max(muzzleFlash, 0.4);
+      sfx('laser');
     }
   }
 
@@ -13750,12 +13802,13 @@ function update(dt) {
     const f = forts[i];
     f.x += f.vx * dt;
     f.saucerSpin += dt * 5;
-    f.y += Math.sin(t * 1.5 + f.bob) * 24 * dt;
+    f.y += Math.sin(t * 1.5 + (f.bob || 0)) * 24 * dt;
     
     f.shootT -= dt;
     if (f.shootT <= 0 && f.x < W - 40 && f.x > 80) {
       f.shootT = Math.max(1.0, 2.2 - level * 0.16);
-      const dx = ship.x - f.x, dy = ship.y - f.y;
+      const target = getEnemyTarget(f.x, f.y);
+      const dx = target.x - f.x, dy = target.y - f.y;
       const dist = Math.hypot(dx, dy) || 1;
       const spdBonus = 1 + Math.min(0.8, (level - 1) * 0.07);
 
@@ -13880,15 +13933,17 @@ function update(dt) {
     g.saucerSpin += dt * 6;
     const spdBonus = 1 + Math.min(0.8, (level - 1) * 0.07);
 
+    const target = getEnemyTarget(g.x, g.y);
+
     if (g.variant === 'stalker') {
       // 2. SEPARATIST VULTURE DROID: Quad-Mandible Tracking Plasma Flurry & Buzz Droid Deployment
-      g.y += (ship.y - g.y) * 1.2 * dt;
+      g.y += (target.y - g.y) * 1.2 * dt;
       g.shootT = (g.shootT || 1.0) - dt;
       if (g.shootT <= 0 && g.x < W - 50 && g.x > 90) {
         g.shootT = Math.max(0.8, 1.8 - level * 0.12) + Math.random() * 0.5;
-        const dx = ship.x - g.x, dy = ship.y - g.y;
+        const dx = target.x - g.x, dy = target.y - g.y;
         const dist = Math.hypot(dx, dy) || 1;
-        
+
         // Quad-Mandible Burst
         for (const my of [-10, -3, 3, 10]) {
           eballs.push({
@@ -13903,11 +13958,11 @@ function update(dt) {
       }
     } else if (g.variant === 'rammer') {
       // 3. COSMIC HEAVY PLASMA BOMBER: Seismic Proton Torpedo Bombing Run + Trailing Mine Dropper
-      g.y += (ship.y - g.y) * 2.2 * dt;
+      g.y += (target.y - g.y) * 2.2 * dt;
       g.shootT = (g.shootT || 1.2) - dt;
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 120) {
         g.shootT = Math.max(1.1, 2.2 - level * 0.15);
-        const dx = ship.x - g.x, dy = ship.y - g.y;
+        const dx = target.x - g.x, dy = target.y - g.y;
         const dist = Math.hypot(dx, dy) || 1;
         eballs.push({
           type: 'emp',
@@ -13916,7 +13971,7 @@ function update(dt) {
           vx: (dx / dist) * 520 * spdBonus, vy: (dy / dist) * 520 * spdBonus,
           r: 16
         });
-        popup(g.x, g.y - 20, '💣 PROTON TORPEDO!', '#00e5ff');
+        popup(g.x, g.y - 20, '⚡ PROTON TORPEDO!', '#00e5ff');
         sfx('incoming');
       }
 
@@ -13945,7 +14000,7 @@ function update(dt) {
       }
     } else if (g.variant === 'drone') {
       // 4. IMPERIAL TIE DEFENDER: 3-Way 120° Synchronized Cyan Ion Hyper-Burst!
-      g.y += Math.sin(t * 8 + g.wob) * 95 * dt;
+      g.y += Math.sin(t * 8 + (g.wob || 0)) * 95 * dt;
       g.shootT = (g.shootT || 1.0) - dt;
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 100) {
         g.shootT = Math.max(0.8, 1.8 - level * 0.14) + Math.random() * 0.6;
@@ -13958,11 +14013,11 @@ function update(dt) {
       }
     } else if (g.variant === 'phantom') {
       // 5. SEPARATIST TRI-FIGHTER: Droid-Brain Laser Lock-On (3-Round Barrage)
-      g.y += (ship.y - g.y) * 1.4 * dt;
+      g.y += (target.y - g.y) * 1.4 * dt;
       g.shootT = (g.shootT || 1.1) - dt;
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 100) {
         g.shootT = Math.max(0.9, 1.9 - level * 0.14) + Math.random() * 0.5;
-        const dx = ship.x - g.x, dy = ship.y - g.y;
+        const dx = target.x - g.x, dy = target.y - g.y;
         for (const spr of [-0.12, 0, 0.12]) {
           const baseAng = Math.atan2(dy, dx) + spr;
           eballs.push({ type: 'laser', col: '#c084fc', x: g.x - 22, y: g.y, vx: Math.cos(baseAng) * 600 * spdBonus, vy: Math.sin(baseAng) * 600 * spdBonus, r: 11 });
@@ -13971,11 +14026,11 @@ function update(dt) {
       }
     } else {
       // 1. IMPERIAL TIE/ln: Twin Ruby Laser Strafing Volley & High-G Ion Barrel Roll!
-      g.y += (ship.y - g.y) * 0.9 * dt + Math.sin(t * 6 + g.wob) * 48 * dt;
+      g.y += (target.y - g.y) * 0.9 * dt + Math.sin(t * 6 + (g.wob || 0)) * 48 * dt;
       g.shootT = (g.shootT || 1.2) - dt;
       if (g.shootT <= 0 && g.x < W - 60 && g.x > 120) {
         g.shootT = Math.max(0.9, 1.9 - level * 0.14) + Math.random() * 0.6;
-        const dx = ship.x - g.x, dy = ship.y - g.y;
+        const dx = target.x - g.x, dy = target.y - g.y;
         const dist = Math.hypot(dx, dy) || 1;
         eballs.push({
           type: 'laser',
@@ -13994,7 +14049,54 @@ function update(dt) {
         sfx('laser');
       }
     }
-    
+
+    // Check collision with living clones
+    let hitGliderClone = false;
+    for (let ci = 0; ci < nebulaClones.length; ci++) {
+      const c = nebulaClones[ci];
+      if (c && c.alive && c.hp > 0 && Math.hypot(g.x - c.x, g.y - c.y) < (c.r || 28) + 26) {
+        hitGliderClone = true;
+        c.hp -= 1;
+        explode(g.x, g.y, g.col || '#ff2255', 28);
+        sfx('boom');
+        addShake(10);
+        popup(c.x, c.y - 25, `CLONE SHIELD: ${c.hp}/2 HP`, '#00ffee');
+        killGlider(i, g);
+        if (c.hp <= 0) {
+          c.alive = false;
+          explode(c.x, c.y, '#00ffee', 55);
+          explode(c.x, c.y, '#ffd23c', 40);
+          sfx('boom');
+          addShake(18);
+          popup(c.x, c.y - 30, '💥 CLONE DETONATION! 10 AOE DMG', '#00ffee');
+          for (let bi = eballs.length - 1; bi >= 0; bi--) {
+            if (Math.hypot(eballs[bi].x - c.x, eballs[bi].y - c.y) < 220) eballs.splice(bi, 1);
+          }
+          for (let gi = gliders.length - 1; gi >= 0; gi--) {
+            const eg = gliders[gi];
+            if (Math.hypot(eg.x - c.x, eg.y - c.y) < 220) {
+              eg.hp -= 10.0;
+              if (eg.hp <= 0) killGlider(gi, eg);
+            }
+          }
+          for (let fi = forts.length - 1; fi >= 0; fi--) {
+            const ef = forts[fi];
+            if (Math.hypot(ef.x - c.x, ef.y - c.y) < 220) {
+              ef.hp -= 10.0;
+              if (ef.hp <= 0) killFort(fi, ef);
+            }
+          }
+          if (boss && Math.hypot(boss.x - c.x, boss.y - c.y) < 260) {
+            boss.hp -= 10.0;
+            if (boss.hp <= 0) killBoss();
+          }
+          nebulaClones.splice(ci, 1);
+        }
+        break;
+      }
+    }
+    if (hitGliderClone) continue;
+
     if (g.x < -80) gliders.splice(i, 1);
     else if (ship.inv <= 0 && Math.hypot(g.x - ship.x, g.y - ship.y) < ship.r + 32) {
       damageShip();
@@ -14002,8 +14104,7 @@ function update(dt) {
       gliders.splice(i, 1);
     }
   }
-
-  // Update Mines
+// Update Mines
   for (let i = mines.length - 1; i >= 0; i--) {
     const m = mines[i];
     m.x += m.vx * dt;
@@ -14023,8 +14124,9 @@ function update(dt) {
     const b = eballs[i];
 
     if (b.isGuided || b.isHoming) {
-      // Homing Concussion Torpedo actively tracks and steers toward player
-      const tdx = ship.x - b.x, tdy = ship.y - b.y;
+      // Homing Concussion Torpedo actively tracks and steers toward player or nearest clone
+      const target = getEnemyTarget(b.x, b.y);
+      const tdx = target.x - b.x, tdy = target.y - b.y;
       const targetAng = Math.atan2(tdy, tdx);
       const currAng = Math.atan2(b.vy, b.vx);
       let diff = targetAng - currAng;
@@ -14071,6 +14173,54 @@ function update(dt) {
       }
     }
     
+    // Clone Direct Hit Absorption (2 hits per clone before shockwave detonation)
+    let hitClone = false;
+    for (let ci = 0; ci < nebulaClones.length; ci++) {
+      const c = nebulaClones[ci];
+      if (c && c.alive && c.hp > 0 && Math.hypot(b.x - c.x, b.y - c.y) < (c.r || 28) + (b.r || 10)) {
+        hitClone = true;
+        c.hp -= 1;
+        explode(b.x, b.y, '#00ffee', 14);
+        sfx('shield');
+        addShake(6);
+        popup(c.x, c.y - 25, `CLONE SHIELD: ${c.hp}/2 HP`, '#00ffee');
+        eballs.splice(i, 1);
+        if (c.hp <= 0) {
+          c.alive = false;
+          explode(c.x, c.y, '#00ffee', 55);
+          explode(c.x, c.y, '#ffd23c', 40);
+          sfx('boom');
+          addShake(18);
+          popup(c.x, c.y - 30, '💥 CLONE DETONATION! 10 AOE DMG', '#00ffee');
+          // Detonation AoE Shockwave dealing 10.0 AoE damage
+          for (let bi = eballs.length - 1; bi >= 0; bi--) {
+            if (Math.hypot(eballs[bi].x - c.x, eballs[bi].y - c.y) < 220) eballs.splice(bi, 1);
+          }
+          for (let gi = gliders.length - 1; gi >= 0; gi--) {
+            const eg = gliders[gi];
+            if (Math.hypot(eg.x - c.x, eg.y - c.y) < 220) {
+              eg.hp -= 10.0;
+              if (eg.hp <= 0) killGlider(gi, eg);
+            }
+          }
+          for (let fi = forts.length - 1; fi >= 0; fi--) {
+            const ef = forts[fi];
+            if (Math.hypot(ef.x - c.x, ef.y - c.y) < 220) {
+              ef.hp -= 10.0;
+              if (ef.hp <= 0) killFort(fi, ef);
+            }
+          }
+          if (boss && Math.hypot(boss.x - c.x, boss.y - c.y) < 260) {
+            boss.hp -= 10.0;
+            if (boss.hp <= 0) killBoss();
+          }
+          nebulaClones.splice(ci, 1);
+        }
+        break;
+      }
+    }
+    if (hitClone) continue;
+
     if (b.x < -40 || b.y < -40 || b.y > H + 40) eballs.splice(i, 1);
     else if (ship.inv <= 0 && Math.hypot(b.x - ship.x, b.y - ship.y) < ship.r + b.r - 5) {
       if (b.isLava || b.type === 'lava' || b.type === 'magma') {
@@ -17930,21 +18080,137 @@ function draw() {
     cx.restore();
   }
 
-  // 9h. Render Nebula Droid Flak Pods
-  for (const pod of flakPods) {
-    cx.save();
-    cx.translate(pod.x, pod.y);
-    cx.fillStyle = '#94a3b8';
-    cx.fillRect(-6, -6, 12, 12);
-    cx.strokeStyle = '#00ffee';
-    cx.lineWidth = 1.5;
-    cx.strokeRect(-6, -6, 12, 12);
-    // Beeping indicator
-    if (Math.floor(t * 20) % 2 === 0) {
-      cx.fillStyle = '#ff0033';
-      cx.beginPath(); cx.arc(0, 0, 3, 0, Math.PI * 2); cx.fill();
+  // 9h. Render Nebula Cruiser Phantom Wingman Clones
+  if (typeof nebulaClones !== 'undefined') {
+    for (const c of nebulaClones) {
+      if (!c || !c.alive || c.hp <= 0) continue;
+      cx.save();
+      cx.translate(c.x, c.y);
+
+      // Holographic Wingman Shimmer & Energy Shield Field
+      const cloneAlpha = 0.88 + Math.sin(t * 12 + (c.id === 'clone_top' ? 0 : 3)) * 0.10;
+      cx.globalAlpha = Math.min(1.0, Math.max(0.2, cloneAlpha));
+
+      // Sublight Turbine Ion Plumes
+      const ionEnginesY = [-26, -12, 12, 26];
+      for (let i = 0; i < ionEnginesY.length; i++) {
+        const ey = ionEnginesY[i];
+        const jg = cx.createLinearGradient(-44, ey, -70, ey);
+        jg.addColorStop(0, '#ffffff');
+        jg.addColorStop(0.3, '#00ffee');
+        jg.addColorStop(0.75, '#0284c7');
+        jg.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.fillStyle = jg;
+        cx.beginPath();
+        cx.moveTo(-44, ey - 3.5);
+        cx.lineTo(-62 - Math.random() * 12, ey);
+        cx.lineTo(-44, ey + 3.5);
+        cx.closePath();
+        cx.fill();
+      }
+
+      // Outboard Cantilever Wing Pylons
+      const pylonGrad = cx.createLinearGradient(-28, -28, 8, 28);
+      pylonGrad.addColorStop(0, '#0f172a'); pylonGrad.addColorStop(0.5, '#64748b'); pylonGrad.addColorStop(1, '#38bdf8');
+      cx.fillStyle = pylonGrad;
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.8;
+      cx.beginPath();
+      cx.moveTo(-28, -14); cx.lineTo(-10, -28); cx.lineTo(8, -28); cx.lineTo(0, -14);
+      cx.closePath(); cx.fill(); cx.stroke();
+      cx.beginPath();
+      cx.moveTo(-28, 14); cx.lineTo(-10, 28); cx.lineTo(8, 28); cx.lineTo(0, 14);
+      cx.closePath(); cx.fill(); cx.stroke();
+
+      // Wingtip Plasma Scythe Emitter Conduits
+      cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.5;
+      cx.beginPath();
+      cx.moveTo(-10, -27); cx.lineTo(7, -27);
+      cx.moveTo(-10, 27); cx.lineTo(7, 27);
+      cx.stroke();
+
+      // Rear Outrigger Turbine Engine Pods
+      for (const ey of [-26, 26]) {
+        const outTurbGrad = cx.createLinearGradient(-42, ey - 6, -16, ey + 6);
+        outTurbGrad.addColorStop(0, '#0f172a'); outTurbGrad.addColorStop(0.5, '#64748b'); outTurbGrad.addColorStop(1, '#38bdf8');
+        cx.fillStyle = outTurbGrad;
+        cx.beginPath(); cx.roundRect(-42, ey - 6, 26, 12, 3); cx.fill();
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.4; cx.stroke();
+        cx.fillStyle = '#0f172a';
+        cx.beginPath(); cx.arc(-18, ey, 4.5, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#00ffee'; cx.lineWidth = 1.2; cx.stroke();
+      }
+
+      // Main Slab Armored Industrial Fuselage
+      const hGrad = cx.createLinearGradient(0, -16, 0, 16);
+      hGrad.addColorStop(0, '#ffffff');
+      hGrad.addColorStop(0.2, '#38bdf8');
+      hGrad.addColorStop(0.65, '#64748b');
+      hGrad.addColorStop(1, '#0f172a');
+      cx.fillStyle = hGrad;
+      cx.beginPath();
+      cx.moveTo(-36, -16);
+      cx.lineTo(18, -16);
+      cx.lineTo(44, -8);
+      cx.lineTo(50, 0);
+      cx.lineTo(44, 8);
+      cx.lineTo(18, 16);
+      cx.lineTo(-36, 16);
+      cx.lineTo(-44, 0);
+      cx.closePath();
+      cx.fill();
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.4; cx.stroke();
+
+      // Chevrons
+      cx.strokeStyle = '#00ffee'; cx.lineWidth = 2.5;
+      cx.beginPath();
+      cx.moveTo(-16, -14); cx.lineTo(-24, 14);
+      cx.moveTo(4, -14); cx.lineTo(-4, 14);
+      cx.stroke();
+
+      // Mid-Flank Turbines
+      for (const ey of [-12, 12]) {
+        const midTurbGrad = cx.createLinearGradient(-4, ey - 5, 24, ey + 5);
+        midTurbGrad.addColorStop(0, '#0f172a'); midTurbGrad.addColorStop(0.5, '#64748b'); midTurbGrad.addColorStop(1, '#38bdf8');
+        cx.fillStyle = midTurbGrad;
+        cx.beginPath(); cx.roundRect(-4, ey - 5, 28, 10, 3); cx.fill();
+        cx.strokeStyle = '#38bdf8'; cx.lineWidth = 1.4; cx.stroke();
+      }
+
+      // Cockpit Viewport & HUD
+      const cGlow = cx.createLinearGradient(20, 0, 36, 0);
+      cGlow.addColorStop(0, '#ffffff');
+      cGlow.addColorStop(0.4, '#00ffee');
+      cGlow.addColorStop(1, '#0f172a');
+      cx.fillStyle = cGlow;
+      cx.fillRect(22, -2.5, 14, 5);
+      cx.strokeStyle = 'rgba(255, 255, 255, 0.7)'; cx.lineWidth = 1;
+      cx.strokeRect(22, -2.5, 14, 5);
+
+      // Forward Cannons
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2.4;
+      cx.beginPath();
+      cx.moveTo(42, -5); cx.lineTo(58, -5);
+      cx.moveTo(42, 5); cx.lineTo(58, 5);
+      cx.stroke();
+
+      // Clone UI Badge & Health Indicators
+      cx.globalAlpha = 1.0;
+      cx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+      cx.strokeStyle = '#00ffee';
+      cx.lineWidth = 1.5;
+      cx.beginPath();
+      cx.roundRect(-36, -42, 72, 16, 4);
+      cx.fill();
+      cx.stroke();
+
+      cx.fillStyle = '#ffffff';
+      cx.font = 'bold 9px monospace';
+      cx.textAlign = 'center';
+      cx.textBaseline = 'middle';
+      cx.fillText(c.hp === 2 ? 'CLONE [2/2 HP]' : 'CLONE [1/2 HP]', 0, -34);
+
+      cx.restore();
     }
-    cx.restore();
   }
 
   // 9i. Render Hammerhead Deflector Ramming Prow Shield
