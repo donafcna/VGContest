@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v85';
+  var LATEST_VERSION = 'v=60fps_v86';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -3373,7 +3373,7 @@
   </div>
 </div>
 
-<div id="dossierModal" class="overlay hidden" style="z-index: 100;">
+<div id="dossierModal" class="overlay hidden" style="z-index: 100;" onclick="if(event.target===this) closeDossierModal(event);">
   <div class="dossier-card">
     <div class="dossier-header">
       <span id="dosRank" class="dos-badge">🥇 RANK #1</span>
@@ -3403,12 +3403,12 @@
       <div id="dosUpgList" class="dos-upg-grid"></div>
     </div>
 
-    <button id="dosCloseBtn" class="dos-close-btn">✖ CLOSE DOSSIER</button>
+    <button id="dosCloseBtn" class="dos-close-btn" onclick="closeDossierModal(event)">✖ CLOSE DOSSIER</button>
   </div>
 </div>
 
 <!-- Roblox Grow a Garden Style Lucky Prize Wheel Modal -->
-<div id="spinModal" class="overlay hidden" style="z-index: 120;">
+<div id="spinModal" class="overlay hidden" style="z-index: 120;" onclick="if(event.target===this) closeSpinModal(event);">
   <div class="spin-card">
     <div class="spin-header">
       <span class="spin-badge">🎡 LUCKY PRIZE WHEEL 🎟️</span>
@@ -3448,7 +3448,7 @@
 </div>
 
 <!-- Pirate 7-Day Voyage Daily Rewards Modal -->
-<div id="dailyModal" class="overlay hidden" style="z-index: 125;">
+<div id="dailyModal" class="overlay hidden" style="z-index: 125;" onclick="if(event.target===this) closeDailyModal(event);">
   <div class="daily-card" style="position:relative">
     <button onclick="closeDailyModal(event)" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem">✖ CLOSE</button>
     <span class="daily-badge-tag">🎁 PIRATE DAILY VOYAGE REWARDS ⚓</span>
@@ -3465,7 +3465,7 @@
 
 
 <!-- Holographic Pirate Bounty Quests Modal -->
-<div id="questModal" class="overlay hidden" style="z-index: 128;">
+<div id="questModal" class="overlay hidden" style="z-index: 128;" onclick="if(event.target===this) closeQuestModal(event);">
   <div class="quest-modal-card" style="position:relative;background:linear-gradient(135deg,rgba(10,18,36,0.98),rgba(15,23,42,0.98));border:2px solid #6366f1;border-radius:24px;width:min(94vw, 680px);max-height:86vh;display:flex;flex-direction:column;padding:24px;box-shadow:0 0 40px rgba(99,102,241,0.4), 0 20px 60px rgba(0,0,0,0.8);color:#fff;overflow:hidden">
     <button onclick="closeQuestModal(event)" style="position:absolute;top:18px;right:18px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem">✖ CLOSE</button>
     
@@ -3489,7 +3489,7 @@
 </div>
 
 <!-- Flagship Boss & Enemy Fleet Intel Modal -->
-<div id="bossIntelModal" class="overlay hidden" style="z-index: 126;">
+<div id="bossIntelModal" class="overlay hidden" style="z-index: 126;" onclick="if(event.target===this) closeBossIntelModal(event);">
   <div class="boss-intel-card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <div style="text-align:left">
@@ -3516,7 +3516,7 @@
 
 <!-- Brawl Stars Style Friends & Add Friends Modal -->
 <!-- Brawl Stars Style Player Profile & Career Stats Dossier Modal -->
-<div id="profileModal" class="overlay hidden" style="z-index: 135;">
+<div id="profileModal" class="overlay hidden" style="z-index: 135;" onclick="if(event.target===this) closeProfileModal(event);">
   <div class="profile-modal-card">
     <!-- Header -->
     <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:12px;margin-bottom:16px;">
@@ -3594,7 +3594,7 @@
   </div>
 </div>
 
-<div id="friendsModal" class="overlay hidden" style="z-index: 130;">
+<div id="friendsModal" class="overlay hidden" style="z-index: 130;" onclick="if(event.target===this) closeFriendsModal(event);">
   <div class="online-card" style="max-width: 580px;">
     <div class="online-header">
       <div style="text-align:left">
@@ -3632,7 +3632,7 @@
 </div>
 
 <!-- Brawl Stars Style Settings Modal -->
-<div id="settingsModal" class="overlay hidden" style="z-index: 130;">
+<div id="settingsModal" class="overlay hidden" style="z-index: 130;" onclick="if(event.target===this) closeSettingsModal(event);">
   <div class="online-card" style="max-width: 520px;">
     <div class="online-header">
       <div style="text-align:left">
@@ -3678,7 +3678,7 @@
   </div>
 </div>
 
-<div id="onlineModal" class="overlay hidden" style="z-index: 129;">
+<div id="onlineModal" class="overlay hidden" style="z-index: 129;" onclick="if(event.target===this) closeOnlineModal(event);">
   <div class="online-card">
     <div class="online-header">
       <div style="text-align:left">
@@ -3817,7 +3817,7 @@
 </div>
 
 <!-- Cosmic Trail (Brawl Stars Style Trophy Road Modal) -->
-<div id="trailModal" class="overlay hidden" style="z-index: 128;">
+<div id="trailModal" class="overlay hidden" style="z-index: 128;" onclick="if(event.target===this) closeTrailModal(event);">
   <div class="trail-card">
     <div class="trail-header">
       <div style="text-align:left">
@@ -7810,6 +7810,14 @@ function closeBossIntelModal() {
 
 let cachedLeaderboardRows = [];
 
+function closeDossierModal(e) {
+  if (e) { try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {} }
+  hideOverlay('dossierModal');
+  const modal = document.getElementById('dossierModal');
+  if (modal) modal.classList.add('hidden');
+}
+window.closeDossierModal = closeDossierModal;
+
 function openDossier(pilotIndex) {
   const p = cachedLeaderboardRows[pilotIndex];
   if (!p) return;
@@ -9004,7 +9012,8 @@ window.closeFriendsModal = closeFriendsModal;
 function openSettingsModal(e) {
   if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
   try { initAudio(); } catch(err) {}
-  const m = document.getElementById('settingsModal', 'profileModal', 'questModal');
+  showOverlay('settingsModal');
+  const m = document.getElementById('settingsModal');
   if (m) m.classList.remove('hidden');
   updateSettingsUI();
 }
@@ -9012,7 +9021,8 @@ window.openSettingsModal = openSettingsModal;
 
 function closeSettingsModal(e) {
   if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
-  const m = document.getElementById('settingsModal', 'profileModal', 'questModal');
+  hideOverlay('settingsModal');
+  const m = document.getElementById('settingsModal');
   if (m) m.classList.add('hidden');
 }
 window.closeSettingsModal = closeSettingsModal;
@@ -9550,7 +9560,7 @@ function updateProfileUI() {
     const topTrophies = document.getElementById('topProfileTrophyCount');
     if (topTrophies) topTrophies.textContent = trophies.toLocaleString();
 
-    const topAvatarWrap = document.getElementById('topProfileAvatar');
+    const topAvatarWrap = document.getElementById('topProfileAvatarWrap') || document.getElementById('topProfileAvatar');
     if (topAvatarWrap) {
       topAvatarWrap.style.background = curAvatar.gradient;
       topAvatarWrap.style.borderColor = curAvatar.border;
@@ -9601,6 +9611,13 @@ function updateProfileUI() {
   }
 }
 window.updateProfileUI = updateProfileUI;
+function updateTopProfileDisplay() {
+  if (typeof updateProfileUI === 'function') {
+    try { updateProfileUI(); } catch(e) {}
+  }
+}
+window.updateTopProfileDisplay = updateTopProfileDisplay;
+
 
 function openProfileModal(e) {
   if (e) {
@@ -10795,14 +10812,19 @@ function getClaimableTrailCount() {
 }
 
 function updateTrailBadge() {
-  const badge = document.getElementById('trailBadge');
-  if (!badge) return;
-  const count = getClaimableTrailCount();
-  if (count > 0) {
-    badge.textContent = count > 9 ? '9+' : count;
-    badge.classList.remove('hidden');
-  } else {
-    badge.classList.add('hidden');
+  const count = (typeof getClaimableTrailCount === 'function') ? getClaimableTrailCount() : 0;
+  const badges = [document.getElementById('topTrailClaimBadge'), document.getElementById('trailBadge')];
+  badges.forEach(badge => {
+    if (!badge) return;
+    if (count > 0) {
+      badge.textContent = count > 9 ? '9+' : count;
+      badge.classList.remove('hidden');
+    } else {
+      badge.classList.add('hidden');
+    }
+  });
+  if (typeof updateTrailUI === 'function') {
+    try { updateTrailUI(); } catch(e) {}
   }
 }
 
@@ -10957,7 +10979,10 @@ function bindActionButtons() {
     };
   };
 
+  attach('topProfileCard', openProfileModal);
   attach('topTrailBar', openTrailModal);
+  attach('middleRightDailyWrap', openDailyModal);
+  attach('bottomLeftQuestWrap', openQuestModal);
   attach('startbtn', startInstantCombat);
   
   attach('onlinebtn', openOnlineModal);
@@ -10975,15 +11000,15 @@ function bindActionButtons() {
   attach('spinCloseBtn', closeSpinModal);
   attach('dailyCloseBtn', closeDailyModal);
   attach('bossIntelCloseBtn', closeBossIntelModal);
-  attach('bottomLeftQuestWrap', openQuestModal);
   attach('questbtn', openQuestModal);
   attach('pauseQuestBtn', openQuestModal);
+  attach('profileCloseBtn', closeProfileModal);
+  attach('friendsCloseBtn', closeFriendsModal);
+  attach('settingsCloseBtn', closeSettingsModal);
+  attach('onlineCloseBtn', closeOnlineModal);
   try { QUESTS.updateBadges(); } catch(e) {}
   attach('trailCloseBtn', closeTrailModal);
-  attach('dosCloseBtn', () => {
-    const m = document.getElementById('dossierModal');
-    if (m) m.classList.add('hidden');
-  });
+  attach('dosCloseBtn', closeDossierModal);
 }
 
 if (document.readyState === 'loading') {
