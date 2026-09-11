@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v107';
+  var LATEST_VERSION = 'v=60fps_v108';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5375,6 +5375,7 @@ function activateVipPass(code) {
     renderWallet(); try { updateProfileUI(); } catch(e) {}
     updateTrailBadge();
     buildShop();
+    try { renderBrawlShopUI(); } catch(e) {}
     renderLeaderboard('lbMenu', -1, playerName);
     return true;
   }
@@ -11144,6 +11145,7 @@ if (document.readyState === 'loading') {
           applyLoadout();
           renderWallet(); try { updateProfileUI(); } catch(e) {}
           try { buildShop(); } catch(e) {}
+          try { renderBrawlShopUI(); } catch(e) {}
           if (immediate) {
             LB.updateName(val);
             renderLeaderboard('lbMenu', -1, playerName);
@@ -20253,15 +20255,28 @@ function renderBrawlShopUI() {
     </div>`;
     
     // Resource Pack 4: Creator VIP Pass
-    h += `<div class="brawl-shop-card featured">
-      <div class="brawl-shop-card-rarity" style="background:#ffd700;color:#020617">👑 CREATOR VIP PASS</div>
-      <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #ffd700 0%, #78350f 100%)">
-        <span style="font-size:3.2rem">👑</span>
-      </div>
-      <div class="brawl-shop-card-title">Creator VIP Pass</div>
-      <div class="brawl-shop-card-desc">Exclusive to Noël. Unlock all ships, max Lv 10 stats &amp; all skins!</div>
-      <button class="brawl-shop-buy-btn free" onclick="promptVipPass(); renderBrawlShopUI();">🔑 UNLOCK VIP</button>
-    </div>`;
+    const vipCaptainName = (playerName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'Noel Peigne').trim();
+    if (isCreator()) {
+      h += `<div class="brawl-shop-card featured" style="border-color:#ffd700;box-shadow:0 0 20px rgba(255,215,0,0.4)">
+        <div class="brawl-shop-card-rarity" style="background:#ffd700;color:#020617">👑 VIP ACTIVE</div>
+        <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #ffd700 0%, #78350f 100%)">
+          <span style="font-size:3.2rem">👑</span>
+        </div>
+        <div class="brawl-shop-card-title">Creator VIP Pass</div>
+        <div class="brawl-shop-card-desc">Exclusive to ${typeof esc === 'function' ? esc(vipCaptainName) : vipCaptainName}. All 5 Ships, Max Lv 10 Stats &amp; All Skins Active!</div>
+        <button class="brawl-shop-buy-btn free" style="background:#22c55e;color:#020617;cursor:default">✔ UNLOCKED</button>
+      </div>`;
+    } else {
+      h += `<div class="brawl-shop-card featured">
+        <div class="brawl-shop-card-rarity" style="background:#ffd700;color:#020617">👑 CREATOR VIP PASS</div>
+        <div class="brawl-shop-card-icon-wrap" style="background:radial-gradient(circle, #ffd700 0%, #78350f 100%)">
+          <span style="font-size:3.2rem">👑</span>
+        </div>
+        <div class="brawl-shop-card-title">Creator VIP Pass</div>
+        <div class="brawl-shop-card-desc">Exclusive to ${typeof esc === 'function' ? esc(vipCaptainName) : vipCaptainName}. Unlock all ships, max Lv 10 stats &amp; all skins!</div>
+        <button class="brawl-shop-buy-btn free" onclick="promptVipPass(); renderBrawlShopUI();">🔑 UNLOCK VIP</button>
+      </div>`;
+    }
     
     h += `</div>`;
   }
