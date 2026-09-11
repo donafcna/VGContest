@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v109';
+  var LATEST_VERSION = 'v=60fps_v110';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -3459,13 +3459,17 @@
 <!-- Holographic Pirate Daily Bounty Quests Modal -->
 <div id="questModal" class="overlay hidden" style="z-index: 128;" onclick="if(event.target===this) closeQuestModal(event);">
   <div class="quest-modal-card" style="position:relative;background:linear-gradient(135deg,rgba(10,18,36,0.98),rgba(15,23,42,0.98));border:2px solid #6366f1;border-radius:24px;width:min(94vw, 680px);max-height:86vh;display:flex;flex-direction:column;padding:24px;box-shadow:0 0 40px rgba(99,102,241,0.4), 0 20px 60px rgba(0,0,0,0.8);color:#fff;overflow:hidden">
-    <button onclick="closeQuestModal(event)" style="position:absolute;top:18px;right:18px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem">✖ CLOSE</button>
-    
-    <div style="text-align:left;margin-bottom:14px">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:6px">
-        <span style="display:inline-block;padding:3px 10px;background:rgba(99,102,241,0.25);border:1px solid #818cf8;color:#a5b4fc;font-size:0.75rem;font-weight:900;border-radius:8px;font-family:'Orbitron',sans-serif;letter-spacing:1px">📜 DAILY GALAXY PIRATE CONTRACTS</span>
-        <span id="dailyQuestTimerPill" style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(245,158,11,0.15);border:1.5px solid #f59e0b;color:#ffd23c;font-size:0.75rem;font-weight:900;border-radius:8px;font-family:'Orbitron',sans-serif;box-shadow:0 0 12px rgba(245,158,11,0.3)">⏰ Resets in: <span id="dailyQuestTimer" style="color:#ffffff;font-variant-numeric:tabular-nums">--h --m --s</span></span>
+    <!-- Header Top Row with Category Tag, Timer Pill & Close Button (Flexbox - No Overlap) -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+      <span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(99,102,241,0.25);border:1px solid #818cf8;color:#a5b4fc;font-size:0.75rem;font-weight:900;border-radius:8px;font-family:'Orbitron',sans-serif;letter-spacing:1px">📜 DAILY GALAXY PIRATE CONTRACTS</span>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span id="dailyQuestTimerPill" style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(245,158,11,0.15);border:1.5px solid #f59e0b;color:#ffd23c;font-size:0.75rem;font-weight:900;border-radius:8px;font-family:'Orbitron',sans-serif;box-shadow:0 0 12px rgba(245,158,11,0.3)">⏰ Resets in: <span id="dailyQuestTimer" style="color:#ffffff;font-variant-numeric:tabular-nums">--h --m --s</span></span>
+        <button onclick="closeQuestModal(event)" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem;display:inline-flex;align-items:center;justify-content:center;font-weight:bold">✖ CLOSE</button>
       </div>
+    </div>
+    
+    <!-- Title & Description -->
+    <div style="text-align:left;margin-bottom:14px">
       <h1 style="font-family:'Orbitron',sans-serif;font-size:1.55rem;font-weight:900;color:#ffffff;margin:0 0 4px 0;letter-spacing:1px">DAILY BOUNTY QUESTS</h1>
       <p style="margin:0;font-size:0.88rem;color:#94a3b8">Complete daily combat bounties to earn <b>Gold Dubloons 🪙, Trophies 🏆 &amp; Cosmic Gems 💎</b>! Refreshes every day at midnight.</p>
     </div>
