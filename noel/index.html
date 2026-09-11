@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v104';
+  var LATEST_VERSION = 'v=60fps_v105';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5536,7 +5536,7 @@ const SHIPS = [
     hp: 9, cool: 0.48, spd: 0.95, gold: 1.15, magnet: 35, spread: [0],
     power: '⚡ Stealth Armor (+3 Max Hull HP) & Quad Tachyon Concussion Blast',
     superName: '⚡ Overdrive: Event Horizon Black Hole',
-    superDesc: 'Cosmic Overdrive [E]: Deploys a medium-sized Gravitational Black Hole that draws in surrounding enemy fighters, crushes incoming enemy projectiles on contact, and inflicts balanced gravitational tidal disruption before a tactical Supernova collapse!'
+    superDesc: 'Cosmic Overdrive [E]: Deploys a medium-sized Gravitational Black Hole that deals 0 damage, but powerfully sucks in all surrounding enemy ships, draws in coins, and swallows incoming enemy shots on contact!'
   },
   {
     id: 'hind',
@@ -11960,43 +11960,38 @@ function update(dt) {
       });
     }
 
-    // 1. SUCK & DISRUPT ENEMY SHIPS (Gliders) - Controlled gravitational spiral suction
+    // 1. SUCK ENEMY SHIPS (Gliders) - Pure Gravitational Suction (0 Damage)
     for (let gi = gliders.length - 1; gi >= 0; gi--) {
       const g = gliders[gi];
       const d = Math.hypot(sing.x - g.x, sing.y - g.y);
       if (d < gravR) {
         const ang = Math.atan2(sing.y - g.y, sing.x - g.x);
-        const pull = 260 + (1 - d / gravR) * 360;
+        const pull = 280 + (1 - d / gravR) * 380;
         // Inward gravitational suction + tangential vortex swirl
         g.x += (Math.cos(ang) * pull - Math.sin(ang) * 70) * dt;
         g.y += (Math.sin(ang) * pull + Math.cos(ang) * 70) * dt;
-        g.hp -= 2.5 * dt; // Balanced tidal disruption damage
       }
-      // Event Horizon Core compression damage
+      // Trapped inside event horizon core
       if (d < coreR + (g.w * 0.5 || 24)) {
-        g.hp -= 3.5 * dt;
-      }
-      if (g.hp <= 0) {
-        explode(g.x, g.y, '#c084fc', 12);
-        killGlider(gi, g);
+        g.x = sing.x + (Math.random() - 0.5) * coreR * 0.8;
+        g.y = sing.y + (Math.random() - 0.5) * coreR * 0.8;
       }
     }
 
-    // 2. SUCK & DISRUPT ENEMY WARSHIPS (Forts) - Gravitational vortex pull
+    // 2. SUCK ENEMY WARSHIPS (Forts) - Pure Gravitational Vortex Pull (0 Damage)
     for (let fi = forts.length - 1; fi >= 0; fi--) {
       const f = forts[fi];
       const d = Math.hypot(sing.x - f.x, sing.y - f.y);
       if (d < gravR) {
         const ang = Math.atan2(sing.y - f.y, sing.x - f.x);
-        const pull = 160 + (1 - d / gravR) * 260;
+        const pull = 180 + (1 - d / gravR) * 280;
         f.x += Math.cos(ang) * pull * dt;
         f.y += Math.sin(ang) * pull * dt;
-        f.hp -= 2.5 * dt;
       }
       if (d < coreR + (f.w * 0.5 || 34)) {
-        f.hp -= 4.0 * dt; // Balanced core event horizon compression
+        f.x = sing.x + (Math.random() - 0.5) * coreR * 0.6;
+        f.y = sing.y + (Math.random() - 0.5) * coreR * 0.6;
       }
-      if (f.hp <= 0) killFort(fi, f);
     }
 
     // 3. SUCK & DISINTEGRATE ENEMY SHOTS (eballs) - Any enemy bullet touching or near black hole gets consumed!
@@ -12005,8 +12000,8 @@ function update(dt) {
       const d = Math.hypot(sing.x - eb.x, sing.y - eb.y);
       if (d < gravR) {
         const ang = Math.atan2(sing.y - eb.y, sing.x - eb.x);
-        eb.vx += Math.cos(ang) * 1400 * dt;
-        eb.vy += Math.sin(ang) * 1400 * dt;
+        eb.vx += Math.cos(ang) * 1500 * dt;
+        eb.vy += Math.sin(ang) * 1500 * dt;
       }
       // Consumed upon reaching event horizon
       if (d < coreR + (eb.r || 10) + 14) {
@@ -12021,8 +12016,8 @@ function update(dt) {
       const d = Math.hypot(sing.x - m.x, sing.y - m.y);
       if (d < gravR) {
         const ang = Math.atan2(sing.y - m.y, sing.x - m.x);
-        m.x += Math.cos(ang) * 380 * dt;
-        m.y += Math.sin(ang) * 380 * dt;
+        m.x += Math.cos(ang) * 400 * dt;
+        m.y += Math.sin(ang) * 400 * dt;
         if (d < coreR + (m.r || 24)) killMine(mi, m);
       }
     }
@@ -12037,19 +12032,10 @@ function update(dt) {
       }
     }
 
-    // 6. BOSSES: IMMUNE TO SUCTION (Boss position is NOT moved), moderate tidal rift damage
-    if (boss && boss.alive !== false && (boss.hp > 0)) {
-      const bossDist = Math.hypot(sing.x - boss.x, sing.y - boss.y);
-      if (bossDist < accR + (boss.w * 0.5 || 60)) {
-        boss.hp -= 2.0 * dt; // Balanced continuous gravitational tidal damage
-        if (Math.random() < 0.25) {
-          explode(boss.x + (Math.random() - 0.5) * boss.w * 0.5, boss.y + (Math.random() - 0.5) * boss.h * 0.5, '#c084fc', 8);
-        }
-        if (boss.hp <= 0) killBoss();
-      }
-    }
+    // 6. BOSSES: IMMUNE TO SUCTION & 0 DAMAGE (Boss position is NOT moved, 0 damage)
+    // No pull or damage applied to bosses
 
-    // 7. HAWKING RADIATION SUPERNOVA COLLAPSE (Final Detonation on Lifespan End)
+    // 7. EVENT HORIZON DISSIPATION (0 Damage Visual Effect)
     if (sing.life <= 0) {
       explode(sing.x, sing.y, '#c084fc', 24);
       explode(sing.x, sing.y, '#38bdf8', 18);
@@ -12057,31 +12043,14 @@ function update(dt) {
       parts.push({ type: 'ring', x: sing.x, y: sing.y, r: 8, maxR: 160, life: 0.4, maxLife: 0.4, col: '#38bdf8', lw: 4 });
       
       sfx('boom');
-      addShake(20);
-      popup(sing.x, sing.y - 35, '💥 BLACK HOLE SUPERNOVA!', '#c084fc');
+      addShake(15);
+      popup(sing.x, sing.y - 35, '🌌 BLACK HOLE DISSIPATED!', '#c084fc');
 
-      for (let gi = gliders.length - 1; gi >= 0; gi--) {
-        const g = gliders[gi];
-        if (Math.hypot(sing.x - g.x, sing.y - g.y) < 220) {
-          g.hp -= 3.5;
-          if (g.hp <= 0) killGlider(gi, g);
-        }
-      }
-      for (let fi = forts.length - 1; fi >= 0; fi--) {
-        const f = forts[fi];
-        if (Math.hypot(sing.x - f.x, sing.y - f.y) < 220) {
-          f.hp -= 3.5;
-          if (f.hp <= 0) killFort(fi, f);
-        }
-      }
+      // Clear incoming enemy bullets within range on dissipation
       for (let bi = eballs.length - 1; bi >= 0; bi--) {
         if (Math.hypot(sing.x - eballs[bi].x, sing.y - eballs[bi].y) < 220) {
           eballs.splice(bi, 1);
         }
-      }
-      if (boss && Math.hypot(sing.x - boss.x, sing.y - boss.y) < 220) {
-        boss.hp -= 4.5;
-        if (boss.hp <= 0) killBoss();
       }
       singularities.splice(i, 1);
     }
