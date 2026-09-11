@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v101';
+  var LATEST_VERSION = 'v=60fps_v102';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -4243,6 +4243,10 @@ function onGameTouchStart(e) {
     return;
   }
   if (state !== 'play') return;
+  if (ship.hp <= 0) {
+    lose();
+    return;
+  }
 
   for (let i = 0; i < e.changedTouches.length; i++) {
     const t = e.changedTouches[i];
@@ -8303,6 +8307,10 @@ function spawnBoss() {
 }
 window.spawnBoss = spawnBoss;
 window.ship = ship;
+function getBoss() { return boss; }
+function setBoss(b) { boss = b; }
+window.getBoss = getBoss;
+window.setBoss = setBoss;
 
 function startCombat() {
   state = 'play'; if (typeof window !== 'undefined') window.state = 'play';
@@ -9407,10 +9415,12 @@ function startInstantCombat(e) {
   // 3. Initialize ship object
   try {
     if (!ship || typeof ship !== 'object') {
-      ship = { x: W * 0.22, y: H * 0.5, vx: 0, vy: 0, pitch: 0, hp: 5, inv: 2.0, recoil: 0, flagWave: 0, sailGlow: 0, r: 46, aimAngle: 0 };
+      ship = { x: W * 0.22, y: H * 0.5, vx: 0, vy: 0, pitch: 0, hp: 5, inv: 2.0, recoil: 0, flagWave: 0, sailGlow: 0, r: 46, aimAngle: 0, alive: true, name: playerName || 'Captain Noel' };
     } else {
       ship.hp = (typeof maxHp !== 'undefined' && maxHp) ? maxHp : 5;
       ship.inv = 2.0;
+      ship.alive = true;
+      ship.name = playerName || 'Captain Noel';
       ship.x = W * 0.22;
       ship.y = H * 0.5;
       ship.vx = 0;
@@ -9851,20 +9861,32 @@ function saveBest() {
 
 function lose() {
   state = 'over';
+  if (typeof window !== 'undefined') window.state = 'over';
+  if (boss) {
+    boss.tractorT = 0;
+    boss.beamCharge = 0;
+    boss.beamActive = 0;
+  }
   if (typeof OnlineFleetNet !== 'undefined' && OnlineFleetNet && OnlineFleetNet.mode === 'online_host') {
     try { OnlineFleetNet.broadcast({ type: 'game_over', score: score, level: level }); } catch(e) {}
   }
   sfx('boom');
   updateDpadVisibility();
-  updatePauseBtnVisibility(); try { updateTopBrawlBarVisibility(); try { updateTopProfileVisibility(); } catch(e) {} } catch(e) {}
+  updatePauseBtnVisibility();
+  try { updateTopBrawlBarVisibility(); try { updateTopProfileVisibility(); } catch(e) {} } catch(e) {}
   const pb = saveBest();
   const bank = bankRun();
-  document.getElementById('losetext').textContent =
-    `Pirate galleon destroyed in Sector ${level}… Final Score: ${score}` +
-    (pb ? '  🏅 NEW GALAXY RECORD!' : `  · Personal Best: ${best} 🏅`) +
-    `\nSalvage banked: +${bank.coins} 🪙  +${bank.tokens} 🎟️  +${bank.spins} 🎡  +${bank.kills} ☠️` +
-    (bank.unlocked.length ? `\n🎨 New galleon paint unlocked: ${bank.unlocked.join(', ')}!` : '');
-  document.getElementById('loseoverlay').classList.remove('hidden');
+  const loseTextEl = document.getElementById('losetext');
+  if (loseTextEl) {
+    loseTextEl.textContent =
+      `Pirate galleon destroyed in Sector ${level} · Final Score: ${score}` +
+      (pb ? '  🏆 NEW GALAXY RECORD!' : `  ⭐ Personal Best: ${best} ⭐`) +
+      `
+Salvage banked: +${bank.coins} 💰  +${bank.tokens} 🎟️  +${bank.spins} 🎡  +${bank.kills} 💀` +
+      (bank.unlocked.length ? `
+🎨 New galleon paint unlocked: ${bank.unlocked.join(', ')}!` : '');
+  }
+  showOverlay('loseoverlay');
   endGame('lbLose');
 }
 
@@ -12858,10 +12880,21 @@ function update(dt) {
             if (p.hp <= 0) {
               p.alive = false;
               p.respawnT = 6.0;
-              popup(p.x, p.y - 25, `💥 ${p.name ? p.name.toUpperCase() : 'PILOT'} DOWN!`, '#ff3344');
+              const pDisplayName = p.name || playerName || 'Captain';
+              popup(p.x, p.y - 25, `💥 ${pDisplayName.toUpperCase()} DOWN!`, '#ff3344');
               explode(p.x, p.y, '#ff3344', 45);
-              const aliveCount = (typeof players !== 'undefined' && players.length > 0) ? players.filter(pl => pl.alive).length : 0;
-              if (aliveCount === 0) lose();
+
+              const isOnline = (typeof OnlineFleetNet !== 'undefined' && OnlineFleetNet && OnlineFleetNet.mode && OnlineFleetNet.mode.startsWith('online'));
+              if (isOnline && players && players.length > 1) {
+                const match = players.find(pl => pl === p || pl.id === p.id);
+                if (match) match.alive = false;
+                const aliveCount = players.filter(pl => pl.alive).length;
+                if (aliveCount === 0) lose();
+              } else {
+                ship.alive = false;
+                if (players && players[0]) players[0].alive = false;
+                lose();
+              }
             }
           }
         } else {
@@ -14527,10 +14560,21 @@ function damageShip(targetPlayer) {
   if (p.hp <= 0) {
     p.alive = false;
     p.respawnT = 6.0; // 6 second respawn timer in Co-op!
-    popup(p.x, p.y - 25, `💥 ${p.name.toUpperCase()} DOWN!`, '#ff3344');
+    const pDisplayName = p.name || playerName || 'Captain';
+    popup(p.x, p.y - 25, `💥 ${pDisplayName.toUpperCase()} DOWN!`, '#ff3344');
     explode(p.x, p.y, '#ff3344', 45);
-    const aliveCount = players.filter(pl => pl.alive).length;
-    if (aliveCount === 0) lose();
+
+    const isOnline = (typeof OnlineFleetNet !== 'undefined' && OnlineFleetNet && OnlineFleetNet.mode && OnlineFleetNet.mode.startsWith('online'));
+    if (isOnline && players && players.length > 1) {
+      const match = players.find(pl => pl === p || pl.id === p.id);
+      if (match) match.alive = false;
+      const aliveCount = players.filter(pl => pl.alive).length;
+      if (aliveCount === 0) lose();
+    } else {
+      ship.alive = false;
+      if (players && players[0]) players[0].alive = false;
+      lose();
+    }
   }
 }
 
