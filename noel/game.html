@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v100';
+  var LATEST_VERSION = 'v=60fps_v101';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5549,10 +5549,10 @@ const SHIPS = [
     name: 'Nebula Cruiser (Nebula\'s Starship) 🌌',
     cost: 10,
     cols: ['#38bdf8', '#64748b', '#0f172a'],
-    hp: 8, cool: 0.42, spd: 1.20, gold: 1.50, magnet: 75, spread: [-0.15, 0.15],
-    power: '🌀 Twin Plasma Scythes, Quad Articulated Turbines & Void Torpedoes',
+    hp: 8, cool: 0.42, spd: 1.20, gold: 1.50, magnet: 75, spread: [0],
+    power: '🌀 Heavy Plasma Cannon, Quad Articulated Turbines & Void Torpedoes',
     superName: '⚡ Overdrive: Twin Holographic Fleet Clones 👥',
-    superDesc: 'Cosmic Overdrive [E]: Deploys two autonomous Nebula Cruiser phantom clones that break formation into different directions across the upper and lower sectors to draw all enemy fire, provide twin plasma fire support, and absorb 2 direct hits each before detonating!'
+    superDesc: 'Cosmic Overdrive [E]: Deploys two autonomous Nebula Cruiser phantom clones that break formation into different directions across the upper and lower sectors to draw all enemy fire, provide balanced support fire, and absorb 2 direct hits each before detonating!'
   },
 ];
 
@@ -12260,8 +12260,8 @@ function update(dt) {
           y: c.y + sinA * 35 + perpY,
           vx: cosA * boltSpeed,
           vy: sinA * boltSpeed,
-          r: 6.5,
-          dmg: 3.0,
+          r: 5.5,
+          dmg: 1.0,
           col: '#00ffee',
           isCloneBolt: true,
           target: enemyTarget,
@@ -14232,26 +14232,26 @@ function update(dt) {
           explode(c.x, c.y, '#ffd23c', 40);
           sfx('boom');
           addShake(18);
-          popup(c.x, c.y - 30, '💥 CLONE DETONATION! 10 AOE DMG', '#00ffee');
+          popup(c.x, c.y - 30, '💥 CLONE DETONATION! 3.5 AOE DMG', '#00ffee');
           for (let bi = eballs.length - 1; bi >= 0; bi--) {
             if (Math.hypot(eballs[bi].x - c.x, eballs[bi].y - c.y) < 220) eballs.splice(bi, 1);
           }
           for (let gi = gliders.length - 1; gi >= 0; gi--) {
             const eg = gliders[gi];
             if (Math.hypot(eg.x - c.x, eg.y - c.y) < 220) {
-              eg.hp -= 10.0;
+              eg.hp -= 3.5;
               if (eg.hp <= 0) killGlider(gi, eg);
             }
           }
           for (let fi = forts.length - 1; fi >= 0; fi--) {
             const ef = forts[fi];
             if (Math.hypot(ef.x - c.x, ef.y - c.y) < 220) {
-              ef.hp -= 10.0;
+              ef.hp -= 3.5;
               if (ef.hp <= 0) killFort(fi, ef);
             }
           }
           if (boss && Math.hypot(boss.x - c.x, boss.y - c.y) < 260) {
-            boss.hp -= 10.0;
+            boss.hp -= 3.5;
             if (boss.hp <= 0) killBoss();
           }
           nebulaClones.splice(ci, 1);
@@ -14355,27 +14355,27 @@ function update(dt) {
           explode(c.x, c.y, '#ffd23c', 40);
           sfx('boom');
           addShake(18);
-          popup(c.x, c.y - 30, '💥 CLONE DETONATION! 10 AOE DMG', '#00ffee');
-          // Detonation AoE Shockwave dealing 10.0 AoE damage
+          popup(c.x, c.y - 30, '💥 CLONE DETONATION! 3.5 AOE DMG', '#00ffee');
+          // Detonation AoE Shockwave dealing 3.5 AoE damage
           for (let bi = eballs.length - 1; bi >= 0; bi--) {
             if (Math.hypot(eballs[bi].x - c.x, eballs[bi].y - c.y) < 220) eballs.splice(bi, 1);
           }
           for (let gi = gliders.length - 1; gi >= 0; gi--) {
             const eg = gliders[gi];
             if (Math.hypot(eg.x - c.x, eg.y - c.y) < 220) {
-              eg.hp -= 10.0;
+              eg.hp -= 3.5;
               if (eg.hp <= 0) killGlider(gi, eg);
             }
           }
           for (let fi = forts.length - 1; fi >= 0; fi--) {
             const ef = forts[fi];
             if (Math.hypot(ef.x - c.x, ef.y - c.y) < 220) {
-              ef.hp -= 10.0;
+              ef.hp -= 3.5;
               if (ef.hp <= 0) killFort(fi, ef);
             }
           }
           if (boss && Math.hypot(boss.x - c.x, boss.y - c.y) < 260) {
-            boss.hp -= 10.0;
+            boss.hp -= 3.5;
             if (boss.hp <= 0) killBoss();
           }
           nebulaClones.splice(ci, 1);
