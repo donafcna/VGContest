@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v111';
+  var LATEST_VERSION = 'v=60fps_v112';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -13404,7 +13404,7 @@ function update(dt) {
       boss.atkCycle = ((boss.atkCycle || 0) + 1) % numCycles;
 
       if (boss.type === 'dread') {
-        // Boss 1: GRAND ADMIRAL VEX: OMEGA DREADNOUGHT
+        // Boss 1: GRAND ADMIRAL VEX: OMEGA DREADNOUGHT (Pure 1v1 Flagship Duel - No Minion Spawns)
         if (boss.atkCycle === 0 || boss.atkCycle === 2) {
           // ULTIMATE: Axial Planet-Killer Continuous Emerald Death Ray (1.2s Telegraph Warning + 1.8s LOCKED STATIONARY Laser)
           boss.beamCharge = 1.2;
@@ -13412,13 +13412,6 @@ function update(dt) {
           const muzzleX = boss.x - boss.w * 0.48, muzzleY = boss.y;
           const beamTarget = getEnemyTarget(muzzleX, muzzleY);
           boss.beamAng = Math.atan2(beamTarget.y - muzzleY, beamTarget.x - muzzleX);
-          if (gliders.length < 3) {
-            gliders.push({
-              variant: 'tie', name: 'VEX ESCORT TIE', col: '#ff0033', maxHp: 2, hp: 2,
-              x: boss.x - boss.w * 0.3, y: boss.y + (Math.random() - 0.5) * 120,
-              vx: -240, vy: (Math.random() - 0.5) * 80, shootT: 1.5, w: 56, h: 42
-            });
-          }
           addAlert('🚨 DANGER: AXIAL BEAM LOCKED — EVACUATE RED ZONE! 🚨', 'incoming');
           popup(boss.x - 40, boss.y - 45, '🚨 RED HAZARD ZONE • DODGE! 🚨', '#ff003b');
           sfx('incoming');
