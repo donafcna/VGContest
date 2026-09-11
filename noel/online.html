@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v102';
+  var LATEST_VERSION = 'v=60fps_v103';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5536,7 +5536,7 @@ const SHIPS = [
     hp: 9, cool: 0.48, spd: 0.95, gold: 1.15, magnet: 35, spread: [0],
     power: '⚡ Stealth Armor (+3 Max Hull HP) & Quad Tachyon Concussion Blast',
     superName: '⚡ Overdrive: Event Horizon Black Hole',
-    superDesc: 'Cosmic Overdrive [E]: Deploys a medium-sized Gravitational Black Hole that sucks in all enemy ships, crushes enemy projectiles on contact, and tears bosses with tidal forces before a Hawking Supernova collapse!'
+    superDesc: 'Cosmic Overdrive [E]: Deploys a medium-sized Gravitational Black Hole that draws in surrounding enemy fighters, crushes incoming enemy projectiles on contact, and inflicts balanced gravitational tidal disruption before a tactical Supernova collapse!'
   },
   {
     id: 'hind',
@@ -11960,41 +11960,41 @@ function update(dt) {
       });
     }
 
-    // 1. SUCK & CRUSH ENEMY SHIPS (Gliders) - Strong gravitational spiral suction
+    // 1. SUCK & DISRUPT ENEMY SHIPS (Gliders) - Controlled gravitational spiral suction
     for (let gi = gliders.length - 1; gi >= 0; gi--) {
       const g = gliders[gi];
       const d = Math.hypot(sing.x - g.x, sing.y - g.y);
       if (d < gravR) {
         const ang = Math.atan2(sing.y - g.y, sing.x - g.x);
-        const pull = 340 + (1 - d / gravR) * 480;
-        // Strong inward gravitational suction + tangential vortex swirl
-        g.x += (Math.cos(ang) * pull - Math.sin(ang) * 90) * dt;
-        g.y += (Math.sin(ang) * pull + Math.cos(ang) * 90) * dt;
-        g.hp -= 12.0 * dt; // Gravitational tidal tearing damage
+        const pull = 260 + (1 - d / gravR) * 360;
+        // Inward gravitational suction + tangential vortex swirl
+        g.x += (Math.cos(ang) * pull - Math.sin(ang) * 70) * dt;
+        g.y += (Math.sin(ang) * pull + Math.cos(ang) * 70) * dt;
+        g.hp -= 2.5 * dt; // Balanced tidal disruption damage
       }
-      // Touched Black Hole Event Horizon Core: Instant Crushing Singularity Collapse
+      // Event Horizon Core compression damage
       if (d < coreR + (g.w * 0.5 || 24)) {
+        g.hp -= 3.5 * dt;
+      }
+      if (g.hp <= 0) {
         explode(g.x, g.y, '#c084fc', 12);
-        popup(g.x, g.y - 20, '💥 CRUSHED!', '#c084fc');
-        killGlider(gi, g);
-      } else if (g.hp <= 0) {
         killGlider(gi, g);
       }
     }
 
-    // 2. SUCK & CRUSH ENEMY WARSHIPS (Forts) - Gravitational vortex pull
+    // 2. SUCK & DISRUPT ENEMY WARSHIPS (Forts) - Gravitational vortex pull
     for (let fi = forts.length - 1; fi >= 0; fi--) {
       const f = forts[fi];
       const d = Math.hypot(sing.x - f.x, sing.y - f.y);
       if (d < gravR) {
         const ang = Math.atan2(sing.y - f.y, sing.x - f.x);
-        const pull = 220 + (1 - d / gravR) * 350;
+        const pull = 160 + (1 - d / gravR) * 260;
         f.x += Math.cos(ang) * pull * dt;
         f.y += Math.sin(ang) * pull * dt;
-        f.hp -= 14.0 * dt;
+        f.hp -= 2.5 * dt;
       }
       if (d < coreR + (f.w * 0.5 || 34)) {
-        f.hp -= 35.0 * dt; // Heavy core event horizon compression
+        f.hp -= 4.0 * dt; // Balanced core event horizon compression
       }
       if (f.hp <= 0) killFort(fi, f);
     }
@@ -12037,12 +12037,12 @@ function update(dt) {
       }
     }
 
-    // 6. BOSSES: IMMUNE TO SUCTION (Boss position is NOT moved), but suffers heavy tidal rift damage
+    // 6. BOSSES: IMMUNE TO SUCTION (Boss position is NOT moved), moderate tidal rift damage
     if (boss && boss.alive !== false && (boss.hp > 0)) {
       const bossDist = Math.hypot(sing.x - boss.x, sing.y - boss.y);
       if (bossDist < accR + (boss.w * 0.5 || 60)) {
-        boss.hp -= 12.0 * dt; // Continuous gravitational tidal damage
-        if (Math.random() < 0.35) {
+        boss.hp -= 2.0 * dt; // Balanced continuous gravitational tidal damage
+        if (Math.random() < 0.25) {
           explode(boss.x + (Math.random() - 0.5) * boss.w * 0.5, boss.y + (Math.random() - 0.5) * boss.h * 0.5, '#c084fc', 8);
         }
         if (boss.hp <= 0) killBoss();
@@ -12057,20 +12057,20 @@ function update(dt) {
       parts.push({ type: 'ring', x: sing.x, y: sing.y, r: 8, maxR: 160, life: 0.4, maxLife: 0.4, col: '#38bdf8', lw: 4 });
       
       sfx('boom');
-      addShake(30);
+      addShake(20);
       popup(sing.x, sing.y - 35, '💥 BLACK HOLE SUPERNOVA!', '#c084fc');
 
       for (let gi = gliders.length - 1; gi >= 0; gi--) {
         const g = gliders[gi];
         if (Math.hypot(sing.x - g.x, sing.y - g.y) < 220) {
-          g.hp -= 20.0;
+          g.hp -= 3.5;
           if (g.hp <= 0) killGlider(gi, g);
         }
       }
       for (let fi = forts.length - 1; fi >= 0; fi--) {
         const f = forts[fi];
         if (Math.hypot(sing.x - f.x, sing.y - f.y) < 220) {
-          f.hp -= 20.0;
+          f.hp -= 3.5;
           if (f.hp <= 0) killFort(fi, f);
         }
       }
@@ -12080,7 +12080,7 @@ function update(dt) {
         }
       }
       if (boss && Math.hypot(sing.x - boss.x, sing.y - boss.y) < 220) {
-        boss.hp -= 22.0;
+        boss.hp -= 4.5;
         if (boss.hp <= 0) killBoss();
       }
       singularities.splice(i, 1);
