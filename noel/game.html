@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v116';
+  var LATEST_VERSION = 'v=60fps_v117';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -621,14 +621,14 @@
   .shopitem .maxed { color:#3fd07a; font-weight:bold; font-size:0.9rem; white-space:nowrap; }
   #losetext, #wintext { white-space:pre-line; }
 
-  /* Daily Rewards Modal Styles */
+  /* Daily Rewards Modal Styles (Brawl Stars Horizontal Road Style) */
   .daily-card {
     background: linear-gradient(135deg, rgba(10, 18, 36, 0.98), rgba(15, 23, 42, 0.98));
     border: 2px solid #ff5e62;
     border-radius: 24px;
-    padding: 24px;
-    max-width: 680px;
-    width: min(94vw, 680px);
+    padding: 20px 24px;
+    max-width: 720px;
+    width: min(95vw, 720px);
     box-shadow: 0 0 40px rgba(255, 94, 98, 0.35), 0 20px 60px rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(14px);
     display: flex;
@@ -642,67 +642,118 @@
     background: rgba(255, 94, 98, 0.25);
     border: 1px solid #ff5e62;
     color: #ffd23c;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 900;
-    padding: 4px 12px;
+    padding: 3px 10px;
     border-radius: 8px;
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
     font-family: 'Orbitron', sans-serif;
   }
+  #dailyModal .daily-title,
   .daily-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.55rem;
-    font-weight: 900;
-    color: #ffd23c;
-    margin: 0 0 4px 0;
-    letter-spacing: 1px;
-    text-shadow: 0 0 10px rgba(255, 210, 60, 0.4);
-    line-height: 1.2;
-    text-align: left;
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: 1.05rem !important;
+    font-weight: 900 !important;
+    color: #ffd23c !important;
+    margin: 0 0 2px 0 !important;
+    letter-spacing: 0.8px !important;
+    text-shadow: 0 0 8px rgba(255, 210, 60, 0.5) !important;
+    line-height: 1.2 !important;
+    text-align: left !important;
+    text-transform: uppercase !important;
   }
   .daily-streak-info {
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     color: #94a3b8;
     margin: 0;
     text-align: left;
   }
-  .daily-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin: 4px 0;
+  .daily-track-wrap {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #ffd23c rgba(255,255,255,0.1);
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 2px 14px 2px;
+    margin: 4px 0 8px 0;
   }
-  @media (max-width: 540px) {
-    .daily-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+  .daily-track-wrap::-webkit-scrollbar {
+    height: 6px;
+  }
+  .daily-track-wrap::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #ff5e62, #ffd23c);
+    border-radius: 4px;
+  }
+  .daily-track-wrap::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+  }
+  .daily-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: stretch;
+    width: max-content;
+    min-width: 100%;
+    padding: 4px 2px;
+    box-sizing: border-box;
   }
   .daily-day-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 210, 60, 0.2);
-    border-radius: 14px;
-    padding: 10px 8px;
+    flex: 0 0 135px;
+    width: 135px;
+    min-width: 135px;
+    background: linear-gradient(180deg, rgba(20, 30, 55, 0.85) 0%, rgba(10, 18, 35, 0.95) 100%);
+    border: 1.5px solid rgba(255, 210, 60, 0.25);
+    border-radius: 16px;
+    padding: 12px 8px 10px 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    justify-content: space-between;
+    gap: 6px;
     position: relative;
-    transition: all 0.2s ease;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    user-select: none;
+    box-sizing: border-box;
+  }
+  .daily-day-card:hover {
+    transform: translateY(-4px) scale(1.03);
+    border-color: #ffd23c;
+    box-shadow: 0 8px 25px rgba(255, 210, 60, 0.3);
   }
   .daily-day-card.day-7 {
-    grid-column: span 2;
-    background: linear-gradient(135deg, rgba(255, 210, 60, 0.15), rgba(168, 85, 247, 0.15));
-    border: 1.5px solid #ffd23c;
-    box-shadow: 0 0 15px rgba(255, 210, 60, 0.25);
+    flex: 0 0 155px;
+    width: 155px;
+    min-width: 155px;
+    background: linear-gradient(180deg, rgba(255, 210, 60, 0.2) 0%, rgba(234, 88, 12, 0.25) 100%);
+    border: 2px solid #ffd23c;
+    box-shadow: 0 0 20px rgba(255, 210, 60, 0.4);
   }
   .daily-day-card.day-celestial {
-    grid-column: span 2;
-    background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.25));
+    flex: 0 0 165px;
+    width: 165px;
+    min-width: 165px;
+    background: linear-gradient(180deg, rgba(6, 182, 212, 0.25) 0%, rgba(168, 85, 247, 0.3) 100%);
     border: 2px solid #38bdf8;
-    box-shadow: 0 0 22px rgba(56, 189, 248, 0.5);
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
   }
-  .daily-day-card.day-window-end {
-    grid-column: span 2;
+  .daily-day-card.active {
+    border: 2.5px solid #ffd23c;
+    background: linear-gradient(180deg, rgba(255, 210, 60, 0.35) 0%, rgba(255, 94, 98, 0.25) 100%);
+    box-shadow: 0 0 25px rgba(255, 210, 60, 0.7);
+    transform: scale(1.05);
+  }
+  .daily-day-card.claimed {
+    border-color: rgba(63, 208, 122, 0.5);
+    background: rgba(63, 208, 122, 0.08);
+    opacity: 0.8;
+  }
+  .daily-day-card.missed {
+    border: 2px solid #ff3344;
+    background: rgba(255, 51, 68, 0.15);
   }
   .daily-day-card.claimed {
     border-color: rgba(63, 208, 122, 0.5);
@@ -3454,37 +3505,41 @@
 <div id="dailyModal" class="overlay hidden" style="z-index: 125;" onclick="if(event.target===this) closeDailyModal(event);">
   <div class="daily-card" style="position:relative">
     <!-- Header Top Row with Category Tag, Timer Pill & Close Button (Flexbox - No Overlap) -->
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px">
       <span class="daily-badge-tag">🌌 INFINITE DAILY EXPEDITION (DAY 1 TO ∞) 🚀</span>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span id="dailyRewardTimerPill" style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(255,94,98,0.15);border:1.5px solid #ff5e62;color:#ffd23c;font-size:0.75rem;font-weight:900;border-radius:8px;font-family:'Orbitron',sans-serif;box-shadow:0 0 12px rgba(255,94,98,0.3)">⏰ Next Reward: <span id="dailyRewardTimer" style="color:#ffffff;font-variant-numeric:tabular-nums">--h --m --s</span></span>
-        <button onclick="closeDailyModal(event)" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem;display:inline-flex;align-items:center;justify-content:center;font-weight:bold">✖ CLOSE</button>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span id="dailyRewardTimerPill" style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(255,94,98,0.15);border:1.5px solid #ff5e62;color:#ffd23c;font-size:0.72rem;font-weight:900;border-radius:8px;font-family:'Orbitron',sans-serif;box-shadow:0 0 12px rgba(255,94,98,0.3)">⏰ Next Reward: <span id="dailyRewardTimer" style="color:#ffffff;font-variant-numeric:tabular-nums">--h --m --s</span></span>
+        <button onclick="closeDailyModal(event)" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:8px;padding:4px 12px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.80rem;display:inline-flex;align-items:center;justify-content:center;font-weight:bold">✖ CLOSE</button>
       </div>
     </div>
     
-    <!-- Title & Description (Medium Size Orbitron Title Matching Quest Modal) -->
-    <div style="text-align:left;margin-bottom:10px">
-      <h1 class="daily-title">INFINITE COSMIC ODYSSEY</h1>
-      <p id="dailyStreakText" class="daily-streak-info">Embark on your Infinite Cosmic Odyssey! Daily rewards scale endlessly with massive Mega Chests every 7 days &amp; Celestial Vaults every 30 days.</p>
+    <!-- Title & Description (Small, Sleek, Single-Line Orbitron Header) -->
+    <div style="text-align:left;margin-bottom:6px">
+      <div class="daily-title" style="font-family:'Orbitron',sans-serif!important;font-size:1.05rem!important;font-weight:900!important;color:#ffd23c!important;margin:0 0 2px 0!important;letter-spacing:0.8px!important;text-shadow:0 0 8px rgba(255,210,60,0.5)!important;text-transform:uppercase!important">
+        🌌 INFINITE COSMIC ODYSSEY
+      </div>
+      <p id="dailyStreakText" class="daily-streak-info" style="margin:0;font-size:0.80rem;color:#94a3b8">
+        Embark on your Infinite Cosmic Odyssey! Daily rewards scale endlessly with Mega Chests every 7 days.
+      </p>
     </div>
 
-    <!-- Infinite Horizon Interactive Navigation Bar -->
-    <div id="dailyHorizonNav" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,210,60,0.25);border-radius:12px;padding:6px 10px;margin-bottom:8px">
-      <button id="odysseyPrevBtn" onclick="changeOdysseyPage(-7)" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#93c5fd;border-radius:8px;padding:4px 10px;font-size:0.75rem;font-family:'Orbitron',sans-serif;cursor:pointer;font-weight:bold">◀ PREV</button>
-      <span id="odysseyHorizonLabel" style="font-family:'Orbitron',sans-serif;font-size:0.75rem;font-weight:900;color:#ffd23c;letter-spacing:0.5px">🌌 DAYS 1 — 14 (ENDLESS EXPEDITION) 🚀</span>
-      <div style="display:flex;gap:6px">
-        <button id="odysseyJumpTodayBtn" onclick="jumpOdysseyToday()" style="background:rgba(255,210,60,0.15);border:1px solid #ffd23c;color:#ffd23c;border-radius:8px;padding:4px 8px;font-size:0.72rem;font-family:'Orbitron',sans-serif;cursor:pointer;font-weight:bold">🎯 TODAY</button>
-        <button id="odysseyNextBtn" onclick="changeOdysseyPage(7)" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#93c5fd;border-radius:8px;padding:4px 10px;font-size:0.75rem;font-family:'Orbitron',sans-serif;cursor:pointer;font-weight:bold">NEXT ▶</button>
+    <!-- Brawl Stars Horizontal Roadmap Interactive Navigation Bar -->
+    <div id="dailyHorizonNav" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,210,60,0.25);border-radius:10px;padding:4px 8px;margin-bottom:6px">
+      <button id="odysseyPrevBtn" onclick="scrollOdysseyTrack(-280)" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#93c5fd;border-radius:6px;padding:3px 8px;font-size:0.72rem;font-family:'Orbitron',sans-serif;cursor:pointer;font-weight:bold">◀ SCROLL LEFT</button>
+      <span id="odysseyHorizonLabel" style="font-family:'Orbitron',sans-serif;font-size:0.72rem;font-weight:900;color:#ffd23c;letter-spacing:0.5px">🌌 BRAWL EXPEDITION ROAD (DAYS 1 TO ∞) 🚀</span>
+      <div style="display:flex;gap:4px">
+        <button id="odysseyJumpTodayBtn" onclick="jumpOdysseyToday()" style="background:rgba(255,210,60,0.2);border:1px solid #ffd23c;color:#ffd23c;border-radius:6px;padding:3px 8px;font-size:0.70rem;font-family:'Orbitron',sans-serif;cursor:pointer;font-weight:bold">🎯 TODAY</button>
+        <button id="odysseyNextBtn" onclick="scrollOdysseyTrack(280)" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#93c5fd;border-radius:6px;padding:3px 8px;font-size:0.72rem;font-family:'Orbitron',sans-serif;cursor:pointer;font-weight:bold">SCROLL RIGHT ▶</button>
       </div>
     </div>
     
-    <!-- Infinite Horizon Interactive Grid Scrollable Area -->
-    <div style="flex:1;overflow-y:auto;padding-right:4px;margin:2px 0 8px 0">
+    <!-- Brawl Stars Style Horizontal Track Across Screen -->
+    <div id="dailyTrackWrap" class="daily-track-wrap">
       <div id="dailyGrid" class="daily-grid"></div>
     </div>
 
     <!-- Action & Streak Recovery Area -->
-    <div id="dailyActionArea" style="display:flex;flex-direction:column;gap:8px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.1)"></div>
+    <div id="dailyActionArea" style="display:flex;flex-direction:column;gap:6px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.1)"></div>
   </div>
 </div>
 
@@ -10263,19 +10318,28 @@ function updateDailyBadge() {
 
 let odysseyHorizonStart = 1;
 
+function scrollOdysseyTrack(delta) {
+  const el = document.getElementById('dailyTrackWrap');
+  if (el) el.scrollBy({ left: delta, behavior: 'smooth' });
+}
+window.scrollOdysseyTrack = scrollOdysseyTrack;
+
 function jumpOdysseyToday() {
   const status = getDailyRewardStatus();
   const curDay = status.currentDay || 1;
-  odysseyHorizonStart = Math.max(1, Math.floor((curDay - 1) / 7) * 7 + 1);
-  renderDailyModalUI();
+  const activeCard = document.querySelector('#dailyGrid .daily-day-card.active, #dailyGrid .daily-day-card.missed');
+  if (activeCard && activeCard.scrollIntoView) {
+    activeCard.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  } else {
+    const el = document.getElementById('dailyTrackWrap');
+    if (el) {
+      const cardWidth = 147;
+      const targetLeft = Math.max(0, (curDay - 2) * cardWidth);
+      el.scrollTo({ left: targetLeft, behavior: 'smooth' });
+    }
+  }
 }
 window.jumpOdysseyToday = jumpOdysseyToday;
-
-function changeOdysseyPage(delta) {
-  odysseyHorizonStart = Math.max(1, odysseyHorizonStart + delta);
-  renderDailyModalUI();
-}
-window.changeOdysseyPage = changeOdysseyPage;
 
 function renderDailyModalUI() {
   const status = getDailyRewardStatus();
@@ -10284,7 +10348,6 @@ function renderDailyModalUI() {
   const banner = document.getElementById('dailyActionArea');
   const streakText = document.getElementById('dailyStreakText');
   const horizonLabel = document.getElementById('odysseyHorizonLabel');
-  const prevBtn = document.getElementById('odysseyPrevBtn');
   if (!container || !banner) return;
 
   const curDay = status.currentDay || 1;
@@ -10298,19 +10361,10 @@ function renderDailyModalUI() {
     }
   }
 
-  if (horizonLabel) {
-    horizonLabel.textContent = `🌌 DAYS ${odysseyHorizonStart} — ${odysseyHorizonStart + 13} (ENDLESS EXPEDITION) 🚀`;
-  }
-  if (prevBtn) {
-    prevBtn.disabled = (odysseyHorizonStart <= 1);
-    prevBtn.style.opacity = (odysseyHorizonStart <= 1) ? '0.4' : '1';
-    prevBtn.style.cursor = (odysseyHorizonStart <= 1) ? 'not-allowed' : 'pointer';
-  }
-
-  // Render 14 consecutive days of the active infinite horizon
+  // Render 35 consecutive days across the horizontal Brawl Stars style track
+  const totalDaysToRender = Math.max(35, Math.ceil((curDay + 14) / 7) * 7);
   let html = '';
-  for (let i = 0; i < 14; i++) {
-    const dayNum = odysseyHorizonStart + i;
+  for (let dayNum = 1; dayNum <= totalDaysToRender; dayNum++) {
     const r = getDailyRewardForDay(dayNum);
     let cardClass = 'daily-day-card';
     if (r.isCelestial) {
@@ -10341,7 +10395,7 @@ function renderDailyModalUI() {
     }
 
     html += `
-      <div class="${cardClass}">
+      <div class="${cardClass}" id="dailyCard_Day_${dayNum}">
         <span class="daily-day-num">${r.name}</span>
         <span class="daily-day-icon">${r.icon}</span>
         <span class="daily-day-reward">${r.text.replace(/\n/g, '<br>')}</span>
@@ -10380,10 +10434,10 @@ function renderDailyModalUI() {
     `;
   } else {
     banner.innerHTML = `
-      <div style="color:#3fd07a;font-weight:bold;font-size:1rem;margin-bottom:6px">
+      <div style="color:#3fd07a;font-weight:bold;font-size:1rem;margin-bottom:4px">
         ✔ Day ${daily.streak || 1} Odyssey Reward has been banked!
       </div>
-      <div style="color:#8fa6cb;font-size:0.86rem;margin-bottom:10px">
+      <div style="color:#8fa6cb;font-size:0.84rem;margin-bottom:8px">
         Come back tomorrow to unlock Day ${status.currentDay}!
       </div>
       <button class="daily-reset-btn" onclick="closeDailyModal()">✖ CLOSE</button>
@@ -10420,6 +10474,7 @@ function claimDailyReward() {
   if (typeof updateTopTrailBar === "function") updateTopTrailBar();
   if (typeof updateTrailBadge === "function") updateTrailBadge();
   renderDailyModalUI();
+  setTimeout(jumpOdysseyToday, 50);
 }
 window.claimDailyReward = claimDailyReward;
 
@@ -10510,12 +10565,10 @@ function openDailyModal(e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch (err) {}
   }
   try { initAudio(); } catch (err) {}
-  const curStatus = getDailyRewardStatus();
-  const curDay = curStatus.currentDay || 1;
-  odysseyHorizonStart = Math.max(1, Math.floor((curDay - 1) / 7) * 7 + 1);
   renderDailyModalUI();
   updateDailyRewardTimerDisplay();
   showOverlay('dailyModal');
+  setTimeout(jumpOdysseyToday, 60);
 
   clearInterval(dailyModalTimer);
   dailyModalTimer = setInterval(() => {
