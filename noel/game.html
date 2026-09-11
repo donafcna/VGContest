@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v118';
+  var LATEST_VERSION = 'v=60fps_v119';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -7049,12 +7049,12 @@ const BOSS_INTEL = [
     col: '#38bdf8',
     hp: 70,
     powers: [
-      '🌊 Ventral Spire Heavy Ion Ray (Piercing azure continuous beam sweeping flight lanes)',
-      '🚀 Dual Guided Concussion Torpedo Volleys & Deflector Shield Bubbles',
-      '⚡ Heavy Citadel 8-Gun Broadside Turbolaser Salvo (High-speed azure blue plasma fire)'
+      '🌀 Tri-Vortex Homing Barrage: 3 vertical tracking shots spaced 2cm (76px) apart that follow you for 5 seconds!',
+      '🚀 Overcharged Tri-Vortex Salvo: Rapid-fire 3-shot vertical tracking torpedoes (5s homing)',
+      '⚡ Ultimate Tri-Vortex Citadel Volley: High-velocity 3-shot vertical barrage locked on for 5 seconds'
     ],
     loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +125 🪙',
-    tactic: 'Stay above the deep ventral command fin to avoid the downward ion beam, and target the dorsal shield blister domes!'
+    tactic: 'The 3 vertical vortex shots follow your ship for 5 seconds! Use sharp vertical and reverse thrusters to dodge them until their 5-second tracking expires!'
   },
   {
     id: 'void',
@@ -13692,31 +13692,70 @@ function update(dt) {
 
       } else if (boss.type === 'ram') {
         // Boss 3: ADMIRAL VORTEX: TITAN CITADEL CRUISER MC-85 (THE PROFUNDITY)
+        // Powers: 3 shots that are vertical from each other (2cm / ~76px apart) that follow the player for 5 seconds!
+        const verticalOffsets = [-76, 0, 76]; // 2cm apart vertical separation
+        
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Ventral Spire Heavy Ion Ray (Aimed 8-shot fan at player)
-          for (let k = 0; k < 8; k++) {
-            const spr = ((k - 3.5) / 7) * 0.44;
-            const shootAng = aimAng + spr;
-            eballs.push({ type: 'laser', col: '#c084fc', x: boss.x - boss.w * 0.45, y: boss.y, vx: Math.cos(shootAng) * 720 * spdBonus, vy: Math.sin(shootAng) * 720 * spdBonus, r: 18 });
+          // ULTIMATE: Overcharged Tri-Vortex Barrage (3 vertical shots 2cm apart, 5.0s homing tracking)
+          for (const offY of verticalOffsets) {
+            eballs.push({
+              type: 'vortex_tri',
+              isHoming: true,
+              isGuided: true,
+              homingT: 5.0,
+              turnRate: 3.4,
+              col: '#38bdf8',
+              x: boss.x - boss.w * 0.42,
+              y: boss.y + offY,
+              vx: -520 * spdBonus,
+              vy: 0,
+              r: 22,
+              spin: 0
+            });
           }
-          addShake(28);
-          popup(boss.x - 40, boss.y - 45, '🌊 ULTIMATE: VENTRAL ION CANNON RAY!', '#00e5ff');
-          sfx('laser');
+          addShake(24);
+          popup(boss.x - 40, boss.y - 45, '🌀 ULTIMATE: OVERCHARGED TRI-VORTEX (5s TRACKING)!', '#38bdf8');
+          sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          // Dual Guided Concussion Torpedo Volleys (Aimed directly at player & actively tracking)
-          for (const cy of [-32, 18]) {
-            eballs.push({ type: 'emp', isGuided: true, col: '#38bdf8', x: boss.x - boss.w * 0.42, y: boss.y + cy, vx: (dx / dist) * 580 * spdBonus, vy: (dy / dist) * 580 * spdBonus, r: 22 });
+          // Rapid Tri-Vortex Barrage (3 vertical shots 2cm apart, 5.0s homing tracking)
+          for (const offY of verticalOffsets) {
+            eballs.push({
+              type: 'vortex_tri',
+              isHoming: true,
+              isGuided: true,
+              homingT: 5.0,
+              turnRate: 3.2,
+              col: '#00ffee',
+              x: boss.x - boss.w * 0.40,
+              y: boss.y + offY,
+              vx: -480 * spdBonus,
+              vy: 0,
+              r: 20,
+              spin: 0
+            });
           }
-          popup(boss.x - 40, boss.y - 45, '🚀 GUIDED CONCUSSION TORPEDOES!', '#38bdf8');
+          popup(boss.x - 40, boss.y - 45, '🚀 TRI-VORTEX HOMING SALVO (5s TRACKING)!', '#00ffee');
           sfx('incoming');
         } else {
-          // Heavy Citadel 8-Gun Broadside Turbolaser Salvo (Aimed broadside spread at player)
-          for (const ang of [-0.36, -0.24, -0.12, 0, 0.12, 0.24, 0.36]) {
-            const shootAng = aimAng + ang;
-            eballs.push({ type: 'laser', col: '#00ffee', x: boss.x - boss.w * 0.40, y: boss.y - 12, vx: Math.cos(shootAng) * 660 * spdBonus, vy: Math.sin(shootAng) * 660 * spdBonus, r: 18 });
+          // Primary Tri-Vortex Formation (3 vertical shots 2cm apart, 5.0s homing tracking)
+          for (const offY of verticalOffsets) {
+            eballs.push({
+              type: 'vortex_tri',
+              isHoming: true,
+              isGuided: true,
+              homingT: 5.0,
+              turnRate: 3.0,
+              col: '#38bdf8',
+              x: boss.x - boss.w * 0.38,
+              y: boss.y + offY,
+              vx: -450 * spdBonus,
+              vy: 0,
+              r: 19,
+              spin: 0
+            });
           }
           sfx('laser');
-          popup(boss.x - 40, boss.y - 45, '💥 TITAN CITADEL BROADSIDE!', '#00ffee');
+          popup(boss.x - 40, boss.y - 45, '🌀 TRI-VORTEX BARRAGE (5s TRACKING)!', '#38bdf8');
         }
 
       } else if (boss.type === 'void') {
@@ -14655,7 +14694,16 @@ function update(dt) {
     const b = eballs[i];
 
     if (b.isGuided || b.isHoming) {
-      // Homing Concussion Torpedo actively tracks and steers toward player or nearest clone
+      if (b.homingT !== undefined) {
+        b.homingT -= dt;
+        if (b.homingT <= 0) {
+          b.isGuided = false;
+          b.isHoming = false;
+        }
+      }
+    }
+    if (b.isGuided || b.isHoming) {
+      // Homing actively tracks and steers toward player or nearest clone
       const target = getEnemyTarget(b.x, b.y);
       const tdx = target.x - b.x, tdy = target.y - b.y;
       const targetAng = Math.atan2(tdy, tdx);
@@ -14792,9 +14840,9 @@ function update(dt) {
       } else if (b.type === 'bacteria_micro') {
         popup(ship.x, ship.y - 30, '🧫 BACTERIA BIT INFESTATION!', '#00ffaa');
         explode(b.x, b.y, '#00ffaa', 14);
-      } else if (b.type === 'vortex') {
-        popup(ship.x, ship.y - 30, '🌀 VOID SINGULARITY CRUSH!', '#00ffaa');
-        explode(b.x, b.y, '#00ffaa', 30);
+      } else if (b.type === 'vortex_tri' || b.type === 'vortex') {
+        popup(ship.x, ship.y - 30, '🌀 TRI-VORTEX PLASMA HIT!', '#38bdf8');
+        explode(b.x, b.y, '#38bdf8', 30);
         addShake(16);
       }
       damageShip();
@@ -18249,13 +18297,17 @@ function draw() {
       cx.strokeStyle = col; cx.lineWidth = 2.4;
       cx.beginPath(); cx.arc(0, 0, eb.r, t * 12, t * 12 + Math.PI * 1.5); cx.stroke();
 
-    } else if (eb.type === 'vortex') {
-      // Dark Matter Singularity
-      cx.fillStyle = 'rgba(0, 255, 170, 0.30)';
+    } else if (eb.type === 'vortex_tri' || eb.type === 'vortex') {
+      // Swirling Tri-Vortex Plasma Orb with concentric rotating vortex arcs
+      const col = eb.col || '#38bdf8';
+      cx.fillStyle = 'rgba(56, 189, 248, 0.25)';
       cx.beginPath(); cx.arc(0, 0, eb.r + 6, 0, Math.PI * 2); cx.fill();
+      cx.strokeStyle = col; cx.lineWidth = 2.2;
+      cx.beginPath(); cx.arc(0, 0, eb.r, t * 14, t * 14 + Math.PI * 1.4); cx.stroke();
+      cx.strokeStyle = '#ffffff'; cx.lineWidth = 1.6;
+      cx.beginPath(); cx.arc(0, 0, eb.r * 0.55, -t * 18, -t * 18 + Math.PI * 1.2); cx.stroke();
       cx.fillStyle = '#020617';
-      cx.beginPath(); cx.arc(0, 0, eb.r * 0.48, 0, Math.PI * 2); cx.fill();
-      cx.strokeStyle = '#00ffaa'; cx.lineWidth = 1.6; cx.stroke();
+      cx.beginPath(); cx.arc(0, 0, eb.r * 0.35, 0, Math.PI * 2); cx.fill();
 
     } else if (eb.type === 'magma') {
       // Concussion Proton Torpedo (Sleek aerodynamic glowing warhead with plasma exhaust)
