@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v106';
+  var LATEST_VERSION = 'v=60fps_v107';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5318,7 +5318,7 @@ function isCreator() {
     const storedName = safeStorage.getItem('sp_name') || '';
     const nameToCheck = (inputVal || playerName || storedName || '').trim().toLowerCase();
     if (!nameToCheck) return false;
-    const norm = nameToCheck.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const norm = nameToCheck.normalize('NFD').replace(/[̀-ͯ]/g, '');
     return (
       norm === 'noel' ||
       norm === 'captain noel' ||
@@ -5326,6 +5326,7 @@ function isCreator() {
       norm === 'noel the goat' ||
       norm === 'noelthegoat' ||
       norm === 'donatien' ||
+      norm === 'donat' ||
       norm === 'donatien peigne' ||
       norm.startsWith('noel') ||
       norm.startsWith('captain noel')
@@ -5337,9 +5338,15 @@ function isCreator() {
 window.isCreator = isCreator;
 
 function activateVipPass(code) {
-  const c = (code || '').trim().toUpperCase();
-  const norm = (code || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const raw = (code || '').trim();
+  const c = raw.toUpperCase();
+  const cleanCode = raw.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+  const norm = raw.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
   const valid = (
+    raw === 'fygvix-pujbig-Cakxo6' ||
+    c === 'FYGVIX-PUJBIG-CAKXO6' ||
+    cleanCode === 'fygvixpujbigcakxo6' ||
     c === 'NOEL' ||
     c === 'NOËL' ||
     c === 'NOEL2026' ||
@@ -5347,20 +5354,23 @@ function activateVipPass(code) {
     c === 'CREATOR' ||
     c === 'DONATIEN' ||
     norm === 'noel' ||
+    norm === 'noel peigne' ||
     norm === 'captain noel' ||
     norm === 'donatien' ||
+    norm === 'donat' ||
     isCreator()
   );
   if (valid) {
     try {
       safeStorage.setItem('sp_creator_pass', 'true');
-      safeStorage.setItem('sp_name', 'Captain Noël');
     } catch(e) {}
-    playerName = 'Captain Noël';
+    const activeName = (playerName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'Noel Peigne').trim();
+    playerName = activeName;
+    try { safeStorage.setItem('sp_name', activeName); } catch(e) {}
     const inp = document.getElementById('pname');
-    if (inp) inp.value = 'Captain Noël';
+    if (inp && !inp.value) inp.value = activeName;
     window.SAVE = SAVE;
-SAVE.load();
+    SAVE.load();
     applyLoadout();
     renderWallet(); try { updateProfileUI(); } catch(e) {}
     updateTrailBadge();
@@ -5373,13 +5383,20 @@ SAVE.load();
 window.activateVipPass = activateVipPass;
 
 function promptVipPass() {
-  const pin = prompt("👑 ENTER CREATOR KEY OR CAPTAIN NAME (Exclusive to Noël):");
+  const curName = (playerName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'Noel Peigne').trim();
+  const pin = prompt("🔑 ENTER CREATOR VIP CODE (e.g. fygvix-pujbig-Cakxo6):");
   if (pin) {
     const ok = activateVipPass(pin);
     if (ok) {
-      alert("👑 GAME CREATOR VIP PASS ACTIVATED!\nWelcome back, Captain Noël!\n\n✔ All 5 Ships Unlocked\n✔ All Lv 10 Arsenal Upgrades Maxed\n✔ 99,999 Gold Coins & 999 Cores\n✔ All Skins & Super Abilities Active");
+      alert(`👑 GAME CREATOR VIP PASS ACTIVATED!
+Welcome Captain ${curName}!
+
+✨ All 5 Ships Unlocked
+⚡ All Lv 10 Arsenal Upgrades Maxed
+💰 99,999 Gold Coins & 999 Cores
+🎨 All Skins & Cosmic Overdrives Active!`);
     } else {
-      alert("❌ Access Denied: VIP Pass is strictly exclusive to Noël.");
+      alert("❌ Access Denied: Invalid VIP Code. Enter code \"fygvix-pujbig-Cakxo6\" or creator name to unlock.");
     }
   }
 }
@@ -10500,17 +10517,19 @@ function buildShop() {
   renderWallet(); try { updateProfileUI(); } catch(e) {}
   let h = '';
   
-  // VIP Creator Banner — EXCLUSIVE TO NOËL
+    const curCaptainName = (playerName || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'Noel Peigne').trim();
+
+  // VIP Creator Banner - Dynamically shows active captain name!
   if (isCreator()) {
     h += `<div class="vip-creator-banner" style="background:linear-gradient(135deg,rgba(255,210,60,0.25),rgba(168,85,247,0.22));border:2px solid #ffd23c;border-radius:14px;padding:14px 18px;margin-bottom:16px;text-align:center;box-shadow:0 0 25px rgba(255,210,60,0.4)">` +
-      `<div style="color:#ffd23c;font-weight:900;font-size:1.15rem;font-family:'Orbitron',sans-serif;letter-spacing:1.5px">👑 GAME CREATOR VIP PASS ACTIVE — EXCLUSIVE TO NOËL 👑</div>` +
-      `<div style="color:#cfe4ff;font-size:0.88rem;margin-top:4px">Welcome Captain Noël! All 5 Fleet Ships, Max Lv 10 Arsenal Upgrades, 7 Skins &amp; Unlimited Fortune Unlocked!</div></div>`;
+      `<div style="color:#ffd23c;font-weight:900;font-size:1.15rem;font-family:'Orbitron',sans-serif;letter-spacing:1.5px">👑 GAME CREATOR VIP PASS ACTIVE · EXCLUSIVE TO ${esc(curCaptainName.toUpperCase())} 👑</div>` +
+      `<div style="color:#cfe4ff;font-size:0.88rem;margin-top:4px">Welcome Captain ${esc(curCaptainName)}! All 5 Fleet Ships, Max Lv 10 Arsenal Upgrades, 7 Skins &amp; Unlimited Fortune Unlocked!</div></div>`;
   } else {
     h += `<div class="vip-locked-banner" style="background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,210,60,0.35);border-radius:12px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">` +
-      `<div style="display:flex;align-items:center;gap:10px"><span style="font-size:1.5rem">🔒</span>` +
-      `<div><div style="color:#ffd23c;font-weight:bold;font-size:0.92rem;font-family:'Orbitron',sans-serif">👑 GAME CREATOR VIP PASS (Exclusive to Noël)</div>` +
-      `<div style="color:#8fa6cb;font-size:0.75rem">Reserved for the game creator. Change Captain Name to Noël or enter creator key to unlock.</div></div></div>` +
-      `<button onclick="promptVipPass()" style="font-size:0.78rem;padding:6px 14px;background:linear-gradient(135deg,#ffd23c,#f59e0b);color:#000;font-weight:bold;border-radius:8px;cursor:pointer">🔑 UNLOCK VIP</button></div>`;
+      `<div style="display:flex;align-items:center;gap:10px"><span style="font-size:1.5rem">👑</span>` +
+      `<div><div style="color:#ffd23c;font-weight:bold;font-size:0.92rem;font-family:'Orbitron',sans-serif">👑 GAME CREATOR VIP PASS (Exclusive to ${esc(curCaptainName)})</div>` +
+      `<div style="color:#8fa6cb;font-size:0.75rem">Reserved for the game creator. Enter code "fygvix-pujbig-Cakxo6" or change Captain Name to unlock.</div></div></div>` +
+      `<button onclick="promptVipPass()" style="font-size:0.78rem;padding:6px 14px;background:linear-gradient(135deg,#ffd23c,#f59e0b);color:#000;font-weight:bold;border:none;border-radius:8px;cursor:pointer;font-family:'Orbitron',sans-serif">🔑 UNLOCK VIP</button></div>`;
   }
 
   // 0. DAILY REWARDS VOYAGE SHORTCUT
@@ -11103,8 +11122,8 @@ if (document.readyState === 'loading') {
       if (i) i.value = n;
       playerName = n;
     } else {
-      playerName = 'NoelTheGoat';
-      if (i) i.value = '';
+      playerName = 'Noel Peigne';
+      if (i) i.value = 'Noel Peigne';
     }
 
     SAVE.load();
@@ -11124,6 +11143,7 @@ if (document.readyState === 'loading') {
           SAVE.load();
           applyLoadout();
           renderWallet(); try { updateProfileUI(); } catch(e) {}
+          try { buildShop(); } catch(e) {}
           if (immediate) {
             LB.updateName(val);
             renderLeaderboard('lbMenu', -1, playerName);
