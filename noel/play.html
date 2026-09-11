@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v105';
+  var LATEST_VERSION = 'v=60fps_v106';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5556,7 +5556,7 @@ const SHIPS = [
     hp: 8, cool: 0.42, spd: 1.20, gold: 1.50, magnet: 75, spread: [0],
     power: '🌀 Heavy Plasma Cannon, Quad Articulated Turbines & Void Torpedoes',
     superName: '⚡ Overdrive: Twin Holographic Fleet Clones 👥',
-    superDesc: 'Cosmic Overdrive [E]: Deploys two autonomous Nebula Cruiser phantom clones that break formation into different directions across the upper and lower sectors to draw all enemy fire, provide light tactical support fire, and absorb 2 direct hits each before detonating!'
+    superDesc: 'Cosmic Overdrive [E]: Deploys two autonomous Nebula Cruiser phantom clones that break formation across the upper and lower sectors to draw all enemy fire, fire support plasma bolts at half damage (1.0 dmg) of the original ship, and absorb 2 direct hits each before detonating!'
   },
 ];
 
@@ -12230,7 +12230,7 @@ function update(dt) {
     c.pitch = Math.max(-0.25, Math.min(0.25, (c.y - prevY) / (Math.max(0.001, dt) * 600)));
 
     // Directed Light Plasma Blaster Fire Support actively targeting enemies
-    c.shootT = (c.shootT || 0.40) - dt;
+    c.shootT = (typeof c.shootT === 'number' ? c.shootT : 0.40) - dt;
     if (c.shootT <= 0) {
       c.shootT = 0.45;
       const enemyTarget = getCloneTarget(c.x, c.y);
@@ -12249,8 +12249,8 @@ function update(dt) {
         y: c.y + sinA * 35,
         vx: cosA * boltSpeed,
         vy: sinA * boltSpeed,
-        r: 4.5,
-        dmg: 0.35,
+        r: 5.0,
+        dmg: 1.0, // Exactly half damage (1.0 dmg) of the original Nebula Cruiser (2.0 dmg)
         col: '#00ffee',
         isCloneBolt: true,
         target: enemyTarget,
