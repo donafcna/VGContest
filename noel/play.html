@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v98';
+  var LATEST_VERSION = 'v=60fps_v99';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5758,9 +5758,9 @@ const LB = {
     } catch (e) {}
   },
   getMyEntry() {
-    const curName = (document.getElementById('pname') && document.getElementById('pname').value.trim()) || (SAVE && SAVE.data && SAVE.data.name) || safeStorage.getItem('sp_name') || 'NoelTheGoat';
+    const curName = ((document.getElementById('pname') && document.getElementById('pname').value.trim()) || (SAVE && SAVE.data && SAVE.data.name) || safeStorage.getItem('sp_name') || 'NoelTheGoat').trim().slice(0, 14);
     const myTr = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : ((SAVE && SAVE.data && SAVE.data.trophies) || 100000);
-    const myBest = +safeStorage.getItem('sp_best') || 6225;
+    const myBest = +safeStorage.getItem('sp_best') || (typeof best !== 'undefined' ? best : 0) || 6225;
     const myKills = (SAVE && SAVE.data && SAVE.data.kills) || 2559;
     const myCoins = (SAVE && SAVE.data && SAVE.data.coins) || 100459;
     const myTokens = (SAVE && SAVE.data && SAVE.data.tokens) || 1040;
@@ -5771,11 +5771,11 @@ const LB = {
     const myUpg = (SAVE && SAVE.data && SAVE.data.upg) || { cannon: 3, hull: 3, speed: 3 };
 
     return {
-      uid: (SAVE && SAVE.data && SAVE.data.uid) || 'pilot_master_captain',
+      uid: (SAVE && SAVE.data && SAVE.data.uid) || `pilot_${curName.toLowerCase().replace(/[^a-z0-9]/g, '')}`,
       name: curName,
-      score: myBest > 0 ? myBest : 6225,
+      score: myBest > 0 ? myBest : 100,
       trophies: myTr > 0 ? myTr : 100000,
-      level: 10,
+      level: (SAVE && SAVE.data && SAVE.data.sector) || 10,
       coins: myCoins,
       kills: myKills,
       ship: myShip,
@@ -5787,10 +5787,50 @@ const LB = {
       created_at: Date.now()
     };
   },
+  async _cloud() {
+    try {
+      const controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+      const timeoutId = controller ? setTimeout(() => controller.abort(), 3500) : null;
+      const resp = await fetch(`${this.URL}/rest/v1/${this.TABLE}?scope=eq.${this.SCOPE}&select=*&order=created_at.desc&limit=250`, {
+        method: 'GET',
+        headers: this._headers(),
+        signal: controller ? controller.signal : undefined
+      });
+      if (timeoutId) clearTimeout(timeoutId);
+      if (!resp.ok) return [];
+
+      const raw = await resp.json();
+      if (!Array.isArray(raw)) return [];
+
+      const cloudEntries = [];
+      const botNames = ['admiral vane', 'captain flint', 'dread scarlett', 'star-lord jax', 'marauder vex', 'nova drake', 'corsair morgan', 'cipher ray', 'astraea thorne'];
+
+      for (const row of raw) {
+        if (!row || !row.body) continue;
+        try {
+          const entry = (typeof row.body === 'string') ? JSON.parse(row.body) : row.body;
+          if (entry && entry.name) {
+            const cleanName = entry.name.trim().slice(0, 14);
+            if (cleanName && !botNames.includes(cleanName.toLowerCase())) {
+              cloudEntries.push({
+                ...entry,
+                name: cleanName,
+                created_at: entry.created_at || (row.created_at ? new Date(row.created_at).getTime() : Date.now())
+              });
+            }
+          }
+        } catch (err) {}
+      }
+      return cloudEntries;
+    } catch (e) {
+      return [];
+    }
+  },
   async submit(entry) {
-    if (!entry || typeof entry.score !== 'number' || entry.score <= 0) return;
-    entry.uid = entry.uid || (SAVE && SAVE.data && SAVE.data.uid) || 'pilot_me';
-    entry.name = (entry.name || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'NoelTheGoat').slice(0, 14);
+    if (!entry) entry = this.getMyEntry();
+    entry.name = (entry.name || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'NoelTheGoat').trim().slice(0, 14);
+    if (!entry.name) entry.name = 'Captain Noel';
+    entry.uid = entry.uid || (SAVE && SAVE.data && SAVE.data.uid) || `pilot_${entry.name.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
     entry.ship = entry.ship || (SAVE && SAVE.data && SAVE.data.sel) || 'cutter';
     entry.skin = entry.skin || (SAVE && SAVE.data && SAVE.data.skin) || 'default';
     entry.ships = entry.ships || [...((SAVE && SAVE.data && SAVE.data.ships) || ['cutter'])];
@@ -5798,8 +5838,11 @@ const LB = {
     entry.kills = typeof entry.kills === 'number' ? entry.kills : ((SAVE && SAVE.data && SAVE.data.kills) || 0);
     entry.tokens = typeof entry.tokens === 'number' ? entry.tokens : ((SAVE && SAVE.data && SAVE.data.tokens) || 0);
     entry.spins = typeof entry.spins === 'number' ? entry.spins : ((SAVE && SAVE.data && SAVE.data.spins) || 0);
-    entry.trophies = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : (entry.trophies || entry.score || 100000);
-    entry.created_at = entry.created_at || Date.now();
+    entry.trophies = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : (entry.trophies || ((SAVE && SAVE.data && SAVE.data.trophies) || 100000));
+    entry.score = (typeof entry.score === 'number' && entry.score > 0) ? entry.score : (+safeStorage.getItem('sp_best') || 100);
+    entry.level = entry.level || (SAVE && SAVE.data && SAVE.data.sector) || 10;
+    entry.coins = (SAVE && SAVE.data && SAVE.data.coins) || 100000;
+    entry.created_at = Date.now();
 
     // 1. ALWAYS persist immediately to local storage
     try {
@@ -5809,15 +5852,17 @@ const LB = {
         arr[idx] = Object.assign(arr[idx], entry);
         if (entry.score >= (arr[idx].score || 0)) {
           arr[idx].score = entry.score;
-          arr[idx].level = entry.level || arr[idx].level;
+        }
+        if (entry.trophies >= (arr[idx].trophies || 0)) {
+          arr[idx].trophies = entry.trophies;
         }
       } else {
         arr.push(entry);
       }
-      safeStorage.setItem('sp_lb', JSON.stringify(arr));
+      safeStorage.setItem('sp_lb', JSON.stringify(this._dedupe(arr)));
     } catch (e) {}
 
-    // 2. Sync to cloud
+    // 2. Sync to cloud database
     if (this.online()) {
       try {
         await fetch(this.URL + '/rest/v1/' + this.TABLE, {
@@ -5840,39 +5885,22 @@ const LB = {
     try {
       safeStorage.setItem('sp_name', newName);
       playerName = newName;
-      let arr = await this._local();
-      const myUid = SAVE.data.uid;
-      let meFound = false;
-
-      for (const r of arr) {
-        if (r.uid === myUid || (r.name || '').trim().toLowerCase() === newName.toLowerCase()) {
-          r.name = newName;
-          r.uid = myUid;
-          r.trophies = (typeof getPlayerTrophies === 'function') ? getPlayerTrophies() : 100000;
-          r.ship = SAVE.data.sel;
-          r.skin = SAVE.data.skin;
-          r.ships = [...SAVE.data.ships];
-          r.upg = { ...SAVE.data.upg };
-          r.kills = SAVE.data.kills;
-          r.tokens = SAVE.data.tokens;
-          r.spins = SAVE.data.spins;
-          meFound = true;
-        }
+      if (SAVE && SAVE.data) {
+        SAVE.data.name = newName;
+        SAVE.save();
       }
-      if (!meFound) {
-        arr.push(this.getMyEntry());
-      }
-      safeStorage.setItem('sp_lb', JSON.stringify(arr));
+      const my = this.getMyEntry();
+      my.name = newName;
+      await this.submit(my);
     } catch (e) {}
   },
-      async _local() {
+  async _local() {
     let rows = [];
     try {
       const stored = safeStorage.getItem('sp_lb');
       if (stored) {
         rows = JSON.parse(stored);
       }
-      // Filter out any artificial bot entries
       const botNames = ['admiral vane', 'captain flint', 'dread scarlett', 'star-lord jax', 'marauder vex', 'nova drake', 'corsair morgan', 'cipher ray', 'astraea thorne'];
       if (Array.isArray(rows)) {
         rows = rows.filter(r => r && r.name && !botNames.includes(r.name.trim().toLowerCase()));
@@ -5885,7 +5913,7 @@ const LB = {
     }
     return rows;
   },
-  registerOnlinePilot(pilot) {
+  async registerOnlinePilot(pilot) {
     if (!pilot || !pilot.name) return;
     const cleanName = (pilot.name || 'Pilot').trim().slice(0, 14);
     if (!cleanName) return;
@@ -5896,7 +5924,7 @@ const LB = {
       skin: pilot.skin || 'default',
       ships: pilot.ships || [pilot.shipType || 'cutter'],
       score: pilot.score || 2500,
-      trophies: pilot.trophies || 5000,
+      trophies: pilot.trophies || 8000,
       level: pilot.level || 5,
       coins: pilot.coins || 1000,
       kills: pilot.kills || 50,
@@ -5904,22 +5932,30 @@ const LB = {
       spins: pilot.spins || 5,
       created_at: Date.now()
     };
-    this.submit(entry);
+    await this.submit(entry);
     try {
       renderLeaderboard('lbMenu', -1, null);
     } catch(e) {}
   },
   async _all() {
     let local = await this._local();
-    const myUid = (SAVE && SAVE.data && SAVE.data.uid) || '';
-    const myName = ((document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'NoelTheGoat').toLowerCase();
+    let cloud = [];
+    try {
+      cloud = await this._cloud();
+    } catch (e) {}
 
-    // Ensure "me" is always present in the leaderboard list
-    if (!local.some(r => (myUid && r.uid === myUid) || ((r.name || '').trim().toLowerCase() === myName))) {
-      local.push(this.getMyEntry());
-    }
+    const combined = [...local, ...cloud];
+    const myEntry = this.getMyEntry();
+    if (myEntry) combined.push(myEntry);
 
-    return this._dedupe(local);
+    const deduped = this._dedupe(combined);
+
+    // Cache merged real player roster locally
+    try {
+      safeStorage.setItem('sp_lb', JSON.stringify(deduped));
+    } catch(e) {}
+
+    return deduped;
   },
   _dedupe(rows) {
     if (!rows || !Array.isArray(rows)) return [this.getMyEntry()];
@@ -5930,7 +5966,7 @@ const LB = {
       const nk = r.name.trim().toLowerCase();
       if (!nk) continue;
       const existing = nameMap.get(nk);
-      if (!existing || (r.score || 0) > (existing.score || 0) || (r.trophies || 0) > (existing.trophies || 0)) {
+      if (!existing || (r.trophies || 0) > (existing.trophies || 0) || (r.score || 0) > (existing.score || 0)) {
         nameMap.set(nk, r);
       }
     }
@@ -5945,14 +5981,25 @@ const LB = {
     const all = await this._all();
     return (n && n > 0) ? all.slice(0, n) : all;
   },
-  async rank(sc, myName) {
-    const board = await this._all();
+  async rank(sc, name) {
+    const all = await this._all();
+    const myName = (name || (document.getElementById('pname') && document.getElementById('pname').value.trim()) || safeStorage.getItem('sp_name') || 'NoelTheGoat').toLowerCase();
     const myUid = (SAVE && SAVE.data && SAVE.data.uid) || '';
-    const idx = board.findIndex(r => (r.uid && r.uid === myUid) || (myName && (r.name || '').trim().toLowerCase() === myName.trim().toLowerCase()));
+    const idx = all.findIndex(r => (myUid && r.uid === myUid) || ((r.name || '').trim().toLowerCase() === myName));
     if (idx >= 0) return idx + 1;
-    return 1;
+    return all.filter(r => (r.trophies || r.score || 0) > sc).length + 1;
+  },
+  async sync() {
+    try {
+      await this.submit(this.getMyEntry());
+      const cloud = await this._all();
+      return cloud;
+    } catch(e) {
+      return await this._local();
+    }
   }
 };
+window.LB = LB;
 
 function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -11088,7 +11135,29 @@ if (document.readyState === 'loading') {
     }
   } catch (e) {}
   renderLeaderboard('lbMenu', -1, null);
-  renderWallet(); try { updateProfileUI(); } catch(e) {}
+  renderWallet();
+  // Live Cloud Leaderboard Sync: Automatically refresh every 15s so new players appear in real time
+  setInterval(() => {
+    if (typeof state !== 'undefined' && (state === 'menu' || state === 'intro')) {
+      try { renderLeaderboard('lbMenu', -1, null); } catch(e) {}
+    }
+  }, 15000);
+
+  window.addEventListener('focus', () => {
+    if (typeof state !== 'undefined' && (state === 'menu' || state === 'intro')) {
+      try { renderLeaderboard('lbMenu', -1, null); } catch(e) {}
+    }
+  });
+
+  // Initial cloud sync on startup
+  try {
+    if (typeof LB !== 'undefined' && LB.sync) {
+      LB.sync().then(() => {
+        try { renderLeaderboard('lbMenu', -1, null); } catch(e) {}
+      });
+    }
+  } catch(e) {}
+ try { updateProfileUI(); } catch(e) {}
   applyLoadout();
 })();
 
