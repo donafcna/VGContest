@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v114';
+  var LATEST_VERSION = 'v=60fps_v115';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -652,14 +652,17 @@
     font-family: 'Orbitron', sans-serif;
   }
   .daily-title {
-    font-size: clamp(1.4rem, 4.5vw, 1.8rem);
+    font-size: clamp(1.05rem, 3.2vw, 1.35rem);
     color: #ffd23c;
     font-family: 'Cinzel', 'Orbitron', serif;
-    margin: 0;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin: 2px 0 0 0;
     text-shadow: 0 0 10px rgba(255, 210, 60, 0.4);
+    line-height: 1.2;
   }
   .daily-streak-info {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     color: #cfe4ff;
     font-family: 'Orbitron', sans-serif;
     font-weight: 600;
