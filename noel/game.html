@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v99';
+  var LATEST_VERSION = 'v=60fps_v100';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5803,7 +5803,7 @@ const LB = {
       if (!Array.isArray(raw)) return [];
 
       const cloudEntries = [];
-      const botNames = ['admiral vane', 'captain flint', 'dread scarlett', 'star-lord jax', 'marauder vex', 'nova drake', 'corsair morgan', 'cipher ray', 'astraea thorne'];
+      const botNames = ['n', 'noel', 'noël', 'louis', 'admiral vane', 'captain flint', 'dread scarlett', 'star-lord jax', 'marauder vex', 'nova drake', 'corsair morgan', 'cipher ray', 'astraea thorne'];
 
       for (const row of raw) {
         if (!row || !row.body) continue;
@@ -5901,7 +5901,7 @@ const LB = {
       if (stored) {
         rows = JSON.parse(stored);
       }
-      const botNames = ['admiral vane', 'captain flint', 'dread scarlett', 'star-lord jax', 'marauder vex', 'nova drake', 'corsair morgan', 'cipher ray', 'astraea thorne'];
+      const botNames = ['n', 'noel', 'noël', 'louis', 'admiral vane', 'captain flint', 'dread scarlett', 'star-lord jax', 'marauder vex', 'nova drake', 'corsair morgan', 'cipher ray', 'astraea thorne'];
       if (Array.isArray(rows)) {
         rows = rows.filter(r => r && r.name && !botNames.includes(r.name.trim().toLowerCase()));
       }
@@ -5959,12 +5959,13 @@ const LB = {
   },
   _dedupe(rows) {
     if (!rows || !Array.isArray(rows)) return [this.getMyEntry()];
+    const ignored = ['n', 'noel', 'noël', 'louis', 'admiral vane', 'captain flint', 'dread scarlett', 'star-lord jax', 'marauder vex', 'nova drake', 'corsair morgan', 'cipher ray', 'astraea thorne'];
 
     const nameMap = new Map();
     for (const r of rows) {
       if (!r || !r.name) continue;
       const nk = r.name.trim().toLowerCase();
-      if (!nk) continue;
+      if (!nk || ignored.includes(nk)) continue;
       const existing = nameMap.get(nk);
       if (!existing || (r.trophies || 0) > (existing.trophies || 0) || (r.score || 0) > (existing.score || 0)) {
         nameMap.set(nk, r);
