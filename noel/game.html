@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v115';
+  var LATEST_VERSION = 'v=60fps_v116';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -623,57 +623,56 @@
 
   /* Daily Rewards Modal Styles */
   .daily-card {
-    background: linear-gradient(135deg, rgba(8, 15, 30, 0.95), rgba(15, 25, 45, 0.95));
-    border: 2px solid rgba(255, 100, 100, 0.45);
-    border-radius: 20px;
-    padding: 20px 24px;
-    max-width: 580px;
-    width: 92vw;
-    box-shadow: 0 0 35px rgba(255, 94, 98, 0.35), inset 0 0 20px rgba(0, 0, 0, 0.6);
+    background: linear-gradient(135deg, rgba(10, 18, 36, 0.98), rgba(15, 23, 42, 0.98));
+    border: 2px solid #ff5e62;
+    border-radius: 24px;
+    padding: 24px;
+    max-width: 680px;
+    width: min(94vw, 680px);
+    box-shadow: 0 0 40px rgba(255, 94, 98, 0.35), 0 20px 60px rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(14px);
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    text-align: center;
     box-sizing: border-box;
-    max-height: 90vh;
-    overflow-y: auto;
+    max-height: 86vh;
+    overflow: hidden;
+    color: #fff;
   }
   .daily-badge-tag {
-    background: linear-gradient(135deg, #ff5e62, #ff9966);
-    color: #fff;
-    font-size: 0.8rem;
+    background: rgba(255, 94, 98, 0.25);
+    border: 1px solid #ff5e62;
+    color: #ffd23c;
+    font-size: 0.75rem;
     font-weight: 900;
     padding: 4px 12px;
-    border-radius: 99px;
+    border-radius: 8px;
     letter-spacing: 1px;
-    align-self: center;
-    box-shadow: 0 0 12px rgba(255, 94, 98, 0.5);
     font-family: 'Orbitron', sans-serif;
   }
   .daily-title {
-    font-size: clamp(1.05rem, 3.2vw, 1.35rem);
-    color: #ffd23c;
-    font-family: 'Cinzel', 'Orbitron', serif;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.55rem;
     font-weight: 900;
+    color: #ffd23c;
+    margin: 0 0 4px 0;
     letter-spacing: 1px;
-    margin: 2px 0 0 0;
     text-shadow: 0 0 10px rgba(255, 210, 60, 0.4);
     line-height: 1.2;
+    text-align: left;
   }
   .daily-streak-info {
     font-size: 0.88rem;
-    color: #cfe4ff;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 600;
+    color: #94a3b8;
+    margin: 0;
+    text-align: left;
   }
   .daily-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
-    margin: 6px 0;
+    margin: 4px 0;
   }
-  @media (max-width: 480px) {
+  @media (max-width: 540px) {
     .daily-grid {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -3200,7 +3199,7 @@
         <span id="rightDailyClaimBadge" class="brawl-daily-alert-badge">!</span>
       </div>
       <div id="rightDailyStatusText" class="brawl-daily-status">CLAIM!</div>
-      <div id="rightDailyStreakPill" class="brawl-daily-streak">DAY 7</div>
+      <div id="rightDailyStreakPill" class="brawl-daily-streak">DAY 1</div>
     </div>
   </div>
 
@@ -3455,22 +3454,37 @@
 <div id="dailyModal" class="overlay hidden" style="z-index: 125;" onclick="if(event.target===this) closeDailyModal(event);">
   <div class="daily-card" style="position:relative">
     <!-- Header Top Row with Category Tag, Timer Pill & Close Button (Flexbox - No Overlap) -->
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px">
-      <span class="daily-badge-tag" style="margin:0;align-self:auto">🌌 INFINITE DAILY EXPEDITION 🚀</span>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+      <span class="daily-badge-tag">🌌 INFINITE DAILY EXPEDITION (DAY 1 TO ∞) 🚀</span>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <span id="dailyRewardTimerPill" style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(255,94,98,0.15);border:1.5px solid #ff5e62;color:#ffd23c;font-size:0.75rem;font-weight:900;border-radius:8px;font-family:'Orbitron',sans-serif;box-shadow:0 0 12px rgba(255,94,98,0.3)">⏰ Next Reward: <span id="dailyRewardTimer" style="color:#ffffff;font-variant-numeric:tabular-nums">--h --m --s</span></span>
         <button onclick="closeDailyModal(event)" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem;display:inline-flex;align-items:center;justify-content:center;font-weight:bold">✖ CLOSE</button>
       </div>
     </div>
     
-    <h1 class="daily-title">INFINITE COSMIC ODYSSEY</h1>
-    <div id="dailyStreakText" class="daily-streak-info">🌌 Embark on your Infinite Cosmic Odyssey today!</div>
+    <!-- Title & Description (Medium Size Orbitron Title Matching Quest Modal) -->
+    <div style="text-align:left;margin-bottom:10px">
+      <h1 class="daily-title">INFINITE COSMIC ODYSSEY</h1>
+      <p id="dailyStreakText" class="daily-streak-info">Embark on your Infinite Cosmic Odyssey! Daily rewards scale endlessly with massive Mega Chests every 7 days &amp; Celestial Vaults every 30 days.</p>
+    </div>
+
+    <!-- Infinite Horizon Interactive Navigation Bar -->
+    <div id="dailyHorizonNav" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,210,60,0.25);border-radius:12px;padding:6px 10px;margin-bottom:8px">
+      <button id="odysseyPrevBtn" onclick="changeOdysseyPage(-7)" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#93c5fd;border-radius:8px;padding:4px 10px;font-size:0.75rem;font-family:'Orbitron',sans-serif;cursor:pointer;font-weight:bold">◀ PREV</button>
+      <span id="odysseyHorizonLabel" style="font-family:'Orbitron',sans-serif;font-size:0.75rem;font-weight:900;color:#ffd23c;letter-spacing:0.5px">🌌 DAYS 1 — 14 (ENDLESS EXPEDITION) 🚀</span>
+      <div style="display:flex;gap:6px">
+        <button id="odysseyJumpTodayBtn" onclick="jumpOdysseyToday()" style="background:rgba(255,210,60,0.15);border:1px solid #ffd23c;color:#ffd23c;border-radius:8px;padding:4px 8px;font-size:0.72rem;font-family:'Orbitron',sans-serif;cursor:pointer;font-weight:bold">🎯 TODAY</button>
+        <button id="odysseyNextBtn" onclick="changeOdysseyPage(7)" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#93c5fd;border-radius:8px;padding:4px 10px;font-size:0.75rem;font-family:'Orbitron',sans-serif;cursor:pointer;font-weight:bold">NEXT ▶</button>
+      </div>
+    </div>
     
-    <!-- Infinite Horizon Interactive Grid -->
-    <div id="dailyGrid" class="daily-grid"></div>
+    <!-- Infinite Horizon Interactive Grid Scrollable Area -->
+    <div style="flex:1;overflow-y:auto;padding-right:4px;margin:2px 0 8px 0">
+      <div id="dailyGrid" class="daily-grid"></div>
+    </div>
 
     <!-- Action & Streak Recovery Area -->
-    <div id="dailyActionArea" style="display:flex;flex-direction:column;gap:10px;margin-top:6px"></div>
+    <div id="dailyActionArea" style="display:flex;flex-direction:column;gap:8px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.1)"></div>
   </div>
 </div>
 
@@ -10247,12 +10261,30 @@ function updateDailyBadge() {
   }
 }
 
+let odysseyHorizonStart = 1;
+
+function jumpOdysseyToday() {
+  const status = getDailyRewardStatus();
+  const curDay = status.currentDay || 1;
+  odysseyHorizonStart = Math.max(1, Math.floor((curDay - 1) / 7) * 7 + 1);
+  renderDailyModalUI();
+}
+window.jumpOdysseyToday = jumpOdysseyToday;
+
+function changeOdysseyPage(delta) {
+  odysseyHorizonStart = Math.max(1, odysseyHorizonStart + delta);
+  renderDailyModalUI();
+}
+window.changeOdysseyPage = changeOdysseyPage;
+
 function renderDailyModalUI() {
   const status = getDailyRewardStatus();
   const daily = SAVE.data.daily || { streak: 0 };
   const container = document.getElementById('dailyGrid');
   const banner = document.getElementById('dailyActionArea');
   const streakText = document.getElementById('dailyStreakText');
+  const horizonLabel = document.getElementById('odysseyHorizonLabel');
+  const prevBtn = document.getElementById('odysseyPrevBtn');
   if (!container || !banner) return;
 
   const curDay = status.currentDay || 1;
@@ -10262,24 +10294,29 @@ function renderDailyModalUI() {
     if (status.streak > 0) {
       streakText.innerHTML = `🔥 <span style="color:#ffd23c;font-weight:bold">${status.streak}-Day Cosmic Odyssey Streak</span> ${status.state === 'MISSED' ? '<span style="color:#ff3344">(BROKEN)</span>' : 'Active'} · Next Mega Chest: <span style="color:#ff5e62;font-weight:bold">Day ${nextMilestone} 👑</span>`;
     } else {
-      streakText.innerHTML = `🌌 Embark on your Infinite Cosmic Odyssey today! Next Mega Chest: <span style="color:#ffd23c;font-weight:bold">Day 7 👑</span>`;
+      streakText.innerHTML = `🌌 Embark on your Infinite Cosmic Odyssey today! Daily rewards scale endlessly with Mega Chests every 7 days & Celestial Vaults every 30 days.`;
     }
   }
 
-  // Sliding 7-day window centered on current active day
-  const startDay = curDay > 4 ? curDay - 3 : 1;
+  if (horizonLabel) {
+    horizonLabel.textContent = `🌌 DAYS ${odysseyHorizonStart} — ${odysseyHorizonStart + 13} (ENDLESS EXPEDITION) 🚀`;
+  }
+  if (prevBtn) {
+    prevBtn.disabled = (odysseyHorizonStart <= 1);
+    prevBtn.style.opacity = (odysseyHorizonStart <= 1) ? '0.4' : '1';
+    prevBtn.style.cursor = (odysseyHorizonStart <= 1) ? 'not-allowed' : 'pointer';
+  }
 
+  // Render 14 consecutive days of the active infinite horizon
   let html = '';
-  for (let i = 0; i < 7; i++) {
-    const dayNum = startDay + i;
+  for (let i = 0; i < 14; i++) {
+    const dayNum = odysseyHorizonStart + i;
     const r = getDailyRewardForDay(dayNum);
     let cardClass = 'daily-day-card';
     if (r.isCelestial) {
       cardClass += ' day-celestial';
     } else if (r.isMegaChest) {
       cardClass += ' day-7';
-    } else if (i === 6) {
-      cardClass += ' day-window-end';
     }
 
     let statusBadge = '';
@@ -10473,6 +10510,9 @@ function openDailyModal(e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch (err) {}
   }
   try { initAudio(); } catch (err) {}
+  const curStatus = getDailyRewardStatus();
+  const curDay = curStatus.currentDay || 1;
+  odysseyHorizonStart = Math.max(1, Math.floor((curDay - 1) / 7) * 7 + 1);
   renderDailyModalUI();
   updateDailyRewardTimerDisplay();
   showOverlay('dailyModal');
