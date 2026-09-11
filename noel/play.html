@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v117';
+  var LATEST_VERSION = 'v=60fps_v118';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -754,6 +754,15 @@
   .daily-day-card.missed {
     border: 2px solid #ff3344;
     background: rgba(255, 51, 68, 0.15);
+  }
+  .daily-day-card.tomorrow {
+    border: 1.5px dashed rgba(255, 210, 60, 0.45);
+    background: rgba(255, 210, 60, 0.05);
+  }
+  .daily-status-tomorrow {
+    background: rgba(255, 210, 60, 0.15);
+    color: #ffd23c;
+    border: 1px solid rgba(255, 210, 60, 0.4);
   }
   .daily-day-card.claimed {
     border-color: rgba(63, 208, 122, 0.5);
@@ -10305,8 +10314,8 @@ function updateDailyBadge() {
       rightStatus.textContent = 'RECOVER!';
       rightStatus.style.color = '#ff3344';
     } else {
-      rightStatus.textContent = 'READY!';
-      rightStatus.style.color = '#ffd23c';
+      rightStatus.textContent = 'BANKED';
+      rightStatus.style.color = '#3fd07a';
     }
   }
 
@@ -10374,24 +10383,39 @@ function renderDailyModalUI() {
     }
 
     let statusBadge = '';
-    const hasClaimedThis = (status.state === 'ALREADY_CLAIMED')
-      ? (dayNum <= daily.streak)
-      : (dayNum < status.currentDay);
-
-    if (hasClaimedThis) {
-      cardClass += ' claimed';
-      statusBadge = '<span class="daily-day-status daily-status-claimed">✔ CLAIMED</span>';
-    } else if (dayNum === status.currentDay) {
-      if (status.state === 'MISSED') {
+    if (status.state === 'ALREADY_CLAIMED') {
+      if (dayNum <= daily.streak) {
+        cardClass += ' claimed';
+        statusBadge = '<span class="daily-day-status daily-status-claimed">✔ CLAIMED</span>';
+      } else if (dayNum === status.currentDay) {
+        cardClass += ' tomorrow';
+        statusBadge = '<span class="daily-day-status daily-status-tomorrow">⏳ TOMORROW</span>';
+      } else {
+        cardClass += ' locked';
+        statusBadge = '<span class="daily-day-status daily-status-locked">🔒 LOCKED</span>';
+      }
+    } else if (status.state === 'READY') {
+      if (dayNum < status.currentDay) {
+        cardClass += ' claimed';
+        statusBadge = '<span class="daily-day-status daily-status-claimed">✔ CLAIMED</span>';
+      } else if (dayNum === status.currentDay) {
+        cardClass += ' active';
+        statusBadge = '<span class="daily-day-status daily-status-ready">🎁 CLAIM!</span>';
+      } else {
+        cardClass += ' locked';
+        statusBadge = '<span class="daily-day-status daily-status-locked">🔒 LOCKED</span>';
+      }
+    } else if (status.state === 'MISSED') {
+      if (dayNum < status.currentDay) {
+        cardClass += ' claimed';
+        statusBadge = '<span class="daily-day-status daily-status-claimed">✔ CLAIMED</span>';
+      } else if (dayNum === status.currentDay) {
         cardClass += ' missed';
         statusBadge = '<span class="daily-day-status daily-status-missed">⚠️ MISSED</span>';
       } else {
-        cardClass += ' active';
-        statusBadge = '<span class="daily-day-status daily-status-ready">🎁 CLAIM!</span>';
+        cardClass += ' locked';
+        statusBadge = '<span class="daily-day-status daily-status-locked">🔒 LOCKED</span>';
       }
-    } else {
-      cardClass += ' locked';
-      statusBadge = '<span class="daily-day-status daily-status-locked">🔒 LOCKED</span>';
     }
 
     html += `
