@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v108';
+  var LATEST_VERSION = 'v=60fps_v109';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -3170,7 +3170,7 @@
   <p style="font-size:1.05rem;color:#ffd23c;margin-bottom:1.2rem">Solar sails reefed, Captain Noel... Fleet on standby.</p>
   <div class="btnrow" style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:0.6rem;">
     <button id="resumebtn" onclick="togglePause(event)" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:1.15rem;padding:14px 34px;box-shadow:0 6px 24px rgba(34,197,94,0.5)">▶ RESUME BATTLE</button>
-    <button id="pauseQuestBtn" onclick="openQuestModal(event)" style="background:linear-gradient(135deg,#6366f1,#4338ca);color:#fff;font-size:1.15rem;padding:14px 28px;box-shadow:0 6px 24px rgba(99,102,241,0.5);display:inline-flex;align-items:center;gap:6px"><span>📜 BOUNTY QUESTS</span><span id="pauseQuestBadge" style="background:#ef4444;color:#fff;font-size:0.75rem;padding:2px 7px;border-radius:10px;font-weight:bold" class="hidden">0</span></button>
+    <button id="pauseQuestBtn" onclick="openQuestModal(event)" style="background:linear-gradient(135deg,#6366f1,#4338ca);color:#fff;font-size:1.15rem;padding:14px 28px;box-shadow:0 6px 24px rgba(99,102,241,0.5);display:inline-flex;align-items:center;gap:6px"><span>📜 DAILY QUESTS</span><span id="pauseQuestBadge" style="background:#ef4444;color:#fff;font-size:0.75rem;padding:2px 7px;border-radius:10px;font-weight:bold" class="hidden">0</span></button>
     <button id="menubtn" onclick="returnToMenu(event)" style="background:linear-gradient(135deg,#8a7bff,#5b48e0);color:#fff;font-size:1.15rem;padding:14px 32px;box-shadow:0 6px 24px rgba(138,123,255,0.5)">✖ RETURN TO MENU</button>
   </div>
   <p style="margin-top:1.4rem"><a class="exitlink" href="../" style="color:#8fa6cb;font-size:0.92rem;text-decoration:none">🚪 EXIT TO CONTEST HUB</a></p>
@@ -3200,8 +3200,8 @@
         <span class="brawl-quest-icon">📜</span>
         <span id="leftQuestClaimBadge" class="brawl-quest-alert-badge hidden">!</span>
       </div>
-      <div id="leftQuestStatusText" class="brawl-quest-status">QUESTS</div>
-      <div id="leftQuestCountPill" class="brawl-quest-streak">7 ACTIVE</div>
+      <div id="leftQuestStatusText" class="brawl-quest-status">DAILY</div>
+      <div id="leftQuestCountPill" class="brawl-quest-streak">7 DAILY</div>
     </div>
   </div>
 
@@ -3456,15 +3456,18 @@
 </div>
 
 
-<!-- Holographic Pirate Bounty Quests Modal -->
+<!-- Holographic Pirate Daily Bounty Quests Modal -->
 <div id="questModal" class="overlay hidden" style="z-index: 128;" onclick="if(event.target===this) closeQuestModal(event);">
   <div class="quest-modal-card" style="position:relative;background:linear-gradient(135deg,rgba(10,18,36,0.98),rgba(15,23,42,0.98));border:2px solid #6366f1;border-radius:24px;width:min(94vw, 680px);max-height:86vh;display:flex;flex-direction:column;padding:24px;box-shadow:0 0 40px rgba(99,102,241,0.4), 0 20px 60px rgba(0,0,0,0.8);color:#fff;overflow:hidden">
     <button onclick="closeQuestModal(event)" style="position:absolute;top:18px;right:18px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem">✖ CLOSE</button>
     
     <div style="text-align:left;margin-bottom:14px">
-      <span style="display:inline-block;padding:3px 10px;background:rgba(99,102,241,0.25);border:1px solid #818cf8;color:#a5b4fc;font-size:0.75rem;font-weight:900;border-radius:8px;font-family:'Orbitron',sans-serif;letter-spacing:1px;margin-bottom:6px">📜 GALAXY PIRATE CONTRACTS</span>
-      <h1 style="font-family:'Orbitron',sans-serif;font-size:1.55rem;font-weight:900;color:#ffffff;margin:0 0 4px 0;letter-spacing:1px">BOUNTY QUESTS</h1>
-      <p style="margin:0;font-size:0.88rem;color:#94a3b8">Complete deep space combat bounties to earn <b>Gold Dubloons 🪙, Trophies 🏆 & Cosmic Gems 💎</b>!</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:6px">
+        <span style="display:inline-block;padding:3px 10px;background:rgba(99,102,241,0.25);border:1px solid #818cf8;color:#a5b4fc;font-size:0.75rem;font-weight:900;border-radius:8px;font-family:'Orbitron',sans-serif;letter-spacing:1px">📜 DAILY GALAXY PIRATE CONTRACTS</span>
+        <span id="dailyQuestTimerPill" style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(245,158,11,0.15);border:1.5px solid #f59e0b;color:#ffd23c;font-size:0.75rem;font-weight:900;border-radius:8px;font-family:'Orbitron',sans-serif;box-shadow:0 0 12px rgba(245,158,11,0.3)">⏰ Resets in: <span id="dailyQuestTimer" style="color:#ffffff;font-variant-numeric:tabular-nums">--h --m --s</span></span>
+      </div>
+      <h1 style="font-family:'Orbitron',sans-serif;font-size:1.55rem;font-weight:900;color:#ffffff;margin:0 0 4px 0;letter-spacing:1px">DAILY BOUNTY QUESTS</h1>
+      <p style="margin:0;font-size:0.88rem;color:#94a3b8">Complete daily combat bounties to earn <b>Gold Dubloons 🪙, Trophies 🏆 &amp; Cosmic Gems 💎</b>! Refreshes every day at midnight.</p>
     </div>
 
     <!-- Active Quests Scrollable Container -->
@@ -3474,7 +3477,9 @@
 
     <!-- Footer Stats / Refresh info -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);font-size:0.82rem;color:#8fa6cb">
-      <div>✨ Bounty progress updates in real-time in battle!</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="color:#ffd23c">✨ Daily contracts reset every day at midnight (24h) · Progress saves automatically</span>
+      </div>
       <button onclick="closeQuestModal(event)" style="background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;border:none;border-radius:10px;padding:8px 20px;font-family:'Orbitron',sans-serif;font-weight:900;cursor:pointer;box-shadow:0 4px 16px rgba(99,102,241,0.5)">SET SAIL 🚀</button>
     </div>
   </div>
@@ -5420,7 +5425,9 @@ function getFreshRegularSave() {
       storm: { hull: 0, cannon: 0, engine: 0, magnet: 0 },
     },
     ships: ['cutter'],
-    sel: 'cutter'
+    sel: 'cutter',
+    quests: {},
+    questDailyDate: ''
   };
 }
 
@@ -5441,7 +5448,9 @@ function getCreatorSave() {
       storm: { hull: 10, cannon: 10, engine: 10, magnet: 10 },
     },
     ships: ['cutter', 'galleon', 'runner', 'hind', 'storm'],
-    sel: 'cutter'
+    sel: 'cutter',
+    quests: {},
+    questDailyDate: ''
   };
 }
 
@@ -7602,7 +7611,7 @@ function renderFleetIntelUI() {
 
 
 // ==========================================================================
-// 📜 PIRATE BOUNTY QUESTS ENGINE
+// 📜 PIRATE DAILY BOUNTY QUESTS ENGINE (Refreshes Every 24 Hours at Midnight)
 // ==========================================================================
 const QUEST_DEFS = [
   {
@@ -7684,8 +7693,37 @@ const QUEST_DEFS = [
   }
 ];
 
+let questModalTimer = null;
+
 const QUESTS = {
+  checkDailyReset() {
+    if (!SAVE || !SAVE.data) return false;
+    const todayStr = new Date().toDateString();
+    if (!SAVE.data.questDailyDate || SAVE.data.questDailyDate !== todayStr) {
+      SAVE.data.questDailyDate = todayStr;
+      SAVE.data.quests = {};
+      for (const def of QUEST_DEFS) {
+        SAVE.data.quests[def.id] = { progress: 0, completed: false, claimed: false };
+      }
+      try { SAVE.save(); } catch(e) {}
+      return true;
+    }
+    return false;
+  },
+
+  getTimerText() {
+    const now = new Date();
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+    const diff = tomorrow - now;
+    if (diff <= 0) return '00h 00m 00s';
+    const h = Math.floor(diff / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
+    return `${String(h).padStart(2, '0')}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s`;
+  },
+
   getQuests() {
+    this.checkDailyReset();
     if (!SAVE.data.quests || typeof SAVE.data.quests !== 'object') {
       SAVE.data.quests = {};
     }
@@ -7707,6 +7745,7 @@ const QUESTS = {
 
   track(type, amount = 1) {
     if (!SAVE || !SAVE.data) return;
+    this.checkDailyReset();
     if (!SAVE.data.quests) SAVE.data.quests = {};
     let newlyCompleted = [];
     for (const def of QUEST_DEFS) {
@@ -7733,9 +7772,9 @@ const QUESTS = {
       for (const q of newlyCompleted) {
         try {
           sfx('win');
-          addAlert(`🎯 BOUNTY COMPLETED: ${q.title}! (+${q.rewardCoins} 🪙 +${q.rewardTrophies} 🏆)`, 'trophy');
+          addAlert(`🎯 DAILY BOUNTY COMPLETED: ${q.title}! (+${q.rewardCoins} 🪙 +${q.rewardTrophies} 🏆)`, 'trophy');
           if (typeof ship !== 'undefined' && ship) {
-            popup(ship.x, ship.y - 50, `🎯 BOUNTY COMPLETE: ${q.title}!`, '#00ffee');
+            popup(ship.x, ship.y - 50, `🎯 DAILY BOUNTY: ${q.title}!`, '#00ffee');
           }
         } catch(e) {}
       }
@@ -7744,6 +7783,7 @@ const QUESTS = {
   },
 
   claim(id) {
+    this.checkDailyReset();
     const qs = QUESTS.getQuests();
     const q = qs.find(x => x.id === id);
     if (!q || !q.completed || q.claimed) return false;
@@ -7770,6 +7810,7 @@ const QUESTS = {
   },
 
   getUnclaimedCount() {
+    this.checkDailyReset();
     const qs = QUESTS.getQuests();
     return qs.filter(q => q.completed && !q.claimed).length;
   },
@@ -7787,8 +7828,10 @@ const QUESTS = {
       if (count > 0) {
         leftBadge.textContent = count > 9 ? '9+' : count;
         leftBadge.classList.remove('hidden');
+        leftBadge.style.display = 'block';
       } else {
         leftBadge.classList.add('hidden');
+        leftBadge.style.display = 'none';
       }
     }
     if (leftStatus) {
@@ -7799,12 +7842,12 @@ const QUESTS = {
         leftStatus.textContent = 'DONE!';
         leftStatus.style.color = '#38bdf8';
       } else {
-        leftStatus.textContent = 'QUESTS';
+        leftStatus.textContent = 'DAILY';
         leftStatus.style.color = '#ffd23c';
       }
     }
     if (leftPill) {
-      leftPill.textContent = `${completedCount}/${qs.length} DONE`;
+      leftPill.textContent = (completedCount === qs.length) ? 'ALL DONE' : `${completedCount}/${qs.length} DONE`;
     }
 
     // 2. Pause Screen Quest Badge
@@ -7812,15 +7855,20 @@ const QUESTS = {
     if (badge2) {
       if (count > 0) {
         badge2.textContent = count;
+        badge2.style.display = 'inline-block';
         badge2.classList.remove('hidden');
       } else {
+        badge2.style.display = 'none';
         badge2.classList.add('hidden');
       }
     }
   },
 
   renderModal() {
+    this.checkDailyReset();
     const listEl = document.getElementById('questList');
+    const timerEl = document.getElementById('dailyQuestTimer');
+    if (timerEl) timerEl.textContent = this.getTimerText();
     if (!listEl) return;
     const qs = QUESTS.getQuests();
     let html = '';
@@ -7834,7 +7882,10 @@ const QUESTS = {
         <div style="font-size:2.2rem;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:12px;border:1px solid rgba(255,255,255,0.1)">${q.icon}</div>
         <div style="flex:1;min-width:0">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-            <span style="font-family:'Orbitron',sans-serif;font-weight:900;color:${isClaimed ? '#94a3b8' : '#ffffff'};font-size:0.95rem">${q.title}</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-family:'Orbitron',sans-serif;font-weight:900;color:${isClaimed ? '#94a3b8' : '#ffffff'};font-size:0.95rem">${q.title}</span>
+              <span style="font-size:0.70rem;padding:2px 6px;border-radius:6px;background:rgba(99,102,241,0.25);border:1px solid #818cf8;color:#a5b4fc;font-weight:bold;font-family:'Orbitron',sans-serif">DAILY</span>
+            </div>
             <span style="font-family:'Orbitron',sans-serif;font-size:0.8rem;color:${isReady ? '#00ffee' : isClaimed ? '#22c55e' : '#ffd23c'};font-weight:bold">${isClaimed ? 'COMPLETED ✓' : `${Math.min(q.progress, q.target)} / ${q.target}`}</span>
           </div>
           <div style="font-size:0.80rem;color:#94a3b8;margin-bottom:8px;line-height:1.3">${q.desc}</div>
@@ -7869,8 +7920,23 @@ function openQuestModal(e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
   }
   initAudio();
+  QUESTS.checkDailyReset();
   QUESTS.renderModal();
   showOverlay('questModal');
+
+  clearInterval(questModalTimer);
+  questModalTimer = setInterval(() => {
+    const timerEl = document.getElementById('dailyQuestTimer');
+    if (timerEl) {
+      timerEl.textContent = QUESTS.getTimerText();
+    }
+    const todayStr = new Date().toDateString();
+    if (SAVE && SAVE.data && SAVE.data.questDailyDate !== todayStr) {
+      QUESTS.checkDailyReset();
+      QUESTS.renderModal();
+      QUESTS.updateBadges();
+    }
+  }, 1000);
 }
 window.openQuestModal = openQuestModal;
 
@@ -7878,6 +7944,7 @@ function closeQuestModal(e) {
   if (e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch(err) {}
   }
+  clearInterval(questModalTimer);
   hideOverlay('questModal');
 }
 window.closeQuestModal = closeQuestModal;
@@ -11129,6 +11196,7 @@ if (document.readyState === 'loading') {
 
     SAVE.load();
     applyLoadout();
+    try { QUESTS.checkDailyReset(); QUESTS.updateBadges(); } catch(e) {}
 
     best = +safeStorage.getItem('sp_best') || 0;
     const bl = document.getElementById('bestline');
