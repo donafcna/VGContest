@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v113';
+  var LATEST_VERSION = 'v=60fps_v114';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -692,6 +692,15 @@
     background: linear-gradient(135deg, rgba(255, 210, 60, 0.15), rgba(168, 85, 247, 0.15));
     border: 1.5px solid #ffd23c;
     box-shadow: 0 0 15px rgba(255, 210, 60, 0.25);
+  }
+  .daily-day-card.day-celestial {
+    grid-column: span 2;
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.25));
+    border: 2px solid #38bdf8;
+    box-shadow: 0 0 22px rgba(56, 189, 248, 0.5);
+  }
+  .daily-day-card.day-window-end {
+    grid-column: span 2;
   }
   .daily-day-card.claimed {
     border-color: rgba(63, 208, 122, 0.5);
@@ -3180,9 +3189,9 @@
   
 
   <!-- Brawl Stars Style Middle-Right Daily Rewards Floating Widget -->
-  <div id="middleRightDailyWrap" class="middle-right-daily-wrap" onclick="openDailyModal(event)" role="button" tabindex="0" title="Tap to claim Daily Voyage Rewards!">
+  <div id="middleRightDailyWrap" class="middle-right-daily-wrap" onclick="openDailyModal(event)" role="button" tabindex="0" title="Tap to claim Infinite Cosmic Odyssey Rewards!">
     <div class="brawl-daily-tile">
-      <div class="brawl-daily-header">DAILY GIFT</div>
+      <div class="brawl-daily-header">ODYSSEY</div>
       <div class="brawl-daily-icon-wrap">
         <span class="brawl-daily-gift-icon">🎁</span>
         <span id="rightDailyClaimBadge" class="brawl-daily-alert-badge">!</span>
@@ -3439,22 +3448,22 @@
   </div>
 </div>
 
-<!-- Pirate 7-Day Voyage Daily Rewards Modal -->
+<!-- Infinite Cosmic Odyssey Daily Rewards Modal -->
 <div id="dailyModal" class="overlay hidden" style="z-index: 125;" onclick="if(event.target===this) closeDailyModal(event);">
   <div class="daily-card" style="position:relative">
     <!-- Header Top Row with Category Tag, Timer Pill & Close Button (Flexbox - No Overlap) -->
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px">
-      <span class="daily-badge-tag" style="margin:0;align-self:auto">🎁 PIRATE DAILY VOYAGE REWARDS ⚓</span>
+      <span class="daily-badge-tag" style="margin:0;align-self:auto">🌌 INFINITE DAILY EXPEDITION 🚀</span>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <span id="dailyRewardTimerPill" style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(255,94,98,0.15);border:1.5px solid #ff5e62;color:#ffd23c;font-size:0.75rem;font-weight:900;border-radius:8px;font-family:'Orbitron',sans-serif;box-shadow:0 0 12px rgba(255,94,98,0.3)">⏰ Next Reward: <span id="dailyRewardTimer" style="color:#ffffff;font-variant-numeric:tabular-nums">--h --m --s</span></span>
         <button onclick="closeDailyModal(event)" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem;display:inline-flex;align-items:center;justify-content:center;font-weight:bold">✖ CLOSE</button>
       </div>
     </div>
     
-    <h1 class="daily-title">7-DAY VOYAGE REWARDS</h1>
-    <div id="dailyStreakText" class="daily-streak-info">⚓ Start your 7-Day Voyage Streak today!</div>
+    <h1 class="daily-title">INFINITE COSMIC ODYSSEY</h1>
+    <div id="dailyStreakText" class="daily-streak-info">🌌 Embark on your Infinite Cosmic Odyssey today!</div>
     
-    <!-- 7-Day Interactive Grid -->
+    <!-- Infinite Horizon Interactive Grid -->
     <div id="dailyGrid" class="daily-grid"></div>
 
     <!-- Action & Streak Recovery Area -->
@@ -10046,16 +10055,100 @@ function renderWallet() {
   if (typeof updateTrailBadge === "function") updateTrailBadge();
 }
 
-// ---------- DAILY REWARDS SYSTEM (7-DAY PIRATE VOYAGE STREAK & TOKEN RECOVERY) ----------
-const DAILY_REWARDS = [
-  { day: 1, name: 'Day 1', icon: '🪙', coins: 150, spins: 1, tokens: 0, text: '+150 🪙 Dubloons\n+1 🎡 Lucky Spin' },
-  { day: 2, name: 'Day 2', icon: '🎟️', coins: 300, spins: 0, tokens: 1, text: '+300 🪙 Dubloons\n+1 🎟️ Plasma Core' },
-  { day: 3, name: 'Day 3', icon: '🎡', coins: 500, spins: 2, tokens: 0, text: '+500 🪙 Dubloons\n+2 🎡 Lucky Spins' },
-  { day: 4, name: 'Day 4', icon: '🎟️', coins: 800, spins: 0, tokens: 2, text: '+800 🪙 Dubloons\n+2 🎟️ Plasma Cores' },
-  { day: 5, name: 'Day 5', icon: '🎡', coins: 1200, spins: 3, tokens: 0, text: '+1,200 🪙 Dubloons\n+3 🎡 Lucky Spins' },
-  { day: 6, name: 'Day 6', icon: '🎟️', coins: 1800, spins: 0, tokens: 3, text: '+1,800 🪙 Dubloons\n+3 🎟️ Plasma Cores' },
-  { day: 7, name: 'Day 7: MEGA CHEST 👑', icon: '👑', coins: 3500, spins: 5, tokens: 5, text: '+3,500 🪙 Dubloons\n+5 🎟️ Cores · +5 🎡 Spins\n+ 🛡️ Kinetic Shield' }
-];
+// ---------- INFINITE COSMIC ODYSSEY DAILY EXPEDITION SYSTEM (INFINITE DAYS & TOKEN RECOVERY) ----------
+function getDailyRewardForDay(dayNum) {
+  const d = Math.max(1, parseInt(dayNum, 10) || 1);
+  const isCelestial = (d % 30 === 0);
+  const isMegaChest = (d % 7 === 0);
+  const weekIndex = Math.floor((d - 1) / 7);
+  const cycleIndex = ((d - 1) % 7) + 1; // 1 to 7
+
+  let coins = 0;
+  let spins = 0;
+  let tokens = 0;
+  let name = `Day ${d}`;
+  let icon = '🪙';
+  let bonusShield = false;
+
+  if (isCelestial) {
+    name = `Day ${d}: CELESTIAL VAULT 💎`;
+    icon = '💎';
+    coins = 6000 + weekIndex * 1000;
+    tokens = 10 + Math.floor(d / 15);
+    spins = 10 + Math.floor(d / 15);
+    bonusShield = true;
+  } else if (isMegaChest) {
+    name = `Day ${d}: MEGA CHEST 👑`;
+    icon = '👑';
+    coins = 3500 + weekIndex * 750;
+    tokens = 5 + weekIndex;
+    spins = 5 + weekIndex;
+    bonusShield = true;
+  } else {
+    switch (cycleIndex) {
+      case 1:
+        icon = '🪙';
+        coins = 150 + weekIndex * 150;
+        spins = 1 + Math.floor(weekIndex / 2);
+        tokens = 0;
+        break;
+      case 2:
+        icon = '🎟️';
+        coins = 300 + weekIndex * 200;
+        spins = 0;
+        tokens = 1 + Math.floor(weekIndex / 2);
+        break;
+      case 3:
+        icon = '🎡';
+        coins = 500 + weekIndex * 250;
+        spins = 2 + Math.floor(weekIndex / 2);
+        tokens = 0;
+        break;
+      case 4:
+        icon = '🎟️';
+        coins = 800 + weekIndex * 300;
+        spins = 0;
+        tokens = 2 + Math.floor(weekIndex / 2);
+        break;
+      case 5:
+        icon = '🎡';
+        coins = 1200 + weekIndex * 350;
+        spins = 3 + Math.floor(weekIndex / 2);
+        tokens = 0;
+        break;
+      case 6:
+        icon = '🎟️';
+        coins = 1800 + weekIndex * 400;
+        spins = 0;
+        tokens = 3 + Math.floor(weekIndex / 2);
+        break;
+    }
+  }
+
+  let textParts = [`+${coins.toLocaleString()} 🪙 Dubloons`];
+  if (tokens > 0) textParts.push(`+${tokens} 🎟️ Plasma Core${tokens > 1 ? 's' : ''}`);
+  if (spins > 0) textParts.push(`+${spins} 🎡 Lucky Spin${spins > 1 ? 's' : ''}`);
+  if (bonusShield) textParts.push(`+ 🛡️ Kinetic Shield`);
+
+  return {
+    day: d,
+    name,
+    icon,
+    coins,
+    spins,
+    tokens,
+    isMegaChest: isMegaChest || isCelestial,
+    isCelestial,
+    text: textParts.join('\n')
+  };
+}
+
+// Backwards compatibility array for first 7 days
+const DAILY_REWARDS = Array.from({ length: 7 }, (_, i) => getDailyRewardForDay(i + 1));
+window.getDailyRewardForDay = getDailyRewardForDay;
+window.getDailyRewardStatus = getDailyRewardStatus;
+window.renderDailyModalUI = renderDailyModalUI;
+window.DAILY_REWARDS = DAILY_REWARDS;
 
 function getTodayString() {
   const d = new Date();
@@ -10091,16 +10184,18 @@ function getDailyRewardStatus() {
 
   if (diff === 0) {
     // Already claimed today
-    const nextDay = (daily.streak % 7) + 1;
+    const currentDay = Math.max(1, daily.streak || 1);
+    const nextDay = currentDay + 1;
     return { state: 'ALREADY_CLAIMED', currentDay: nextDay, streak: daily.streak, daysDiff: 0 };
   } else if (diff === 1) {
-    // Consecutive next day
-    const nextDay = (daily.streak % 7) + 1;
+    // Consecutive next day -> Ready to claim
+    const nextDay = (daily.streak || 0) + 1;
     return { state: 'READY', currentDay: nextDay, streak: daily.streak, daysDiff: 1 };
   } else {
     // Missed 1 or more days!
-    const missedStreak = daily.streak > 0 ? daily.streak : 1;
-    return { state: 'MISSED', currentDay: (missedStreak % 7) + 1, streak: missedStreak, daysDiff: diff };
+    const missedDay = (daily.streak || 0) + 1;
+    const missedStreak = daily.streak > 0 ? daily.streak : 0;
+    return { state: 'MISSED', currentDay: missedDay, streak: missedStreak, daysDiff: diff };
   }
 }
 
@@ -10144,8 +10239,8 @@ function updateDailyBadge() {
   }
 
   if (rightStreak) {
-    const curStreak = (daily.streak > 0) ? daily.streak : 1;
-    rightStreak.textContent = 'DAY ' + (((curStreak - 1) % 7) + 1);
+    const curDay = (status.state === 'ALREADY_CLAIMED') ? Math.max(1, daily.streak || 1) : status.currentDay;
+    rightStreak.textContent = 'DAY ' + curDay;
   }
 }
 
@@ -10157,31 +10252,42 @@ function renderDailyModalUI() {
   const streakText = document.getElementById('dailyStreakText');
   if (!container || !banner) return;
 
+  const curDay = status.currentDay || 1;
+  const nextMilestone = Math.ceil(Math.max(1, curDay) / 7) * 7;
+
   if (streakText) {
-    streakText.innerHTML = status.streak > 0 
-      ? `🔥 <span style="color:#ffd23c;font-weight:bold">${status.streak}-Day Voyage Streak</span> ${status.state === 'MISSED' ? '<span style="color:#ff3344">(BROKEN)</span>' : 'Active'}`
-      : `⚓ Start your 7-Day Voyage Streak today!`;
+    if (status.streak > 0) {
+      streakText.innerHTML = `🔥 <span style="color:#ffd23c;font-weight:bold">${status.streak}-Day Cosmic Odyssey Streak</span> ${status.state === 'MISSED' ? '<span style="color:#ff3344">(BROKEN)</span>' : 'Active'} · Next Mega Chest: <span style="color:#ff5e62;font-weight:bold">Day ${nextMilestone} 👑</span>`;
+    } else {
+      streakText.innerHTML = `🌌 Embark on your Infinite Cosmic Odyssey today! Next Mega Chest: <span style="color:#ffd23c;font-weight:bold">Day 7 👑</span>`;
+    }
   }
 
+  // Sliding 7-day window centered on current active day
+  const startDay = curDay > 4 ? curDay - 3 : 1;
+
   let html = '';
-  for (let i = 0; i < DAILY_REWARDS.length; i++) {
-    const r = DAILY_REWARDS[i];
-    const dayNum = i + 1;
+  for (let i = 0; i < 7; i++) {
+    const dayNum = startDay + i;
+    const r = getDailyRewardForDay(dayNum);
     let cardClass = 'daily-day-card';
-    if (dayNum === 7) cardClass += ' day-7';
+    if (r.isCelestial) {
+      cardClass += ' day-celestial';
+    } else if (r.isMegaChest) {
+      cardClass += ' day-7';
+    } else if (i === 6) {
+      cardClass += ' day-window-end';
+    }
 
     let statusBadge = '';
-    const activeClaimIndex = status.state === 'READY' ? status.currentDay : (status.state === 'MISSED' ? status.currentDay : 0);
-    
-    const claimedDaysInCycle = (daily.streak % 7);
-    const hasClaimedThis = status.state === 'ALREADY_CLAIMED' 
-      ? (dayNum <= claimedDaysInCycle || (claimedDaysInCycle === 0 && daily.streak > 0))
+    const hasClaimedThis = (status.state === 'ALREADY_CLAIMED')
+      ? (dayNum <= daily.streak)
       : (dayNum < status.currentDay);
 
     if (hasClaimedThis) {
       cardClass += ' claimed';
       statusBadge = '<span class="daily-day-status daily-status-claimed">✔ CLAIMED</span>';
-    } else if (dayNum === activeClaimIndex) {
+    } else if (dayNum === status.currentDay) {
       if (status.state === 'MISSED') {
         cardClass += ' missed';
         statusBadge = '<span class="daily-day-status daily-status-missed">⚠️ MISSED</span>';
@@ -10219,7 +10325,7 @@ function renderDailyModalUI() {
     const canRepair = SAVE.data.tokens >= repairCost;
     banner.innerHTML = `
       <div class="daily-repair-banner">
-        ⚠️ <b>VOYAGE STREAK BROKEN!</b> You missed yesterday's reward (Day ${status.currentDay}).<br>
+        ⚠️ <b>COSMIC ODYSSEY STREAK BROKEN!</b> You missed yesterday's reward (Day ${status.currentDay}).<br>
         You can <b>reset to Day 1</b> for free, or <b>repair your streak</b> using <b>5 Plasma Cores 🎟️</b>!
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
@@ -10235,10 +10341,10 @@ function renderDailyModalUI() {
   } else {
     banner.innerHTML = `
       <div style="color:#3fd07a;font-weight:bold;font-size:1rem;margin-bottom:6px">
-        ✔ Today's Voyage Reward has been banked!
+        ✔ Day ${daily.streak || 1} Odyssey Reward has been banked!
       </div>
       <div style="color:#8fa6cb;font-size:0.86rem;margin-bottom:10px">
-        Come back tomorrow for your next reward!
+        Come back tomorrow to unlock Day ${status.currentDay}!
       </div>
       <button class="daily-reset-btn" onclick="closeDailyModal()">✖ CLOSE</button>
     `;
@@ -10249,14 +10355,14 @@ function claimDailyReward() {
   const status = getDailyRewardStatus();
   if (status.state !== 'READY') return;
 
-  const dayIndex = status.currentDay - 1;
-  const reward = DAILY_REWARDS[dayIndex];
+  const targetDay = status.currentDay;
+  const reward = getDailyRewardForDay(targetDay);
   if (!reward) return;
 
   // Award Loot
-  SAVE.data.coins += reward.coins;
-  SAVE.data.spins += reward.spins;
-  SAVE.data.tokens += reward.tokens;
+  SAVE.data.coins = (SAVE.data.coins || 0) + reward.coins;
+  SAVE.data.spins = (SAVE.data.spins || 0) + reward.spins;
+  SAVE.data.tokens = (SAVE.data.tokens || 0) + reward.tokens;
   SAVE.data.daily.streak = (SAVE.data.daily.streak || 0) + 1;
   SAVE.data.daily.lastClaimDate = getTodayString();
   SAVE.save();
@@ -10265,7 +10371,7 @@ function claimDailyReward() {
   sfx('coin');
   sfx('map');
 
-  popup(W * 0.5, H * 0.4, `🎉 DAY ${status.currentDay} CLAIMED! +${reward.coins} 🪙`, '#ffd23c');
+  popup(W * 0.5, H * 0.4, `🎉 DAY ${targetDay} CLAIMED! +${reward.coins.toLocaleString()} 🪙`, '#ffd23c');
   if (reward.tokens > 0) popup(W * 0.5, H * 0.46, `+${reward.tokens} 🎟️ Plasma Cores!`, '#c084fc');
   if (reward.spins > 0) popup(W * 0.5, H * 0.52, `+${reward.spins} 🎡 Lucky Spins!`, '#00ffee');
 
@@ -10661,10 +10767,10 @@ function buildShop() {
 
   // 0. DAILY REWARDS VOYAGE SHORTCUT
   const dailyStatus = getDailyRewardStatus();
-  h += '<h2>🎁 PIRATE DAILY VOYAGE REWARDS — 7-Day Streak ⚓</h2>';
+  h += '<h2>🚀 INFINITE COSMIC ODYSSEY REWARDS — Endless Daily Streak 🌌</h2>';
   h += `<div class="shopitem" style="border: 1.5px solid #ff5e62; background: linear-gradient(135deg, rgba(255, 94, 98, 0.15), rgba(255, 210, 60, 0.1));">` +
-    `<div class="ic" style="font-size:2rem;display:flex;align-items:center;justify-content:center">🎁</div>` +
-    `<div class="info"><div class="t" style="color:#ffd23c">7-Day Pirate Voyage Calendar</div>` +
+    `<div class="ic" style="font-size:2rem;display:flex;align-items:center;justify-content:center">🌌</div>` +
+    `<div class="info"><div class="t" style="color:#ffd23c">Infinite Cosmic Odyssey Calendar</div>` +
     `<div class="d">${dailyStatus.state === 'READY' ? '🎁 Daily reward is READY to claim!' : (dailyStatus.state === 'MISSED' ? '⚠️ Streak broken! Repair with 5 cores or reset.' : '✔ Daily reward claimed! Next reward tomorrow.')}</div>` +
     `<div class="lv" style="color:#ff9966">Streak: ${SAVE.data.daily ? SAVE.data.daily.streak : 0} Days 🔥</div></div>` +
     `<button style="background:linear-gradient(135deg,#ff5e62,#ff9966);color:#fff;box-shadow:0 0 15px rgba(255,94,98,0.5)" onclick="openDailyModal(event)">🎁 OPEN</button></div>`;
