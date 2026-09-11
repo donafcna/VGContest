@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v103';
+  var LATEST_VERSION = 'v=60fps_v104';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -5275,10 +5275,10 @@ function activateSuper(e) {
         r: 28,
         hp: 2,
         maxHp: 2,
-        life: 18.0,
-        maxLife: 18.0,
+        life: 7.0,
+        maxLife: 7.0,
         alive: true,
-        shootT: 0.20,
+        shootT: 0.40,
         shipModel: 'storm',
         pitch: -0.15
       },
@@ -5291,10 +5291,10 @@ function activateSuper(e) {
         r: 28,
         hp: 2,
         maxHp: 2,
-        life: 18.0,
-        maxLife: 18.0,
+        life: 7.0,
+        maxLife: 7.0,
         alive: true,
-        shootT: 0.35,
+        shootT: 0.60,
         shipModel: 'storm',
         pitch: 0.15
       }
@@ -5556,7 +5556,7 @@ const SHIPS = [
     hp: 8, cool: 0.42, spd: 1.20, gold: 1.50, magnet: 75, spread: [0],
     power: '🌀 Heavy Plasma Cannon, Quad Articulated Turbines & Void Torpedoes',
     superName: '⚡ Overdrive: Twin Holographic Fleet Clones 👥',
-    superDesc: 'Cosmic Overdrive [E]: Deploys two autonomous Nebula Cruiser phantom clones that break formation into different directions across the upper and lower sectors to draw all enemy fire, provide balanced support fire, and absorb 2 direct hits each before detonating!'
+    superDesc: 'Cosmic Overdrive [E]: Deploys two autonomous Nebula Cruiser phantom clones that break formation into different directions across the upper and lower sectors to draw all enemy fire, provide light tactical support fire, and absorb 2 direct hits each before detonating!'
   },
 ];
 
@@ -12260,10 +12260,10 @@ function update(dt) {
     c.y = Math.max(50, Math.min(H - 60, c.y));
     c.pitch = Math.max(-0.25, Math.min(0.25, (c.y - prevY) / (Math.max(0.001, dt) * 600)));
 
-    // Directed Twin Plasma Blaster Fire Support actively targeting enemies
-    c.shootT = (c.shootT || 0.32) - dt;
+    // Directed Light Plasma Blaster Fire Support actively targeting enemies
+    c.shootT = (c.shootT || 0.40) - dt;
     if (c.shootT <= 0) {
-      c.shootT = 0.28;
+      c.shootT = 0.45;
       const enemyTarget = getCloneTarget(c.x, c.y);
       let fireAng = 0;
       if (enemyTarget && enemyTarget.hp > 0) {
@@ -12274,23 +12274,20 @@ function update(dt) {
       }
 
       const cosA = Math.cos(fireAng), sinA = Math.sin(fireAng);
-      const boltSpeed = 1200;
-      for (const offP of [-10, 10]) {
-        const perpX = -sinA * offP, perpY = cosA * offP;
-        balls.push({
-          x: c.x + cosA * 35 + perpX,
-          y: c.y + sinA * 35 + perpY,
-          vx: cosA * boltSpeed,
-          vy: sinA * boltSpeed,
-          r: 5.5,
-          dmg: 1.0,
-          col: '#00ffee',
-          isCloneBolt: true,
-          target: enemyTarget,
-          shipModel: 'storm'
-        });
-      }
-      muzzleFlash = Math.max(muzzleFlash, 0.4);
+      const boltSpeed = 1150;
+      balls.push({
+        x: c.x + cosA * 35,
+        y: c.y + sinA * 35,
+        vx: cosA * boltSpeed,
+        vy: sinA * boltSpeed,
+        r: 4.5,
+        dmg: 0.35,
+        col: '#00ffee',
+        isCloneBolt: true,
+        target: enemyTarget,
+        shipModel: 'storm'
+      });
+      muzzleFlash = Math.max(muzzleFlash, 0.3);
       sfx('laser');
     }
   }
@@ -14265,26 +14262,26 @@ function update(dt) {
           explode(c.x, c.y, '#ffd23c', 40);
           sfx('boom');
           addShake(18);
-          popup(c.x, c.y - 30, '💥 CLONE DETONATION! 3.5 AOE DMG', '#00ffee');
+          popup(c.x, c.y - 30, '💥 CLONE DETONATION! 1.0 AOE DMG', '#00ffee');
           for (let bi = eballs.length - 1; bi >= 0; bi--) {
             if (Math.hypot(eballs[bi].x - c.x, eballs[bi].y - c.y) < 220) eballs.splice(bi, 1);
           }
           for (let gi = gliders.length - 1; gi >= 0; gi--) {
             const eg = gliders[gi];
             if (Math.hypot(eg.x - c.x, eg.y - c.y) < 220) {
-              eg.hp -= 3.5;
+              eg.hp -= 1.0;
               if (eg.hp <= 0) killGlider(gi, eg);
             }
           }
           for (let fi = forts.length - 1; fi >= 0; fi--) {
             const ef = forts[fi];
             if (Math.hypot(ef.x - c.x, ef.y - c.y) < 220) {
-              ef.hp -= 3.5;
+              ef.hp -= 1.0;
               if (ef.hp <= 0) killFort(fi, ef);
             }
           }
           if (boss && Math.hypot(boss.x - c.x, boss.y - c.y) < 260) {
-            boss.hp -= 3.5;
+            boss.hp -= 1.0;
             if (boss.hp <= 0) killBoss();
           }
           nebulaClones.splice(ci, 1);
@@ -14388,7 +14385,7 @@ function update(dt) {
           explode(c.x, c.y, '#ffd23c', 40);
           sfx('boom');
           addShake(18);
-          popup(c.x, c.y - 30, '💥 CLONE DETONATION! 3.5 AOE DMG', '#00ffee');
+          popup(c.x, c.y - 30, '💥 CLONE DETONATION! 1.0 AOE DMG', '#00ffee');
           // Detonation AoE Shockwave dealing 3.5 AoE damage
           for (let bi = eballs.length - 1; bi >= 0; bi--) {
             if (Math.hypot(eballs[bi].x - c.x, eballs[bi].y - c.y) < 220) eballs.splice(bi, 1);
@@ -14396,19 +14393,19 @@ function update(dt) {
           for (let gi = gliders.length - 1; gi >= 0; gi--) {
             const eg = gliders[gi];
             if (Math.hypot(eg.x - c.x, eg.y - c.y) < 220) {
-              eg.hp -= 3.5;
+              eg.hp -= 1.0;
               if (eg.hp <= 0) killGlider(gi, eg);
             }
           }
           for (let fi = forts.length - 1; fi >= 0; fi--) {
             const ef = forts[fi];
             if (Math.hypot(ef.x - c.x, ef.y - c.y) < 220) {
-              ef.hp -= 3.5;
+              ef.hp -= 1.0;
               if (ef.hp <= 0) killFort(fi, ef);
             }
           }
           if (boss && Math.hypot(boss.x - c.x, boss.y - c.y) < 260) {
-            boss.hp -= 3.5;
+            boss.hp -= 1.0;
             if (boss.hp <= 0) killBoss();
           }
           nebulaClones.splice(ci, 1);
