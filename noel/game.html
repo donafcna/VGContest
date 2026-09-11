@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v110';
+  var LATEST_VERSION = 'v=60fps_v111';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -3442,8 +3442,15 @@
 <!-- Pirate 7-Day Voyage Daily Rewards Modal -->
 <div id="dailyModal" class="overlay hidden" style="z-index: 125;" onclick="if(event.target===this) closeDailyModal(event);">
   <div class="daily-card" style="position:relative">
-    <button onclick="closeDailyModal(event)" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem">✖ CLOSE</button>
-    <span class="daily-badge-tag">🎁 PIRATE DAILY VOYAGE REWARDS ⚓</span>
+    <!-- Header Top Row with Category Tag, Timer Pill & Close Button (Flexbox - No Overlap) -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px">
+      <span class="daily-badge-tag" style="margin:0;align-self:auto">🎁 PIRATE DAILY VOYAGE REWARDS ⚓</span>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span id="dailyRewardTimerPill" style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(255,94,98,0.15);border:1.5px solid #ff5e62;color:#ffd23c;font-size:0.75rem;font-weight:900;border-radius:8px;font-family:'Orbitron',sans-serif;box-shadow:0 0 12px rgba(255,94,98,0.3)">⏰ Next Reward: <span id="dailyRewardTimer" style="color:#ffffff;font-variant-numeric:tabular-nums">--h --m --s</span></span>
+        <button onclick="closeDailyModal(event)" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 14px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:0.85rem;display:inline-flex;align-items:center;justify-content:center;font-weight:bold">✖ CLOSE</button>
+      </div>
+    </div>
+    
     <h1 class="daily-title">7-DAY VOYAGE REWARDS</h1>
     <div id="dailyStreakText" class="daily-streak-info">⚓ Start your 7-Day Voyage Streak today!</div>
     
@@ -10197,6 +10204,7 @@ function renderDailyModalUI() {
     `;
   }
   container.innerHTML = html;
+  try { updateDailyRewardTimerDisplay(); } catch(e) {}
 
   // Render Action Area
   if (status.state === 'READY') {
@@ -10311,13 +10319,59 @@ function resetDailyStreak() {
 }
 window.resetDailyStreak = resetDailyStreak;
 
+let dailyModalTimer = null;
+
+function getDailyRewardTimerText() {
+  const status = getDailyRewardStatus();
+  if (status.state === 'READY') {
+    return 'READY TO CLAIM!';
+  }
+  const now = new Date();
+  const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+  const diff = tomorrow - now;
+  if (diff <= 0) return '00h 00m 00s';
+  const h = Math.floor(diff / (1000 * 60 * 60));
+  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const s = Math.floor((diff % (1000 * 60)) / 1000);
+  return `${String(h).padStart(2, '0')}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s`;
+}
+
+function updateDailyRewardTimerDisplay() {
+  const timerEl = document.getElementById('dailyRewardTimer');
+  const timerPill = document.getElementById('dailyRewardTimerPill');
+  const status = getDailyRewardStatus();
+  if (timerEl) {
+    if (status.state === 'READY') {
+      timerEl.textContent = 'READY!';
+      if (timerPill) {
+        timerPill.style.background = 'rgba(34,197,94,0.2)';
+        timerPill.style.borderColor = '#22c55e';
+        timerPill.style.color = '#4ade80';
+      }
+    } else {
+      timerEl.textContent = getDailyRewardTimerText();
+      if (timerPill) {
+        timerPill.style.background = 'rgba(255,94,98,0.15)';
+        timerPill.style.borderColor = '#ff5e62';
+        timerPill.style.color = '#ffd23c';
+      }
+    }
+  }
+}
+
 function openDailyModal(e) {
   if (e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch (err) {}
   }
   try { initAudio(); } catch (err) {}
   renderDailyModalUI();
+  updateDailyRewardTimerDisplay();
   showOverlay('dailyModal');
+
+  clearInterval(dailyModalTimer);
+  dailyModalTimer = setInterval(() => {
+    updateDailyRewardTimerDisplay();
+  }, 1000);
 }
 window.openDailyModal = openDailyModal;
 
@@ -10325,6 +10379,7 @@ function closeDailyModal(e) {
   if (e) {
     try { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); } catch (err) {}
   }
+  clearInterval(dailyModalTimer);
   hideOverlay('dailyModal');
   renderWallet(); try { updateProfileUI(); } catch(e) {}
   updateDailyBadge();
