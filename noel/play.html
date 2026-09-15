@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v121';
+  var LATEST_VERSION = 'v=60fps_v122';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -7049,12 +7049,12 @@ const BOSS_INTEL = [
     col: '#38bdf8',
     hp: 70,
     powers: [
-      '🌀 Multi-Vector Tri-Vortex: 3 vertical shots (2cm apart) that fan out in different directions and track you for 5 seconds!',
-      '🚀 Rapid Divergent Tri-Vortex Salvo: Angled multi-directional tracking torpedoes (5s homing)',
-      '⚡ Ultimate Overcharged Tri-Vortex Volley: Wide-angle 3-shot multi-directional barrage locked on for 5 seconds'
+      '🌀 Random Multi-Vector Tri-Vortex: 3 vertical shots (2cm apart) that launch in random different directions and track you for 3 seconds!',
+      '🚀 Rapid Divergent Tri-Vortex Salvo: Unpredictable multi-directional tracking torpedoes (3s homing)',
+      '⚡ Ultimate Overcharged Tri-Vortex Volley: Wide-angle 3-shot random multi-directional barrage locked on for 3 seconds'
     ],
     loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +125 🪙',
-    tactic: 'The 3 vertical vortex shots launch in different diverging directions and then curve toward you for 5 seconds! Use wide evasive loops to slip past their converging pincer arc!'
+    tactic: 'The 3 vertical vortex shots launch in unpredictable, random diverging directions like autonomous fighter clones and weave toward you for 3 seconds! Keep moving dynamically to dodge their multi-vector homing paths!'
   },
   {
     id: 'void',
@@ -13692,15 +13692,15 @@ function update(dt) {
 
       } else if (boss.type === 'ram') {
         // Boss 3: ADMIRAL VORTEX: TITAN CITADEL CRUISER MC-85 (THE PROFUNDITY)
-        // Powers: 3 shots that are vertical from each other (2cm / ~76px apart) that go in DIFFERENT DIRECTIONS and follow the player for 5 seconds!
+        // Powers: 3 shots that are vertical from each other (2cm / ~76px apart) that go in DIFFERENT & RANDOM DIRECTIONS (like Nebula Cruiser clones) and follow the player for 3 seconds!
         const verticalPatterns = [
-          { offY: -76, angOffset: 0.44 },  // Top shot: angles up-left (negative vy)
-          { offY: 0,   angOffset: 0.00 },  // Middle shot: flies straight left towards player
-          { offY: 76,  angOffset: -0.44 }  // Bottom shot: angles down-left (positive vy)
+          { offY: -76, angOffset: 0.36 + Math.random() * 0.28, weaveFreq: 3.4, weaveAmp: 0.55, weavePhase: Math.random() * Math.PI * 2 }, // Top shot: angles up-left & weaves dynamically
+          { offY: 0,   angOffset: (Math.random() - 0.5) * 0.28, weaveFreq: 2.8, weaveAmp: 0.40, weavePhase: Math.random() * Math.PI * 2 }, // Middle shot: angles center & weaves dynamically
+          { offY: 76,  angOffset: -0.36 - Math.random() * 0.28, weaveFreq: 3.6, weaveAmp: 0.55, weavePhase: Math.random() * Math.PI * 2 }  // Bottom shot: angles down-left & weaves dynamically
         ];
         
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Wide Multi-Vector Tri-Vortex Barrage (3 vertical shots in divergent directions, 5.0s homing tracking)
+          // ULTIMATE: Wide Multi-Vector Tri-Vortex Barrage (3 vertical shots in random divergent directions, 3.0s homing tracking)
           const baseSpd = 520 * spdBonus;
           for (const p of verticalPatterns) {
             const shootAng = Math.PI + p.angOffset * 1.25; // wide divergent directions
@@ -13708,8 +13708,12 @@ function update(dt) {
               type: 'vortex_tri',
               isHoming: true,
               isGuided: true,
-              homingT: 5.0,
+              homingT: 3.0,
               turnRate: 3.4,
+              weaveFreq: p.weaveFreq,
+              weaveAmp: p.weaveAmp,
+              weavePhase: p.weavePhase,
+              patrolT: 0,
               col: '#38bdf8',
               x: boss.x - boss.w * 0.42,
               y: boss.y + p.offY,
@@ -13720,10 +13724,10 @@ function update(dt) {
             });
           }
           addShake(24);
-          popup(boss.x - 40, boss.y - 45, '🌀 ULTIMATE: MULTI-VECTOR TRI-VORTEX (5s TRACKING)!', '#38bdf8');
+          popup(boss.x - 40, boss.y - 45, '🌀 ULTIMATE: RANDOM TRI-VORTEX (3s TRACKING)!', '#38bdf8');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          // Rapid Divergent Tri-Vortex Barrage (3 vertical shots in divergent directions, 5.0s homing tracking)
+          // Rapid Divergent Tri-Vortex Barrage (3 vertical shots in random divergent directions, 3.0s homing tracking)
           const baseSpd = 480 * spdBonus;
           for (const p of verticalPatterns) {
             const shootAng = Math.PI + p.angOffset * 1.1;
@@ -13731,8 +13735,12 @@ function update(dt) {
               type: 'vortex_tri',
               isHoming: true,
               isGuided: true,
-              homingT: 5.0,
+              homingT: 3.0,
               turnRate: 3.2,
+              weaveFreq: p.weaveFreq,
+              weaveAmp: p.weaveAmp,
+              weavePhase: p.weavePhase,
+              patrolT: 0,
               col: '#00ffee',
               x: boss.x - boss.w * 0.40,
               y: boss.y + p.offY,
@@ -13742,10 +13750,10 @@ function update(dt) {
               spin: 0
             });
           }
-          popup(boss.x - 40, boss.y - 45, '🚀 DIVERGENT TRI-VORTEX SALVO (5s TRACKING)!', '#00ffee');
+          popup(boss.x - 40, boss.y - 45, '🚀 RANDOM DIVERGENT TRI-VORTEX (3s TRACKING)!', '#00ffee');
           sfx('incoming');
         } else {
-          // Primary Multi-Directional Tri-Vortex Formation (3 vertical shots 2cm apart in different directions, 5.0s homing tracking)
+          // Primary Multi-Directional Tri-Vortex Formation (3 vertical shots 2cm apart in random different directions, 3.0s homing tracking)
           const baseSpd = 450 * spdBonus;
           for (const p of verticalPatterns) {
             const shootAng = Math.PI + p.angOffset;
@@ -13753,8 +13761,12 @@ function update(dt) {
               type: 'vortex_tri',
               isHoming: true,
               isGuided: true,
-              homingT: 5.0,
+              homingT: 3.0,
               turnRate: 3.0,
+              weaveFreq: p.weaveFreq,
+              weaveAmp: p.weaveAmp,
+              weavePhase: p.weavePhase,
+              patrolT: 0,
               col: '#38bdf8',
               x: boss.x - boss.w * 0.38,
               y: boss.y + p.offY,
@@ -13765,7 +13777,7 @@ function update(dt) {
             });
           }
           sfx('laser');
-          popup(boss.x - 40, boss.y - 45, '🌀 MULTI-DIRECTIONAL TRI-VORTEX (5s TRACKING)!', '#38bdf8');
+          popup(boss.x - 40, boss.y - 45, '🌀 RANDOM MULTI-DIRECTIONAL TRI-VORTEX (3s TRACKING)!', '#38bdf8');
         }
 
       } else if (boss.type === 'void') {
@@ -14713,15 +14725,19 @@ function update(dt) {
       }
     }
     if (b.isGuided || b.isHoming) {
-      // Homing actively tracks and steers toward player or nearest clone
+      // Homing actively tracks and steers toward player or nearest clone (with Nebula clone-style multi-directional weave)
       const target = getEnemyTarget(b.x, b.y);
       const tdx = target.x - b.x, tdy = target.y - b.y;
-      const targetAng = Math.atan2(tdy, tdx);
+      let targetAng = Math.atan2(tdy, tdx);
+      if (b.weaveAmp) {
+        b.patrolT = (b.patrolT || 0) + dt;
+        targetAng += Math.sin(b.patrolT * (b.weaveFreq || 3.2) + (b.weavePhase || 0)) * b.weaveAmp;
+      }
       const currAng = Math.atan2(b.vy, b.vx);
       let diff = targetAng - currAng;
       while (diff < -Math.PI) diff += Math.PI * 2;
       while (diff > Math.PI) diff -= Math.PI * 2;
-      const turnRate = 2.8 * dt;
+      const turnRate = (b.turnRate || 2.8) * dt;
       const newAng = currAng + Math.max(-turnRate, Math.min(turnRate, diff));
       const curSpeed = Math.hypot(b.vx, b.vy);
       b.vx = Math.cos(newAng) * curSpeed;
