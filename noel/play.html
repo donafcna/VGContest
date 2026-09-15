@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v119';
+  var LATEST_VERSION = 'v=60fps_v121';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -7049,12 +7049,12 @@ const BOSS_INTEL = [
     col: '#38bdf8',
     hp: 70,
     powers: [
-      '🌀 Tri-Vortex Homing Barrage: 3 vertical tracking shots spaced 2cm (76px) apart that follow you for 5 seconds!',
-      '🚀 Overcharged Tri-Vortex Salvo: Rapid-fire 3-shot vertical tracking torpedoes (5s homing)',
-      '⚡ Ultimate Tri-Vortex Citadel Volley: High-velocity 3-shot vertical barrage locked on for 5 seconds'
+      '🌀 Multi-Vector Tri-Vortex: 3 vertical shots (2cm apart) that fan out in different directions and track you for 5 seconds!',
+      '🚀 Rapid Divergent Tri-Vortex Salvo: Angled multi-directional tracking torpedoes (5s homing)',
+      '⚡ Ultimate Overcharged Tri-Vortex Volley: Wide-angle 3-shot multi-directional barrage locked on for 5 seconds'
     ],
     loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +125 🪙',
-    tactic: 'The 3 vertical vortex shots follow your ship for 5 seconds! Use sharp vertical and reverse thrusters to dodge them until their 5-second tracking expires!'
+    tactic: 'The 3 vertical vortex shots launch in different diverging directions and then curve toward you for 5 seconds! Use wide evasive loops to slip past their converging pincer arc!'
   },
   {
     id: 'void',
@@ -13692,12 +13692,18 @@ function update(dt) {
 
       } else if (boss.type === 'ram') {
         // Boss 3: ADMIRAL VORTEX: TITAN CITADEL CRUISER MC-85 (THE PROFUNDITY)
-        // Powers: 3 shots that are vertical from each other (2cm / ~76px apart) that follow the player for 5 seconds!
-        const verticalOffsets = [-76, 0, 76]; // 2cm apart vertical separation
+        // Powers: 3 shots that are vertical from each other (2cm / ~76px apart) that go in DIFFERENT DIRECTIONS and follow the player for 5 seconds!
+        const verticalPatterns = [
+          { offY: -76, angOffset: 0.44 },  // Top shot: angles up-left (negative vy)
+          { offY: 0,   angOffset: 0.00 },  // Middle shot: flies straight left towards player
+          { offY: 76,  angOffset: -0.44 }  // Bottom shot: angles down-left (positive vy)
+        ];
         
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Overcharged Tri-Vortex Barrage (3 vertical shots 2cm apart, 5.0s homing tracking)
-          for (const offY of verticalOffsets) {
+          // ULTIMATE: Wide Multi-Vector Tri-Vortex Barrage (3 vertical shots in divergent directions, 5.0s homing tracking)
+          const baseSpd = 520 * spdBonus;
+          for (const p of verticalPatterns) {
+            const shootAng = Math.PI + p.angOffset * 1.25; // wide divergent directions
             eballs.push({
               type: 'vortex_tri',
               isHoming: true,
@@ -13706,19 +13712,21 @@ function update(dt) {
               turnRate: 3.4,
               col: '#38bdf8',
               x: boss.x - boss.w * 0.42,
-              y: boss.y + offY,
-              vx: -520 * spdBonus,
-              vy: 0,
+              y: boss.y + p.offY,
+              vx: Math.cos(shootAng) * baseSpd,
+              vy: Math.sin(shootAng) * baseSpd,
               r: 22,
               spin: 0
             });
           }
           addShake(24);
-          popup(boss.x - 40, boss.y - 45, '🌀 ULTIMATE: OVERCHARGED TRI-VORTEX (5s TRACKING)!', '#38bdf8');
+          popup(boss.x - 40, boss.y - 45, '🌀 ULTIMATE: MULTI-VECTOR TRI-VORTEX (5s TRACKING)!', '#38bdf8');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          // Rapid Tri-Vortex Barrage (3 vertical shots 2cm apart, 5.0s homing tracking)
-          for (const offY of verticalOffsets) {
+          // Rapid Divergent Tri-Vortex Barrage (3 vertical shots in divergent directions, 5.0s homing tracking)
+          const baseSpd = 480 * spdBonus;
+          for (const p of verticalPatterns) {
+            const shootAng = Math.PI + p.angOffset * 1.1;
             eballs.push({
               type: 'vortex_tri',
               isHoming: true,
@@ -13727,18 +13735,20 @@ function update(dt) {
               turnRate: 3.2,
               col: '#00ffee',
               x: boss.x - boss.w * 0.40,
-              y: boss.y + offY,
-              vx: -480 * spdBonus,
-              vy: 0,
+              y: boss.y + p.offY,
+              vx: Math.cos(shootAng) * baseSpd,
+              vy: Math.sin(shootAng) * baseSpd,
               r: 20,
               spin: 0
             });
           }
-          popup(boss.x - 40, boss.y - 45, '🚀 TRI-VORTEX HOMING SALVO (5s TRACKING)!', '#00ffee');
+          popup(boss.x - 40, boss.y - 45, '🚀 DIVERGENT TRI-VORTEX SALVO (5s TRACKING)!', '#00ffee');
           sfx('incoming');
         } else {
-          // Primary Tri-Vortex Formation (3 vertical shots 2cm apart, 5.0s homing tracking)
-          for (const offY of verticalOffsets) {
+          // Primary Multi-Directional Tri-Vortex Formation (3 vertical shots 2cm apart in different directions, 5.0s homing tracking)
+          const baseSpd = 450 * spdBonus;
+          for (const p of verticalPatterns) {
+            const shootAng = Math.PI + p.angOffset;
             eballs.push({
               type: 'vortex_tri',
               isHoming: true,
@@ -13747,15 +13757,15 @@ function update(dt) {
               turnRate: 3.0,
               col: '#38bdf8',
               x: boss.x - boss.w * 0.38,
-              y: boss.y + offY,
-              vx: -450 * spdBonus,
-              vy: 0,
+              y: boss.y + p.offY,
+              vx: Math.cos(shootAng) * baseSpd,
+              vy: Math.sin(shootAng) * baseSpd,
               r: 19,
               spin: 0
             });
           }
           sfx('laser');
-          popup(boss.x - 40, boss.y - 45, '🌀 TRI-VORTEX BARRAGE (5s TRACKING)!', '#38bdf8');
+          popup(boss.x - 40, boss.y - 45, '🌀 MULTI-DIRECTIONAL TRI-VORTEX (5s TRACKING)!', '#38bdf8');
         }
 
       } else if (boss.type === 'void') {
