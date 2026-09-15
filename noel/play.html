@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v123';
+  var LATEST_VERSION = 'v=60fps_v124';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -7049,12 +7049,12 @@ const BOSS_INTEL = [
     col: '#38bdf8',
     hp: 70,
     powers: [
-      '🌀 Random Multi-Vector Tri-Vortex: 3 vertical shots (2cm apart) that launch in random different directions and track you for 3 seconds!',
-      '🚀 Rapid Divergent Tri-Vortex Salvo: Unpredictable multi-directional tracking torpedoes (3s homing)',
-      '⚡ Ultimate Overcharged Tri-Vortex Volley: Wide-angle 3-shot random multi-directional barrage locked on for 3 seconds'
+      '🚀 Random Multi-Vector Tri-Torpedoes: 3 vertical torpedoes (2cm apart) that launch in random different directions and track you for 3 seconds!',
+      '🚀 Rapid Divergent Tri-Torpedo Salvo: Unpredictable multi-directional tracking torpedoes (3s homing)',
+      '⚡ Ultimate Overcharged Tri-Torpedo Volley: Wide-angle 3-shot random torpedo barrage locked on for 3 seconds'
     ],
     loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +125 🪙',
-    tactic: 'The 3 vertical vortex shots launch in unpredictable, random diverging directions like autonomous fighter clones and weave toward you for 3 seconds! Keep moving dynamically to dodge their multi-vector homing paths!'
+    tactic: 'The 3 vertical torpedoes launch in unpredictable, random diverging directions like autonomous missiles and weave toward you for 3 seconds! Keep moving dynamically to dodge their multi-vector homing trajectory!'
   },
   {
     id: 'void',
@@ -13700,12 +13700,13 @@ function update(dt) {
         ];
         
         if (boss.atkCycle === 2) {
-          // ULTIMATE: Wide Multi-Vector Tri-Vortex Barrage (3 vertical shots in random divergent directions, 3.0s homing tracking)
+          // ULTIMATE: Wide Multi-Vector Tri-Torpedo Barrage (3 vertical torpedoes in random divergent directions, 3.0s homing tracking)
           const baseSpd = 360 * spdBonus;
           for (const p of verticalPatterns) {
             const shootAng = Math.PI + p.angOffset * 1.25; // wide divergent directions
             eballs.push({
               type: 'vortex_tri',
+              isTorpedo: true,
               isHoming: true,
               isGuided: true,
               homingT: 3.0,
@@ -13724,15 +13725,16 @@ function update(dt) {
             });
           }
           addShake(24);
-          popup(boss.x - 40, boss.y - 45, '🌀 ULTIMATE: RANDOM TRI-VORTEX (3s TRACKING)!', '#38bdf8');
+          popup(boss.x - 40, boss.y - 45, '🚀 ULTIMATE: RANDOM TRI-TORPEDO BARRAGE (3s TRACKING)!', '#38bdf8');
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
-          // Rapid Divergent Tri-Vortex Barrage (3 vertical shots in random divergent directions, 3.0s homing tracking)
+          // Rapid Divergent Tri-Torpedo Salvo (3 vertical torpedoes in random divergent directions, 3.0s homing tracking)
           const baseSpd = 330 * spdBonus;
           for (const p of verticalPatterns) {
             const shootAng = Math.PI + p.angOffset * 1.1;
             eballs.push({
               type: 'vortex_tri',
+              isTorpedo: true,
               isHoming: true,
               isGuided: true,
               homingT: 3.0,
@@ -13750,15 +13752,16 @@ function update(dt) {
               spin: 0
             });
           }
-          popup(boss.x - 40, boss.y - 45, '🚀 RANDOM DIVERGENT TRI-VORTEX (3s TRACKING)!', '#00ffee');
+          popup(boss.x - 40, boss.y - 45, '🚀 RANDOM DIVERGENT TRI-TORPEDOES (3s TRACKING)!', '#00ffee');
           sfx('incoming');
         } else {
-          // Primary Multi-Directional Tri-Vortex Formation (3 vertical shots 2cm apart in random different directions, 3.0s homing tracking)
+          // Primary Multi-Directional Tri-Torpedo Formation (3 vertical torpedoes 2cm apart in random different directions, 3.0s homing tracking)
           const baseSpd = 300 * spdBonus;
           for (const p of verticalPatterns) {
             const shootAng = Math.PI + p.angOffset;
             eballs.push({
               type: 'vortex_tri',
+              isTorpedo: true,
               isHoming: true,
               isGuided: true,
               homingT: 3.0,
@@ -13777,7 +13780,7 @@ function update(dt) {
             });
           }
           sfx('laser');
-          popup(boss.x - 40, boss.y - 45, '🌀 RANDOM MULTI-DIRECTIONAL TRI-VORTEX (3s TRACKING)!', '#38bdf8');
+          popup(boss.x - 40, boss.y - 45, '🚀 RANDOM MULTI-DIRECTIONAL TRI-TORPEDOES (3s TRACKING)!', '#38bdf8');
         }
 
       } else if (boss.type === 'void') {
@@ -14866,8 +14869,14 @@ function update(dt) {
       } else if (b.type === 'bacteria_micro') {
         popup(ship.x, ship.y - 30, '🧫 BACTERIA BIT INFESTATION!', '#00ffaa');
         explode(b.x, b.y, '#00ffaa', 14);
-      } else if (b.type === 'vortex_tri' || b.type === 'vortex') {
-        popup(ship.x, ship.y - 30, '🌀 TRI-VORTEX PLASMA HIT!', '#38bdf8');
+      } else if (b.type === 'vortex_tri') {
+        popup(ship.x, ship.y - 30, '💥 TRI-TORPEDO IMPACT!', '#38bdf8');
+        explode(b.x, b.y, '#38bdf8', 32);
+        explode(b.x, b.y, '#00ffee', 20);
+        addShake(18);
+        sfx('boom');
+      } else if (b.type === 'vortex') {
+        popup(ship.x, ship.y - 30, '🌀 DARK MATTER VORTEX HIT!', '#38bdf8');
         explode(b.x, b.y, '#38bdf8', 30);
         addShake(16);
       }
@@ -18323,8 +18332,53 @@ function draw() {
       cx.strokeStyle = col; cx.lineWidth = 2.4;
       cx.beginPath(); cx.arc(0, 0, eb.r, t * 12, t * 12 + Math.PI * 1.5); cx.stroke();
 
-    } else if (eb.type === 'vortex_tri' || eb.type === 'vortex') {
-      // Swirling Tri-Vortex Plasma Orb with concentric rotating vortex arcs
+    } else if (eb.type === 'vortex_tri') {
+      // Heavy Mon Calamari Vortex Proton Torpedo (Aerodynamic hull, delta fins, glowing vortex warhead & ion thruster)
+      const col = eb.col || '#38bdf8';
+      
+      // 1. Azure Plasma Aura Glow
+      cx.fillStyle = 'rgba(56, 189, 248, 0.35)';
+      cx.beginPath(); cx.arc(0, 0, eb.r + 6, 0, Math.PI * 2); cx.fill();
+
+      // 2. High-Tech Torpedo Chassis with Dark Navy Contrast Hull
+      cx.fillStyle = '#082f49';
+      cx.fillRect(-16, -5, 30, 10);
+      cx.strokeStyle = col;
+      cx.lineWidth = 1.8;
+      cx.strokeRect(-16, -5, 30, 10);
+
+      // 3. Searing Vortex Warhead Cone
+      cx.fillStyle = col;
+      cx.beginPath(); cx.moveTo(14, -5); cx.lineTo(24, 0); cx.lineTo(14, 5); cx.closePath(); cx.fill();
+      cx.fillStyle = '#ffffff';
+      cx.beginPath(); cx.moveTo(16, -3); cx.lineTo(23, 0); cx.lineTo(16, 3); cx.closePath(); cx.fill();
+
+      // 4. Rotating Vortex Arc around warhead tip
+      cx.strokeStyle = '#ffffff';
+      cx.lineWidth = 1.5;
+      cx.beginPath(); cx.arc(14, 0, 7, t * 14, t * 14 + Math.PI * 1.4); cx.stroke();
+
+      // 5. Dual Aerodynamic Stabilizing Delta Fins
+      cx.fillStyle = '#0284c7';
+      cx.beginPath(); cx.moveTo(-14, -5); cx.lineTo(-7, -11); cx.lineTo(-1, -5); cx.closePath(); cx.fill();
+      cx.beginPath(); cx.moveTo(-14, 5); cx.lineTo(-7, 11); cx.lineTo(-1, 5); cx.closePath(); cx.fill();
+
+      // 6. Superheated Ion Exhaust Plume
+      const flameLen = 16 + Math.random() * 14;
+      const fGrad = cx.createLinearGradient(-16, 0, -16 - flameLen, 0);
+      fGrad.addColorStop(0, '#ffffff');
+      fGrad.addColorStop(0.35, col);
+      fGrad.addColorStop(1, 'rgba(0, 229, 255, 0)');
+      cx.fillStyle = fGrad;
+      cx.beginPath();
+      cx.moveTo(-16, -4);
+      cx.lineTo(-16 - flameLen, 0);
+      cx.lineTo(-16, 4);
+      cx.closePath();
+      cx.fill();
+
+    } else if (eb.type === 'vortex') {
+      // Swirling Gravitational Dark Matter Vortex Core
       const col = eb.col || '#38bdf8';
       cx.fillStyle = 'rgba(56, 189, 248, 0.25)';
       cx.beginPath(); cx.arc(0, 0, eb.r + 6, 0, Math.PI * 2); cx.fill();
