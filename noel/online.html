@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v122';
+  var LATEST_VERSION = 'v=60fps_v123';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -13701,7 +13701,7 @@ function update(dt) {
         
         if (boss.atkCycle === 2) {
           // ULTIMATE: Wide Multi-Vector Tri-Vortex Barrage (3 vertical shots in random divergent directions, 3.0s homing tracking)
-          const baseSpd = 520 * spdBonus;
+          const baseSpd = 360 * spdBonus;
           for (const p of verticalPatterns) {
             const shootAng = Math.PI + p.angOffset * 1.25; // wide divergent directions
             eballs.push({
@@ -13709,7 +13709,7 @@ function update(dt) {
               isHoming: true,
               isGuided: true,
               homingT: 3.0,
-              turnRate: 3.4,
+              turnRate: 2.8,
               weaveFreq: p.weaveFreq,
               weaveAmp: p.weaveAmp,
               weavePhase: p.weavePhase,
@@ -13728,7 +13728,7 @@ function update(dt) {
           sfx('incoming');
         } else if (boss.atkCycle === 1) {
           // Rapid Divergent Tri-Vortex Barrage (3 vertical shots in random divergent directions, 3.0s homing tracking)
-          const baseSpd = 480 * spdBonus;
+          const baseSpd = 330 * spdBonus;
           for (const p of verticalPatterns) {
             const shootAng = Math.PI + p.angOffset * 1.1;
             eballs.push({
@@ -13736,7 +13736,7 @@ function update(dt) {
               isHoming: true,
               isGuided: true,
               homingT: 3.0,
-              turnRate: 3.2,
+              turnRate: 2.6,
               weaveFreq: p.weaveFreq,
               weaveAmp: p.weaveAmp,
               weavePhase: p.weavePhase,
@@ -13754,7 +13754,7 @@ function update(dt) {
           sfx('incoming');
         } else {
           // Primary Multi-Directional Tri-Vortex Formation (3 vertical shots 2cm apart in random different directions, 3.0s homing tracking)
-          const baseSpd = 450 * spdBonus;
+          const baseSpd = 300 * spdBonus;
           for (const p of verticalPatterns) {
             const shootAng = Math.PI + p.angOffset;
             eballs.push({
@@ -13762,7 +13762,7 @@ function update(dt) {
               isHoming: true,
               isGuided: true,
               homingT: 3.0,
-              turnRate: 3.0,
+              turnRate: 2.4,
               weaveFreq: p.weaveFreq,
               weaveAmp: p.weaveAmp,
               weavePhase: p.weavePhase,
