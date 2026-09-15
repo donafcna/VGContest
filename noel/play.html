@@ -5,7 +5,7 @@
 <head>
 <script>
 (function() {
-  var LATEST_VERSION = 'v=60fps_v124';
+  var LATEST_VERSION = 'v=60fps_v125';
   if (typeof window !== 'undefined' && window.location) {
     var search = window.location.search;
     if (search && search.includes('v=60fps_v') && !search.includes(LATEST_VERSION)) {
@@ -7049,12 +7049,12 @@ const BOSS_INTEL = [
     col: '#38bdf8',
     hp: 70,
     powers: [
-      '🚀 Random Multi-Vector Tri-Torpedoes: 3 vertical torpedoes (2cm apart) that launch in random different directions and track you for 3 seconds!',
-      '🚀 Rapid Divergent Tri-Torpedo Salvo: Unpredictable multi-directional tracking torpedoes (3s homing)',
-      '⚡ Ultimate Overcharged Tri-Torpedo Volley: Wide-angle 3-shot random torpedo barrage locked on for 3 seconds'
+      '🚀 Random Multi-Vector Tri-Torpedoes: 3 vertical torpedoes (2cm apart) that track for 3 seconds, then safely explode for 0 damage!',
+      '🚀 Rapid Divergent Tri-Torpedo Salvo: Unpredictable multi-directional tracking torpedoes (3s homing + 0-dmg detonation)',
+      '⚡ Ultimate Overcharged Tri-Torpedo Volley: Wide-angle 3-shot random torpedo barrage with 0-damage expiration'
     ],
     loot: '👑 +2 🎟️ Plasma Cores · +1 🎡 Wheel Spin · +125 🪙',
-    tactic: 'The 3 vertical torpedoes launch in unpredictable, random diverging directions like autonomous missiles and weave toward you for 3 seconds! Keep moving dynamically to dodge their multi-vector homing trajectory!'
+    tactic: 'The 3 vertical torpedoes launch in unpredictable, random diverging directions and track toward you for 3 seconds before safely exploding with 0 damage! Evade them for 3 seconds to trigger their harmless self-detonation!'
   },
   {
     id: 'void',
@@ -13709,6 +13709,7 @@ function update(dt) {
               isTorpedo: true,
               isHoming: true,
               isGuided: true,
+              explodeOnExpire: true,
               homingT: 3.0,
               turnRate: 2.8,
               weaveFreq: p.weaveFreq,
@@ -13737,6 +13738,7 @@ function update(dt) {
               isTorpedo: true,
               isHoming: true,
               isGuided: true,
+              explodeOnExpire: true,
               homingT: 3.0,
               turnRate: 2.6,
               weaveFreq: p.weaveFreq,
@@ -13764,6 +13766,7 @@ function update(dt) {
               isTorpedo: true,
               isHoming: true,
               isGuided: true,
+              explodeOnExpire: true,
               homingT: 3.0,
               turnRate: 2.4,
               weaveFreq: p.weaveFreq,
@@ -14722,6 +14725,17 @@ function update(dt) {
       if (b.homingT !== undefined) {
         b.homingT -= dt;
         if (b.homingT <= 0) {
+          if (b.explodeOnExpire || b.type === 'vortex_tri') {
+            // After 3 seconds: Torpedoes safely self-detonate with 0 damage to the player!
+            explode(b.x, b.y, b.col || '#38bdf8', 30);
+            explode(b.x, b.y, '#00ffee', 20);
+            parts.push({ type: 'ring', x: b.x, y: b.y, r: 6, maxR: 50, life: 0.35, maxLife: 0.35, col: b.col || '#38bdf8', lw: 3.5 });
+            sfx('boom');
+            addShake(10);
+            popup(b.x, b.y - 20, '💥 TORPEDO DETONATED (0 DMG)!', '#38bdf8');
+            eballs.splice(i, 1);
+            continue;
+          }
           b.isGuided = false;
           b.isHoming = false;
         }
