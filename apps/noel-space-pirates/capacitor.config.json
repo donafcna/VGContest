@@ -1,0 +1,19 @@
+{
+  "appId": "ch.vgcontest.noel.spacepirates",
+  "appName": "Space Pirates",
+  "webDir": "www",
+  "backgroundColor": "#020308",
+  "ios": {
+    "contentInset": "always",
+    "preferredContentMode": "mobile",
+    "allowsLinkPreview": false,
+    "scrollEnabled": false,
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "StatusBar": {
+      "overlaysWebView": true,
+      "style": "DARK"
+    }
+  }
+}
