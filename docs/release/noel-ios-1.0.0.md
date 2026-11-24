@@ -20,8 +20,10 @@
 
 ## Automated after push
 
-- [ ] GitHub Actions builds the app for the generic iPhone Simulator
-- [ ] Simulator `.app` artifact is uploaded
+- [x] GitHub Actions builds the app for the generic iPhone Simulator
+- [x] Simulator `.app` artifact is uploaded
+
+Validated by GitHub Actions run `45327852090` on 2026-11-24.
 
 ## Final App Store operations
 
