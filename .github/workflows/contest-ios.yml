@@ -1,0 +1,48 @@
+name: Leon and Louis iOS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'leon/**'
+      - 'louis/**'
+      - 'apps/contest-ios/**'
+      - 'apps/noel-space-pirates/ios/**'
+      - 'apps/noel-space-pirates/package*.json'
+      - '.github/workflows/contest-ios.yml'
+  workflow_dispatch:
+
+jobs:
+  simulator:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        game: [leon, louis]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/noel-space-pirates/package-lock.json
+      - run: npm ci --prefix apps/noel-space-pirates
+      - run: node apps/contest-ios/prepare.mjs ${{ matrix.game }}
+      - name: Synchronize iOS project
+        working-directory: apps/contest-ios/build/${{ matrix.game }}
+        run: |
+          npm ci
+          npx cap sync ios
+      - name: Compile for iPhone Simulator
+        working-directory: apps/contest-ios/build/${{ matrix.game }}
+        run: |
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.game }}-iPhone-Simulator
+          path: apps/contest-ios/build/${{ matrix.game }}/DerivedData/Build/Products/Debug-iphonesimulator/App.app
+          if-no-files-found: error
+          retention-days: 14
